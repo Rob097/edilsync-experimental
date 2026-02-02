@@ -56,6 +56,7 @@ import ProjectDetail from './pages/ProjectDetail';
 import Projects from './pages/Projects';
 import Settings from './pages/Settings';
 import Calendar from './pages/Calendar';
+import Notifications from './pages/Notifications';
 import __Layout from './Layout.jsx';
 
 
@@ -69,6 +70,7 @@ export const PAGES = {
     "Projects": Projects,
     "Settings": Settings,
     "Calendar": Calendar,
+    "Notifications": Notifications,
 }
 
 export const pagesConfig = {

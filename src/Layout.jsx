@@ -22,13 +22,16 @@ import {
   LogOut,
   User,
   ChevronDown,
-  Check
+  Check,
+  Calendar,
+  Bell
 } from "lucide-react";
 import ContextSwitcher from '@/components/context/ContextSwitcher';
 
 const navItems = [
   { name: 'Dashboard', icon: LayoutDashboard, page: 'Dashboard' },
   { name: 'Progetti', icon: FolderKanban, page: 'Projects' },
+  { name: 'Calendario', icon: Calendar, page: 'Calendar' },
   { name: 'Società', icon: Building2, page: 'Companies' },
 ];
 
@@ -58,6 +61,14 @@ export default function Layout({ children, currentPageName }) {
     },
     enabled: companyMemberships.length > 0,
   });
+
+  const { data: notifications = [] } = useQuery({
+    queryKey: ['notifications', user?.email],
+    queryFn: () => base44.entities.Notification.filter({ user_email: user?.email, is_read: false }),
+    enabled: !!user?.email,
+  });
+
+  const unreadCount = notifications.length;
 
   const currentContext = user?.active_context || 'personal';
   const currentCompany = companies.find(c => c.id === user?.active_company_id);
@@ -114,6 +125,18 @@ export default function Layout({ children, currentPageName }) {
 
             {/* Right side */}
             <div className="flex items-center gap-3">
+              {/* Notifications */}
+              <Link to={createPageUrl('Notifications')}>
+                <Button variant="ghost" size="icon" className="relative">
+                  <Bell className="h-5 w-5 text-gray-600" />
+                  {unreadCount > 0 && (
+                    <span className="absolute -top-0.5 -right-0.5 h-4 w-4 rounded-full bg-[#ef6144] text-white text-xs flex items-center justify-center">
+                      {unreadCount > 9 ? '9+' : unreadCount}
+                    </span>
+                  )}
+                </Button>
+              </Link>
+
               <ContextSwitcher
                 currentContext={currentContext}
                 currentCompany={currentCompany}
