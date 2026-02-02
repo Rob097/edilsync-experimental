@@ -18,7 +18,8 @@ import {
   User,
   Settings,
   MoreVertical,
-  UserPlus
+  UserPlus,
+  FileText
 } from "lucide-react";
 import {
   DropdownMenu,
@@ -30,6 +31,7 @@ import { format } from 'date-fns';
 import { it } from 'date-fns/locale';
 import InviteParticipantDialog from '@/components/project/InviteParticipantDialog';
 import ParticipantCard from '@/components/project/ParticipantCard';
+import DocumentList from '@/components/project/DocumentList';
 import EmptyState from '@/components/ui/EmptyState';
 
 const statusConfig = {
@@ -46,6 +48,7 @@ export default function ProjectDetail() {
   const projectId = urlParams.get('id');
   
   const [inviteDialogOpen, setInviteDialogOpen] = useState(false);
+  const [activeTab, setActiveTab] = useState('participants');
 
   const { data: user } = useQuery({
     queryKey: ['currentUser'],
@@ -211,60 +214,90 @@ export default function ProjectDetail() {
         </Card>
       )}
 
-      {/* Participants */}
-      <Card>
-        <CardHeader className="flex flex-row items-center justify-between pb-4">
-          <CardTitle className="text-lg font-semibold">Partecipanti</CardTitle>
-          {canInvite && (
-            <Button 
-              onClick={() => setInviteDialogOpen(true)}
-              className="bg-[#ef6144] hover:bg-[#d9553a]"
-            >
-              <UserPlus className="h-4 w-4 mr-2" />
-              Invita
-            </Button>
-          )}
-        </CardHeader>
-        <CardContent>
-          {participantsLoading ? (
-            <div className="space-y-3">
-              {[1, 2, 3].map(i => <Skeleton key={i} className="h-16 w-full" />)}
-            </div>
-          ) : activeParticipants.length > 0 ? (
-            <div className="space-y-3">
-              {activeParticipants.map(participant => (
-                <ParticipantCard
-                  key={participant.id}
-                  participant={participant}
-                  companyName={participant.company_id ? getCompanyName(participant.company_id) : null}
-                />
-              ))}
-            </div>
-          ) : (
-            <EmptyState
-              icon={Users}
-              title="Nessun partecipante"
-              description="Invita contractor, progettisti e altri professionisti."
-            />
-          )}
+      {/* Tabs */}
+      <Tabs value={activeTab} onValueChange={setActiveTab}>
+        <TabsList className="mb-4">
+          <TabsTrigger value="participants" className="flex items-center gap-2">
+            <Users className="h-4 w-4" />
+            Partecipanti
+          </TabsTrigger>
+          <TabsTrigger value="documents" className="flex items-center gap-2">
+            <FileText className="h-4 w-4" />
+            Documenti
+          </TabsTrigger>
+        </TabsList>
 
-          {invitedParticipants.length > 0 && (
-            <div className="mt-6 pt-6 border-t">
-              <h4 className="text-sm font-medium text-gray-500 mb-3">In attesa di conferma</h4>
-              <div className="space-y-3">
-                {invitedParticipants.map(participant => (
-                  <ParticipantCard
-                    key={participant.id}
-                    participant={participant}
-                    companyName={participant.company_id ? getCompanyName(participant.company_id) : null}
-                    isPending
-                  />
-                ))}
-              </div>
-            </div>
-          )}
-        </CardContent>
-      </Card>
+        <TabsContent value="participants">
+          <Card>
+            <CardHeader className="flex flex-row items-center justify-between pb-4">
+              <CardTitle className="text-lg font-semibold">Partecipanti</CardTitle>
+              {canInvite && (
+                <Button 
+                  onClick={() => setInviteDialogOpen(true)}
+                  className="bg-[#ef6144] hover:bg-[#d9553a]"
+                >
+                  <UserPlus className="h-4 w-4 mr-2" />
+                  Invita
+                </Button>
+              )}
+            </CardHeader>
+            <CardContent>
+              {participantsLoading ? (
+                <div className="space-y-3">
+                  {[1, 2, 3].map(i => <Skeleton key={i} className="h-16 w-full" />)}
+                </div>
+              ) : activeParticipants.length > 0 ? (
+                <div className="space-y-3">
+                  {activeParticipants.map(participant => (
+                    <ParticipantCard
+                      key={participant.id}
+                      participant={participant}
+                      companyName={participant.company_id ? getCompanyName(participant.company_id) : null}
+                    />
+                  ))}
+                </div>
+              ) : (
+                <EmptyState
+                  icon={Users}
+                  title="Nessun partecipante"
+                  description="Invita contractor, progettisti e altri professionisti."
+                />
+              )}
+
+              {invitedParticipants.length > 0 && (
+                <div className="mt-6 pt-6 border-t">
+                  <h4 className="text-sm font-medium text-gray-500 mb-3">In attesa di conferma</h4>
+                  <div className="space-y-3">
+                    {invitedParticipants.map(participant => (
+                      <ParticipantCard
+                        key={participant.id}
+                        participant={participant}
+                        companyName={participant.company_id ? getCompanyName(participant.company_id) : null}
+                        isPending
+                      />
+                    ))}
+                  </div>
+                </div>
+              )}
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        <TabsContent value="documents">
+          <Card>
+            <CardHeader className="pb-4">
+              <CardTitle className="text-lg font-semibold">Documenti</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <DocumentList 
+                projectId={projectId}
+                canUpload={!!userParticipation}
+                currentUserEmail={user?.email}
+              />
+            </CardContent>
+          </Card>
+        </TabsContent>
+      </Tabs>
 
       <InviteParticipantDialog
         open={inviteDialogOpen}
