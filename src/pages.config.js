@@ -55,6 +55,7 @@ import NewProject from './pages/NewProject';
 import ProjectDetail from './pages/ProjectDetail';
 import Projects from './pages/Projects';
 import Settings from './pages/Settings';
+import Calendar from './pages/Calendar';
 import __Layout from './Layout.jsx';
 
 
@@ -67,6 +68,7 @@ export const PAGES = {
     "ProjectDetail": ProjectDetail,
     "Projects": Projects,
     "Settings": Settings,
+    "Calendar": Calendar,
 }
 
 export const pagesConfig = {
