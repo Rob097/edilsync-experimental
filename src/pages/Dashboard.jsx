@@ -45,12 +45,15 @@ export default function Dashboard() {
   const { data: projectParticipations = [] } = useQuery({
     queryKey: ['userProjectParticipations', user?.id, companyMemberships],
     queryFn: async () => {
-      const allParticipations = await base44.entities.ProjectParticipant.filter({ status: 'active' });
+      const allParticipations = await base44.entities.ProjectParticipant.list();
       const companyIds = companyMemberships.map(m => m.company_id);
       
       return allParticipations.filter(p => 
-        (p.participant_type === 'personal' && p.user_id === user?.id) ||
-        (p.participant_type === 'company' && companyIds.includes(p.company_id))
+        (p.status === 'active' || p.status === 'invited') &&
+        (
+          (p.participant_type === 'personal' && p.user_id === user?.id) ||
+          (p.participant_type === 'company' && companyIds.includes(p.company_id))
+        )
       );
     },
     enabled: !!user?.id,
@@ -94,6 +97,15 @@ export default function Dashboard() {
     const membership = companyMemberships.find(m => m.company_id === companyId);
     return membership?.role;
   };
+
+  const { data: currentCompanyMembers = [] } = useQuery({
+    queryKey: ['currentCompanyMembers', user?.active_company_id],
+    queryFn: () => base44.entities.CompanyMember.filter({ 
+      company_id: user?.active_company_id, 
+      status: 'active' 
+    }),
+    enabled: !!user?.active_company_id && currentContext === 'company',
+  });
 
   return (
     <div className="space-y-8">
@@ -161,19 +173,35 @@ export default function Dashboard() {
             </div>
           </CardContent>
         </Card>
-        <Card>
-          <CardContent className="p-4">
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-lg bg-purple-100 flex items-center justify-center">
-                <Building2 className="h-5 w-5 text-purple-600" />
+        {currentContext === 'personal' ? (
+          <Card>
+            <CardContent className="p-4">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-lg bg-purple-100 flex items-center justify-center">
+                  <Building2 className="h-5 w-5 text-purple-600" />
+                </div>
+                <div>
+                  <p className="text-2xl font-bold text-gray-900">{companies.length}</p>
+                  <p className="text-sm text-gray-500">Società</p>
+                </div>
               </div>
-              <div>
-                <p className="text-2xl font-bold text-gray-900">{companies.length}</p>
-                <p className="text-sm text-gray-500">Società</p>
+            </CardContent>
+          </Card>
+        ) : (
+          <Card>
+            <CardContent className="p-4">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-lg bg-purple-100 flex items-center justify-center">
+                  <Building2 className="h-5 w-5 text-purple-600" />
+                </div>
+                <div>
+                  <p className="text-2xl font-bold text-gray-900">{currentCompanyMembers.length}</p>
+                  <p className="text-sm text-gray-500">Membri</p>
+                </div>
               </div>
-            </div>
-          </CardContent>
-        </Card>
+            </CardContent>
+          </Card>
+        )}
       </div>
 
       {/* Recent Projects */}

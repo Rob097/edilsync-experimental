@@ -43,6 +43,20 @@ export default function InviteParticipantDialog({
     queryFn: () => base44.entities.Company.list(),
   });
 
+  const { data: user } = useQuery({
+    queryKey: ['currentUser'],
+    queryFn: () => base44.auth.me(),
+  });
+
+  const { data: project } = useQuery({
+    queryKey: ['project', projectId],
+    queryFn: async () => {
+      const projects = await base44.entities.Project.filter({ id: projectId });
+      return projects[0];
+    },
+    enabled: !!projectId,
+  });
+
   const inviteMutation = useMutation({
     mutationFn: async () => {
       const participantData = {
@@ -64,7 +78,37 @@ export default function InviteParticipantDialog({
         participantData.invited_by_company_id = currentUserParticipation.company_id;
       }
 
-      return base44.entities.ProjectParticipant.create(participantData);
+      const participant = await base44.entities.ProjectParticipant.create(participantData);
+
+      // Create notification for company members or personal participant
+      if (participantType === 'company') {
+        const companyMembers = await base44.entities.CompanyMember.filter({ 
+          company_id: selectedCompanyId, 
+          status: 'active' 
+        });
+        
+        for (const member of companyMembers) {
+          await base44.entities.Notification.create({
+            user_email: member.user_email,
+            type: 'event_invite',
+            title: 'Invito a nuovo progetto',
+            message: `La tua società è stata invitata al progetto "${project?.name}" con ruolo ${projectRole}`,
+            related_event_id: projectId,
+            is_read: false,
+          });
+        }
+      } else {
+        await base44.entities.Notification.create({
+          user_email: email,
+          type: 'event_invite',
+          title: 'Invito a nuovo progetto',
+          message: `Sei stato invitato al progetto "${project?.name}" con ruolo ${projectRole}`,
+          related_event_id: projectId,
+          is_read: false,
+        });
+      }
+
+      return participant;
     },
     onSuccess: () => {
       queryClient.invalidateQueries(['projectParticipants', projectId]);

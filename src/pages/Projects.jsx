@@ -41,12 +41,15 @@ export default function Projects() {
   const { data: projectParticipations = [] } = useQuery({
     queryKey: ['userProjectParticipations', user?.id, companyMemberships],
     queryFn: async () => {
-      const allParticipations = await base44.entities.ProjectParticipant.filter({ status: 'active' });
+      const allParticipations = await base44.entities.ProjectParticipant.list();
       const companyIds = companyMemberships.map(m => m.company_id);
       
       return allParticipations.filter(p => 
-        (p.participant_type === 'personal' && p.user_id === user?.id) ||
-        (p.participant_type === 'company' && companyIds.includes(p.company_id))
+        (p.status === 'active' || p.status === 'invited') &&
+        (
+          (p.participant_type === 'personal' && p.user_id === user?.id) ||
+          (p.participant_type === 'company' && companyIds.includes(p.company_id))
+        )
       );
     },
     enabled: !!user?.id,
