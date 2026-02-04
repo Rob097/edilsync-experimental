@@ -23,7 +23,8 @@ import {
   CheckCircle2,
   DollarSign,
   MessageSquare,
-  Activity
+  Activity,
+  Flag
 } from "lucide-react";
 import {
   DropdownMenu,
@@ -41,6 +42,8 @@ import TaskList from '@/components/project/TaskList';
 import ChangeRequestList from '@/components/project/ChangeRequestList';
 import ProjectChat from '@/components/project/ProjectChat';
 import EmptyState from '@/components/ui/EmptyState';
+import EditProjectDialog from '@/components/project/EditProjectDialog';
+import MilestoneList from '@/components/project/MilestoneList';
 
 const statusConfig = {
   planning: { label: 'Pianificazione', color: 'bg-blue-100 text-blue-700' },
@@ -56,6 +59,7 @@ export default function ProjectDetail() {
   const projectId = urlParams.get('id');
   
   const [inviteDialogOpen, setInviteDialogOpen] = useState(false);
+  const [editProjectDialogOpen, setEditProjectDialogOpen] = useState(false);
   const [activeTab, setActiveTab] = useState('activity');
 
   const { data: user } = useQuery({
@@ -163,6 +167,15 @@ export default function ProjectDetail() {
             <Badge className={status.color}>{status.label}</Badge>
           </div>
         </div>
+        {project.owner_user_id === user?.id && (
+          <Button
+            variant="outline"
+            onClick={() => setEditProjectDialogOpen(true)}
+          >
+            <Settings className="h-4 w-4 mr-2" />
+            Modifica
+          </Button>
+        )}
       </div>
 
       {/* Info Cards */}
@@ -232,6 +245,10 @@ export default function ProjectDetail() {
             <Activity className="h-4 w-4" />
             Attività
           </TabsTrigger>
+          <TabsTrigger value="milestones" className="flex items-center gap-2">
+            <Flag className="h-4 w-4" />
+            Milestones
+          </TabsTrigger>
           <TabsTrigger value="tasks" className="flex items-center gap-2">
             <CheckCircle2 className="h-4 w-4" />
             Task
@@ -256,6 +273,10 @@ export default function ProjectDetail() {
 
         <TabsContent value="activity">
           <ActivityFeed projectId={projectId} />
+        </TabsContent>
+
+        <TabsContent value="milestones">
+          <MilestoneList projectId={projectId} canEdit={canEditTasks} />
         </TabsContent>
 
         <TabsContent value="tasks">
@@ -344,6 +365,12 @@ export default function ProjectDetail() {
         onOpenChange={setInviteDialogOpen}
         projectId={projectId}
         currentUserParticipation={userParticipation}
+      />
+
+      <EditProjectDialog
+        open={editProjectDialogOpen}
+        onOpenChange={setEditProjectDialogOpen}
+        project={project}
       />
     </div>
   );

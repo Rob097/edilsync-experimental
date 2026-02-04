@@ -24,6 +24,8 @@ export default function NewProject() {
     status: 'planning',
     start_date: '',
     end_date: '',
+    my_role: 'homeowner',
+    homeowner_email: '',
   });
 
   const { data: user } = useQuery({
@@ -53,25 +55,41 @@ export default function NewProject() {
 
   const createProjectMutation = useMutation({
     mutationFn: async (data) => {
+      const { my_role, homeowner_email, ...projectData } = data;
+      
       // Create project
       const project = await base44.entities.Project.create({
-        ...data,
+        ...projectData,
         owner_type: currentContext,
         owner_company_id: currentContext === 'company' ? user?.active_company_id : null,
         owner_user_id: user?.id,
       });
 
-      // Create participant (homeowner)
+      // Create participant for project creator (homeowner or contractor)
       await base44.entities.ProjectParticipant.create({
         project_id: project.id,
         participant_type: currentContext,
         user_id: currentContext === 'personal' ? user?.id : null,
         user_email: user?.email,
         company_id: currentContext === 'company' ? user?.active_company_id : null,
-        project_role: 'homeowner',
+        project_role: my_role,
         status: 'active',
         can_invite: true,
       });
+
+      // If contractor, invite homeowner
+      if (my_role === 'contractor' && homeowner_email) {
+        await base44.entities.ProjectParticipant.create({
+          project_id: project.id,
+          participant_type: 'personal',
+          user_id: null,
+          user_email: homeowner_email,
+          company_id: null,
+          project_role: 'homeowner',
+          status: 'invited',
+          can_invite: true,
+        });
+      }
 
       return project;
     },
@@ -144,6 +162,47 @@ export default function NewProject() {
                 rows={3}
               />
             </div>
+
+            <div className="space-y-2">
+              <Label>Il tuo ruolo nel progetto</Label>
+              <Select 
+                value={formData.my_role} 
+                onValueChange={(v) => handleChange('my_role', v)}
+                disabled={currentContext === 'personal'}
+              >
+                <SelectTrigger>
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="homeowner">Committente</SelectItem>
+                  {currentContext === 'company' && (
+                    <SelectItem value="contractor">Contractor</SelectItem>
+                  )}
+                </SelectContent>
+              </Select>
+              {currentContext === 'personal' && (
+                <p className="text-xs text-gray-500">
+                  Come privato puoi creare progetti solo come committente
+                </p>
+              )}
+            </div>
+
+            {currentContext === 'company' && formData.my_role === 'contractor' && (
+              <div className="space-y-2">
+                <Label htmlFor="homeowner_email">Email del committente *</Label>
+                <Input
+                  id="homeowner_email"
+                  type="email"
+                  value={formData.homeowner_email}
+                  onChange={(e) => handleChange('homeowner_email', e.target.value)}
+                  placeholder="email@committente.it"
+                  required
+                />
+                <p className="text-xs text-gray-500">
+                  Il committente riceverà un invito al progetto
+                </p>
+              </div>
+            )}
 
             <div className="space-y-2">
               <Label>Stato</Label>
