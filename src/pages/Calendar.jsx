@@ -110,8 +110,15 @@ export default function Calendar() {
 
   const getEventsForDay = (day) => {
     return contextEvents.filter(event => {
-      const eventStart = new Date(event.start_datetime);
-      return isSameDay(eventStart, day);
+      const startDate = new Date(event.start_datetime);
+      const endDate = new Date(event.end_datetime);
+      const currentDate = new Date(format(day, 'yyyy-MM-dd'));
+      
+      // Check if the current date is within the event's date range
+      const eventStartDay = new Date(format(startDate, 'yyyy-MM-dd'));
+      const eventEndDay = new Date(format(endDate, 'yyyy-MM-dd'));
+      
+      return currentDate >= eventStartDay && currentDate <= eventEndDay;
     });
   };
 
@@ -267,6 +274,11 @@ export default function Calendar() {
         event={selectedEvent}
         user={user}
         companyMemberships={companyMemberships}
+        onEdit={(event) => {
+          setEventDetailOpen(false);
+          setSelectedEvent(event);
+          setEventDialogOpen(true);
+        }}
       />
     </div>
   );
