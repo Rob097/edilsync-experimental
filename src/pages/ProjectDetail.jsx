@@ -72,6 +72,8 @@ export default function ProjectDetail() {
   const [editProjectDialogOpen, setEditProjectDialogOpen] = useState(false);
   const [activeTab, setActiveTab] = useState('cantiere');
   const [quickActionOpen, setQuickActionOpen] = useState(false);
+  const [lavoriSection, setLavoriSection] = useState('all');
+  const [infoSection, setInfoSection] = useState('all');
 
   const acceptInviteMutation = useMutation({
     mutationFn: (participantId) => base44.entities.ProjectParticipant.update(participantId, { status: 'active' }),
@@ -158,6 +160,32 @@ export default function ProjectDetail() {
   });
   
   const blockedTasks = allTasks.filter(t => t.status === 'blocked');
+
+  // Navigation helper
+  const navigateToSection = (tab, section = null, itemId = null) => {
+    setActiveTab(tab);
+    if (tab === 'lavori' && section) {
+      setLavoriSection(section);
+    }
+    if (tab === 'info' && section) {
+      setInfoSection(section);
+    }
+    
+    // Scroll after state update
+    setTimeout(() => {
+      if (itemId) {
+        const element = document.getElementById(itemId);
+        if (element) {
+          element.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+      } else if (section && section !== 'all') {
+        const sectionElement = document.getElementById(`section-${section}`);
+        if (sectionElement) {
+          sectionElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+      }
+    }, 100);
+  };
 
   if (projectLoading) {
     return (
@@ -361,123 +389,217 @@ export default function ProjectDetail() {
 
         {/* CANTIERE TAB - Il Feed */}
         <TabsContent value="cantiere" className="space-y-4">
-          <ActivityFeed projectId={projectId} />
+          <ActivityFeed 
+            projectId={projectId} 
+            onItemClick={(type, itemId) => {
+              if (type === 'photo') {
+                navigateToSection('info', 'documents', `doc-${itemId}`);
+              } else if (type === 'change_request') {
+                navigateToSection('lavori', 'changes', `change-${itemId}`);
+              } else if (type === 'task') {
+                navigateToSection('lavori', 'tasks', `task-${itemId}`);
+              } else if (type === 'milestone') {
+                navigateToSection('lavori', 'milestones', `milestone-${itemId}`);
+              } else if (type === 'message') {
+                navigateToSection('info', 'chat');
+              }
+            }}
+          />
         </TabsContent>
 
         {/* LAVORI TAB - Task e Change Requests */}
         <TabsContent value="lavori" className="space-y-6">
-          <div>
-            <div className="flex items-center justify-between mb-4">
-              <h3 className="text-lg font-semibold">Attività in Corso</h3>
-            </div>
-            <TaskList projectId={projectId} canEdit={canEditTasks} />
-          </div>
-          
-          <div className="border-t pt-6">
-            <div className="flex items-center justify-between mb-4">
-              <h3 className="text-lg font-semibold">Modifiche & Extra</h3>
-            </div>
-            <ChangeRequestList 
-              projectId={projectId} 
-              canCreate={canCreateChangeRequest}
-              canRespond={canRespondToChangeRequest}
-            />
+          {/* Section selector */}
+          <div className="flex gap-2 flex-wrap">
+            <Button
+              variant={lavoriSection === 'all' ? 'default' : 'outline'}
+              onClick={() => setLavoriSection('all')}
+              className={lavoriSection === 'all' ? 'bg-[#ef6144] hover:bg-[#d9553a]' : ''}
+            >
+              Vedi Tutto
+            </Button>
+            <Button
+              variant={lavoriSection === 'tasks' ? 'default' : 'outline'}
+              onClick={() => setLavoriSection('tasks')}
+              className={lavoriSection === 'tasks' ? 'bg-[#ef6144] hover:bg-[#d9553a]' : ''}
+            >
+              Attività
+            </Button>
+            <Button
+              variant={lavoriSection === 'changes' ? 'default' : 'outline'}
+              onClick={() => setLavoriSection('changes')}
+              className={lavoriSection === 'changes' ? 'bg-[#ef6144] hover:bg-[#d9553a]' : ''}
+            >
+              Modifiche & Extra
+            </Button>
+            <Button
+              variant={lavoriSection === 'milestones' ? 'default' : 'outline'}
+              onClick={() => setLavoriSection('milestones')}
+              className={lavoriSection === 'milestones' ? 'bg-[#ef6144] hover:bg-[#d9553a]' : ''}
+            >
+              Milestones
+            </Button>
           </div>
 
-          <div className="border-t pt-6">
-            <div className="flex items-center justify-between mb-4">
-              <h3 className="text-lg font-semibold">Milestones</h3>
+          {/* Tasks section */}
+          {(lavoriSection === 'all' || lavoriSection === 'tasks') && (
+            <div id="section-tasks">
+              <div className="flex items-center justify-between mb-4">
+                <h3 className="text-lg font-semibold">Attività in Corso</h3>
+              </div>
+              <TaskList projectId={projectId} canEdit={canEditTasks} />
             </div>
-            <MilestoneList projectId={projectId} canEdit={canEditTasks} />
-          </div>
+          )}
+          
+          {/* Changes section */}
+          {(lavoriSection === 'all' || lavoriSection === 'changes') && (
+            <div id="section-changes" className={lavoriSection === 'all' ? 'border-t pt-6' : ''}>
+              <div className="flex items-center justify-between mb-4">
+                <h3 className="text-lg font-semibold">Modifiche & Extra</h3>
+              </div>
+              <ChangeRequestList 
+                projectId={projectId} 
+                canCreate={canCreateChangeRequest}
+                canRespond={canRespondToChangeRequest}
+              />
+            </div>
+          )}
+
+          {/* Milestones section */}
+          {(lavoriSection === 'all' || lavoriSection === 'milestones') && (
+            <div id="section-milestones" className={lavoriSection === 'all' ? 'border-t pt-6' : ''}>
+              <div className="flex items-center justify-between mb-4">
+                <h3 className="text-lg font-semibold">Milestones</h3>
+              </div>
+              <MilestoneList projectId={projectId} canEdit={canEditTasks} />
+            </div>
+          )}
         </TabsContent>
 
         {/* INFO & TEAM TAB */}
         <TabsContent value="info" className="space-y-6">
+          {/* Section selector */}
+          <div className="flex gap-2 flex-wrap">
+            <Button
+              variant={infoSection === 'all' ? 'default' : 'outline'}
+              onClick={() => setInfoSection('all')}
+              className={infoSection === 'all' ? 'bg-[#ef6144] hover:bg-[#d9553a]' : ''}
+            >
+              Vedi Tutto
+            </Button>
+            <Button
+              variant={infoSection === 'chat' ? 'default' : 'outline'}
+              onClick={() => setInfoSection('chat')}
+              className={infoSection === 'chat' ? 'bg-[#ef6144] hover:bg-[#d9553a]' : ''}
+            >
+              Chat
+            </Button>
+            <Button
+              variant={infoSection === 'participants' ? 'default' : 'outline'}
+              onClick={() => setInfoSection('participants')}
+              className={infoSection === 'participants' ? 'bg-[#ef6144] hover:bg-[#d9553a]' : ''}
+            >
+              Partecipanti
+            </Button>
+            <Button
+              variant={infoSection === 'documents' ? 'default' : 'outline'}
+              onClick={() => setInfoSection('documents')}
+              className={infoSection === 'documents' ? 'bg-[#ef6144] hover:bg-[#d9553a]' : ''}
+            >
+              Documenti
+            </Button>
+          </div>
+
           {/* Chat Section */}
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <MessageSquare className="h-5 w-5" />
-                Chat di Cantiere
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <ProjectChat projectId={projectId} />
-            </CardContent>
-          </Card>
+          {(infoSection === 'all' || infoSection === 'chat') && (
+            <Card id="section-chat">
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <MessageSquare className="h-5 w-5" />
+                  Chat di Cantiere
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <ProjectChat projectId={projectId} />
+              </CardContent>
+            </Card>
+          )}
 
           {/* Participants Section */}
-          <Card>
-            <CardHeader className="flex flex-row items-center justify-between pb-4">
-              <CardTitle className="text-lg font-semibold">Partecipanti</CardTitle>
-              {canInvite && (
-                <Button 
-                  onClick={() => setInviteDialogOpen(true)}
-                  className="bg-[#ef6144] hover:bg-[#d9553a]"
-                >
-                  <UserPlus className="h-4 w-4 mr-2" />
-                  Invita
-                </Button>
-              )}
-            </CardHeader>
-            <CardContent>
-              {participantsLoading ? (
-                <div className="space-y-3">
-                  {[1, 2, 3].map(i => <Skeleton key={i} className="h-16 w-full" />)}
-                </div>
-              ) : activeParticipants.length > 0 ? (
-                <div className="space-y-3">
-                  {activeParticipants.map(participant => (
-                    <ParticipantCard
-                      key={participant.id}
-                      participant={participant}
-                      companyName={participant.company_id ? getCompanyName(participant.company_id) : null}
-                    />
-                  ))}
-                </div>
-              ) : (
-                <EmptyState
-                  icon={Users}
-                  title="Nessun partecipante"
-                  description="Invita contractor, progettisti e altri professionisti."
-                />
-              )}
-
-              {invitedParticipants.length > 0 && (
-                <div className="mt-6 pt-6 border-t">
-                  <h4 className="text-sm font-medium text-gray-500 mb-3">In attesa di conferma</h4>
+          {(infoSection === 'all' || infoSection === 'participants') && (
+            <Card id="section-participants">
+              <CardHeader className="flex flex-row items-center justify-between pb-4">
+                <CardTitle className="text-lg font-semibold">Partecipanti</CardTitle>
+                {canInvite && (
+                  <Button 
+                    onClick={() => setInviteDialogOpen(true)}
+                    className="bg-[#ef6144] hover:bg-[#d9553a]"
+                  >
+                    <UserPlus className="h-4 w-4 mr-2" />
+                    Invita
+                  </Button>
+                )}
+              </CardHeader>
+              <CardContent>
+                {participantsLoading ? (
                   <div className="space-y-3">
-                    {invitedParticipants.map(participant => (
+                    {[1, 2, 3].map(i => <Skeleton key={i} className="h-16 w-full" />)}
+                  </div>
+                ) : activeParticipants.length > 0 ? (
+                  <div className="space-y-3">
+                    {activeParticipants.map(participant => (
                       <ParticipantCard
                         key={participant.id}
                         participant={participant}
                         companyName={participant.company_id ? getCompanyName(participant.company_id) : null}
-                        isPending
                       />
                     ))}
                   </div>
-                </div>
-              )}
-            </CardContent>
-          </Card>
+                ) : (
+                  <EmptyState
+                    icon={Users}
+                    title="Nessun partecipante"
+                    description="Invita contractor, progettisti e altri professionisti."
+                  />
+                )}
+
+                {invitedParticipants.length > 0 && (
+                  <div className="mt-6 pt-6 border-t">
+                    <h4 className="text-sm font-medium text-gray-500 mb-3">In attesa di conferma</h4>
+                    <div className="space-y-3">
+                      {invitedParticipants.map(participant => (
+                        <ParticipantCard
+                          key={participant.id}
+                          participant={participant}
+                          companyName={participant.company_id ? getCompanyName(participant.company_id) : null}
+                          isPending
+                        />
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </CardContent>
+            </Card>
+          )}
 
           {/* Documents Section */}
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <FileText className="h-5 w-5" />
-                Documenti
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <DocumentList 
-                projectId={projectId}
-                canUpload={!!userParticipation}
-                currentUserEmail={user?.email}
-              />
-            </CardContent>
-          </Card>
+          {(infoSection === 'all' || infoSection === 'documents') && (
+            <Card id="section-documents">
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <FileText className="h-5 w-5" />
+                  Documenti
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <DocumentList 
+                  projectId={projectId}
+                  canUpload={!!userParticipation}
+                  currentUserEmail={user?.email}
+                />
+              </CardContent>
+            </Card>
+          )}
         </TabsContent>
       </Tabs>
 
@@ -497,8 +619,7 @@ export default function ProjectDetail() {
           <button
             onClick={() => {
               setQuickActionOpen(false);
-              setActiveTab('cantiere');
-              // Trigger photo upload in ActivityFeed
+              navigateToSection('info', 'documents');
             }}
             className="w-full flex items-center gap-3 px-4 py-3 hover:bg-gray-50 rounded-lg text-left transition-colors"
           >
@@ -508,7 +629,7 @@ export default function ProjectDetail() {
           <button
             onClick={() => {
               setQuickActionOpen(false);
-              setActiveTab('lavori');
+              navigateToSection('lavori', 'tasks');
             }}
             className="w-full flex items-center gap-3 px-4 py-3 hover:bg-gray-50 rounded-lg text-left transition-colors"
           >
@@ -518,7 +639,7 @@ export default function ProjectDetail() {
           <button
             onClick={() => {
               setQuickActionOpen(false);
-              setActiveTab('lavori');
+              navigateToSection('lavori', 'changes');
             }}
             className="w-full flex items-center gap-3 px-4 py-3 hover:bg-gray-50 rounded-lg text-left transition-colors"
           >

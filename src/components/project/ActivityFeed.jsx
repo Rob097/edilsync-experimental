@@ -18,7 +18,7 @@ import { format } from 'date-fns';
 import { it } from 'date-fns/locale';
 import EmptyState from '@/components/ui/EmptyState';
 
-export default function ActivityFeed({ projectId }) {
+export default function ActivityFeed({ projectId, onItemClick }) {
   const { data: tasks = [] } = useQuery({
     queryKey: ['tasks', projectId],
     queryFn: () => base44.entities.Task.filter({ project_id: projectId }),
