@@ -75,15 +75,17 @@ export default function Dashboard() {
 
   // Filter projects based on context
   const contextProjects = projects.filter(project => {
-    const participation = projectParticipations.find(p => p.project_id === project.id);
-    if (!participation) return false;
+    const participation = projectParticipations.find(p => {
+      if (p.project_id !== project.id) return false;
+      
+      if (currentContext === 'personal') {
+        return p.participant_type === 'personal' && p.user_id === user?.id;
+      } else {
+        return p.participant_type === 'company' && p.company_id === user?.active_company_id;
+      }
+    });
     
-    if (currentContext === 'personal') {
-      return participation.participant_type === 'personal';
-    } else {
-      return participation.participant_type === 'company' && 
-             participation.company_id === user?.active_company_id;
-    }
+    return !!participation;
   });
 
   const recentProjects = contextProjects.slice(0, 3);

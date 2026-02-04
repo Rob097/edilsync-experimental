@@ -62,6 +62,23 @@ export default function ProjectDetail() {
   const [editProjectDialogOpen, setEditProjectDialogOpen] = useState(false);
   const [activeTab, setActiveTab] = useState('activity');
 
+  const acceptInviteMutation = useMutation({
+    mutationFn: (participantId) => base44.entities.ProjectParticipant.update(participantId, { status: 'active' }),
+    onSuccess: () => {
+      queryClient.invalidateQueries(['projectParticipants', projectId]);
+      queryClient.invalidateQueries(['userProjectParticipations']);
+    },
+  });
+
+  const declineInviteMutation = useMutation({
+    mutationFn: (participantId) => base44.entities.ProjectParticipant.update(participantId, { status: 'declined' }),
+    onSuccess: () => {
+      queryClient.invalidateQueries(['projectParticipants', projectId]);
+      queryClient.invalidateQueries(['userProjectParticipations']);
+      navigate(createPageUrl('Projects'));
+    },
+  });
+
   const { data: user } = useQuery({
     queryKey: ['currentUser'],
     queryFn: () => base44.auth.me(),
@@ -145,8 +162,42 @@ export default function ProjectDetail() {
 
   const status = statusConfig[project.status] || statusConfig.planning;
 
+  const isInvited = userParticipation?.status === 'invited';
+
   return (
     <div className="space-y-6">
+      {/* Invitation Banner */}
+      {isInvited && (
+        <Card className="border-[#ef6144] bg-[#ef6144]/5">
+          <CardContent className="p-4">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+              <div>
+                <h3 className="font-semibold text-gray-900">Sei stato invitato a questo progetto</h3>
+                <p className="text-sm text-gray-600 mt-1">
+                  Accetta l'invito per partecipare alle attività del cantiere
+                </p>
+              </div>
+              <div className="flex gap-2">
+                <Button 
+                  variant="outline"
+                  onClick={() => declineInviteMutation.mutate(userParticipation.id)}
+                  disabled={declineInviteMutation.isPending}
+                >
+                  Rifiuta
+                </Button>
+                <Button 
+                  className="bg-[#ef6144] hover:bg-[#d9553a]"
+                  onClick={() => acceptInviteMutation.mutate(userParticipation.id)}
+                  disabled={acceptInviteMutation.isPending}
+                >
+                  Accetta
+                </Button>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      )}
+
       {/* Header */}
       <div className="flex items-start justify-between">
         <div>
