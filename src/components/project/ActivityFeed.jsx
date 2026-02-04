@@ -123,6 +123,20 @@ export default function ActivityFeed({ projectId, onItemClick }) {
 
   const isLoading = false;
 
+  const handleItemClick = (activity) => {
+    if (!onItemClick) return;
+    
+    if (activity.type === 'document') {
+      onItemClick('photo', activity.data.id);
+    } else if (activity.type === 'change_request') {
+      onItemClick('change_request', activity.data.id);
+    } else if (activity.type === 'task') {
+      onItemClick('task', activity.data.id);
+    } else if (activity.type === 'message') {
+      onItemClick('message', activity.data.id);
+    }
+  };
+
   return (
     <Card>
       <CardHeader>
@@ -138,7 +152,11 @@ export default function ActivityFeed({ projectId, onItemClick }) {
             {activities.map(activity => {
               const Icon = activity.icon;
               return (
-                <div key={activity.id} className="flex items-start gap-3 p-3 rounded-lg border bg-white hover:bg-gray-50 transition-colors">
+                <div 
+                  key={activity.id} 
+                  onClick={() => handleItemClick(activity)}
+                  className="flex items-start gap-3 p-3 rounded-lg border bg-white hover:bg-gray-50 transition-colors cursor-pointer"
+                >
                   <div className={`w-10 h-10 rounded-lg bg-gray-100 flex items-center justify-center flex-shrink-0 ${activity.color}`}>
                     <Icon className="h-5 w-5" />
                   </div>
