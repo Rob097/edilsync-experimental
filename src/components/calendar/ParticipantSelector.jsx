@@ -71,9 +71,9 @@ export default function ParticipantSelector({ participants, onChange }) {
       <Label>Partecipanti</Label>
       
       {/* Add participant form */}
-      <div className="flex gap-2">
+      <div className="space-y-2">
         <Select value={participantType} onValueChange={setParticipantType}>
-          <SelectTrigger className="w-32">
+          <SelectTrigger className="w-full sm:w-32">
             <SelectValue />
           </SelectTrigger>
           <SelectContent>
@@ -83,7 +83,7 @@ export default function ParticipantSelector({ participants, onChange }) {
         </Select>
 
         {participantType === 'user' ? (
-          <div className="flex-1 flex gap-2">
+          <div className="flex flex-col sm:flex-row gap-2">
             <Select value={selectedUserId} onValueChange={setSelectedUserId}>
               <SelectTrigger className="flex-1">
                 <SelectValue placeholder="Seleziona utente..." />
@@ -96,32 +96,38 @@ export default function ParticipantSelector({ participants, onChange }) {
                 ))}
               </SelectContent>
             </Select>
-            <span className="text-gray-400 flex items-center">o</span>
+            <span className="text-gray-400 flex items-center justify-center sm:justify-start">o</span>
             <Input
               placeholder="Email..."
               value={manualEmail}
               onChange={(e) => setManualEmail(e.target.value)}
               className="flex-1"
             />
+            <Button type="button" variant="outline" onClick={handleAddParticipant} className="w-full sm:w-auto">
+              <Plus className="h-4 w-4 sm:mr-0 mr-2" />
+              <span className="sm:hidden">Aggiungi</span>
+            </Button>
           </div>
         ) : (
-          <Select value={selectedCompanyId} onValueChange={setSelectedCompanyId} className="flex-1">
-            <SelectTrigger className="flex-1">
-              <SelectValue placeholder="Seleziona società..." />
-            </SelectTrigger>
-            <SelectContent>
-              {allCompanies.map(company => (
-                <SelectItem key={company.id} value={company.id}>
-                  {company.name}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
+          <div className="flex flex-col sm:flex-row gap-2">
+            <Select value={selectedCompanyId} onValueChange={setSelectedCompanyId}>
+              <SelectTrigger className="flex-1">
+                <SelectValue placeholder="Seleziona società..." />
+              </SelectTrigger>
+              <SelectContent>
+                {allCompanies.map(company => (
+                  <SelectItem key={company.id} value={company.id}>
+                    {company.name}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+            <Button type="button" variant="outline" onClick={handleAddParticipant} className="w-full sm:w-auto">
+              <Plus className="h-4 w-4 sm:mr-0 mr-2" />
+              <span className="sm:hidden">Aggiungi</span>
+            </Button>
+          </div>
         )}
-
-        <Button type="button" variant="outline" size="icon" onClick={handleAddParticipant}>
-          <Plus className="h-4 w-4" />
-        </Button>
       </div>
 
       {/* Participants list */}
