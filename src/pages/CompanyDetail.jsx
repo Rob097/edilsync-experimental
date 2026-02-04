@@ -79,19 +79,24 @@ export default function CompanyDetail() {
     );
   }
 
+  const currentContext = user?.active_context || 'personal';
+  const isViewingActiveCompany = currentContext === 'company' && user?.active_company_id === companyId;
+
   return (
     <div className="space-y-6">
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-4">
         <div className="flex-1 min-w-0">
-          <Button
-            variant="ghost"
-            onClick={() => navigate(createPageUrl('Companies'))}
-            className="mb-2 -ml-3"
-          >
-            <ArrowLeft className="h-4 w-4 mr-2" />
-            Società
-          </Button>
+          {!isViewingActiveCompany && (
+            <Button
+              variant="ghost"
+              onClick={() => navigate(createPageUrl('Companies'))}
+              className="mb-2 -ml-3"
+            >
+              <ArrowLeft className="h-4 w-4 mr-2" />
+              Società
+            </Button>
+          )}
           <div className="flex items-center gap-3">
             <div className="w-14 h-14 rounded-xl bg-[#ef6144]/10 flex items-center justify-center flex-shrink-0">
               <Building2 className="h-7 w-7 text-[#ef6144]" />
