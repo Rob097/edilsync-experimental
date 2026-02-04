@@ -74,8 +74,8 @@ export default function ProjectDetail() {
   const [quickActionOpen, setQuickActionOpen] = useState(false);
   const [lavoriSection, setLavoriSection] = useState('all');
   const [infoSection, setInfoSection] = useState('all');
-  const [triggerDocumentUpload, setTriggerDocumentUpload] = useState(0);
-  const [triggerChangeCreate, setTriggerChangeCreate] = useState(0);
+  const [documentUploadOpen, setDocumentUploadOpen] = useState(false);
+  const [changeCreateOpen, setChangeCreateOpen] = useState(false);
 
   const acceptInviteMutation = useMutation({
     mutationFn: (participantId) => base44.entities.ProjectParticipant.update(participantId, { status: 'active' }),
@@ -463,7 +463,8 @@ export default function ProjectDetail() {
                 projectId={projectId} 
                 canCreate={canCreateChangeRequest}
                 canRespond={canRespondToChangeRequest}
-                triggerCreate={triggerChangeCreate}
+                createDialogOpen={changeCreateOpen}
+                onCreateDialogChange={setChangeCreateOpen}
               />
             </div>
           )}
@@ -599,7 +600,8 @@ export default function ProjectDetail() {
                   projectId={projectId}
                   canUpload={!!userParticipation}
                   currentUserEmail={user?.email}
-                  triggerUpload={triggerDocumentUpload}
+                  uploadDialogOpen={documentUploadOpen}
+                  onUploadDialogChange={setDocumentUploadOpen}
                 />
               </CardContent>
             </Card>
@@ -624,7 +626,7 @@ export default function ProjectDetail() {
             onClick={() => {
               setQuickActionOpen(false);
               navigateToSection('info', 'documents');
-              setTimeout(() => setTriggerDocumentUpload(prev => prev + 1), 200);
+              setTimeout(() => setDocumentUploadOpen(true), 200);
             }}
             className="w-full flex items-center gap-3 px-4 py-3 hover:bg-gray-50 rounded-lg text-left transition-colors"
           >
@@ -645,7 +647,7 @@ export default function ProjectDetail() {
             onClick={() => {
               setQuickActionOpen(false);
               navigateToSection('lavori', 'changes');
-              setTimeout(() => setTriggerChangeCreate(prev => prev + 1), 200);
+              setTimeout(() => setChangeCreateOpen(true), 200);
             }}
             className="w-full flex items-center gap-3 px-4 py-3 hover:bg-gray-50 rounded-lg text-left transition-colors"
           >

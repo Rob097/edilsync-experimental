@@ -54,20 +54,13 @@ const formatFileSize = (bytes) => {
   return (bytes / (1024 * 1024)).toFixed(1) + ' MB';
 };
 
-export default function DocumentList({ projectId, canUpload, currentUserEmail, triggerUpload }) {
+export default function DocumentList({ projectId, canUpload, currentUserEmail, uploadDialogOpen: externalUploadDialog, onUploadDialogChange }) {
   const queryClient = useQueryClient();
   const [searchQuery, setSearchQuery] = useState('');
   const [filterCategory, setFilterCategory] = useState('all');
   const [filterType, setFilterType] = useState('all');
   const [sortBy, setSortBy] = useState('date_desc');
   const [uploadDialogOpen, setUploadDialogOpen] = useState(false);
-
-  // External trigger for opening upload dialog
-  React.useEffect(() => {
-    if (triggerUpload) {
-      setUploadDialogOpen(true);
-    }
-  }, [triggerUpload]);
 
   const { data: documents = [], isLoading } = useQuery({
     queryKey: ['projectDocuments', projectId],
@@ -131,7 +124,10 @@ export default function DocumentList({ projectId, canUpload, currentUserEmail, t
           </div>
           {canUpload && (
             <Button 
-              onClick={() => setUploadDialogOpen(true)}
+              onClick={() => {
+                setUploadDialogOpen(true);
+                onUploadDialogChange?.(true);
+              }}
               className="bg-[#ef6144] hover:bg-[#d9553a]"
             >
               <Upload className="h-4 w-4 mr-2" />
@@ -260,13 +256,19 @@ export default function DocumentList({ projectId, canUpload, currentUserEmail, t
               : "Carica il primo documento del progetto."
           }
           actionLabel={!searchQuery && canUpload ? "Carica documento" : undefined}
-          onAction={!searchQuery && canUpload ? () => setUploadDialogOpen(true) : undefined}
+          onAction={!searchQuery && canUpload ? () => {
+            setUploadDialogOpen(true);
+            onUploadDialogChange?.(true);
+          } : undefined}
         />
       )}
 
       <UploadDocumentDialog
-        open={uploadDialogOpen}
-        onOpenChange={setUploadDialogOpen}
+        open={externalUploadDialog ?? uploadDialogOpen}
+        onOpenChange={(open) => {
+          setUploadDialogOpen(open);
+          onUploadDialogChange?.(open);
+        }}
         projectId={projectId}
       />
     </div>

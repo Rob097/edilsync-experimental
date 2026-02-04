@@ -18,18 +18,10 @@ const statusConfig = {
   clarification_needed: { label: 'Chiarimenti', color: 'bg-orange-100 text-orange-700', icon: AlertTriangle },
 };
 
-export default function ChangeRequestList({ projectId, canCreate, canRespond, triggerCreate }) {
+export default function ChangeRequestList({ projectId, canCreate, canRespond, createDialogOpen, onCreateDialogChange }) {
   const queryClient = useQueryClient();
   const [dialogOpen, setDialogOpen] = useState(false);
   const [selectedRequest, setSelectedRequest] = useState(null);
-
-  // External trigger for opening create dialog
-  React.useEffect(() => {
-    if (triggerCreate) {
-      setSelectedRequest(null);
-      setDialogOpen(true);
-    }
-  }, [triggerCreate]);
 
   const { data: changeRequests = [], isLoading } = useQuery({
     queryKey: ['changeRequests', projectId],
@@ -45,6 +37,7 @@ export default function ChangeRequestList({ projectId, canCreate, canRespond, tr
   const handleCreate = () => {
     setSelectedRequest(null);
     setDialogOpen(true);
+    onCreateDialogChange?.(true);
   };
 
   const sortedRequests = [...changeRequests].sort((a, b) => 
@@ -131,8 +124,14 @@ export default function ChangeRequestList({ projectId, canCreate, canRespond, tr
       </Card>
 
       <ChangeRequestDialog
-        open={dialogOpen}
-        onOpenChange={setDialogOpen}
+        open={createDialogOpen ?? dialogOpen}
+        onOpenChange={(open) => {
+          setDialogOpen(open);
+          if (!open) {
+            setSelectedRequest(null);
+          }
+          onCreateDialogChange?.(open);
+        }}
         request={selectedRequest}
         projectId={projectId}
         canRespond={canRespond}
