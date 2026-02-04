@@ -67,11 +67,15 @@ export default function Layout({ children, currentPageName }) {
   
   const currentContext = user?.active_context || 'personal';
 
+  const companiesNavItem = currentContext === 'personal'
+    ? { name: 'Società', icon: Building2, page: 'Companies', path: createPageUrl('Companies') }
+    : { name: 'Società', icon: Building2, page: 'CompanyDetail', path: createPageUrl('CompanyDetail') + `?id=${user?.active_company_id}` };
+
   const navItems = [
-    { name: 'Dashboard', icon: LayoutDashboard, page: 'Dashboard' },
-    { name: 'Progetti', icon: FolderKanban, page: 'Projects' },
-    { name: 'Calendario', icon: Calendar, page: 'Calendar' },
-    ...(currentContext === 'personal' ? [{ name: 'Società', icon: Building2, page: 'Companies' }] : []),
+    { name: 'Dashboard', icon: LayoutDashboard, page: 'Dashboard', path: createPageUrl('Dashboard') },
+    { name: 'Progetti', icon: FolderKanban, page: 'Projects', path: createPageUrl('Projects') },
+    { name: 'Calendario', icon: Calendar, page: 'Calendar', path: createPageUrl('Calendar') },
+    companiesNavItem,
   ];
 
   const handleContextChange = async (context, company) => {
@@ -108,7 +112,7 @@ export default function Layout({ children, currentPageName }) {
                 return (
                   <Link
                     key={item.page}
-                    to={createPageUrl(item.page)}
+                    to={item.path}
                     className={`
                       flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-colors
                       ${isActive 
@@ -212,7 +216,7 @@ export default function Layout({ children, currentPageName }) {
                 return (
                   <Link
                     key={item.page}
-                    to={createPageUrl(item.page)}
+                    to={item.path}
                     onClick={() => setMobileMenuOpen(false)}
                     className={`
                       flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-medium transition-colors
