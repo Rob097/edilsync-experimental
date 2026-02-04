@@ -34,28 +34,8 @@ export default function DocumentPreviewDialog({ document, open, onOpenChange, al
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-5xl h-[90vh] p-0 flex flex-col">
         <DialogHeader className="px-6 py-3 border-b flex-shrink-0">
-          <div className="flex items-center justify-between gap-4">
-            <div className="flex items-center gap-2 flex-1 min-w-0">
-              <Button
-                variant="ghost"
-                size="icon"
-                onClick={handlePrevious}
-                disabled={!hasPrevious}
-                className="flex-shrink-0"
-              >
-                <ChevronLeft className="h-5 w-5" />
-              </Button>
-              <DialogTitle className="text-lg font-semibold truncate flex-1">{document.name}</DialogTitle>
-              <Button
-                variant="ghost"
-                size="icon"
-                onClick={handleNext}
-                disabled={!hasNext}
-                className="flex-shrink-0"
-              >
-                <ChevronRight className="h-5 w-5" />
-              </Button>
-            </div>
+          <div className="flex items-center justify-between gap-4 pr-8">
+            <DialogTitle className="text-lg font-semibold truncate flex-1">{document.name}</DialogTitle>
             <Button
               variant="outline"
               size="sm"
@@ -70,7 +50,29 @@ export default function DocumentPreviewDialog({ document, open, onOpenChange, al
           </div>
         </DialogHeader>
         
-        <div className="flex-1 overflow-hidden bg-gray-50">
+        <div className="flex-1 overflow-hidden bg-gray-50 relative">
+          {/* Navigation Arrows */}
+          {hasPrevious && (
+            <Button
+              variant="secondary"
+              size="icon"
+              onClick={handlePrevious}
+              className="absolute left-4 top-1/2 -translate-y-1/2 z-10 h-12 w-12 rounded-full shadow-lg"
+            >
+              <ChevronLeft className="h-6 w-6" />
+            </Button>
+          )}
+          {hasNext && (
+            <Button
+              variant="secondary"
+              size="icon"
+              onClick={handleNext}
+              className="absolute right-4 top-1/2 -translate-y-1/2 z-10 h-12 w-12 rounded-full shadow-lg"
+            >
+              <ChevronRight className="h-6 w-6" />
+            </Button>
+          )}
+
           {isImage ? (
             <div className="flex items-center justify-center h-full p-4">
               <img 
