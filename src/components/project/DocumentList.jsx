@@ -4,6 +4,7 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Skeleton } from "@/components/ui/skeleton";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { 
   FileText, 
   Image, 
@@ -56,6 +57,9 @@ const formatFileSize = (bytes) => {
 export default function DocumentList({ projectId, canUpload, currentUserEmail }) {
   const queryClient = useQueryClient();
   const [searchQuery, setSearchQuery] = useState('');
+  const [filterCategory, setFilterCategory] = useState('all');
+  const [filterType, setFilterType] = useState('all');
+  const [sortBy, setSortBy] = useState('date_desc');
   const [uploadDialogOpen, setUploadDialogOpen] = useState(false);
 
   const { data: documents = [], isLoading } = useQuery({
@@ -71,10 +75,30 @@ export default function DocumentList({ projectId, canUpload, currentUserEmail })
     },
   });
 
-  const filteredDocuments = documents.filter(doc =>
-    doc.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    (doc.description && doc.description.toLowerCase().includes(searchQuery.toLowerCase()))
-  );
+  let filteredDocuments = documents.filter(doc => {
+    const matchesSearch = doc.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      (doc.description && doc.description.toLowerCase().includes(searchQuery.toLowerCase()));
+    const matchesCategory = filterCategory === 'all' || doc.category === filterCategory;
+    const matchesType = filterType === 'all' || doc.file_type === filterType;
+    return matchesSearch && matchesCategory && matchesType;
+  });
+
+  // Sort documents
+  if (sortBy === 'date_desc') {
+    filteredDocuments = [...filteredDocuments].sort((a, b) => 
+      new Date(b.created_date) - new Date(a.created_date)
+    );
+  } else if (sortBy === 'date_asc') {
+    filteredDocuments = [...filteredDocuments].sort((a, b) => 
+      new Date(a.created_date) - new Date(b.created_date)
+    );
+  } else if (sortBy === 'name_asc') {
+    filteredDocuments = [...filteredDocuments].sort((a, b) => 
+      a.name.localeCompare(b.name)
+    );
+  }
+
+  const uniqueFileTypes = [...new Set(documents.map(d => d.file_type))].filter(Boolean);
 
   if (isLoading) {
     return (
@@ -86,26 +110,72 @@ export default function DocumentList({ projectId, canUpload, currentUserEmail })
 
   return (
     <div className="space-y-4">
-      {/* Header */}
-      <div className="flex flex-col sm:flex-row gap-3">
-        <div className="relative flex-1">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
-          <Input
-            placeholder="Cerca documenti..."
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            className="pl-10"
-          />
+      {/* Header with Filters */}
+      <div className="flex flex-col gap-3">
+        <div className="flex flex-col sm:flex-row gap-3">
+          <div className="relative flex-1">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
+            <Input
+              placeholder="Cerca documenti..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="pl-10"
+            />
+          </div>
+          {canUpload && (
+            <Button 
+              onClick={() => setUploadDialogOpen(true)}
+              className="bg-[#ef6144] hover:bg-[#d9553a]"
+            >
+              <Upload className="h-4 w-4 mr-2" />
+              Carica
+            </Button>
+          )}
         </div>
-        {canUpload && (
-          <Button 
-            onClick={() => setUploadDialogOpen(true)}
-            className="bg-[#ef6144] hover:bg-[#d9553a]"
-          >
-            <Upload className="h-4 w-4 mr-2" />
-            Carica
-          </Button>
-        )}
+        
+        {/* Filters */}
+        <div className="flex flex-wrap gap-2">
+          <Select value={filterCategory} onValueChange={setFilterCategory}>
+            <SelectTrigger className="w-36">
+              <SelectValue placeholder="Categoria" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">Tutte</SelectItem>
+              <SelectItem value="project">Progetto</SelectItem>
+              <SelectItem value="contract">Contratto</SelectItem>
+              <SelectItem value="permit">Permesso</SelectItem>
+              <SelectItem value="drawing">Disegno</SelectItem>
+              <SelectItem value="photo">Foto</SelectItem>
+              <SelectItem value="report">Report</SelectItem>
+              <SelectItem value="other">Altro</SelectItem>
+            </SelectContent>
+          </Select>
+          
+          {uniqueFileTypes.length > 0 && (
+            <Select value={filterType} onValueChange={setFilterType}>
+              <SelectTrigger className="w-28">
+                <SelectValue placeholder="Tipo" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">Tutti</SelectItem>
+                {uniqueFileTypes.map(type => (
+                  <SelectItem key={type} value={type}>{type.toUpperCase()}</SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          )}
+          
+          <Select value={sortBy} onValueChange={setSortBy}>
+            <SelectTrigger className="w-36">
+              <SelectValue placeholder="Ordina" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="date_desc">Più recenti</SelectItem>
+              <SelectItem value="date_asc">Meno recenti</SelectItem>
+              <SelectItem value="name_asc">Nome A-Z</SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
       </div>
 
       {/* Document list */}
