@@ -25,6 +25,8 @@ import { format } from 'date-fns';
 import { it } from 'date-fns/locale';
 import EmptyState from '@/components/ui/EmptyState';
 import UploadDocumentDialog from './UploadDocumentDialog';
+import DocumentPreviewDialog from './DocumentPreviewDialog';
+import { Eye } from "lucide-react";
 
 const categoryLabels = {
   project: 'Progetto',
@@ -61,6 +63,7 @@ export default function DocumentList({ projectId, canUpload, currentUserEmail, u
   const [filterType, setFilterType] = useState('all');
   const [sortBy, setSortBy] = useState('date_desc');
   const [uploadDialogOpen, setUploadDialogOpen] = useState(false);
+  const [previewDocument, setPreviewDocument] = useState(null);
 
   const { data: documents = [], isLoading } = useQuery({
     queryKey: ['projectDocuments', projectId],
@@ -217,7 +220,16 @@ export default function DocumentList({ projectId, canUpload, currentUserEmail, u
                 <Button
                   variant="ghost"
                   size="icon"
+                  onClick={() => setPreviewDocument(doc)}
+                  title="Anteprima"
+                >
+                  <Eye className="h-4 w-4 text-gray-500" />
+                </Button>
+                <Button
+                  variant="ghost"
+                  size="icon"
                   asChild
+                  title="Scarica"
                 >
                   <a href={doc.file_url} target="_blank" rel="noopener noreferrer" download>
                     <Download className="h-4 w-4 text-gray-500" />
@@ -270,6 +282,12 @@ export default function DocumentList({ projectId, canUpload, currentUserEmail, u
           onUploadDialogChange?.(open);
         }}
         projectId={projectId}
+      />
+
+      <DocumentPreviewDialog
+        document={previewDocument}
+        open={!!previewDocument}
+        onOpenChange={(open) => !open && setPreviewDocument(null)}
       />
     </div>
   );
