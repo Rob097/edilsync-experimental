@@ -162,7 +162,12 @@ export default function ProjectDetail() {
 
   const status = statusConfig[project.status] || statusConfig.planning;
 
-  const isInvited = userParticipation?.status === 'invited';
+  const currentContext = user?.active_context || 'personal';
+  
+  const isInvited = userParticipation?.status === 'invited' && (
+    (userParticipation.participant_type === 'personal' && currentContext === 'personal') ||
+    (userParticipation.participant_type === 'company' && currentContext === 'company' && userParticipation.company_id === user?.active_company_id)
+  );
 
   return (
     <div className="space-y-6">
