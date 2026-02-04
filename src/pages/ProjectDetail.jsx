@@ -204,8 +204,8 @@ export default function ProjectDetail() {
       )}
 
       {/* Header */}
-      <div className="flex items-start justify-between">
-        <div>
+      <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-4">
+        <div className="flex-1 min-w-0">
           <Button
             variant="ghost"
             onClick={() => navigate(createPageUrl('Projects'))}
@@ -214,19 +214,20 @@ export default function ProjectDetail() {
             <ArrowLeft className="h-4 w-4 mr-2" />
             Progetti
           </Button>
-          <h1 className="text-2xl font-bold text-gray-900">{project.name}</h1>
-          <div className="flex items-center gap-3 mt-2">
+          <h1 className="text-2xl font-bold text-gray-900 mb-2">{project.name}</h1>
+          <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3">
             <div className="flex items-center gap-1.5 text-gray-500">
-              <MapPin className="h-4 w-4" />
-              <span>{project.address}</span>
+              <MapPin className="h-4 w-4 flex-shrink-0" />
+              <span className="break-words">{project.address}</span>
             </div>
-            <Badge className={status.color}>{status.label}</Badge>
+            <Badge className={`${status.color} w-fit`}>{status.label}</Badge>
           </div>
         </div>
         {project.owner_user_id === user?.id && (
           <Button
             variant="outline"
             onClick={() => setEditProjectDialogOpen(true)}
+            className="w-full sm:w-auto"
           >
             <Settings className="h-4 w-4 mr-2" />
             Modifica

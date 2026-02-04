@@ -90,9 +90,9 @@ export default function Layout({ children, currentPageName }) {
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Header */}
-      <header className="bg-white border-b border-gray-200 sticky top-0 z-50">
+      <header className="bg-white border-b border-gray-200 sticky top-0 z-50 pointer-events-auto">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between h-16">
+          <div className="flex items-center justify-between h-16 pointer-events-auto">
             {/* Logo */}
             <Link to={createPageUrl('Dashboard')} className="flex items-center gap-2">
               <div className="w-8 h-8 rounded-lg bg-[#ef6144] flex items-center justify-center">
@@ -138,12 +138,15 @@ export default function Layout({ children, currentPageName }) {
                 </Button>
               </Link>
 
-              <ContextSwitcher
-                currentContext={currentContext}
-                currentCompany={currentCompany}
-                companies={companies}
-                onContextChange={handleContextChange}
-              />
+              {/* Desktop Context Switcher */}
+              <div className="hidden md:block">
+                <ContextSwitcher
+                  currentContext={currentContext}
+                  currentCompany={currentCompany}
+                  companies={companies}
+                  onContextChange={handleContextChange}
+                />
+              </div>
 
               {/* User menu */}
               <DropdownMenu>
@@ -195,6 +198,14 @@ export default function Layout({ children, currentPageName }) {
         {/* Mobile Nav */}
         {mobileMenuOpen && (
           <div className="md:hidden border-t border-gray-200 bg-white">
+            <div className="px-4 py-3 border-b border-gray-200">
+              <ContextSwitcher
+                currentContext={currentContext}
+                currentCompany={currentCompany}
+                companies={companies}
+                onContextChange={handleContextChange}
+              />
+            </div>
             <nav className="px-4 py-3 space-y-1">
               {navItems.map((item) => {
                 const isActive = currentPageName === item.page;

@@ -82,8 +82,8 @@ export default function CompanyDetail() {
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="flex items-start justify-between">
-        <div>
+      <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-4">
+        <div className="flex-1 min-w-0">
           <Button
             variant="ghost"
             onClick={() => navigate(createPageUrl('Companies'))}
@@ -93,13 +93,13 @@ export default function CompanyDetail() {
             Società
           </Button>
           <div className="flex items-center gap-3">
-            <div className="w-14 h-14 rounded-xl bg-[#ef6144]/10 flex items-center justify-center">
+            <div className="w-14 h-14 rounded-xl bg-[#ef6144]/10 flex items-center justify-center flex-shrink-0">
               <Building2 className="h-7 w-7 text-[#ef6144]" />
             </div>
-            <div>
-              <h1 className="text-2xl font-bold text-gray-900">{company.name}</h1>
+            <div className="min-w-0 flex-1">
+              <h1 className="text-2xl font-bold text-gray-900 break-words">{company.name}</h1>
               {company.vat_number && (
-                <p className="text-gray-500">P.IVA: {company.vat_number}</p>
+                <p className="text-gray-500 break-words">P.IVA: {company.vat_number}</p>
               )}
             </div>
           </div>
@@ -108,6 +108,7 @@ export default function CompanyDetail() {
           <Button
             variant="outline"
             onClick={() => setEditDialogOpen(true)}
+            className="w-full sm:w-auto"
           >
             <Settings className="h-4 w-4 mr-2" />
             Modifica
