@@ -108,7 +108,7 @@ export default function ProjectDetail() {
   const canInvite = userParticipation?.can_invite || userParticipation?.project_role === 'homeowner';
   const canEditTasks = !!userParticipation;
   const canCreateChangeRequest = !!userParticipation;
-  const canRespondToChangeRequest = userParticipation?.project_role === 'homeowner' || project.owner_user_id === user?.id;
+  const canRespondToChangeRequest = userParticipation?.project_role === 'homeowner' || project?.owner_user_id === user?.id;
 
   const getCompanyName = (companyId) => {
     const company = companies.find(c => c.id === companyId);
