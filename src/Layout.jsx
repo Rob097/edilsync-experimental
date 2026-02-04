@@ -28,15 +28,6 @@ import {
 } from "lucide-react";
 import ContextSwitcher from '@/components/context/ContextSwitcher';
 
-const currentContext = user?.active_context || 'personal';
-
-const navItems = [
-  { name: 'Dashboard', icon: LayoutDashboard, page: 'Dashboard' },
-  { name: 'Progetti', icon: FolderKanban, page: 'Projects' },
-  { name: 'Calendario', icon: Calendar, page: 'Calendar' },
-  ...(currentContext === 'personal' ? [{ name: 'Società', icon: Building2, page: 'Companies' }] : []),
-];
-
 export default function Layout({ children, currentPageName }) {
   const location = useLocation();
   const queryClient = useQueryClient();
@@ -73,6 +64,15 @@ export default function Layout({ children, currentPageName }) {
   const unreadCount = notifications.length;
 
   const currentCompany = companies.find(c => c.id === user?.active_company_id);
+  
+  const currentContext = user?.active_context || 'personal';
+
+  const navItems = [
+    { name: 'Dashboard', icon: LayoutDashboard, page: 'Dashboard' },
+    { name: 'Progetti', icon: FolderKanban, page: 'Projects' },
+    { name: 'Calendario', icon: Calendar, page: 'Calendar' },
+    ...(currentContext === 'personal' ? [{ name: 'Società', icon: Building2, page: 'Companies' }] : []),
+  ];
 
   const handleContextChange = async (context, company) => {
     await base44.auth.updateMe({
