@@ -41,10 +41,55 @@ export default function Notifications() {
     queryFn: () => base44.auth.me(),
   });
 
-  const { data: notifications = [], isLoading } = useQuery({
+  const { data: companyMemberships = [] } = useQuery({
+    queryKey: ['userCompanies', user?.email],
+    queryFn: () => base44.entities.CompanyMember.filter({ user_email: user?.email, status: 'active' }),
+    enabled: !!user?.email,
+  });
+
+  const { data: allNotifications = [], isLoading } = useQuery({
     queryKey: ['allNotifications', user?.email],
     queryFn: () => base44.entities.Notification.filter({ user_email: user?.email }),
     enabled: !!user?.email,
+  });
+
+  const currentContext = user?.active_context || 'personal';
+
+  // Filter notifications based on context
+  const { data: events = [] } = useQuery({
+    queryKey: ['events'],
+    queryFn: () => base44.entities.Event.list(),
+  });
+
+  const { data: eventParticipants = [] } = useQuery({
+    queryKey: ['eventParticipants'],
+    queryFn: () => base44.entities.EventParticipant.list(),
+  });
+
+  const notifications = allNotifications.filter(notif => {
+    // If no related event, show in all contexts
+    if (!notif.related_event_id) return true;
+
+    const relatedEvent = events.find(e => e.id === notif.related_event_id);
+    if (!relatedEvent) return true;
+
+    if (currentContext === 'personal') {
+      // Show if event is personal or user is personally invited
+      return relatedEvent.owner_type === 'personal' ||
+             eventParticipants.some(p => 
+               p.event_id === relatedEvent.id && 
+               p.participant_type === 'user' && 
+               p.user_email === user?.email
+             );
+    } else {
+      // Show if event belongs to current company or company is invited
+      return relatedEvent.owner_company_id === user?.active_company_id ||
+             eventParticipants.some(p => 
+               p.event_id === relatedEvent.id && 
+               p.participant_type === 'company' && 
+               p.company_id === user?.active_company_id
+             );
+    }
   });
 
   const markAsReadMutation = useMutation({

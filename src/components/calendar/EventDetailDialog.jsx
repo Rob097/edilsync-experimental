@@ -44,12 +44,17 @@ export default function EventDetailDialog({ open, onOpenChange, event, user, com
     queryFn: () => base44.entities.Company.list(),
   });
 
+  const currentContext = user?.active_context || 'personal';
   const isCreator = event?.creator_email === user?.email;
   
-  const userParticipation = participants.find(p => 
-    p.user_email === user?.email ||
-    companyMemberships.some(m => m.company_id === p.company_id)
-  );
+  // Find participation matching current context
+  const userParticipation = participants.find(p => {
+    if (currentContext === 'personal') {
+      return p.participant_type === 'user' && p.user_email === user?.email;
+    } else {
+      return p.participant_type === 'company' && p.company_id === user?.active_company_id;
+    }
+  });
 
   const respondMutation = useMutation({
     mutationFn: async (status) => {
