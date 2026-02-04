@@ -16,28 +16,26 @@ export default function DocumentPreviewDialog({ document, open, onOpenChange }) 
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-5xl h-[90vh] p-0">
-        <DialogHeader className="px-6 py-4 border-b">
+      <DialogContent className="max-w-5xl h-[90vh] p-0 flex flex-col">
+        <DialogHeader className="px-6 py-3 border-b flex-shrink-0">
           <div className="flex items-center justify-between">
-            <DialogTitle className="text-lg font-semibold">{document.name}</DialogTitle>
-            <div className="flex items-center gap-2">
-              <Button
-                variant="outline"
-                size="sm"
-                asChild
-              >
-                <a href={document.file_url} download target="_blank" rel="noopener noreferrer">
-                  <Download className="h-4 w-4 mr-2" />
-                  Scarica
-                </a>
-              </Button>
-            </div>
+            <DialogTitle className="text-lg font-semibold truncate pr-4">{document.name}</DialogTitle>
+            <Button
+              variant="outline"
+              size="sm"
+              asChild
+            >
+              <a href={document.file_url} download target="_blank" rel="noopener noreferrer">
+                <Download className="h-4 w-4 mr-2" />
+                Scarica
+              </a>
+            </Button>
           </div>
         </DialogHeader>
         
-        <div className="flex-1 overflow-auto p-4 bg-gray-50">
+        <div className="flex-1 overflow-hidden bg-gray-50">
           {isImage ? (
-            <div className="flex items-center justify-center h-full">
+            <div className="flex items-center justify-center h-full p-4">
               <img 
                 src={document.file_url} 
                 alt={document.name}
@@ -46,12 +44,12 @@ export default function DocumentPreviewDialog({ document, open, onOpenChange }) 
             </div>
           ) : isPdf ? (
             <iframe
-              src={document.file_url}
-              className="w-full h-full rounded-lg shadow-lg bg-white"
+              src={`https://docs.google.com/viewer?url=${encodeURIComponent(document.file_url)}&embedded=true`}
+              className="w-full h-full border-0"
               title={document.name}
             />
           ) : (
-            <div className="flex flex-col items-center justify-center h-full text-center">
+            <div className="flex flex-col items-center justify-center h-full text-center p-4">
               <p className="text-gray-500 mb-4">
                 Anteprima non disponibile per questo tipo di file.
               </p>
