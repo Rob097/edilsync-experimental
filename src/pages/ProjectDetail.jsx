@@ -19,7 +19,11 @@ import {
   Settings,
   MoreVertical,
   UserPlus,
-  FileText
+  FileText,
+  CheckCircle2,
+  DollarSign,
+  MessageSquare,
+  Activity
 } from "lucide-react";
 import {
   DropdownMenu,
@@ -32,6 +36,10 @@ import { it } from 'date-fns/locale';
 import InviteParticipantDialog from '@/components/project/InviteParticipantDialog';
 import ParticipantCard from '@/components/project/ParticipantCard';
 import DocumentList from '@/components/project/DocumentList';
+import ActivityFeed from '@/components/project/ActivityFeed';
+import TaskList from '@/components/project/TaskList';
+import ChangeRequestList from '@/components/project/ChangeRequestList';
+import ProjectChat from '@/components/project/ProjectChat';
 import EmptyState from '@/components/ui/EmptyState';
 
 const statusConfig = {
@@ -48,7 +56,7 @@ export default function ProjectDetail() {
   const projectId = urlParams.get('id');
   
   const [inviteDialogOpen, setInviteDialogOpen] = useState(false);
-  const [activeTab, setActiveTab] = useState('participants');
+  const [activeTab, setActiveTab] = useState('activity');
 
   const { data: user } = useQuery({
     queryKey: ['currentUser'],
@@ -98,6 +106,9 @@ export default function ProjectDetail() {
   });
 
   const canInvite = userParticipation?.can_invite || userParticipation?.project_role === 'homeowner';
+  const canEditTasks = !!userParticipation;
+  const canCreateChangeRequest = !!userParticipation;
+  const canRespondToChangeRequest = userParticipation?.project_role === 'homeowner' || project.owner_user_id === user?.id;
 
   const getCompanyName = (companyId) => {
     const company = companies.find(c => c.id === companyId);
@@ -216,7 +227,23 @@ export default function ProjectDetail() {
 
       {/* Tabs */}
       <Tabs value={activeTab} onValueChange={setActiveTab}>
-        <TabsList className="mb-4">
+        <TabsList className="mb-4 flex-wrap h-auto">
+          <TabsTrigger value="activity" className="flex items-center gap-2">
+            <Activity className="h-4 w-4" />
+            Attività
+          </TabsTrigger>
+          <TabsTrigger value="tasks" className="flex items-center gap-2">
+            <CheckCircle2 className="h-4 w-4" />
+            Task
+          </TabsTrigger>
+          <TabsTrigger value="changes" className="flex items-center gap-2">
+            <DollarSign className="h-4 w-4" />
+            Modifiche
+          </TabsTrigger>
+          <TabsTrigger value="chat" className="flex items-center gap-2">
+            <MessageSquare className="h-4 w-4" />
+            Chat
+          </TabsTrigger>
           <TabsTrigger value="participants" className="flex items-center gap-2">
             <Users className="h-4 w-4" />
             Partecipanti
@@ -226,6 +253,26 @@ export default function ProjectDetail() {
             Documenti
           </TabsTrigger>
         </TabsList>
+
+        <TabsContent value="activity">
+          <ActivityFeed projectId={projectId} />
+        </TabsContent>
+
+        <TabsContent value="tasks">
+          <TaskList projectId={projectId} canEdit={canEditTasks} />
+        </TabsContent>
+
+        <TabsContent value="changes">
+          <ChangeRequestList 
+            projectId={projectId} 
+            canCreate={canCreateChangeRequest}
+            canRespond={canRespondToChangeRequest}
+          />
+        </TabsContent>
+
+        <TabsContent value="chat">
+          <ProjectChat projectId={projectId} />
+        </TabsContent>
 
         <TabsContent value="participants">
           <Card>
@@ -284,18 +331,11 @@ export default function ProjectDetail() {
         </TabsContent>
 
         <TabsContent value="documents">
-          <Card>
-            <CardHeader className="pb-4">
-              <CardTitle className="text-lg font-semibold">Documenti</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <DocumentList 
-                projectId={projectId}
-                canUpload={!!userParticipation}
-                currentUserEmail={user?.email}
-              />
-            </CardContent>
-          </Card>
+          <DocumentList 
+            projectId={projectId}
+            canUpload={!!userParticipation}
+            currentUserEmail={user?.email}
+          />
         </TabsContent>
       </Tabs>
 
