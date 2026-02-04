@@ -30,7 +30,7 @@ export default function ProjectCard({ project, userRole, participantCount }) {
 
   return (
     <Link to={createPageUrl('ProjectDetail') + `?id=${project.id}`}>
-      <Card className="bg-card !my-2 text-card-foreground rounded-xl border shadow hover:shadow-md transition-all duration-200 border-gray-200 hover:border-[#ef6144]/30 cursor-pointer">
+      <Card className="my-2 bg-card text-card-foreground rounded-xl border shadow hover:shadow-md transition-all duration-200 border-gray-200 hover:border-[#ef6144]/30 cursor-pointer">
         <CardContent className="p-5">
           <div className="flex items-start justify-between mb-3">
             <div>
