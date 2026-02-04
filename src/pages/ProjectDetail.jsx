@@ -24,7 +24,11 @@ import {
   DollarSign,
   MessageSquare,
   Activity,
-  Flag
+  Flag,
+  Camera,
+  Upload,
+  AlertCircle,
+  Clock
 } from "lucide-react";
 import {
   DropdownMenu,
@@ -44,6 +48,12 @@ import ProjectChat from '@/components/project/ProjectChat';
 import EmptyState from '@/components/ui/EmptyState';
 import EditProjectDialog from '@/components/project/EditProjectDialog';
 import MilestoneList from '@/components/project/MilestoneList';
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 
 const statusConfig = {
   planning: { label: 'Pianificazione', color: 'bg-blue-100 text-blue-700' },
@@ -60,7 +70,8 @@ export default function ProjectDetail() {
   
   const [inviteDialogOpen, setInviteDialogOpen] = useState(false);
   const [editProjectDialogOpen, setEditProjectDialogOpen] = useState(false);
-  const [activeTab, setActiveTab] = useState('activity');
+  const [activeTab, setActiveTab] = useState('cantiere');
+  const [quickActionOpen, setQuickActionOpen] = useState(false);
 
   const acceptInviteMutation = useMutation({
     mutationFn: (participantId) => base44.entities.ProjectParticipant.update(participantId, { status: 'active' }),
@@ -138,6 +149,15 @@ export default function ProjectDetail() {
 
   const activeParticipants = participants.filter(p => p.status === 'active');
   const invitedParticipants = participants.filter(p => p.status === 'invited');
+
+  // Get blocked tasks
+  const { data: allTasks = [] } = useQuery({
+    queryKey: ['tasks', projectId],
+    queryFn: () => base44.entities.Task.filter({ project_id: projectId }),
+    enabled: !!projectId,
+  });
+  
+  const blockedTasks = allTasks.filter(t => t.status === 'blocked');
 
   if (projectLoading) {
     return (
@@ -295,64 +315,99 @@ export default function ProjectDetail() {
         </Card>
       )}
 
+      {/* Blocked Banner */}
+      {blockedTasks.length > 0 && (
+        <Card className="border-red-300 bg-red-50">
+          <CardContent className="p-4">
+            <div className="flex items-start gap-3">
+              <AlertCircle className="h-5 w-5 text-red-600 mt-0.5 flex-shrink-0" />
+              <div className="flex-1">
+                <h3 className="font-semibold text-red-900">Cantiere Fermo</h3>
+                <p className="text-sm text-red-700 mt-1">
+                  {blockedTasks.length === 1 
+                    ? `1 attività bloccata` 
+                    : `${blockedTasks.length} attività bloccate`}
+                  {blockedTasks[0]?.blocked_by_name && ` • In attesa di ${blockedTasks[0].blocked_by_name}`}
+                </p>
+                <Button
+                  variant="link"
+                  className="text-red-700 hover:text-red-900 p-0 h-auto mt-1"
+                  onClick={() => setActiveTab('lavori')}
+                >
+                  Vedi dettagli →
+                </Button>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      )}
+
       {/* Tabs */}
       <Tabs value={activeTab} onValueChange={setActiveTab}>
         <TabsList className="mb-4 flex-wrap h-auto">
-          <TabsTrigger value="activity" className="flex items-center gap-2">
+          <TabsTrigger value="cantiere" className="flex items-center gap-2">
             <Activity className="h-4 w-4" />
-            Attività
+            Cantiere
           </TabsTrigger>
-          <TabsTrigger value="milestones" className="flex items-center gap-2">
-            <Flag className="h-4 w-4" />
-            Milestones
-          </TabsTrigger>
-          <TabsTrigger value="tasks" className="flex items-center gap-2">
+          <TabsTrigger value="lavori" className="flex items-center gap-2">
             <CheckCircle2 className="h-4 w-4" />
-            Task
+            Lavori
           </TabsTrigger>
-          <TabsTrigger value="changes" className="flex items-center gap-2">
-            <DollarSign className="h-4 w-4" />
-            Modifiche
-          </TabsTrigger>
-          <TabsTrigger value="chat" className="flex items-center gap-2">
-            <MessageSquare className="h-4 w-4" />
-            Chat
-          </TabsTrigger>
-          <TabsTrigger value="participants" className="flex items-center gap-2">
+          <TabsTrigger value="info" className="flex items-center gap-2">
             <Users className="h-4 w-4" />
-            Partecipanti
-          </TabsTrigger>
-          <TabsTrigger value="documents" className="flex items-center gap-2">
-            <FileText className="h-4 w-4" />
-            Documenti
+            Info & Team
           </TabsTrigger>
         </TabsList>
 
-        <TabsContent value="activity">
+        {/* CANTIERE TAB - Il Feed */}
+        <TabsContent value="cantiere" className="space-y-4">
           <ActivityFeed projectId={projectId} />
         </TabsContent>
 
-        <TabsContent value="milestones">
-          <MilestoneList projectId={projectId} canEdit={canEditTasks} />
+        {/* LAVORI TAB - Task e Change Requests */}
+        <TabsContent value="lavori" className="space-y-6">
+          <div>
+            <div className="flex items-center justify-between mb-4">
+              <h3 className="text-lg font-semibold">Attività in Corso</h3>
+            </div>
+            <TaskList projectId={projectId} canEdit={canEditTasks} />
+          </div>
+          
+          <div className="border-t pt-6">
+            <div className="flex items-center justify-between mb-4">
+              <h3 className="text-lg font-semibold">Modifiche & Extra</h3>
+            </div>
+            <ChangeRequestList 
+              projectId={projectId} 
+              canCreate={canCreateChangeRequest}
+              canRespond={canRespondToChangeRequest}
+            />
+          </div>
+
+          <div className="border-t pt-6">
+            <div className="flex items-center justify-between mb-4">
+              <h3 className="text-lg font-semibold">Milestones</h3>
+            </div>
+            <MilestoneList projectId={projectId} canEdit={canEditTasks} />
+          </div>
         </TabsContent>
 
-        <TabsContent value="tasks">
-          <TaskList projectId={projectId} canEdit={canEditTasks} />
-        </TabsContent>
+        {/* INFO & TEAM TAB */}
+        <TabsContent value="info" className="space-y-6">
+          {/* Chat Section */}
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <MessageSquare className="h-5 w-5" />
+                Chat di Cantiere
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <ProjectChat projectId={projectId} />
+            </CardContent>
+          </Card>
 
-        <TabsContent value="changes">
-          <ChangeRequestList 
-            projectId={projectId} 
-            canCreate={canCreateChangeRequest}
-            canRespond={canRespondToChangeRequest}
-          />
-        </TabsContent>
-
-        <TabsContent value="chat">
-          <ProjectChat projectId={projectId} />
-        </TabsContent>
-
-        <TabsContent value="participants">
+          {/* Participants Section */}
           <Card>
             <CardHeader className="flex flex-row items-center justify-between pb-4">
               <CardTitle className="text-lg font-semibold">Partecipanti</CardTitle>
@@ -406,16 +461,72 @@ export default function ProjectDetail() {
               )}
             </CardContent>
           </Card>
-        </TabsContent>
 
-        <TabsContent value="documents">
-          <DocumentList 
-            projectId={projectId}
-            canUpload={!!userParticipation}
-            currentUserEmail={user?.email}
-          />
+          {/* Documents Section */}
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <FileText className="h-5 w-5" />
+                Documenti
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <DocumentList 
+                projectId={projectId}
+                canUpload={!!userParticipation}
+                currentUserEmail={user?.email}
+              />
+            </CardContent>
+          </Card>
         </TabsContent>
       </Tabs>
+
+      {/* Quick Action FAB */}
+      {userParticipation && (
+        <button
+          onClick={() => setQuickActionOpen(!quickActionOpen)}
+          className="fixed bottom-6 right-6 w-14 h-14 rounded-full bg-[#ef6144] hover:bg-[#d9553a] text-white shadow-lg flex items-center justify-center z-50 transition-transform hover:scale-110"
+        >
+          <Plus className={`h-6 w-6 transition-transform ${quickActionOpen ? 'rotate-45' : ''}`} />
+        </button>
+      )}
+
+      {/* Quick Action Menu */}
+      {quickActionOpen && (
+        <div className="fixed bottom-24 right-6 bg-white rounded-lg shadow-xl border p-2 z-50 min-w-[200px]">
+          <button
+            onClick={() => {
+              setQuickActionOpen(false);
+              setActiveTab('cantiere');
+              // Trigger photo upload in ActivityFeed
+            }}
+            className="w-full flex items-center gap-3 px-4 py-3 hover:bg-gray-50 rounded-lg text-left transition-colors"
+          >
+            <Camera className="h-5 w-5 text-[#ef6144]" />
+            <span className="font-medium">Carica Foto</span>
+          </button>
+          <button
+            onClick={() => {
+              setQuickActionOpen(false);
+              setActiveTab('lavori');
+            }}
+            className="w-full flex items-center gap-3 px-4 py-3 hover:bg-gray-50 rounded-lg text-left transition-colors"
+          >
+            <CheckCircle2 className="h-5 w-5 text-[#ef6144]" />
+            <span className="font-medium">Aggiorna Task</span>
+          </button>
+          <button
+            onClick={() => {
+              setQuickActionOpen(false);
+              setActiveTab('lavori');
+            }}
+            className="w-full flex items-center gap-3 px-4 py-3 hover:bg-gray-50 rounded-lg text-left transition-colors"
+          >
+            <DollarSign className="h-5 w-5 text-[#ef6144]" />
+            <span className="font-medium">Nuova Modifica</span>
+          </button>
+        </div>
+      )}
 
       <InviteParticipantDialog
         open={inviteDialogOpen}
