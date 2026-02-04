@@ -6,10 +6,26 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import { Download, X } from "lucide-react";
+import { Download, X, ChevronLeft, ChevronRight } from "lucide-react";
 
-export default function DocumentPreviewDialog({ document, open, onOpenChange }) {
+export default function DocumentPreviewDialog({ document, open, onOpenChange, allDocuments = [], onNavigate }) {
   if (!document) return null;
+
+  const currentIndex = allDocuments.findIndex(doc => doc.id === document.id);
+  const hasPrevious = currentIndex > 0;
+  const hasNext = currentIndex < allDocuments.length - 1;
+
+  const handlePrevious = () => {
+    if (hasPrevious && onNavigate) {
+      onNavigate(allDocuments[currentIndex - 1]);
+    }
+  };
+
+  const handleNext = () => {
+    if (hasNext && onNavigate) {
+      onNavigate(allDocuments[currentIndex + 1]);
+    }
+  };
 
   const isImage = ['jpg', 'jpeg', 'png', 'gif', 'webp'].includes(document.file_type?.toLowerCase());
   const isPdf = document.file_type?.toLowerCase() === 'pdf';
@@ -18,12 +34,33 @@ export default function DocumentPreviewDialog({ document, open, onOpenChange }) 
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-5xl h-[90vh] p-0 flex flex-col">
         <DialogHeader className="px-6 py-3 border-b flex-shrink-0">
-          <div className="flex items-center justify-between">
-            <DialogTitle className="text-lg font-semibold truncate pr-4">{document.name}</DialogTitle>
+          <div className="flex items-center justify-between gap-4">
+            <div className="flex items-center gap-2 flex-1 min-w-0">
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={handlePrevious}
+                disabled={!hasPrevious}
+                className="flex-shrink-0"
+              >
+                <ChevronLeft className="h-5 w-5" />
+              </Button>
+              <DialogTitle className="text-lg font-semibold truncate flex-1">{document.name}</DialogTitle>
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={handleNext}
+                disabled={!hasNext}
+                className="flex-shrink-0"
+              >
+                <ChevronRight className="h-5 w-5" />
+              </Button>
+            </div>
             <Button
               variant="outline"
               size="sm"
               asChild
+              className="flex-shrink-0"
             >
               <a href={document.file_url} download target="_blank" rel="noopener noreferrer">
                 <Download className="h-4 w-4 mr-2" />

@@ -288,6 +288,8 @@ export default function DocumentList({ projectId, canUpload, currentUserEmail, u
         document={previewDocument}
         open={!!previewDocument}
         onOpenChange={(open) => !open && setPreviewDocument(null)}
+        allDocuments={sortedDocuments}
+        onNavigate={setPreviewDocument}
       />
     </div>
   );
