@@ -24,7 +24,8 @@ import {
   ChevronDown,
   Check,
   Calendar,
-  Bell
+  Bell,
+  HardHat
 } from "lucide-react";
 import ContextSwitcher from '@/components/context/ContextSwitcher';
 
@@ -100,7 +101,7 @@ export default function Layout({ children, currentPageName }) {
             {/* Logo */}
             <Link to={createPageUrl('Dashboard')} className="flex items-center gap-2">
               <div className="w-8 h-8 rounded-lg bg-[#ef6144] flex items-center justify-center">
-                <span className="text-white font-bold text-sm">ES</span>
+                <HardHat className="h-5 w-5 text-white" />
               </div>
               <span className="font-semibold text-xl text-gray-900 hidden sm:block">EdilSync</span>
             </Link>
