@@ -58,7 +58,7 @@ export default function CompanyDetail() {
   const activeMembers = members.filter(m => m.status === 'active');
   const invitedMembers = members.filter(m => m.status === 'invited');
 
-  if (companyLoading) {
+  if (companyLoading || !user) {
     return (
       <div className="space-y-6">
         <Skeleton className="h-8 w-48" />
