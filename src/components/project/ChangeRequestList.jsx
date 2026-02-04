@@ -18,10 +18,18 @@ const statusConfig = {
   clarification_needed: { label: 'Chiarimenti', color: 'bg-orange-100 text-orange-700', icon: AlertTriangle },
 };
 
-export default function ChangeRequestList({ projectId, canCreate, canRespond }) {
+export default function ChangeRequestList({ projectId, canCreate, canRespond, triggerCreate }) {
   const queryClient = useQueryClient();
   const [dialogOpen, setDialogOpen] = useState(false);
   const [selectedRequest, setSelectedRequest] = useState(null);
+
+  // External trigger for opening create dialog
+  React.useEffect(() => {
+    if (triggerCreate) {
+      setSelectedRequest(null);
+      setDialogOpen(true);
+    }
+  }, [triggerCreate]);
 
   const { data: changeRequests = [], isLoading } = useQuery({
     queryKey: ['changeRequests', projectId],

@@ -54,13 +54,20 @@ const formatFileSize = (bytes) => {
   return (bytes / (1024 * 1024)).toFixed(1) + ' MB';
 };
 
-export default function DocumentList({ projectId, canUpload, currentUserEmail }) {
+export default function DocumentList({ projectId, canUpload, currentUserEmail, triggerUpload }) {
   const queryClient = useQueryClient();
   const [searchQuery, setSearchQuery] = useState('');
   const [filterCategory, setFilterCategory] = useState('all');
   const [filterType, setFilterType] = useState('all');
   const [sortBy, setSortBy] = useState('date_desc');
   const [uploadDialogOpen, setUploadDialogOpen] = useState(false);
+
+  // External trigger for opening upload dialog
+  React.useEffect(() => {
+    if (triggerUpload) {
+      setUploadDialogOpen(true);
+    }
+  }, [triggerUpload]);
 
   const { data: documents = [], isLoading } = useQuery({
     queryKey: ['projectDocuments', projectId],

@@ -74,6 +74,8 @@ export default function ProjectDetail() {
   const [quickActionOpen, setQuickActionOpen] = useState(false);
   const [lavoriSection, setLavoriSection] = useState('all');
   const [infoSection, setInfoSection] = useState('all');
+  const [triggerDocumentUpload, setTriggerDocumentUpload] = useState(0);
+  const [triggerChangeCreate, setTriggerChangeCreate] = useState(0);
 
   const acceptInviteMutation = useMutation({
     mutationFn: (participantId) => base44.entities.ProjectParticipant.update(participantId, { status: 'active' }),
@@ -461,6 +463,7 @@ export default function ProjectDetail() {
                 projectId={projectId} 
                 canCreate={canCreateChangeRequest}
                 canRespond={canRespondToChangeRequest}
+                triggerCreate={triggerChangeCreate}
               />
             </div>
           )}
@@ -596,6 +599,7 @@ export default function ProjectDetail() {
                   projectId={projectId}
                   canUpload={!!userParticipation}
                   currentUserEmail={user?.email}
+                  triggerUpload={triggerDocumentUpload}
                 />
               </CardContent>
             </Card>
@@ -620,11 +624,12 @@ export default function ProjectDetail() {
             onClick={() => {
               setQuickActionOpen(false);
               navigateToSection('info', 'documents');
+              setTimeout(() => setTriggerDocumentUpload(prev => prev + 1), 200);
             }}
             className="w-full flex items-center gap-3 px-4 py-3 hover:bg-gray-50 rounded-lg text-left transition-colors"
           >
-            <Camera className="h-5 w-5 text-[#ef6144]" />
-            <span className="font-medium">Carica Foto</span>
+            <Upload className="h-5 w-5 text-[#ef6144]" />
+            <span className="font-medium">Carica Allegato</span>
           </button>
           <button
             onClick={() => {
@@ -640,6 +645,7 @@ export default function ProjectDetail() {
             onClick={() => {
               setQuickActionOpen(false);
               navigateToSection('lavori', 'changes');
+              setTimeout(() => setTriggerChangeCreate(prev => prev + 1), 200);
             }}
             className="w-full flex items-center gap-3 px-4 py-3 hover:bg-gray-50 rounded-lg text-left transition-colors"
           >
