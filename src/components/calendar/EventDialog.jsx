@@ -184,6 +184,23 @@ export default function EventDialog({
 
       const eventId = event ? event.id : newEvent.id;
 
+      // If updating event, notify participants
+      if (event) {
+        const existingParticipants = allParticipants.filter(p => p.event_id === event.id);
+        for (const p of existingParticipants) {
+          if (p.user_email) {
+            await base44.entities.Notification.create({
+              user_email: p.user_email,
+              type: 'event_updated',
+              title: 'Evento modificato',
+              message: `L'evento "${formData.title}" è stato modificato.`,
+              related_event_id: eventId,
+              is_read: false,
+            });
+          }
+        }
+      }
+
       // Create participants
       if (!event) {
         for (const p of participants) {

@@ -20,6 +20,7 @@ import {
 import EmptyState from '@/components/ui/EmptyState';
 import InviteMemberDialog from '@/components/company/InviteMemberDialog';
 import MemberCard from '@/components/company/MemberCard';
+import EditCompanyDialog from '@/components/company/EditCompanyDialog';
 
 export default function CompanyDetail() {
   const navigate = useNavigate();
@@ -28,6 +29,7 @@ export default function CompanyDetail() {
   const companyId = urlParams.get('id');
   
   const [inviteDialogOpen, setInviteDialogOpen] = useState(false);
+  const [editDialogOpen, setEditDialogOpen] = useState(false);
 
   const { data: user } = useQuery({
     queryKey: ['currentUser'],
@@ -102,6 +104,15 @@ export default function CompanyDetail() {
             </div>
           </div>
         </div>
+        {isAdmin && (
+          <Button
+            variant="outline"
+            onClick={() => setEditDialogOpen(true)}
+          >
+            <Settings className="h-4 w-4 mr-2" />
+            Modifica
+          </Button>
+        )}
       </div>
 
       {/* Info Cards */}
@@ -220,6 +231,12 @@ export default function CompanyDetail() {
         open={inviteDialogOpen}
         onOpenChange={setInviteDialogOpen}
         companyId={companyId}
+      />
+
+      <EditCompanyDialog
+        open={editDialogOpen}
+        onOpenChange={setEditDialogOpen}
+        company={company}
       />
     </div>
   );

@@ -28,11 +28,13 @@ import {
 } from "lucide-react";
 import ContextSwitcher from '@/components/context/ContextSwitcher';
 
+const currentContext = user?.active_context || 'personal';
+
 const navItems = [
   { name: 'Dashboard', icon: LayoutDashboard, page: 'Dashboard' },
   { name: 'Progetti', icon: FolderKanban, page: 'Projects' },
   { name: 'Calendario', icon: Calendar, page: 'Calendar' },
-  { name: 'Società', icon: Building2, page: 'Companies' },
+  ...(currentContext === 'personal' ? [{ name: 'Società', icon: Building2, page: 'Companies' }] : []),
 ];
 
 export default function Layout({ children, currentPageName }) {
@@ -70,7 +72,6 @@ export default function Layout({ children, currentPageName }) {
 
   const unreadCount = notifications.length;
 
-  const currentContext = user?.active_context || 'personal';
   const currentCompany = companies.find(c => c.id === user?.active_company_id);
 
   const handleContextChange = async (context, company) => {

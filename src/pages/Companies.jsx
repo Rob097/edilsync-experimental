@@ -18,6 +18,15 @@ export default function Companies() {
     queryFn: () => base44.auth.me(),
   });
 
+  const currentContext = user?.active_context || 'personal';
+
+  // If in company context, redirect to company detail
+  React.useEffect(() => {
+    if (currentContext === 'company' && user?.active_company_id) {
+      window.location.href = createPageUrl('CompanyDetail') + `?id=${user.active_company_id}`;
+    }
+  }, [currentContext, user?.active_company_id]);
+
   const { data: companyMemberships = [] } = useQuery({
     queryKey: ['userCompanies', user?.email],
     queryFn: () => base44.entities.CompanyMember.filter({ user_email: user?.email, status: 'active' }),
@@ -62,12 +71,14 @@ export default function Companies() {
           <h1 className="text-2xl font-bold text-gray-900">Le tue Società</h1>
           <p className="text-gray-500 mt-1">Gestisci le società di cui fai parte</p>
         </div>
-        <Link to={createPageUrl('NewCompany')}>
-          <Button className="bg-[#ef6144] hover:bg-[#d9553a]">
-            <Plus className="h-4 w-4 mr-2" />
-            Nuova Società
-          </Button>
-        </Link>
+        {currentContext === 'personal' && (
+          <Link to={createPageUrl('NewCompany')}>
+            <Button className="bg-[#ef6144] hover:bg-[#d9553a]">
+              <Plus className="h-4 w-4 mr-2" />
+              Nuova Società
+            </Button>
+          </Link>
+        )}
       </div>
 
       {/* Search */}

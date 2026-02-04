@@ -30,7 +30,7 @@ const statusLabels = {
   declined: { label: 'Rifiutato', color: 'bg-red-100 text-red-700' },
 };
 
-export default function EventDetailDialog({ open, onOpenChange, event, user, companyMemberships }) {
+export default function EventDetailDialog({ open, onOpenChange, event, user, companyMemberships, onEdit }) {
   const queryClient = useQueryClient();
 
   const { data: participants = [] } = useQuery({
@@ -246,19 +246,31 @@ export default function EventDetailDialog({ open, onOpenChange, event, user, com
 
           {/* Creator actions */}
           {isCreator && (
-            <Button
-              variant="destructive"
-              onClick={() => cancelEventMutation.mutate()}
-              disabled={cancelEventMutation.isPending}
-              className="w-full"
-            >
-              {cancelEventMutation.isPending ? (
-                <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-              ) : (
-                <Trash2 className="h-4 w-4 mr-2" />
-              )}
-              Cancella evento
-            </Button>
+            <div className="space-y-2">
+              <Button
+                variant="outline"
+                onClick={() => {
+                  onOpenChange(false);
+                  onEdit(event);
+                }}
+                className="w-full"
+              >
+                Modifica evento
+              </Button>
+              <Button
+                variant="destructive"
+                onClick={() => cancelEventMutation.mutate()}
+                disabled={cancelEventMutation.isPending}
+                className="w-full"
+              >
+                {cancelEventMutation.isPending ? (
+                  <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                ) : (
+                  <Trash2 className="h-4 w-4 mr-2" />
+                )}
+                Cancella evento
+              </Button>
+            </div>
           )}
 
           {/* Remove myself (if participant, not creator) */}
