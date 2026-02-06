@@ -48,6 +48,7 @@ import ProjectChat from '@/components/project/ProjectChat';
 import EmptyState from '@/components/ui/EmptyState';
 import EditProjectDialog from '@/components/project/EditProjectDialog';
 import MilestoneList from '@/components/project/MilestoneList';
+import ProjectOverview from '@/components/project/ProjectOverview';
 import {
   Dialog,
   DialogContent,
@@ -389,8 +390,13 @@ export default function ProjectDetail() {
           </TabsTrigger>
         </TabsList>
 
-        {/* CANTIERE TAB - Il Feed */}
-        <TabsContent value="cantiere" className="space-y-4">
+        {/* CANTIERE TAB - Panoramica e Feed */}
+        <TabsContent value="cantiere" className="space-y-6">
+          <ProjectOverview 
+            projectId={projectId}
+            onNavigate={navigateToSection}
+          />
+          
           <ActivityFeed 
             projectId={projectId} 
             onItemClick={(type, itemId) => {

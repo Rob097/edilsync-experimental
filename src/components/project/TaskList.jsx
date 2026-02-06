@@ -5,11 +5,12 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Plus, CheckCircle2, Clock, AlertCircle, Play } from "lucide-react";
+import { Plus, CheckCircle2, Clock, AlertCircle, Play, List, Grid3x3 } from "lucide-react";
 import { format } from 'date-fns';
 import { it } from 'date-fns/locale';
 import EmptyState from '@/components/ui/EmptyState';
 import TaskDialog from './TaskDialog';
+import TaskBoard from './TaskBoard';
 
 const statusConfig = {
   not_started: { label: 'Non iniziato', color: 'bg-gray-100 text-gray-700', icon: Clock },
@@ -22,6 +23,7 @@ export default function TaskList({ projectId, canEdit }) {
   const queryClient = useQueryClient();
   const [dialogOpen, setDialogOpen] = useState(false);
   const [selectedTask, setSelectedTask] = useState(null);
+  const [viewMode, setViewMode] = useState('list'); // 'list' or 'board'
 
   const { data: tasks = [], isLoading } = useQuery({
     queryKey: ['tasks', projectId],
@@ -44,11 +46,37 @@ export default function TaskList({ projectId, canEdit }) {
     return statusOrder[a.status] - statusOrder[b.status];
   });
 
+  if (viewMode === 'board') {
+    return <TaskBoard projectId={projectId} canEdit={canEdit} />;
+  }
+
   return (
     <>
       <Card>
         <CardHeader className="flex flex-row items-center justify-between pb-4">
-          <CardTitle>Task</CardTitle>
+          <div className="flex items-center gap-3">
+            <CardTitle>Task</CardTitle>
+            <div className="flex gap-1">
+              <Button
+                variant={viewMode === 'list' ? 'default' : 'outline'}
+                size="icon"
+                onClick={() => setViewMode('list')}
+                className={viewMode === 'list' ? 'bg-[#ef6144] hover:bg-[#d9553a] h-8 w-8' : 'h-8 w-8'}
+                title="Vista lista"
+              >
+                <List className="h-4 w-4" />
+              </Button>
+              <Button
+                variant={viewMode === 'board' ? 'default' : 'outline'}
+                size="icon"
+                onClick={() => setViewMode('board')}
+                className={viewMode === 'board' ? 'bg-[#ef6144] hover:bg-[#d9553a] h-8 w-8' : 'h-8 w-8'}
+                title="Vista board"
+              >
+                <Grid3x3 className="h-4 w-4" />
+              </Button>
+            </div>
+          </div>
           {canEdit && (
             <Button onClick={handleCreate} size="sm" className="bg-[#ef6144] hover:bg-[#d9553a]">
               <Plus className="h-4 w-4 mr-1" />

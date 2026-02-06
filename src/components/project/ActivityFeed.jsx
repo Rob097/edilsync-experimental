@@ -14,7 +14,7 @@ import {
   Calendar,
   DollarSign
 } from "lucide-react";
-import { format } from 'date-fns';
+import { format, startOfDay, isToday, isYesterday } from 'date-fns';
 import { it } from 'date-fns/locale';
 import EmptyState from '@/components/ui/EmptyState';
 
@@ -121,6 +121,29 @@ export default function ActivityFeed({ projectId, onItemClick }) {
     return items.sort((a, b) => new Date(b.date) - new Date(a.date));
   }, [tasks, changeRequests, messages, documents, events]);
 
+  // Group activities by day
+  const groupedActivities = useMemo(() => {
+    const groups = {};
+    activities.forEach(activity => {
+      const activityDate = new Date(activity.date);
+      const dayKey = startOfDay(activityDate).toISOString();
+      if (!groups[dayKey]) {
+        groups[dayKey] = {
+          date: activityDate,
+          items: []
+        };
+      }
+      groups[dayKey].items.push(activity);
+    });
+    return Object.values(groups).sort((a, b) => b.date - a.date);
+  }, [activities]);
+
+  const getDayLabel = (date) => {
+    if (isToday(date)) return 'Oggi';
+    if (isYesterday(date)) return 'Ieri';
+    return format(date, 'dd MMMM yyyy', { locale: it });
+  };
+
   const isLoading = false;
 
   const handleItemClick = (activity) => {
@@ -148,28 +171,41 @@ export default function ActivityFeed({ projectId, onItemClick }) {
             {[1, 2, 3].map(i => <Skeleton key={i} className="h-16 w-full" />)}
           </div>
         ) : activities.length > 0 ? (
-          <div className="space-y-3">
-            {activities.map(activity => {
-              const Icon = activity.icon;
-              return (
-                <div 
-                  key={activity.id} 
-                  onClick={() => handleItemClick(activity)}
-                  className="flex items-start gap-3 p-3 rounded-lg border bg-white hover:bg-gray-50 transition-colors cursor-pointer"
-                >
-                  <div className={`w-10 h-10 rounded-lg bg-gray-100 flex items-center justify-center flex-shrink-0 ${activity.color}`}>
-                    <Icon className="h-5 w-5" />
-                  </div>
-                  <div className="flex-1 min-w-0">
-                    <p className="font-medium text-sm">{activity.title}</p>
-                    <p className="text-sm text-gray-500">{activity.description}</p>
-                    <p className="text-xs text-gray-400 mt-1">
-                      {format(new Date(activity.date), 'dd MMM yyyy, HH:mm', { locale: it })}
-                    </p>
-                  </div>
+          <div className="space-y-6">
+            {groupedActivities.map((group, groupIdx) => (
+              <div key={groupIdx}>
+                <div className="flex items-center gap-2 mb-3">
+                  <div className="h-px bg-gray-200 flex-1" />
+                  <span className="text-xs font-medium text-gray-500 px-2">
+                    {getDayLabel(group.date)}
+                  </span>
+                  <div className="h-px bg-gray-200 flex-1" />
                 </div>
-              );
-            })}
+                <div className="space-y-2">
+                  {group.items.map(activity => {
+                    const Icon = activity.icon;
+                    return (
+                      <div 
+                        key={activity.id} 
+                        onClick={() => handleItemClick(activity)}
+                        className="flex items-start gap-3 p-3 rounded-lg border bg-white hover:bg-gray-50 transition-colors cursor-pointer"
+                      >
+                        <div className={`w-10 h-10 rounded-lg bg-gray-100 flex items-center justify-center flex-shrink-0 ${activity.color}`}>
+                          <Icon className="h-5 w-5" />
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <p className="font-medium text-sm">{activity.title}</p>
+                          <p className="text-sm text-gray-500">{activity.description}</p>
+                          <p className="text-xs text-gray-400 mt-1">
+                            {format(new Date(activity.date), 'HH:mm', { locale: it })}
+                          </p>
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+            ))}
           </div>
         ) : (
           <EmptyState

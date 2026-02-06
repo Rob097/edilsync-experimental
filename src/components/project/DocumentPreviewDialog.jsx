@@ -9,6 +9,8 @@ import { Button } from "@/components/ui/button";
 import { Download, X, ChevronLeft, ChevronRight } from "lucide-react";
 
 export default function DocumentPreviewDialog({ document, open, onOpenChange, allDocuments = [], onNavigate }) {
+  const [activeTab, setActiveTab] = useState('preview');
+  
   if (!document) return null;
 
   const currentIndex = allDocuments.findIndex(doc => doc.id === document.id);
