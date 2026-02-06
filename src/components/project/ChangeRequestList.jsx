@@ -57,7 +57,13 @@ export default function ChangeRequestList({ projectId, canCreate, canRespond, cr
           )}
         </CardHeader>
         <CardContent>
-          {isLoading ? (
+          {viewMode === 'board' ? (
+            <ChangeRequestBoard 
+              projectId={projectId}
+              canCreateOrRespond={canCreateOrRespond}
+              currentUserEmail={currentUserEmail}
+            />
+          ) : isLoading ? (
             <div className="space-y-3">
               {[1, 2, 3].map(i => <Skeleton key={i} className="h-24 w-full" />)}
             </div>
@@ -119,7 +125,7 @@ export default function ChangeRequestList({ projectId, canCreate, canRespond, cr
               actionLabel={canCreate ? "Crea richiesta" : undefined}
               onAction={canCreate ? handleCreate : undefined}
             />
-          )}
+          ))}
         </CardContent>
       </Card>
 

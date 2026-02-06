@@ -132,7 +132,7 @@ export default function MilestoneList({ projectId, canEdit }) {
               actionLabel={canEdit ? "Aggiungi milestone" : undefined}
               onAction={canEdit ? () => setDialogOpen(true) : undefined}
             />
-          )}
+          ))}
         </CardContent>
       </Card>
 

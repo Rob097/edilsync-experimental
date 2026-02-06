@@ -23,7 +23,7 @@ export default function TaskList({ projectId, canEdit }) {
   const queryClient = useQueryClient();
   const [dialogOpen, setDialogOpen] = useState(false);
   const [selectedTask, setSelectedTask] = useState(null);
-  const [viewMode, setViewMode] = useState('list'); // 'list' or 'board'
+  const [viewMode, setViewMode] = useState('board'); // 'list' or 'board'
 
   const { data: tasks = [], isLoading } = useQuery({
     queryKey: ['tasks', projectId],
@@ -46,16 +46,12 @@ export default function TaskList({ projectId, canEdit }) {
     return statusOrder[a.status] - statusOrder[b.status];
   });
 
-  if (viewMode === 'board') {
-    return <TaskBoard projectId={projectId} canEdit={canEdit} />;
-  }
-
   return (
     <>
       <Card>
         <CardHeader className="flex flex-row items-center justify-between pb-4">
           <div className="flex items-center gap-3">
-            <CardTitle>Task</CardTitle>
+            <CardTitle>Attività</CardTitle>
             <div className="flex gap-1">
               <Button
                 variant={viewMode === 'list' ? 'default' : 'outline'}
@@ -80,7 +76,7 @@ export default function TaskList({ projectId, canEdit }) {
           {canEdit && (
             <Button onClick={handleCreate} size="sm" className="bg-[#ef6144] hover:bg-[#d9553a]">
               <Plus className="h-4 w-4 mr-1" />
-              Nuovo Task
+              Nuova Attività
             </Button>
           )}
         </CardHeader>

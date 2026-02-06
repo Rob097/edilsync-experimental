@@ -4,63 +4,54 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Plus, Clock, AlertCircle, User, Calendar } from "lucide-react";
+import { DollarSign, Clock, CheckCircle2, XCircle, AlertCircle } from "lucide-react";
 import { DragDropContext, Droppable, Draggable } from '@hello-pangea/dnd';
 import { format } from 'date-fns';
 import { it } from 'date-fns/locale';
-import TaskDialog from './TaskDialog';
+import ChangeRequestDialog from './ChangeRequestDialog';
 import EmptyState from '@/components/ui/EmptyState';
 
 const columns = [
-  { id: 'not_started', label: 'Da Iniziare', color: 'bg-gray-100' },
-  { id: 'in_progress', label: 'In Corso', color: 'bg-blue-100' },
-  { id: 'completed', label: 'Completato', color: 'bg-green-100' },
-  { id: 'blocked', label: 'Bloccato', color: 'bg-red-100' },
+  { id: 'pending', label: 'In Attesa', color: 'bg-yellow-100', icon: Clock },
+  { id: 'approved', label: 'Approvata', color: 'bg-green-100', icon: CheckCircle2 },
+  { id: 'clarification_needed', label: 'Chiarimenti', color: 'bg-blue-100', icon: AlertCircle },
+  { id: 'rejected', label: 'Rifiutata', color: 'bg-red-100', icon: XCircle },
 ];
 
-export default function TaskBoard({ projectId, canEdit, onTaskCreate }) {
+export default function ChangeRequestBoard({ projectId, canCreateOrRespond, currentUserEmail }) {
   const queryClient = useQueryClient();
   const [dialogOpen, setDialogOpen] = useState(false);
-  const [selectedTask, setSelectedTask] = useState(null);
+  const [selectedRequest, setSelectedRequest] = useState(null);
 
-  const { data: tasks = [], isLoading } = useQuery({
-    queryKey: ['tasks', projectId],
-    queryFn: () => base44.entities.Task.filter({ project_id: projectId }),
+  const { data: changeRequests = [], isLoading } = useQuery({
+    queryKey: ['changeRequests', projectId],
+    queryFn: () => base44.entities.ChangeRequest.filter({ project_id: projectId }),
     enabled: !!projectId,
   });
 
-  const updateTaskMutation = useMutation({
-    mutationFn: ({ taskId, status }) => base44.entities.Task.update(taskId, { 
-      status,
-      blocked_date: status === 'blocked' ? new Date().toISOString() : null
-    }),
+  const updateRequestMutation = useMutation({
+    mutationFn: ({ requestId, status }) => base44.entities.ChangeRequest.update(requestId, { status }),
     onSuccess: () => {
-      queryClient.invalidateQueries(['tasks', projectId]);
+      queryClient.invalidateQueries(['changeRequests', projectId]);
     },
   });
 
   const handleDragEnd = (result) => {
-    if (!result.destination || !canEdit) return;
+    if (!result.destination || !canCreateOrRespond) return;
     
-    const taskId = result.draggableId;
+    const requestId = result.draggableId;
     const newStatus = result.destination.droppableId;
     
-    updateTaskMutation.mutate({ taskId, status: newStatus });
+    updateRequestMutation.mutate({ requestId, status: newStatus });
   };
 
-  const handleTaskClick = (task) => {
-    if (!canEdit) return;
-    setSelectedTask(task);
+  const handleRequestClick = (request) => {
+    setSelectedRequest(request);
     setDialogOpen(true);
   };
 
-  const handleCreate = () => {
-    setSelectedTask(null);
-    setDialogOpen(true);
-  };
-
-  const getTasksByStatus = (status) => {
-    return tasks.filter(task => task.status === status);
+  const getRequestsByStatus = (status) => {
+    return changeRequests.filter(req => req.status === status);
   };
 
   if (isLoading) {
@@ -73,14 +64,12 @@ export default function TaskBoard({ projectId, canEdit, onTaskCreate }) {
     );
   }
 
-  if (tasks.length === 0) {
+  if (changeRequests.length === 0) {
     return (
       <EmptyState
-        icon={Clock}
-        title="Nessuna attività"
-        description="Crea la prima attività per iniziare a organizzare il lavoro."
-        actionLabel={canEdit ? "Crea attività" : undefined}
-        onAction={canEdit ? onTaskCreate || handleCreate : undefined}
+        icon={DollarSign}
+        title="Nessuna richiesta di modifica"
+        description="Nessuna richiesta è stata ancora creata."
       />
     );
   }
@@ -90,14 +79,18 @@ export default function TaskBoard({ projectId, canEdit, onTaskCreate }) {
       <DragDropContext onDragEnd={handleDragEnd}>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
           {columns.map(column => {
-            const columnTasks = getTasksByStatus(column.id);
+            const columnRequests = getRequestsByStatus(column.id);
+            const Icon = column.icon;
             return (
               <div key={column.id} className="flex flex-col">
                 <div className={`p-3 rounded-t-lg ${column.color} border-b-2 border-gray-300`}>
                   <h3 className="font-semibold text-gray-900 flex items-center justify-between">
-                    <span>{column.label}</span>
+                    <span className="flex items-center gap-2">
+                      <Icon className="h-4 w-4" />
+                      {column.label}
+                    </span>
                     <Badge variant="secondary" className="bg-white">
-                      {columnTasks.length}
+                      {columnRequests.length}
                     </Badge>
                   </h3>
                 </div>
@@ -111,73 +104,63 @@ export default function TaskBoard({ projectId, canEdit, onTaskCreate }) {
                         snapshot.isDraggingOver ? 'bg-gray-100' : ''
                       }`}
                     >
-                      {columnTasks.map((task, index) => (
+                      {columnRequests.map((request, index) => (
                         <Draggable
-                          key={task.id}
-                          draggableId={task.id}
+                          key={request.id}
+                          draggableId={request.id}
                           index={index}
-                          isDragDisabled={!canEdit}
+                          isDragDisabled={!canCreateOrRespond}
                         >
                           {(provided, snapshot) => (
                             <div
                               ref={provided.innerRef}
                               {...provided.draggableProps}
                               {...provided.dragHandleProps}
-                              onClick={() => handleTaskClick(task)}
+                              onClick={() => handleRequestClick(request)}
                               className={`p-3 bg-white rounded-lg border shadow-sm ${
-                                canEdit ? 'cursor-pointer hover:shadow-md' : ''
+                                canCreateOrRespond ? 'cursor-pointer hover:shadow-md' : ''
                               } transition-shadow ${
                                 snapshot.isDragging ? 'shadow-lg' : ''
                               }`}
                             >
                               <h4 className="font-medium text-sm mb-2 line-clamp-2">
-                                {task.title}
+                                {request.title}
                               </h4>
                               
-                              {task.description && (
+                              {request.description && (
                                 <p className="text-xs text-gray-500 mb-2 line-clamp-2">
-                                  {task.description}
+                                  {request.description}
                                 </p>
                               )}
                               
-                              {task.room_area && (
-                                <Badge variant="outline" className="text-xs mb-2">
-                                  {task.room_area}
-                                </Badge>
-                              )}
-                              
                               <div className="space-y-1">
-                                {task.assigned_to_name && (
+                                {request.cost_impact !== null && request.cost_impact !== undefined && (
                                   <div className="flex items-center gap-1 text-xs text-gray-600">
-                                    <User className="h-3 w-3" />
-                                    <span className="truncate">{task.assigned_to_name}</span>
+                                    <DollarSign className="h-3 w-3" />
+                                    <span>€{request.cost_impact}</span>
                                   </div>
                                 )}
                                 
-                                {task.due_date && (
+                                {request.time_impact_days && (
                                   <div className="flex items-center gap-1 text-xs text-gray-600">
-                                    <Calendar className="h-3 w-3" />
-                                    <span>{format(new Date(task.due_date), 'dd MMM', { locale: it })}</span>
+                                    <Clock className="h-3 w-3" />
+                                    <span>+{request.time_impact_days} giorni</span>
                                   </div>
                                 )}
-                              </div>
-                              
-                              {task.status === 'blocked' && task.blocked_reason && (
-                                <div className="mt-2 p-1.5 rounded bg-red-50 border border-red-200">
-                                  <p className="text-xs text-red-700 line-clamp-2">
-                                    {task.blocked_reason}
-                                  </p>
+                                
+                                <div className="text-xs text-gray-500 mt-2">
+                                  {format(new Date(request.created_date), 'dd MMM', { locale: it })}
                                 </div>
-                              )}
+                              </div>
                             </div>
                           )}
                         </Draggable>
                       ))}
                       {provided.placeholder}
                       
-                      {columnTasks.length === 0 && (
+                      {columnRequests.length === 0 && (
                         <div className="flex items-center justify-center h-32 text-gray-400 text-sm">
-                          Nessuna attività
+                          Nessuna richiesta
                         </div>
                       )}
                     </div>
@@ -189,11 +172,13 @@ export default function TaskBoard({ projectId, canEdit, onTaskCreate }) {
         </div>
       </DragDropContext>
 
-      <TaskDialog
+      <ChangeRequestDialog
         open={dialogOpen}
         onOpenChange={setDialogOpen}
-        task={selectedTask}
+        changeRequest={selectedRequest}
         projectId={projectId}
+        canCreateOrRespond={canCreateOrRespond}
+        currentUserEmail={currentUserEmail}
       />
     </>
   );
