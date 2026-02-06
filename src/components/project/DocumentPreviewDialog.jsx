@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
   Dialog,
   DialogContent,
@@ -6,7 +6,9 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import { Download, X, ChevronLeft, ChevronRight } from "lucide-react";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Download, X, ChevronLeft, ChevronRight, MessageSquare, FileText } from "lucide-react";
+import DocumentComments from './DocumentComments';
 
 export default function DocumentPreviewDialog({ document, open, onOpenChange, allDocuments = [], onNavigate }) {
   const [activeTab, setActiveTab] = useState('preview');
@@ -52,7 +54,19 @@ export default function DocumentPreviewDialog({ document, open, onOpenChange, al
           </div>
         </DialogHeader>
         
-        <div className="flex-1 overflow-hidden bg-gray-50 relative">
+        <Tabs value={activeTab} onValueChange={setActiveTab} className="flex-1 flex flex-col overflow-hidden">
+          <TabsList className="mx-6 mt-2">
+            <TabsTrigger value="preview" className="flex items-center gap-2">
+              <FileText className="h-4 w-4" />
+              Anteprima
+            </TabsTrigger>
+            <TabsTrigger value="comments" className="flex items-center gap-2">
+              <MessageSquare className="h-4 w-4" />
+              Commenti
+            </TabsTrigger>
+          </TabsList>
+
+          <TabsContent value="preview" className="flex-1 overflow-hidden bg-gray-50 relative mt-0">
           {/* Navigation Arrows */}
           {hasPrevious && (
             <Button
@@ -102,7 +116,12 @@ export default function DocumentPreviewDialog({ document, open, onOpenChange, al
               </Button>
             </div>
           )}
-        </div>
+          </TabsContent>
+
+          <TabsContent value="comments" className="flex-1 overflow-auto p-6 mt-0">
+            <DocumentComments documentId={document.id} projectId={document.project_id} />
+          </TabsContent>
+        </Tabs>
       </DialogContent>
     </Dialog>
   );
