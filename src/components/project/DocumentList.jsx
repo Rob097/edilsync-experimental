@@ -14,7 +14,11 @@ import {
   Download,
   Trash2,
   MoreVertical,
-  Pencil
+  Pencil,
+  Folder,
+  ArrowLeft,
+  Grid3x3,
+  List
 } from "lucide-react";
 import {
   DropdownMenu,
