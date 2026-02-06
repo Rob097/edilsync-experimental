@@ -13,7 +13,8 @@ import {
   Search,
   Download,
   Trash2,
-  MoreVertical
+  MoreVertical,
+  Pencil
 } from "lucide-react";
 import {
   DropdownMenu,
