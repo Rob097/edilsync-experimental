@@ -145,6 +145,18 @@ export default function DocumentList({ projectId, canUpload, currentUserEmail, u
       {/* Header with Filters */}
       <div className="flex flex-col gap-3">
         <div className="flex flex-col sm:flex-row gap-3">
+          {/* Back button when folder is open */}
+          {openFolder && viewMode === 'grid' && (
+            <Button
+              variant="outline"
+              onClick={() => setOpenFolder(null)}
+              className="sm:w-auto"
+            >
+              <ArrowLeft className="h-4 w-4 mr-2" />
+              Indietro
+            </Button>
+          )}
+          
           <div className="relative flex-1">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
             <Input
@@ -154,6 +166,33 @@ export default function DocumentList({ projectId, canUpload, currentUserEmail, u
               className="pl-10"
             />
           </div>
+
+          {/* View toggle */}
+          <div className="flex gap-2">
+            <Button
+              variant={viewMode === 'grid' ? 'default' : 'outline'}
+              size="icon"
+              onClick={() => {
+                setViewMode('grid');
+                setOpenFolder(null);
+              }}
+              title="Vista a griglia"
+            >
+              <Grid3x3 className="h-4 w-4" />
+            </Button>
+            <Button
+              variant={viewMode === 'list' ? 'default' : 'outline'}
+              size="icon"
+              onClick={() => {
+                setViewMode('list');
+                setOpenFolder(null);
+              }}
+              title="Vista a lista"
+            >
+              <List className="h-4 w-4" />
+            </Button>
+          </div>
+
           {canUpload && (
             <Button 
               onClick={() => {
