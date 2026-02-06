@@ -290,6 +290,13 @@ export default function DocumentList({ projectId, canUpload, currentUserEmail, u
         projectId={projectId}
       />
 
+      <UploadDocumentDialog
+        open={!!editingDocument}
+        onOpenChange={(open) => !open && setEditingDocument(null)}
+        projectId={projectId}
+        document={editingDocument}
+      />
+
       <DocumentPreviewDialog
         document={previewDocument}
         open={!!previewDocument}
