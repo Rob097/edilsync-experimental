@@ -142,7 +142,7 @@ export default function UploadDocumentDialog({ open, onOpenChange, projectId, do
           </DialogDescription>
         </DialogHeader>
 
-        <form onSubmit={handleSubmit} className="space-y-6 mt-4">
+        <form onSubmit={handleSubmit} className="space-y-6 mt-4 max-w-full overflow-hidden">
           {/* File Upload */}
           <div className="space-y-2">
             <Label>File {!isEditMode && '*'}</Label>
