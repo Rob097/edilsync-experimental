@@ -70,6 +70,8 @@ export default function DocumentList({ projectId, canUpload, currentUserEmail, u
   const [uploadDialogOpen, setUploadDialogOpen] = useState(false);
   const [previewDocument, setPreviewDocument] = useState(null);
   const [editingDocument, setEditingDocument] = useState(null);
+  const [viewMode, setViewMode] = useState('grid'); // 'list' or 'grid'
+  const [openFolder, setOpenFolder] = useState(null); // category name when folder is open
 
   const { data: documents = [], isLoading } = useQuery({
     queryKey: ['projectDocuments', projectId],
