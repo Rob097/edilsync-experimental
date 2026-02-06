@@ -246,6 +246,10 @@ export default function DocumentList({ projectId, canUpload, currentUserEmail, u
                       </Button>
                     </DropdownMenuTrigger>
                     <DropdownMenuContent align="end">
+                      <DropdownMenuItem onClick={() => setEditingDocument(doc)}>
+                        <Pencil className="h-4 w-4 mr-2" />
+                        Modifica
+                      </DropdownMenuItem>
                       <DropdownMenuItem
                         onClick={() => deleteMutation.mutate(doc.id)}
                         className="text-red-600"
