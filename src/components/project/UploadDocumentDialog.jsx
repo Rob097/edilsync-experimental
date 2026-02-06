@@ -128,7 +128,7 @@ export default function UploadDocumentDialog({ open, onOpenChange, projectId, do
     uploadMutation.mutate();
   };
 
-  const isValid = file && name;
+  const isValid = isEditMode ? name : (file && name);
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
