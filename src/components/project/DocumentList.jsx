@@ -111,16 +111,19 @@ export default function DocumentList({ projectId, canUpload, currentUserEmail, u
 
   const uniqueFileTypes = [...new Set(documents.map(d => d.file_type))].filter(Boolean);
 
-  // Group documents by category for folder view
+  // Group documents by category for folder view (use filtered documents)
   const categoriesWithCounts = Object.keys(categoryLabels).map(category => ({
     value: category,
     label: categoryLabels[category],
-    count: documents.filter(doc => doc.category === category).length
+    count: filteredDocuments.filter(doc => doc.category === category).length
   })).filter(cat => cat.count > 0);
 
   // Get documents for open folder
+  // If search or filters are active, show all filtered documents
+  // Otherwise, show only documents from the selected category
+  const hasActiveFilters = searchQuery || filterCategory !== 'all' || filterType !== 'all';
   const folderDocuments = openFolder 
-    ? filteredDocuments.filter(doc => doc.category === openFolder)
+    ? (hasActiveFilters ? filteredDocuments : filteredDocuments.filter(doc => doc.category === openFolder))
     : [];
 
   const isImageFile = (fileType) => {
