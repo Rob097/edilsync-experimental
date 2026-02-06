@@ -253,7 +253,7 @@ export default function UploadDocumentDialog({ open, onOpenChange, projectId, do
               {isUploading && (
                 <Loader2 className="h-4 w-4 mr-2 animate-spin" />
               )}
-              Carica
+              {isEditMode ? 'Salva' : 'Carica'}
             </Button>
           </div>
         </form>
