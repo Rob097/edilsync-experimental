@@ -134,9 +134,11 @@ export default function UploadDocumentDialog({ open, onOpenChange, projectId, do
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
-          <DialogTitle>Carica Documento</DialogTitle>
+          <DialogTitle>{isEditMode ? 'Modifica Documento' : 'Carica Documento'}</DialogTitle>
           <DialogDescription>
-            Carica un file da associare al progetto.
+            {isEditMode 
+              ? 'Modifica le informazioni del documento o sostituisci il file.' 
+              : 'Carica un file da associare al progetto.'}
           </DialogDescription>
         </DialogHeader>
 
