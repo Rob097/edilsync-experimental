@@ -25,15 +25,27 @@ const categories = [
   { value: 'other', label: 'Altro' },
 ];
 
-export default function UploadDocumentDialog({ open, onOpenChange, projectId }) {
+export default function UploadDocumentDialog({ open, onOpenChange, projectId, document }) {
   const queryClient = useQueryClient();
   const fileInputRef = useRef(null);
+  const isEditMode = !!document;
   
   const [file, setFile] = useState(null);
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
   const [category, setCategory] = useState('other');
   const [isUploading, setIsUploading] = useState(false);
+
+  // Initialize form with document data when editing
+  React.useEffect(() => {
+    if (document) {
+      setName(document.name || '');
+      setDescription(document.description || '');
+      setCategory(document.category || 'other');
+    } else {
+      resetForm();
+    }
+  }, [document]);
 
   const { data: user } = useQuery({
     queryKey: ['currentUser'],
