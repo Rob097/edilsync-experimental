@@ -56,24 +56,45 @@ export default function UploadDocumentDialog({ open, onOpenChange, projectId, do
     mutationFn: async () => {
       setIsUploading(true);
       
-      // Upload file
-      const { file_url } = await base44.integrations.Core.UploadFile({ file });
-      
-      // Get file extension
-      const fileType = file.name.split('.').pop()?.toLowerCase() || '';
-      
-      // Create document record
-      return base44.entities.ProjectDocument.create({
-        project_id: projectId,
-        name: name || file.name,
-        description: description || null,
-        file_url,
-        file_type: fileType,
-        file_size: file.size,
-        uploaded_by_email: user?.email,
-        uploaded_by_name: user?.full_name,
-        category,
-      });
+      if (isEditMode) {
+        // Edit mode
+        let file_url = document.file_url;
+        let file_type = document.file_type;
+        let file_size = document.file_size;
+
+        // If new file is selected, upload it
+        if (file) {
+          const uploadResult = await base44.integrations.Core.UploadFile({ file });
+          file_url = uploadResult.file_url;
+          file_type = file.name.split('.').pop()?.toLowerCase() || '';
+          file_size = file.size;
+        }
+
+        return base44.entities.ProjectDocument.update(document.id, {
+          name,
+          description: description || null,
+          file_url,
+          file_type,
+          file_size,
+          category,
+        });
+      } else {
+        // Create mode
+        const { file_url } = await base44.integrations.Core.UploadFile({ file });
+        const fileType = file.name.split('.').pop()?.toLowerCase() || '';
+        
+        return base44.entities.ProjectDocument.create({
+          project_id: projectId,
+          name: name || file.name,
+          description: description || null,
+          file_url,
+          file_type: fileType,
+          file_size: file.size,
+          uploaded_by_email: user?.email,
+          uploaded_by_name: user?.full_name,
+          category,
+        });
+      }
     },
     onSuccess: () => {
       queryClient.invalidateQueries(['projectDocuments', projectId]);
