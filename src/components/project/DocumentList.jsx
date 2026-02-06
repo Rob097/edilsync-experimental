@@ -252,99 +252,243 @@ export default function DocumentList({ projectId, canUpload, currentUserEmail, u
         </div>
       </div>
 
-      {/* Document list */}
-      {filteredDocuments.length > 0 ? (
-        <div className="space-y-2">
-          {filteredDocuments.map(doc => (
-            <div 
-              key={doc.id}
-              className="flex items-center justify-between p-4 rounded-lg border bg-white hover:bg-gray-50 transition-colors"
-            >
-              <div className="flex items-center gap-3 min-w-0 flex-1">
-                <div className="w-10 h-10 rounded-lg bg-gray-100 flex items-center justify-center flex-shrink-0">
-                  {getFileIcon(doc.file_type)}
-                </div>
-                <div className="min-w-0 flex-1">
-                  <p className="font-medium text-gray-900 truncate">{doc.name}</p>
-                  <div className="flex items-center gap-2 text-sm text-gray-500">
-                    {doc.category && (
-                      <span className="bg-gray-100 px-2 py-0.5 rounded text-xs">
-                        {categoryLabels[doc.category] || doc.category}
-                      </span>
-                    )}
-                    {doc.file_size && (
-                      <span>{formatFileSize(doc.file_size)}</span>
-                    )}
-                    <span>•</span>
-                    <span>{format(new Date(doc.created_date), 'd MMM yyyy', { locale: it })}</span>
+      {/* Content based on view mode */}
+      {viewMode === 'grid' && !openFolder ? (
+        /* Folder Grid View */
+        categoriesWithCounts.length > 0 ? (
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
+            {categoriesWithCounts.map(category => (
+              <div
+                key={category.value}
+                onClick={() => setOpenFolder(category.value)}
+                className="p-6 rounded-lg border bg-white hover:bg-gray-50 hover:border-[#ef6144] transition-all cursor-pointer group"
+              >
+                <div className="flex flex-col items-center text-center gap-3">
+                  <div className="w-16 h-16 rounded-lg bg-gray-100 group-hover:bg-[#ef6144]/10 flex items-center justify-center transition-colors">
+                    <Folder className="h-8 w-8 text-gray-400 group-hover:text-[#ef6144] transition-colors" />
                   </div>
-                  {doc.description && (
-                    <p className="text-sm text-gray-500 truncate mt-0.5">{doc.description}</p>
+                  <div>
+                    <p className="font-medium text-gray-900">{category.label}</p>
+                    <p className="text-sm text-gray-500 mt-1">
+                      {category.count} {category.count === 1 ? 'file' : 'file'}
+                    </p>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        ) : (
+          <EmptyState
+            icon={Folder}
+            title="Nessun documento"
+            description="Carica il primo documento del progetto."
+            actionLabel={canUpload ? "Carica documento" : undefined}
+            onAction={canUpload ? () => {
+              setUploadDialogOpen(true);
+              onUploadDialogChange?.(true);
+            } : undefined}
+          />
+        )
+      ) : viewMode === 'grid' && openFolder ? (
+        /* File Grid View (inside folder) */
+        folderDocuments.length > 0 ? (
+          <>
+            <div className="mb-4">
+              <h3 className="text-lg font-semibold text-gray-900">
+                {categoryLabels[openFolder]}
+              </h3>
+              <p className="text-sm text-gray-500">
+                {folderDocuments.length} {folderDocuments.length === 1 ? 'documento' : 'documenti'}
+              </p>
+            </div>
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
+              {folderDocuments.map(doc => (
+                <div
+                  key={doc.id}
+                  className="rounded-lg border bg-white hover:shadow-md transition-shadow overflow-hidden group"
+                >
+                  {/* Preview */}
+                  <div 
+                    className="aspect-square bg-gray-100 flex items-center justify-center relative overflow-hidden cursor-pointer"
+                    onClick={() => setPreviewDocument(doc)}
+                  >
+                    {isImageFile(doc.file_type) ? (
+                      <img 
+                        src={doc.file_url} 
+                        alt={doc.name}
+                        className="w-full h-full object-cover"
+                      />
+                    ) : isPdfFile(doc.file_type) ? (
+                      <div className="w-full h-full flex items-center justify-center">
+                        <FileText className="h-12 w-12 text-red-500" />
+                      </div>
+                    ) : (
+                      <div className="w-full h-full flex items-center justify-center">
+                        <File className="h-12 w-12 text-blue-500" />
+                      </div>
+                    )}
+                    <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors flex items-center justify-center">
+                      <Eye className="h-6 w-6 text-white opacity-0 group-hover:opacity-100 transition-opacity" />
+                    </div>
+                  </div>
+                  
+                  {/* Details */}
+                  <div className="p-3">
+                    <p className="font-medium text-sm text-gray-900 truncate" title={doc.name}>
+                      {doc.name}
+                    </p>
+                    <div className="flex items-center justify-between mt-2">
+                      <span className="text-xs text-gray-500">
+                        {formatFileSize(doc.file_size)}
+                      </span>
+                      <div className="flex items-center gap-1">
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          className="h-7 w-7"
+                          asChild
+                          title="Scarica"
+                        >
+                          <a href={doc.file_url} target="_blank" rel="noopener noreferrer" download>
+                            <Download className="h-3.5 w-3.5 text-gray-500" />
+                          </a>
+                        </Button>
+                        {(canUpload || doc.uploaded_by_email === currentUserEmail) && (
+                          <DropdownMenu>
+                            <DropdownMenuTrigger asChild>
+                              <Button variant="ghost" size="icon" className="h-7 w-7">
+                                <MoreVertical className="h-3.5 w-3.5 text-gray-500" />
+                              </Button>
+                            </DropdownMenuTrigger>
+                            <DropdownMenuContent align="end">
+                              <DropdownMenuItem onClick={() => setEditingDocument(doc)}>
+                                <Pencil className="h-4 w-4 mr-2" />
+                                Modifica
+                              </DropdownMenuItem>
+                              <DropdownMenuItem
+                                onClick={() => deleteMutation.mutate(doc.id)}
+                                className="text-red-600"
+                              >
+                                <Trash2 className="h-4 w-4 mr-2" />
+                                Elimina
+                              </DropdownMenuItem>
+                            </DropdownMenuContent>
+                          </DropdownMenu>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </>
+        ) : (
+          <EmptyState
+            icon={FileText}
+            title="Nessun documento in questa cartella"
+            description="Carica documenti in questa categoria."
+            actionLabel={canUpload ? "Carica documento" : undefined}
+            onAction={canUpload ? () => {
+              setUploadDialogOpen(true);
+              onUploadDialogChange?.(true);
+            } : undefined}
+          />
+        )
+      ) : (
+        /* List View */
+        filteredDocuments.length > 0 ? (
+          <div className="space-y-2">
+            {filteredDocuments.map(doc => (
+              <div 
+                key={doc.id}
+                className="flex items-center justify-between p-4 rounded-lg border bg-white hover:bg-gray-50 transition-colors"
+              >
+                <div className="flex items-center gap-3 min-w-0 flex-1">
+                  <div className="w-10 h-10 rounded-lg bg-gray-100 flex items-center justify-center flex-shrink-0">
+                    {getFileIcon(doc.file_type)}
+                  </div>
+                  <div className="min-w-0 flex-1">
+                    <p className="font-medium text-gray-900 truncate">{doc.name}</p>
+                    <div className="flex items-center gap-2 text-sm text-gray-500">
+                      {doc.category && (
+                        <span className="bg-gray-100 px-2 py-0.5 rounded text-xs">
+                          {categoryLabels[doc.category] || doc.category}
+                        </span>
+                      )}
+                      {doc.file_size && (
+                        <span>{formatFileSize(doc.file_size)}</span>
+                      )}
+                      <span>•</span>
+                      <span>{format(new Date(doc.created_date), 'd MMM yyyy', { locale: it })}</span>
+                    </div>
+                    {doc.description && (
+                      <p className="text-sm text-gray-500 truncate mt-0.5">{doc.description}</p>
+                    )}
+                  </div>
+                </div>
+                
+                <div className="flex items-center gap-2 ml-2">
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    onClick={() => setPreviewDocument(doc)}
+                    title="Anteprima"
+                  >
+                    <Eye className="h-4 w-4 text-gray-500" />
+                  </Button>
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    asChild
+                    title="Scarica"
+                  >
+                    <a href={doc.file_url} target="_blank" rel="noopener noreferrer" download>
+                      <Download className="h-4 w-4 text-gray-500" />
+                    </a>
+                  </Button>
+                  
+                  {(canUpload || doc.uploaded_by_email === currentUserEmail) && (
+                    <DropdownMenu>
+                      <DropdownMenuTrigger asChild>
+                        <Button variant="ghost" size="icon">
+                          <MoreVertical className="h-4 w-4 text-gray-500" />
+                        </Button>
+                      </DropdownMenuTrigger>
+                      <DropdownMenuContent align="end">
+                        <DropdownMenuItem onClick={() => setEditingDocument(doc)}>
+                          <Pencil className="h-4 w-4 mr-2" />
+                          Modifica
+                        </DropdownMenuItem>
+                        <DropdownMenuItem
+                          onClick={() => deleteMutation.mutate(doc.id)}
+                          className="text-red-600"
+                        >
+                          <Trash2 className="h-4 w-4 mr-2" />
+                          Elimina
+                        </DropdownMenuItem>
+                      </DropdownMenuContent>
+                    </DropdownMenu>
                   )}
                 </div>
               </div>
-              
-              <div className="flex items-center gap-2 ml-2">
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  onClick={() => setPreviewDocument(doc)}
-                  title="Anteprima"
-                >
-                  <Eye className="h-4 w-4 text-gray-500" />
-                </Button>
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  asChild
-                  title="Scarica"
-                >
-                  <a href={doc.file_url} target="_blank" rel="noopener noreferrer" download>
-                    <Download className="h-4 w-4 text-gray-500" />
-                  </a>
-                </Button>
-                
-                {(canUpload || doc.uploaded_by_email === currentUserEmail) && (
-                  <DropdownMenu>
-                    <DropdownMenuTrigger asChild>
-                      <Button variant="ghost" size="icon">
-                        <MoreVertical className="h-4 w-4 text-gray-500" />
-                      </Button>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent align="end">
-                      <DropdownMenuItem onClick={() => setEditingDocument(doc)}>
-                        <Pencil className="h-4 w-4 mr-2" />
-                        Modifica
-                      </DropdownMenuItem>
-                      <DropdownMenuItem
-                        onClick={() => deleteMutation.mutate(doc.id)}
-                        className="text-red-600"
-                      >
-                        <Trash2 className="h-4 w-4 mr-2" />
-                        Elimina
-                      </DropdownMenuItem>
-                    </DropdownMenuContent>
-                  </DropdownMenu>
-                )}
-              </div>
-            </div>
-          ))}
-        </div>
-      ) : (
-        <EmptyState
-          icon={FileText}
-          title={searchQuery ? "Nessun risultato" : "Nessun documento"}
-          description={
-            searchQuery
-              ? "Prova a modificare i termini di ricerca."
-              : "Carica il primo documento del progetto."
-          }
-          actionLabel={!searchQuery && canUpload ? "Carica documento" : undefined}
-          onAction={!searchQuery && canUpload ? () => {
-            setUploadDialogOpen(true);
-            onUploadDialogChange?.(true);
-          } : undefined}
-        />
+            ))}
+          </div>
+        ) : (
+          <EmptyState
+            icon={FileText}
+            title={searchQuery ? "Nessun risultato" : "Nessun documento"}
+            description={
+              searchQuery
+                ? "Prova a modificare i termini di ricerca."
+                : "Carica il primo documento del progetto."
+            }
+            actionLabel={!searchQuery && canUpload ? "Carica documento" : undefined}
+            onAction={!searchQuery && canUpload ? () => {
+              setUploadDialogOpen(true);
+              onUploadDialogChange?.(true);
+            } : undefined}
+          />
+        )
       )}
 
       <UploadDocumentDialog
