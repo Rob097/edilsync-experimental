@@ -145,7 +145,7 @@ export default function UploadDocumentDialog({ open, onOpenChange, projectId, do
         <form onSubmit={handleSubmit} className="space-y-6 mt-4">
           {/* File Upload */}
           <div className="space-y-2">
-            <Label>File *</Label>
+            <Label>File {!isEditMode && '*'}</Label>
             <input
               ref={fileInputRef}
               type="file"
@@ -181,12 +181,17 @@ export default function UploadDocumentDialog({ open, onOpenChange, projectId, do
               >
                 <Upload className="h-8 w-8 mx-auto text-gray-400 mb-2" />
                 <p className="text-sm text-gray-600">
-                  Clicca per selezionare un file
+                  {isEditMode ? 'Clicca per sostituire il file' : 'Clicca per selezionare un file'}
                 </p>
                 <p className="text-xs text-gray-400 mt-1">
                   PDF, DOC, XLS, JPG, PNG, DWG
                 </p>
               </div>
+            )}
+            {isEditMode && !file && (
+              <p className="text-xs text-gray-500">
+                File attuale: {document.name}.{document.file_type}
+              </p>
             )}
           </div>
 
