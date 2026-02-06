@@ -5,11 +5,12 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Plus, DollarSign, Clock, CheckCircle2, XCircle, AlertTriangle } from "lucide-react";
+import { Plus, DollarSign, Clock, CheckCircle2, XCircle, AlertTriangle, List, Grid3x3 } from "lucide-react";
 import { format } from 'date-fns';
 import { it } from 'date-fns/locale';
 import EmptyState from '@/components/ui/EmptyState';
 import ChangeRequestDialog from './ChangeRequestDialog';
+import ChangeRequestBoard from './ChangeRequestBoard';
 
 const statusConfig = {
   pending: { label: 'In attesa', color: 'bg-yellow-100 text-yellow-700', icon: Clock },
@@ -18,10 +19,11 @@ const statusConfig = {
   clarification_needed: { label: 'Chiarimenti', color: 'bg-orange-100 text-orange-700', icon: AlertTriangle },
 };
 
-export default function ChangeRequestList({ projectId, canCreate, canRespond, createDialogOpen, onCreateDialogChange }) {
+export default function ChangeRequestList({ projectId, canCreate, canRespond, createDialogOpen, onCreateDialogChange, currentUserEmail }) {
   const queryClient = useQueryClient();
   const [dialogOpen, setDialogOpen] = useState(false);
   const [selectedRequest, setSelectedRequest] = useState(null);
+  const [viewMode, setViewMode] = useState('board');
 
   const { data: changeRequests = [], isLoading } = useQuery({
     queryKey: ['changeRequests', projectId],
@@ -48,7 +50,29 @@ export default function ChangeRequestList({ projectId, canCreate, canRespond, cr
     <>
       <Card>
         <CardHeader className="flex flex-row items-center justify-between pb-4">
-          <CardTitle>Richieste di Modifica</CardTitle>
+          <div className="flex items-center gap-3">
+            <CardTitle>Richieste di Modifica & Extra</CardTitle>
+            <div className="flex gap-1">
+              <Button
+                variant={viewMode === 'list' ? 'default' : 'outline'}
+                size="icon"
+                onClick={() => setViewMode('list')}
+                className={viewMode === 'list' ? 'bg-[#ef6144] hover:bg-[#d9553a] h-8 w-8' : 'h-8 w-8'}
+                title="Vista lista"
+              >
+                <List className="h-4 w-4" />
+              </Button>
+              <Button
+                variant={viewMode === 'board' ? 'default' : 'outline'}
+                size="icon"
+                onClick={() => setViewMode('board')}
+                className={viewMode === 'board' ? 'bg-[#ef6144] hover:bg-[#d9553a] h-8 w-8' : 'h-8 w-8'}
+                title="Vista board"
+              >
+                <Grid3x3 className="h-4 w-4" />
+              </Button>
+            </div>
+          </div>
           {canCreate && (
             <Button onClick={handleCreate} size="sm" className="bg-[#ef6144] hover:bg-[#d9553a]">
               <Plus className="h-4 w-4 mr-1" />
@@ -60,7 +84,7 @@ export default function ChangeRequestList({ projectId, canCreate, canRespond, cr
           {viewMode === 'board' ? (
             <ChangeRequestBoard 
               projectId={projectId}
-              canCreateOrRespond={canCreateOrRespond}
+              canCreateOrRespond={canCreate || canRespond}
               currentUserEmail={currentUserEmail}
             />
           ) : isLoading ? (
@@ -125,7 +149,7 @@ export default function ChangeRequestList({ projectId, canCreate, canRespond, cr
               actionLabel={canCreate ? "Crea richiesta" : undefined}
               onAction={canCreate ? handleCreate : undefined}
             />
-          ))}
+          )}
         </CardContent>
       </Card>
 

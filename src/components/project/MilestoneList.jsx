@@ -5,11 +5,12 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Plus, Flag, Calendar, CheckCircle2, Clock, AlertTriangle } from "lucide-react";
+import { Plus, Flag, Calendar, CheckCircle2, Clock, AlertTriangle, List, BarChart3 } from "lucide-react";
 import { format } from 'date-fns';
 import { it } from 'date-fns/locale';
 import EmptyState from '@/components/ui/EmptyState';
 import MilestoneDialog from './MilestoneDialog';
+import MilestoneBoard from './MilestoneBoard';
 
 const statusConfig = {
   pending: { label: 'In attesa', color: 'bg-gray-100 text-gray-700', icon: Clock },
@@ -18,14 +19,21 @@ const statusConfig = {
   delayed: { label: 'Ritardo', color: 'bg-red-100 text-red-700', icon: AlertTriangle },
 };
 
-export default function MilestoneList({ projectId, canEdit }) {
+export default function MilestoneList({ projectId, project, canEdit, onNavigateToTasks }) {
   const queryClient = useQueryClient();
   const [dialogOpen, setDialogOpen] = useState(false);
   const [editingMilestone, setEditingMilestone] = useState(null);
+  const [viewMode, setViewMode] = useState('timeline');
 
   const { data: milestones = [], isLoading } = useQuery({
     queryKey: ['milestones', projectId],
     queryFn: () => base44.entities.Milestone.filter({ project_id: projectId }, 'order_index'),
+    enabled: !!projectId,
+  });
+
+  const { data: tasks = [] } = useQuery({
+    queryKey: ['tasks', projectId],
+    queryFn: () => base44.entities.Task.filter({ project_id: projectId }),
     enabled: !!projectId,
   });
 
@@ -37,6 +45,14 @@ export default function MilestoneList({ projectId, canEdit }) {
   const handleCloseDialog = () => {
     setDialogOpen(false);
     setEditingMilestone(null);
+  };
+
+  const handleMilestoneClick = (milestone) => {
+    if (onNavigateToTasks) {
+      onNavigateToTasks(milestone.id);
+    } else if (canEdit) {
+      handleEdit(milestone);
+    }
   };
 
   if (isLoading) {
@@ -58,10 +74,32 @@ export default function MilestoneList({ projectId, canEdit }) {
     <>
       <Card>
         <CardHeader className="flex flex-row items-center justify-between pb-4">
-          <CardTitle className="text-lg font-semibold flex items-center gap-2">
-            <Flag className="h-5 w-5 text-[#ef6144]" />
-            Milestones
-          </CardTitle>
+          <div className="flex items-center gap-3">
+            <CardTitle className="text-lg font-semibold flex items-center gap-2">
+              <Flag className="h-5 w-5 text-[#ef6144]" />
+              Milestone
+            </CardTitle>
+            <div className="flex gap-1">
+              <Button
+                variant={viewMode === 'list' ? 'default' : 'outline'}
+                size="icon"
+                onClick={() => setViewMode('list')}
+                className={viewMode === 'list' ? 'bg-[#ef6144] hover:bg-[#d9553a] h-8 w-8' : 'h-8 w-8'}
+                title="Vista lista"
+              >
+                <List className="h-4 w-4" />
+              </Button>
+              <Button
+                variant={viewMode === 'timeline' ? 'default' : 'outline'}
+                size="icon"
+                onClick={() => setViewMode('timeline')}
+                className={viewMode === 'timeline' ? 'bg-[#ef6144] hover:bg-[#d9553a] h-8 w-8' : 'h-8 w-8'}
+                title="Vista timeline"
+              >
+                <BarChart3 className="h-4 w-4" />
+              </Button>
+            </div>
+          </div>
           {canEdit && (
             <Button 
               onClick={() => setDialogOpen(true)}
@@ -74,7 +112,14 @@ export default function MilestoneList({ projectId, canEdit }) {
           )}
         </CardHeader>
         <CardContent>
-          {milestones.length > 0 ? (
+          {viewMode === 'timeline' ? (
+            <MilestoneBoard 
+              projectId={projectId}
+              project={project}
+              canEdit={canEdit}
+              onMilestoneClick={handleMilestoneClick}
+            />
+          ) : milestones.length > 0 ? (
             <div className="space-y-4">
               {milestones.map((milestone, index) => {
                 const status = statusConfig[milestone.status] || statusConfig.pending;
@@ -82,12 +127,14 @@ export default function MilestoneList({ projectId, canEdit }) {
                 const isOverdue = milestone.status !== 'completed' && 
                   milestone.target_date && 
                   new Date(milestone.target_date) < new Date();
+                const milestoneTasks = tasks.filter(t => t.milestone_id === milestone.id);
+                const completedTasks = milestoneTasks.filter(t => t.status === 'completed').length;
 
                 return (
                   <div 
                     key={milestone.id}
-                    onClick={() => canEdit && handleEdit(milestone)}
-                    className={`p-4 rounded-lg border bg-white ${canEdit ? 'cursor-pointer hover:bg-gray-50' : ''} transition-colors`}
+                    onClick={() => handleMilestoneClick(milestone)}
+                    className="p-4 rounded-lg border bg-white cursor-pointer hover:bg-gray-50 transition-colors"
                   >
                     <div className="flex items-start justify-between">
                       <div className="flex-1">
@@ -99,6 +146,13 @@ export default function MilestoneList({ projectId, canEdit }) {
                         </div>
                         {milestone.description && (
                           <p className="text-sm text-gray-600 mb-2 ml-11">{milestone.description}</p>
+                        )}
+                        {milestoneTasks.length > 0 && (
+                          <div className="ml-11 mb-2">
+                            <Badge variant="outline" className="text-xs">
+                              {completedTasks}/{milestoneTasks.length} attività completate
+                            </Badge>
+                          </div>
                         )}
                         <div className="flex items-center gap-3 ml-11 text-sm">
                           {milestone.target_date && (
@@ -132,7 +186,7 @@ export default function MilestoneList({ projectId, canEdit }) {
               actionLabel={canEdit ? "Aggiungi milestone" : undefined}
               onAction={canEdit ? () => setDialogOpen(true) : undefined}
             />
-          ))}
+          )}
         </CardContent>
       </Card>
 

@@ -81,7 +81,13 @@ export default function TaskList({ projectId, canEdit }) {
           )}
         </CardHeader>
         <CardContent>
-          {isLoading ? (
+          {viewMode === 'board' ? (
+            <TaskBoard 
+              projectId={projectId} 
+              canEdit={canEdit}
+              onTaskCreate={handleCreate}
+            />
+          ) : isLoading ? (
             <div className="space-y-3">
               {[1, 2, 3].map(i => <Skeleton key={i} className="h-20 w-full" />)}
             </div>
@@ -136,9 +142,9 @@ export default function TaskList({ projectId, canEdit }) {
           ) : (
             <EmptyState
               icon={CheckCircle2}
-              title="Nessun task"
-              description="Non ci sono task per questo progetto."
-              actionLabel={canEdit ? "Crea task" : undefined}
+              title="Nessuna attività"
+              description="Non ci sono attività per questo progetto."
+              actionLabel={canEdit ? "Crea attività" : undefined}
               onAction={canEdit ? handleCreate : undefined}
             />
           )}
