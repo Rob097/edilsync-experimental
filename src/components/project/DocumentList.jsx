@@ -64,6 +64,7 @@ export default function DocumentList({ projectId, canUpload, currentUserEmail, u
   const [sortBy, setSortBy] = useState('date_desc');
   const [uploadDialogOpen, setUploadDialogOpen] = useState(false);
   const [previewDocument, setPreviewDocument] = useState(null);
+  const [editingDocument, setEditingDocument] = useState(null);
 
   const { data: documents = [], isLoading } = useQuery({
     queryKey: ['projectDocuments', projectId],
