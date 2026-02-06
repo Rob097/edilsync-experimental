@@ -471,6 +471,7 @@ export default function ProjectDetail() {
                 canRespond={canRespondToChangeRequest}
                 createDialogOpen={changeCreateOpen}
                 onCreateDialogChange={setChangeCreateOpen}
+                currentUserEmail={user?.email}
               />
             </div>
           )}
@@ -481,7 +482,15 @@ export default function ProjectDetail() {
               <div className="flex items-center justify-between mb-4">
                 <h3 className="text-lg font-semibold">Milestones</h3>
               </div>
-              <MilestoneList projectId={projectId} canEdit={canEditTasks} />
+              <MilestoneList 
+                projectId={projectId}
+                project={project}
+                canEdit={canEditTasks}
+                onNavigateToTasks={(milestoneId) => {
+                  setActiveTab('lavori');
+                  setLavoriSection('tasks');
+                }}
+              />
             </div>
           )}
         </TabsContent>
