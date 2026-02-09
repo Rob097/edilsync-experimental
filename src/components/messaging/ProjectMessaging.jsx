@@ -143,7 +143,7 @@ export default function ProjectMessaging({
   }
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-4 gap-4 h-[600px]">
+    <div className="grid grid-cols-1 md:grid-cols-4 gap-4 h-[600px] md:h-[600px] sm:h-[800px]">
       <Card className="md:col-span-1 p-4 overflow-y-auto">
         <ChannelList
           projectId={projectId}
