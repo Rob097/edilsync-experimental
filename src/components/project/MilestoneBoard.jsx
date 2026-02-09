@@ -54,20 +54,43 @@ export default function MilestoneBoard({ projectId, project, canEdit, onMileston
       const startYear = startDate.getFullYear();
       const endYear = endDate.getFullYear();
       
-      // Skip milestones not in current year
-      if (startYear !== currentYear && endYear !== currentYear) return null;
+      // Skip milestones not in current year range
+      if (endYear < currentYear || startYear > currentYear) return null;
       
       const tasksForMilestone = tasks.filter(t => t.milestone_id === milestone.id);
       const completedTasks = tasksForMilestone.filter(t => t.status === 'completed').length;
+      
+      // Calculate display dates for current year
+      let displayStartMonth, displayStartDay, displayEndMonth, displayEndDay;
+      
+      if (startYear === currentYear) {
+        // Milestone starts this year
+        displayStartMonth = getMonth(startDate);
+        displayStartDay = getDate(startDate);
+      } else {
+        // Milestone started in a previous year
+        displayStartMonth = 0; // January
+        displayStartDay = 1;
+      }
+      
+      if (endYear === currentYear) {
+        // Milestone ends this year
+        displayEndMonth = getMonth(endDate);
+        displayEndDay = getDate(endDate);
+      } else {
+        // Milestone ends in a future year
+        displayEndMonth = 11; // December
+        displayEndDay = 31;
+      }
       
       return {
         ...milestone,
         startDate,
         endDate,
-        startMonth: getMonth(startDate),
-        endMonth: getMonth(endDate),
-        startDay: getDate(startDate),
-        endDay: getDate(endDate),
+        startMonth: displayStartMonth,
+        endMonth: displayEndMonth,
+        startDay: displayStartDay,
+        endDay: displayEndDay,
         tasksCount: tasksForMilestone.length,
         completedTasksCount: completedTasks,
       };
@@ -153,8 +176,8 @@ export default function MilestoneBoard({ projectId, project, canEdit, onMileston
                 return (
                   <div
                     key={milestone.id}
-                    className="flex border-b relative"
-                    style={{ minHeight: '60px' }}
+                    className="flex relative"
+                    style={{ minHeight: '80px' }}
                   >
                     {/* Month cells for borders */}
                     {months.map((month, monthIdx) => (
