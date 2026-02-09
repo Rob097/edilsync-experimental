@@ -23,72 +23,57 @@ export default function Dashboard() {
   const { data: user } = useQuery({
     queryKey: ['currentUser'],
     queryFn: () => base44.auth.me(),
+    staleTime: 5 * 60 * 1000, // 5 minutes
   });
 
   const { data: companyMemberships = [] } = useQuery({
     queryKey: ['userCompanies', user?.email],
     queryFn: () => base44.entities.CompanyMember.filter({ user_email: user?.email, status: 'active' }),
     enabled: !!user?.email,
+    staleTime: 5 * 60 * 1000, // 5 minutes
   });
+
+  const companyIds = companyMemberships.map(m => m.company_id);
 
   const { data: companies = [], isLoading: companiesLoading } = useQuery({
-    queryKey: ['companies', companyMemberships],
-    queryFn: async () => {
-      if (companyMemberships.length === 0) return [];
-      const companyIds = companyMemberships.map(m => m.company_id);
-      const allCompanies = await base44.entities.Company.list();
-      return allCompanies.filter(c => companyIds.includes(c.id));
-    },
-    enabled: companyMemberships.length > 0,
-  });
-
-  const { data: projectParticipations = [] } = useQuery({
-    queryKey: ['userProjectParticipations', user?.id, companyMemberships],
-    queryFn: async () => {
-      const allParticipations = await base44.entities.ProjectParticipant.list();
-      const companyIds = companyMemberships.map(m => m.company_id);
-      
-      return allParticipations.filter(p => 
-        (p.status === 'active' || p.status === 'invited') &&
-        (
-          (p.participant_type === 'personal' && p.user_id === user?.id) ||
-          (p.participant_type === 'company' && companyIds.includes(p.company_id))
-        )
-      );
-    },
-    enabled: !!user?.id,
-  });
-
-  const { data: projects = [], isLoading: projectsLoading } = useQuery({
-    queryKey: ['projects', projectParticipations],
-    queryFn: async () => {
-      if (projectParticipations.length === 0) return [];
-      const projectIds = [...new Set(projectParticipations.map(p => p.project_id))];
-      const allProjects = await base44.entities.Project.list('-created_date');
-      return allProjects.filter(p => projectIds.includes(p.id));
-    },
-    enabled: projectParticipations.length > 0,
+    queryKey: ['companies', companyIds],
+    queryFn: () => base44.entities.Company.filter({ id: { $in: companyIds } }),
+    enabled: companyIds.length > 0,
+    staleTime: 5 * 60 * 1000, // 5 minutes
   });
 
   const currentContext = user?.active_context || 'personal';
   const currentCompany = companies.find(c => c.id === user?.active_company_id);
 
-  // Filter projects based on context
-  const contextProjects = projects.filter(project => {
-    const participation = projectParticipations.find(p => {
-      if (p.project_id !== project.id) return false;
-      
+  const { data: projectParticipations = [] } = useQuery({
+    queryKey: ['userProjectParticipations', user?.id, currentContext, currentCompany?.id],
+    queryFn: () => {
+      const query = { status: { $in: ['active', 'invited'] } };
       if (currentContext === 'personal') {
-        return p.participant_type === 'personal' && p.user_id === user?.id;
+        query.participant_type = 'personal';
+        query.user_id = user?.id;
+      } else if (currentContext === 'company' && currentCompany?.id) {
+        query.participant_type = 'company';
+        query.company_id = currentCompany.id;
       } else {
-        return p.participant_type === 'company' && p.company_id === user?.active_company_id;
+        return [];
       }
-    });
-    
-    return !!participation;
+      return base44.entities.ProjectParticipant.filter(query);
+    },
+    enabled: !!user?.id && (currentContext === 'personal' || (currentContext === 'company' && !!currentCompany?.id)),
+    staleTime: 5 * 60 * 1000, // 5 minutes
   });
 
-  const recentProjects = contextProjects.slice(0, 3);
+  const projectIds = [...new Set(projectParticipations.map(p => p.project_id))];
+
+  const { data: projects = [], isLoading: projectsLoading } = useQuery({
+    queryKey: ['projects', projectIds],
+    queryFn: () => base44.entities.Project.filter({ id: { $in: projectIds } }, '-created_date'),
+    enabled: projectIds.length > 0,
+    staleTime: 5 * 60 * 1000, // 5 minutes
+  });
+
+  const recentProjects = projects.slice(0, 3);
 
   const getProjectRole = (projectId) => {
     const participation = projectParticipations.find(p => p.project_id === projectId);
@@ -107,6 +92,7 @@ export default function Dashboard() {
       status: 'active' 
     }),
     enabled: !!user?.active_company_id && currentContext === 'company',
+    staleTime: 5 * 60 * 1000, // 5 minutes
   });
 
   return (
@@ -139,7 +125,7 @@ export default function Dashboard() {
                 <FolderKanban className="h-5 w-5 text-[#ef6144]" />
               </div>
               <div>
-                <p className="text-2xl font-bold text-gray-900">{contextProjects.length}</p>
+                <p className="text-2xl font-bold text-gray-900">{projects.length}</p>
                 <p className="text-sm text-gray-500">Progetti</p>
               </div>
             </div>
@@ -153,7 +139,7 @@ export default function Dashboard() {
               </div>
               <div>
                 <p className="text-2xl font-bold text-gray-900">
-                  {contextProjects.filter(p => p.status === 'in_progress').length}
+                  {projects.filter(p => p.status === 'in_progress').length}
                 </p>
                 <p className="text-sm text-gray-500">In corso</p>
               </div>
@@ -168,7 +154,7 @@ export default function Dashboard() {
               </div>
               <div>
                 <p className="text-2xl font-bold text-gray-900">
-                  {contextProjects.filter(p => p.status === 'completed').length}
+                  {projects.filter(p => p.status === 'completed').length}
                 </p>
                 <p className="text-sm text-gray-500">Completati</p>
               </div>
