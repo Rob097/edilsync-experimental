@@ -162,54 +162,63 @@ export default function MessageList({
   }
 
   return (
-    <div className="flex-1 overflow-y-auto p-4 space-y-3">
-      {sortedMessages.map(message => {
-        const isOwnMessage = message.sender_email === currentUserEmail;
-        const senderDisplay = message.sender_context_type === 'company' && message.sender_company_name
-          ? `${message.sender_company_name} - ${message.sender_name}`
-          : message.sender_name;
+    <>
+      <div className="flex-1 overflow-y-auto p-4 space-y-3">
+        {sortedMessages.map(message => {
+          const isOwnMessage = message.sender_email === currentUserEmail;
+          const senderDisplay = message.sender_context_type === 'company' && message.sender_company_name
+            ? `${message.sender_company_name} - ${message.sender_name}`
+            : message.sender_name;
 
-        return (
-          <div key={message.id} className={`flex gap-3 ${isOwnMessage ? 'flex-row-reverse' : ''}`}>
-            {!isOwnMessage && (
-              <Avatar className="h-8 w-8 flex-shrink-0">
-                {message.sender_context_type === 'company' ? (
-                  <Building2 className="h-4 w-4" />
-                ) : (
-                  <User className="h-4 w-4" />
-                )}
-              </Avatar>
-            )}
-            <div className={`flex flex-col max-w-[75%] ${isOwnMessage ? 'items-end' : 'items-start'}`}>
+          return (
+            <div key={message.id} className={`flex gap-3 ${isOwnMessage ? 'flex-row-reverse' : ''}`}>
               {!isOwnMessage && (
-                <div className="flex items-baseline gap-2 mb-1 px-1">
-                  <span className="font-semibold text-xs text-gray-700">{senderDisplay}</span>
-                  <span className="text-xs text-gray-400">
+                <Avatar className="h-8 w-8 flex-shrink-0">
+                  {message.sender_context_type === 'company' ? (
+                    <Building2 className="h-4 w-4" />
+                  ) : (
+                    <User className="h-4 w-4" />
+                  )}
+                </Avatar>
+              )}
+              <div className={`flex flex-col max-w-[75%] ${isOwnMessage ? 'items-end' : 'items-start'}`}>
+                {!isOwnMessage && (
+                  <div className="flex items-baseline gap-2 mb-1 px-1">
+                    <span className="font-semibold text-xs text-gray-700">{senderDisplay}</span>
+                    <span className="text-xs text-gray-400">
+                      {format(new Date(message.created_date), 'HH:mm', { locale: it })}
+                    </span>
+                  </div>
+                )}
+                <div className={`rounded-2xl px-4 py-2.5 ${
+                  isOwnMessage 
+                    ? 'bg-[#ef6144] text-white' 
+                    : 'bg-white border border-gray-200'
+                }`}>
+                  <div className={`text-sm break-words whitespace-pre-wrap ${
+                    isOwnMessage ? 'text-white' : 'text-gray-700'
+                  }`}>
+                    {parseMessageContent(message)}
+                  </div>
+                </div>
+                {isOwnMessage && (
+                  <span className="text-xs text-gray-400 mt-1 px-1">
                     {format(new Date(message.created_date), 'HH:mm', { locale: it })}
                   </span>
-                </div>
-              )}
-              <div className={`rounded-2xl px-4 py-2.5 ${
-                isOwnMessage 
-                  ? 'bg-[#ef6144] text-white' 
-                  : 'bg-white border border-gray-200'
-              }`}>
-                <div className={`text-sm break-words whitespace-pre-wrap ${
-                  isOwnMessage ? 'text-white' : 'text-gray-700'
-                }`}>
-                  {parseMessageContent(message)}
-                </div>
+                )}
               </div>
-              {isOwnMessage && (
-                <span className="text-xs text-gray-400 mt-1 px-1">
-                  {format(new Date(message.created_date), 'HH:mm', { locale: it })}
-                </span>
-              )}
             </div>
-          </div>
-        );
-      })}
-      <div ref={messagesEndRef} />
-    </div>
+          );
+        })}
+        <div ref={messagesEndRef} />
+      </div>
+
+      <DocumentPreviewDialog
+        document={selectedDocument}
+        open={previewOpen}
+        onOpenChange={setPreviewOpen}
+        allDocuments={allDocuments}
+      />
+    </>
   );
 }
