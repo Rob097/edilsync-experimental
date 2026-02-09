@@ -107,6 +107,8 @@ export default function MessageInput({
       else if (type === 'change_request') mentionedChangeRequests.push(id);
     }
 
+    // Extract document links (no need to track separately, just part of message content)
+
     sendMessageMutation.mutate({
       channel_id: channelId,
       project_id: projectId,
