@@ -3,7 +3,7 @@ import { base44 } from '@/api/base44Client';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { Card } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton.jsx";
-import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
+import { Sheet, SheetContent, SheetTrigger, SheetClose } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
 import { Menu } from "lucide-react";
 import ChannelList from './ChannelList';
@@ -155,6 +155,7 @@ export default function ProjectMessaging({
 
       {/* Mobile sidebar - hidden, shown in sheet */}
       <Sheet open={sidebarOpen} onOpenChange={setSidebarOpen}>
+        <SheetTrigger asChild className="hidden" />
         <SheetContent side="left" className="w-64 p-0">
           <div className="p-4 overflow-y-auto h-full">
             <ChannelList
