@@ -21,8 +21,8 @@ export default function MessageList({
     queryKey: ['messages', channelId],
     queryFn: () => base44.entities.Message.filter({ channel_id: channelId }),
     enabled: !!channelId,
-    staleTime: 10 * 1000, // 10 secondi
-    refetchInterval: 30 * 1000, // Ricontrolla ogni 30 secondi per nuovi messaggi
+    staleTime: 30 * 1000, // 30 secondi
+    refetchInterval: 60 * 1000, // Ricontrolla ogni 60 secondi per nuovi messaggi
   });
 
   const { data: channelMember } = useQuery({

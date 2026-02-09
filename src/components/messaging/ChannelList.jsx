@@ -21,24 +21,24 @@ export default function ChannelList({
     queryKey: ['channels', projectId],
     queryFn: () => base44.entities.Channel.filter({ project_id: projectId }),
     enabled: !!projectId,
-    staleTime: 30 * 1000, // 30 secondi
+    staleTime: 2 * 60 * 1000, // 2 minuti
   });
 
   const { data: channelMembers = [], isLoading: membersLoading } = useQuery({
     queryKey: ['channelMembers', projectId],
     queryFn: () => base44.entities.ChannelMember.filter({ project_id: projectId }),
-    enabled: !!projectId && channels.length > 0,
-    staleTime: 30 * 1000, // 30 secondi
+    enabled: !!projectId,
+    staleTime: 2 * 60 * 1000, // 2 minuti
   });
 
   const { data: messages = [] } = useQuery({
     queryKey: ['messages', projectId],
     queryFn: () => base44.entities.Message.filter({ project_id: projectId }),
-    enabled: !!projectId,
-    staleTime: 10 * 1000, // 10 secondi
+    enabled: !!projectId && channelMembers.length > 0,
+    staleTime: 30 * 1000, // 30 secondi
   });
 
-  const isLoading = channelsLoading || membersLoading;
+  const isLoading = channelsLoading;
 
   // Filter channels based on membership
   const myChannels = channels.filter(channel => {

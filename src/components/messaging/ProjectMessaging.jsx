@@ -22,14 +22,14 @@ export default function ProjectMessaging({
     queryKey: ['channels', projectId],
     queryFn: () => base44.entities.Channel.filter({ project_id: projectId }),
     enabled: !!projectId,
-    staleTime: 30 * 1000, // 30 secondi
+    staleTime: 2 * 60 * 1000, // 2 minuti
   });
 
   const { data: channelMembers = [], isLoading: membersLoading } = useQuery({
     queryKey: ['channelMembers', projectId],
     queryFn: () => base44.entities.ChannelMember.filter({ project_id: projectId }),
-    enabled: !!projectId && channels.length > 0,
-    staleTime: 30 * 1000, // 30 secondi
+    enabled: !!projectId,
+    staleTime: 2 * 60 * 1000, // 2 minuti
   });
 
   const { data: companies = [] } = useQuery({
@@ -121,7 +121,7 @@ export default function ProjectMessaging({
   const selectedChannel = channels.find(c => c.id === selectedChannelId);
   const activeCompany = companies.find(c => c.id === activeCompanyId);
 
-  if (!currentUser || channelsLoading || membersLoading) {
+  if (!currentUser || channelsLoading) {
     return (
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4 h-[600px]">
         <Card className="md:col-span-1 p-4">
