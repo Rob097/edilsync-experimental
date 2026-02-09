@@ -29,11 +29,13 @@ import {
 } from "lucide-react";
 import ContextSwitcher from '@/components/context/ContextSwitcher';
 import MessagingNotifications from '@/components/messaging/MessagingNotifications';
+import FullPageLoader from '@/components/ui/FullPageLoader';
 
 export default function Layout({ children, currentPageName }) {
   const location = useLocation();
   const queryClient = useQueryClient();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [isChangingContext, setIsChangingContext] = useState(false);
 
   const { data: user } = useQuery({
     queryKey: ['currentUser'],
@@ -81,11 +83,19 @@ export default function Layout({ children, currentPageName }) {
   ];
 
   const handleContextChange = async (context, company) => {
-    await base44.auth.updateMe({
-      active_context: context,
-      active_company_id: company?.id || null,
-    });
-    queryClient.invalidateQueries(['currentUser']);
+    setIsChangingContext(true);
+    try {
+      await base44.auth.updateMe({
+        active_context: context,
+        active_company_id: company?.id || null,
+      });
+      // Invalida TUTTE le query per ricaricare tutti i dati con il nuovo contesto
+      await queryClient.invalidateQueries();
+      // Ricarica tutte le query attive
+      await queryClient.refetchQueries();
+    } finally {
+      setIsChangingContext(false);
+    }
   };
 
   const getInitials = (name) => {
@@ -94,7 +104,9 @@ export default function Layout({ children, currentPageName }) {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <>
+      {isChangingContext && <FullPageLoader message="Cambio contesto in corso..." />}
+      <div className="min-h-screen bg-gray-50">
       {/* Header */}
       <header className="bg-white border-b border-gray-200 sticky top-0 z-50 pointer-events-auto">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -246,5 +258,6 @@ export default function Layout({ children, currentPageName }) {
         {children}
       </main>
     </div>
+    </>
   );
 }
