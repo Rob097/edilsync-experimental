@@ -12,7 +12,7 @@ export default function Settings() {
   const queryClient = useQueryClient();
   
   const [formData, setFormData] = useState({
-    full_name: '',
+    display_name: '',
     phone: '',
   });
   const [hasChanges, setHasChanges] = useState(false);
@@ -25,7 +25,7 @@ export default function Settings() {
   useEffect(() => {
     if (user) {
       setFormData({
-        full_name: user.full_name || '',
+        display_name: user.display_name || user.full_name || '',
         phone: user.phone || '',
       });
     }
@@ -84,11 +84,11 @@ export default function Settings() {
         <CardContent>
           <form onSubmit={handleSubmit} className="space-y-6">
             <div className="space-y-2">
-              <Label htmlFor="full_name">Nome completo</Label>
+              <Label htmlFor="display_name">Nome completo</Label>
               <Input
-                id="full_name"
-                value={formData.full_name}
-                onChange={(e) => handleChange('full_name', e.target.value)}
+                id="display_name"
+                value={formData.display_name}
+                onChange={(e) => handleChange('display_name', e.target.value)}
                 placeholder="Mario Rossi"
               />
             </div>
