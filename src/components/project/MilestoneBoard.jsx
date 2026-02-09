@@ -141,64 +141,55 @@ export default function MilestoneBoard({ projectId, project, canEdit, onMileston
                 const startMonth = milestone.startMonth;
                 const endMonth = milestone.endMonth;
                 
+                // Calculate position and width
+                const monthWidth = 100 / 12; // Each month is 1/12 of the total width
+                const daysInStartMonth = getDaysInMonth(milestone.startDate);
+                const daysInEndMonth = getDaysInMonth(milestone.endDate);
+                
+                const startOffset = (startMonth * monthWidth) + ((milestone.startDay - 1) / daysInStartMonth * monthWidth);
+                const endOffset = (endMonth * monthWidth) + (milestone.endDay / daysInEndMonth * monthWidth);
+                const width = endOffset - startOffset;
+                
                 return (
                   <div
                     key={milestone.id}
-                    className="flex border-b hover:bg-gray-50 transition-colors relative"
+                    className="flex border-b relative"
                     style={{ minHeight: '60px' }}
                   >
-                    {months.map((month, monthIdx) => {
-                      const isInRange = monthIdx >= startMonth && monthIdx <= endMonth;
-                      const isStartMonth = monthIdx === startMonth;
-                      const isEndMonth = monthIdx === endMonth;
-                      
-                      const daysInMonth = getDaysInMonth(month);
-                      const startPercent = isStartMonth ? (milestone.startDay / daysInMonth) * 100 : 0;
-                      const endPercent = isEndMonth ? (milestone.endDay / daysInMonth) * 100 : 100;
-                      
-                      return (
-                        <div
-                          key={monthIdx}
-                          className="flex-1 min-w-[80px] border-r last:border-r-0 relative"
-                        >
-                          {isInRange && (
-                            <div
-                              className="absolute top-2 bottom-2"
-                              style={{
-                                left: isStartMonth ? `${startPercent}%` : '0%',
-                                right: isEndMonth ? `${100 - endPercent}%` : '0%',
-                              }}
-                            >
-                              <div
-                                onClick={() => handleMilestoneClick(milestone)}
-                                className="cursor-pointer h-full"
-                              >
-                                <div className={`${statusConfig[milestone.status]?.color} text-white rounded ${isStartMonth ? 'rounded-l-lg' : ''} ${isEndMonth ? 'rounded-r-lg' : ''} p-2 shadow-sm hover:shadow-md transition-shadow h-full flex flex-col justify-center`}>
-                                  {isStartMonth && (
-                                    <>
-                                      <div className="flex items-center gap-1 mb-0.5">
-                                        <Icon className="h-3 w-3 flex-shrink-0" />
-                                        <span className="text-xs font-semibold line-clamp-1">
-                                          {milestone.title}
-                                        </span>
-                                      </div>
-                                      <div className="text-xs opacity-90">
-                                        {format(milestone.startDate, 'dd MMM', { locale: it })} - {format(milestone.endDate, 'dd MMM', { locale: it })}
-                                      </div>
-                                      {milestone.tasksCount > 0 && (
-                                        <div className="text-xs opacity-90 mt-0.5">
-                                          {milestone.completedTasksCount}/{milestone.tasksCount} ✓
-                                        </div>
-                                      )}
-                                    </>
-                                  )}
-                                </div>
-                              </div>
-                            </div>
-                          )}
+                    {/* Month cells for borders */}
+                    {months.map((month, monthIdx) => (
+                      <div
+                        key={monthIdx}
+                        className="flex-1 min-w-[80px] border-r last:border-r-0"
+                      />
+                    ))}
+                    
+                    {/* Milestone bar */}
+                    <div
+                      className="absolute top-2 bottom-2 cursor-pointer"
+                      style={{
+                        left: `${startOffset}%`,
+                        width: `${width}%`,
+                      }}
+                      onClick={() => handleMilestoneClick(milestone)}
+                    >
+                      <div className={`${statusConfig[milestone.status]?.color} text-white rounded-lg p-2 shadow-sm hover:shadow-md transition-shadow h-full flex flex-col justify-center`}>
+                        <div className="flex items-center gap-1 mb-0.5">
+                          <Icon className="h-3 w-3 flex-shrink-0" />
+                          <span className="text-xs font-semibold truncate">
+                            {milestone.title}
+                          </span>
                         </div>
-                      );
-                    })}
+                        <div className="text-xs opacity-90 truncate">
+                          {format(milestone.startDate, 'dd MMM', { locale: it })} - {format(milestone.endDate, 'dd MMM', { locale: it })}
+                        </div>
+                        {milestone.tasksCount > 0 && (
+                          <div className="text-xs opacity-90 mt-0.5">
+                            {milestone.completedTasksCount}/{milestone.tasksCount} ✓
+                          </div>
+                        )}
+                      </div>
+                    </div>
                   </div>
                 );
               })
