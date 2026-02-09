@@ -179,7 +179,10 @@ export default function ProjectDetail() {
     setTimeout(() => {
       const tabsElement = document.querySelector('[role="tablist"]');
       if (tabsElement) {
-        tabsElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        const offset = 100;
+        const elementPosition = tabsElement.getBoundingClientRect().top;
+        const offsetPosition = elementPosition + window.pageYOffset - offset;
+        window.scrollTo({ top: offsetPosition, behavior: 'smooth' });
       }
       
       // Then scroll to specific item if provided
@@ -386,7 +389,10 @@ export default function ProjectDetail() {
         setTimeout(() => {
           const tabsElement = document.querySelector('[role="tablist"]');
           if (tabsElement) {
-            tabsElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            const offset = 100;
+            const elementPosition = tabsElement.getBoundingClientRect().top;
+            const offsetPosition = elementPosition + window.pageYOffset - offset;
+            window.scrollTo({ top: offsetPosition, behavior: 'smooth' });
           }
         }, 100);
       }}>
@@ -441,7 +447,10 @@ export default function ProjectDetail() {
                 setTimeout(() => {
                   const tabsElement = document.querySelector('[role="tablist"]');
                   if (tabsElement) {
-                    tabsElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    const offset = 100;
+                    const elementPosition = tabsElement.getBoundingClientRect().top;
+                    const offsetPosition = elementPosition + window.pageYOffset - offset;
+                    window.scrollTo({ top: offsetPosition, behavior: 'smooth' });
                   }
                 }, 100);
               }}
@@ -456,7 +465,10 @@ export default function ProjectDetail() {
                 setTimeout(() => {
                   const tabsElement = document.querySelector('[role="tablist"]');
                   if (tabsElement) {
-                    tabsElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    const offset = 100;
+                    const elementPosition = tabsElement.getBoundingClientRect().top;
+                    const offsetPosition = elementPosition + window.pageYOffset - offset;
+                    window.scrollTo({ top: offsetPosition, behavior: 'smooth' });
                   }
                 }, 100);
               }}
@@ -471,7 +483,10 @@ export default function ProjectDetail() {
                 setTimeout(() => {
                   const tabsElement = document.querySelector('[role="tablist"]');
                   if (tabsElement) {
-                    tabsElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    const offset = 100;
+                    const elementPosition = tabsElement.getBoundingClientRect().top;
+                    const offsetPosition = elementPosition + window.pageYOffset - offset;
+                    window.scrollTo({ top: offsetPosition, behavior: 'smooth' });
                   }
                 }, 100);
               }}
@@ -486,7 +501,10 @@ export default function ProjectDetail() {
                 setTimeout(() => {
                   const tabsElement = document.querySelector('[role="tablist"]');
                   if (tabsElement) {
-                    tabsElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    const offset = 100;
+                    const elementPosition = tabsElement.getBoundingClientRect().top;
+                    const offsetPosition = elementPosition + window.pageYOffset - offset;
+                    window.scrollTo({ top: offsetPosition, behavior: 'smooth' });
                   }
                 }, 100);
               }}
@@ -564,7 +582,10 @@ export default function ProjectDetail() {
                 setTimeout(() => {
                   const tabsElement = document.querySelector('[role="tablist"]');
                   if (tabsElement) {
-                    tabsElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    const offset = 100;
+                    const elementPosition = tabsElement.getBoundingClientRect().top;
+                    const offsetPosition = elementPosition + window.pageYOffset - offset;
+                    window.scrollTo({ top: offsetPosition, behavior: 'smooth' });
                   }
                 }, 100);
               }}
@@ -579,7 +600,10 @@ export default function ProjectDetail() {
                 setTimeout(() => {
                   const tabsElement = document.querySelector('[role="tablist"]');
                   if (tabsElement) {
-                    tabsElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    const offset = 100;
+                    const elementPosition = tabsElement.getBoundingClientRect().top;
+                    const offsetPosition = elementPosition + window.pageYOffset - offset;
+                    window.scrollTo({ top: offsetPosition, behavior: 'smooth' });
                   }
                 }, 100);
               }}
@@ -594,7 +618,10 @@ export default function ProjectDetail() {
                 setTimeout(() => {
                   const tabsElement = document.querySelector('[role="tablist"]');
                   if (tabsElement) {
-                    tabsElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    const offset = 100;
+                    const elementPosition = tabsElement.getBoundingClientRect().top;
+                    const offsetPosition = elementPosition + window.pageYOffset - offset;
+                    window.scrollTo({ top: offsetPosition, behavior: 'smooth' });
                   }
                 }, 100);
               }}
@@ -609,7 +636,10 @@ export default function ProjectDetail() {
                 setTimeout(() => {
                   const tabsElement = document.querySelector('[role="tablist"]');
                   if (tabsElement) {
-                    tabsElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    const offset = 100;
+                    const elementPosition = tabsElement.getBoundingClientRect().top;
+                    const offsetPosition = elementPosition + window.pageYOffset - offset;
+                    window.scrollTo({ top: offsetPosition, behavior: 'smooth' });
                   }
                 }, 100);
               }}
