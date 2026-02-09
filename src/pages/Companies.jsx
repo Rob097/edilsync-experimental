@@ -16,7 +16,6 @@ export default function Companies() {
   const { data: user } = useQuery({
     queryKey: ['currentUser'],
     queryFn: () => base44.auth.me(),
-    staleTime: 5 * 60 * 1000, // 5 minutes
   });
 
   const currentContext = user?.active_context || 'personal';
@@ -32,23 +31,22 @@ export default function Companies() {
     queryKey: ['userCompanies', user?.email],
     queryFn: () => base44.entities.CompanyMember.filter({ user_email: user?.email, status: 'active' }),
     enabled: !!user?.email,
-    staleTime: 5 * 60 * 1000, // 5 minutes
   });
 
-  const companyIds = companyMemberships.map(m => m.company_id);
-
   const { data: companies = [], isLoading } = useQuery({
-    queryKey: ['companies', companyIds],
-    queryFn: () => base44.entities.Company.filter({ id: { $in: companyIds } }),
-    enabled: companyIds.length > 0,
-    staleTime: 5 * 60 * 1000, // 5 minutes
+    queryKey: ['companies', companyMemberships],
+    queryFn: async () => {
+      if (companyMemberships.length === 0) return [];
+      const companyIds = companyMemberships.map(m => m.company_id);
+      const allCompanies = await base44.entities.Company.list();
+      return allCompanies.filter(c => companyIds.includes(c.id));
+    },
+    enabled: companyMemberships.length > 0,
   });
 
   const { data: allMembers = [] } = useQuery({
-    queryKey: ['allCompanyMembers', companyIds],
-    queryFn: () => base44.entities.CompanyMember.filter({ company_id: { $in: companyIds }, status: 'active' }),
-    enabled: companyIds.length > 0,
-    staleTime: 5 * 60 * 1000, // 5 minutes
+    queryKey: ['allCompanyMembers'],
+    queryFn: () => base44.entities.CompanyMember.filter({ status: 'active' }),
   });
 
   const filteredCompanies = companies.filter(company =>

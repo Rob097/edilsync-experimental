@@ -34,7 +34,6 @@ export default function CompanyDetail() {
   const { data: user } = useQuery({
     queryKey: ['currentUser'],
     queryFn: () => base44.auth.me(),
-    staleTime: 5 * 60 * 1000, // 5 minutes
   });
 
   const { data: company, isLoading: companyLoading } = useQuery({
@@ -44,14 +43,12 @@ export default function CompanyDetail() {
       return companies[0];
     },
     enabled: !!companyId,
-    staleTime: 5 * 60 * 1000, // 5 minutes
   });
 
   const { data: members = [], isLoading: membersLoading } = useQuery({
     queryKey: ['companyMembers', companyId],
     queryFn: () => base44.entities.CompanyMember.filter({ company_id: companyId }),
     enabled: !!companyId,
-    staleTime: 2 * 60 * 1000, // 2 minutes
   });
 
   // Check if current user is admin

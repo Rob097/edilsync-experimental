@@ -38,31 +38,29 @@ export default function Layout({ children, currentPageName }) {
   const { data: user } = useQuery({
     queryKey: ['currentUser'],
     queryFn: () => base44.auth.me(),
-    staleTime: 5 * 60 * 1000, // 5 minutes
   });
 
   const { data: companyMemberships = [] } = useQuery({
     queryKey: ['userCompanies', user?.email],
     queryFn: () => base44.entities.CompanyMember.filter({ user_email: user?.email, status: 'active' }),
     enabled: !!user?.email,
-    staleTime: 5 * 60 * 1000, // 5 minutes
   });
 
-  const companyIds = companyMemberships.map(m => m.company_id);
-
   const { data: companies = [] } = useQuery({
-    queryKey: ['companies', companyIds],
-    queryFn: () => base44.entities.Company.filter({ id: { $in: companyIds } }),
-    enabled: companyIds.length > 0,
-    staleTime: 5 * 60 * 1000, // 5 minutes
+    queryKey: ['companies', companyMemberships],
+    queryFn: async () => {
+      if (companyMemberships.length === 0) return [];
+      const companyIds = companyMemberships.map(m => m.company_id);
+      const allCompanies = await base44.entities.Company.list();
+      return allCompanies.filter(c => companyIds.includes(c.id));
+    },
+    enabled: companyMemberships.length > 0,
   });
 
   const { data: notifications = [] } = useQuery({
     queryKey: ['notifications', user?.email],
     queryFn: () => base44.entities.Notification.filter({ user_email: user?.email, is_read: false }),
     enabled: !!user?.email,
-    staleTime: 30 * 1000, // 30 seconds
-    refetchInterval: 60 * 1000, // Refetch every 60 seconds
   });
 
   const unreadCount = notifications.length;

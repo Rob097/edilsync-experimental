@@ -28,35 +28,33 @@ export default function Calendar() {
   const { data: user } = useQuery({
     queryKey: ['currentUser'],
     queryFn: () => base44.auth.me(),
-    staleTime: 5 * 60 * 1000, // 5 minutes
   });
 
   const { data: companyMemberships = [] } = useQuery({
     queryKey: ['userCompanies', user?.email],
     queryFn: () => base44.entities.CompanyMember.filter({ user_email: user?.email, status: 'active' }),
     enabled: !!user?.email,
-    staleTime: 5 * 60 * 1000, // 5 minutes
   });
 
-  const companyIds = companyMemberships.map(m => m.company_id);
-
   const { data: companies = [] } = useQuery({
-    queryKey: ['companies', companyIds],
-    queryFn: () => base44.entities.Company.filter({ id: { $in: companyIds } }),
-    enabled: companyIds.length > 0,
-    staleTime: 5 * 60 * 1000, // 5 minutes
+    queryKey: ['companies', companyMemberships],
+    queryFn: async () => {
+      if (companyMemberships.length === 0) return [];
+      const companyIds = companyMemberships.map(m => m.company_id);
+      const allCompanies = await base44.entities.Company.list();
+      return allCompanies.filter(c => companyIds.includes(c.id));
+    },
+    enabled: companyMemberships.length > 0,
   });
 
   const { data: events = [] } = useQuery({
     queryKey: ['events'],
     queryFn: () => base44.entities.Event.filter({ status: 'scheduled' }),
-    staleTime: 2 * 60 * 1000, // 2 minutes
   });
 
   const { data: eventParticipants = [] } = useQuery({
     queryKey: ['eventParticipants'],
     queryFn: () => base44.entities.EventParticipant.list(),
-    staleTime: 2 * 60 * 1000, // 2 minutes
   });
 
   const currentContext = user?.active_context || 'personal';

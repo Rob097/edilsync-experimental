@@ -28,24 +28,21 @@ export default function MessageInput({
   const textareaRef = useRef(null);
 
   const { data: tasks = [] } = useQuery({
-    queryKey: ['projectTasks', projectId],
+    queryKey: ['tasks', projectId],
     queryFn: () => base44.entities.Task.filter({ project_id: projectId }),
     enabled: !!projectId && mentionType === 'task',
-    staleTime: 1 * 60 * 1000, // 1 minute
   });
 
   const { data: milestones = [] } = useQuery({
-    queryKey: ['projectMilestones', projectId],
+    queryKey: ['milestones', projectId],
     queryFn: () => base44.entities.Milestone.filter({ project_id: projectId }),
     enabled: !!projectId && mentionType === 'milestone',
-    staleTime: 2 * 60 * 1000, // 2 minutes
   });
 
   const { data: changeRequests = [] } = useQuery({
-    queryKey: ['projectChangeRequests', projectId],
+    queryKey: ['changeRequests', projectId],
     queryFn: () => base44.entities.ChangeRequest.filter({ project_id: projectId }),
     enabled: !!projectId && mentionType === 'change_request',
-    staleTime: 2 * 60 * 1000, // 2 minutes
   });
 
   const sendMessageMutation = useMutation({
