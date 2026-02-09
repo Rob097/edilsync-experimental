@@ -548,7 +548,7 @@ export default function ProjectDetail() {
 
           {/* Chat Section */}
           {(infoSection === 'all' || infoSection === 'chat') && (
-            <div id="section-chat">
+            <div>
               <h3 className="text-lg font-semibold mb-4">Messaggistica</h3>
               <ProjectMessaging
                 projectId={projectId}
@@ -570,7 +570,7 @@ export default function ProjectDetail() {
 
           {/* Participants Section */}
           {(infoSection === 'all' || infoSection === 'participants') && (
-            <Card id="section-participants">
+            <Card>
               <CardHeader className="flex flex-row items-center justify-between pb-4">
                 <CardTitle className="text-lg font-semibold">Partecipanti</CardTitle>
                 {canInvite && (
@@ -627,7 +627,7 @@ export default function ProjectDetail() {
 
           {/* Documents Section */}
           {(infoSection === 'all' || infoSection === 'documents') && (
-            <Card id="section-documents">
+            <Card>
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
                   <FileText className="h-5 w-5" />
