@@ -15,10 +15,7 @@ export default function MessageList({
   onNavigate
 }) {
   const queryClient = useQueryClient();
-  const messagesEndRef = useRef(null);
   const containerRef = useRef(null);
-  const prevChannelIdRef = useRef(channelId);
-  const prevMessageCountRef = useRef(0);
 
   const { data: messages = [], isLoading } = useQuery({
     queryKey: ['messages', channelId],
@@ -56,18 +53,6 @@ export default function MessageList({
       return () => clearTimeout(timer);
     }
   }, [messages.length, channelId]);
-
-  useEffect(() => {
-    const channelChanged = prevChannelIdRef.current !== channelId;
-    const newMessageAdded = messages.length > prevMessageCountRef.current;
-    
-    if (channelChanged || newMessageAdded) {
-      messagesEndRef.current?.scrollIntoView({ behavior: channelChanged ? 'auto' : 'smooth' });
-    }
-    
-    prevChannelIdRef.current = channelId;
-    prevMessageCountRef.current = messages.length;
-  }, [messages, channelId]);
 
   const sortedMessages = [...messages].sort((a, b) => 
     new Date(a.created_date) - new Date(b.created_date)
@@ -167,7 +152,6 @@ export default function MessageList({
           </div>
         );
       })}
-      <div ref={messagesEndRef} />
     </div>
   );
 }
