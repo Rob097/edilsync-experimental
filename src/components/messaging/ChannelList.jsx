@@ -34,8 +34,8 @@ export default function ChannelList({
   const { data: messages = [] } = useQuery({
     queryKey: ['messages', projectId],
     queryFn: () => base44.entities.Message.filter({ project_id: projectId }),
-    enabled: !!projectId && channelMembers.length > 0,
-    staleTime: 30 * 1000, // 30 secondi
+    enabled: !!projectId,
+    staleTime: 2 * 60 * 1000, // 2 minuti
   });
 
   const isLoading = channelsLoading;

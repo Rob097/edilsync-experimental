@@ -38,6 +38,14 @@ export default function ProjectMessaging({
     staleTime: 5 * 60 * 1000, // 5 minuti
   });
 
+  // Prefetch messages for the project to speed up channel switching
+  const { data: allProjectMessages = [] } = useQuery({
+    queryKey: ['messages', projectId],
+    queryFn: () => base44.entities.Message.filter({ project_id: projectId }),
+    enabled: !!projectId,
+    staleTime: 2 * 60 * 1000, // 2 minuti
+  });
+
   const createChannelMutation = useMutation({
     mutationFn: async (channelData) => {
       return await base44.entities.Channel.create(channelData);

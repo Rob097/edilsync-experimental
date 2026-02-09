@@ -17,13 +17,17 @@ export default function MessageList({
   const queryClient = useQueryClient();
   const messagesEndRef = useRef(null);
 
-  const { data: messages = [], isLoading } = useQuery({
-    queryKey: ['messages', channelId],
-    queryFn: () => base44.entities.Message.filter({ channel_id: channelId }),
-    enabled: !!channelId,
-    staleTime: 30 * 1000, // 30 secondi
+  // Use project-level messages and filter by channel for instant display
+  const { data: allMessages = [] } = useQuery({
+    queryKey: ['messages', projectId],
+    queryFn: () => base44.entities.Message.filter({ project_id: projectId }),
+    enabled: !!projectId,
+    staleTime: 2 * 60 * 1000, // 2 minuti
     refetchInterval: 60 * 1000, // Ricontrolla ogni 60 secondi per nuovi messaggi
   });
+
+  const messages = allMessages.filter(m => m.channel_id === channelId);
+  const isLoading = false; // Messages are loaded at project level
 
   const { data: channelMember } = useQuery({
     queryKey: ['channelMember', channelId, currentUserEmail],
