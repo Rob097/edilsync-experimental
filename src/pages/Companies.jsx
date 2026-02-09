@@ -13,9 +13,10 @@ import EmptyState from '@/components/ui/EmptyState';
 export default function Companies() {
   const [searchQuery, setSearchQuery] = useState('');
 
-  const { data: user } = useQuery({
+  const { data: user, isLoading: userLoading } = useQuery({
     queryKey: ['currentUser'],
     queryFn: () => base44.auth.me(),
+    staleTime: 60 * 1000,
   });
 
   const currentContext = user?.active_context || 'personal';
@@ -31,9 +32,10 @@ export default function Companies() {
     queryKey: ['userCompanies', user?.email],
     queryFn: () => base44.entities.CompanyMember.filter({ user_email: user?.email, status: 'active' }),
     enabled: !!user?.email,
+    staleTime: 2 * 60 * 1000,
   });
 
-  const { data: companies = [], isLoading } = useQuery({
+  const { data: companies = [], isLoading: companiesLoading } = useQuery({
     queryKey: ['companies', companyMemberships],
     queryFn: async () => {
       if (companyMemberships.length === 0) return [];
@@ -42,12 +44,16 @@ export default function Companies() {
       return allCompanies.filter(c => companyIds.includes(c.id));
     },
     enabled: companyMemberships.length > 0,
+    staleTime: 5 * 60 * 1000,
   });
 
   const { data: allMembers = [] } = useQuery({
     queryKey: ['allCompanyMembers'],
     queryFn: () => base44.entities.CompanyMember.filter({ status: 'active' }),
+    staleTime: 2 * 60 * 1000,
   });
+
+  const isLoading = userLoading || companiesLoading;
 
   const filteredCompanies = companies.filter(company =>
     company.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
