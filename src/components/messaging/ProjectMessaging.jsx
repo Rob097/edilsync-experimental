@@ -153,42 +153,23 @@ export default function ProjectMessaging({
         />
       </Card>
 
-      {/* Mobile sidebar - hidden, shown in sheet */}
       <Sheet open={sidebarOpen} onOpenChange={setSidebarOpen}>
-        <SheetTrigger asChild className="hidden" />
-        <SheetContent side="left" className="w-64 p-0">
-          <div className="p-4 overflow-y-auto h-full">
-            <ChannelList
-              projectId={projectId}
-              currentUserEmail={currentUser.email}
-              activeCompanyId={activeCompanyId}
-              selectedChannelId={selectedChannelId}
-              onSelectChannel={(channelId) => {
-                setSelectedChannelId(channelId);
-                setSidebarOpen(false);
-              }}
-              participants={participants}
-            />
-          </div>
-        </SheetContent>
-      </Sheet>
-
-      <Card className="flex-1 flex flex-col overflow-hidden">
-        {selectedChannel ? (
-          <>
-            <div className="border-b p-4 flex items-center justify-between">
-              <div>
-                <h3 className="font-semibold">{selectedChannel.name}</h3>
-                {selectedChannel.description && (
-                  <p className="text-sm text-gray-500 mt-1">{selectedChannel.description}</p>
-                )}
+        <Card className="flex-1 flex flex-col overflow-hidden">
+          {selectedChannel ? (
+            <>
+              <div className="border-b p-4 flex items-center justify-between">
+                <div>
+                  <h3 className="font-semibold">{selectedChannel.name}</h3>
+                  {selectedChannel.description && (
+                    <p className="text-sm text-gray-500 mt-1">{selectedChannel.description}</p>
+                  )}
+                </div>
+                <SheetTrigger asChild className="md:hidden">
+                  <Button variant="ghost" size="icon">
+                    <Menu className="h-5 w-5" />
+                  </Button>
+                </SheetTrigger>
               </div>
-              <SheetTrigger asChild className="md:hidden">
-                <Button variant="ghost" size="icon">
-                  <Menu className="h-5 w-5" />
-                </Button>
-              </SheetTrigger>
-            </div>
             <MessageList
               channelId={selectedChannelId}
               projectId={projectId}
@@ -205,13 +186,30 @@ export default function ProjectMessaging({
               activeCompanyName={activeCompany?.name}
               participants={participants}
             />
-          </>
-        ) : (
-          <div className="flex items-center justify-center h-full text-gray-500">
-            Seleziona un canale per iniziare
+            </>
+          ) : (
+            <div className="flex items-center justify-center h-full text-gray-500">
+              Seleziona un canale per iniziare
+            </div>
+          )}
+        </Card>
+
+        <SheetContent side="left" className="w-64 p-0">
+          <div className="p-4 overflow-y-auto h-full">
+            <ChannelList
+              projectId={projectId}
+              currentUserEmail={currentUser.email}
+              activeCompanyId={activeCompanyId}
+              selectedChannelId={selectedChannelId}
+              onSelectChannel={(channelId) => {
+                setSelectedChannelId(channelId);
+                setSidebarOpen(false);
+              }}
+              participants={participants}
+            />
           </div>
-        )}
-      </Card>
+        </SheetContent>
+      </Sheet>
     </div>
   );
 }
