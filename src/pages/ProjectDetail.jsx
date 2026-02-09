@@ -394,7 +394,7 @@ export default function ProjectDetail() {
           </TabsTrigger>
           <TabsTrigger value="info" className="flex items-center gap-2">
             <Users className="h-4 w-4" />
-            Team
+            Info & Team
           </TabsTrigger>
         </TabsList>
 
@@ -514,7 +514,7 @@ export default function ProjectDetail() {
           )}
         </TabsContent>
 
-        {/* TEAM TAB */}
+        {/* Info & TEAM TAB */}
         <TabsContent value="info" className="space-y-6">
           {/* Section selector */}
           <div className="flex gap-2 flex-wrap">
