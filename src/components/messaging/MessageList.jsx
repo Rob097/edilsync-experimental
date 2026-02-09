@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { base44 } from '@/api/base44Client';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { Avatar } from "@/components/ui/avatar";
@@ -6,7 +6,8 @@ import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton.jsx";
 import { format } from 'date-fns';
 import { it } from 'date-fns/locale';
-import { User, Building2, Flag, CheckCircle2, DollarSign } from "lucide-react";
+import { User, Building2, Flag, CheckCircle2, DollarSign, FileText } from "lucide-react";
+import DocumentPreviewDialog from '@/components/project/DocumentPreviewDialog';
 
 export default function MessageList({ 
   channelId, 
@@ -16,6 +17,8 @@ export default function MessageList({
 }) {
   const queryClient = useQueryClient();
   const messagesEndRef = useRef(null);
+  const [selectedDocument, setSelectedDocument] = useState(null);
+  const [previewOpen, setPreviewOpen] = useState(false);
 
   // Use project-level messages and filter by channel for instant display
   const { data: allMessages = [] } = useQuery({
@@ -39,6 +42,13 @@ export default function MessageList({
     },
     enabled: !!channelId && !!currentUserEmail,
     staleTime: 60 * 1000, // 1 minuto
+  });
+
+  const { data: allDocuments = [] } = useQuery({
+    queryKey: ['documents', projectId],
+    queryFn: () => base44.entities.ProjectDocument.filter({ project_id: projectId }),
+    enabled: !!projectId,
+    staleTime: 60 * 1000,
   });
 
   const lastUpdateRef = useRef(null);
@@ -73,7 +83,20 @@ export default function MessageList({
       task: <CheckCircle2 className="h-3 w-3" />,
       milestone: <Flag className="h-3 w-3" />,
       change_request: <DollarSign className="h-3 w-3" />,
+      document: <FileText className="h-3 w-3" />,
       user: <User className="h-3 w-3" />
+    };
+
+    const handleDocumentClick = () => {
+      if (type === 'document') {
+        const doc = allDocuments.find(d => d.id === id);
+        if (doc) {
+          setSelectedDocument(doc);
+          setPreviewOpen(true);
+        }
+      } else {
+        onNavigate && onNavigate(type, id);
+      }
     };
 
     return (
@@ -81,7 +104,7 @@ export default function MessageList({
         key={`${type}-${id}`}
         variant="outline" 
         className="inline-flex items-center gap-1 cursor-pointer bg-gray-100"
-        onClick={() => onNavigate && onNavigate(type, id)}
+        onClick={handleDocumentClick}
       >
         {icons[type]}
         {text}
@@ -94,17 +117,24 @@ export default function MessageList({
     let lastIndex = 0;
     const content = message.content;
 
-    // Parse mentions
-    const mentionRegex = /@\[([^\]]+)\]\(([^:]+):([^)]+)\)/g;
+    // Parse mentions and document links
+    const regex = /(@\[([^\]]+)\]\(([^:]+):([^)]+)\)|#\[([^\]]+)\]\(([^:]+):([^)]+)\))/g;
     let match;
 
-    while ((match = mentionRegex.exec(content)) !== null) {
+    while ((match = regex.exec(content)) !== null) {
       if (match.index > lastIndex) {
         parts.push(content.substring(lastIndex, match.index));
       }
       
-      const [, text, type, id] = match;
-      parts.push(renderMention(type, id, text));
+      if (match[2]) {
+        // Mention format: @[text](type:id)
+        const [, , text, type, id] = match;
+        parts.push(renderMention(type, id, text));
+      } else {
+        // Document format: #[text](type:id)
+        const [, , , , , text, type, id] = match;
+        parts.push(renderMention(type, id, text));
+      }
       lastIndex = match.index + match[0].length;
     }
 
