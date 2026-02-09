@@ -19,8 +19,10 @@ export default function MessageList({
 
   const { data: messages = [], isLoading } = useQuery({
     queryKey: ['messages', channelId],
-    queryFn: () => base44.entities.Message.filter({ channel_id: channelId }),
+    queryFn: () => base44.entities.Message.filter({ channel_id: channelId }, 'created_date'),
     enabled: !!channelId,
+    staleTime: 10 * 1000, // 10 seconds
+    refetchInterval: 30 * 1000, // Refetch every 30 seconds
   });
 
   const { data: channelMember } = useQuery({
@@ -33,6 +35,7 @@ export default function MessageList({
       return members[0];
     },
     enabled: !!channelId && !!currentUserEmail,
+    staleTime: 1 * 60 * 1000, // 1 minute
   });
 
   const updateReadMutation = useMutation({

@@ -22,40 +22,34 @@ export default function MessagingNotifications({ userEmail }) {
     queryKey: ['allChannelMembers', userEmail],
     queryFn: () => base44.entities.ChannelMember.filter({ user_email: userEmail }),
     enabled: !!userEmail,
+    staleTime: 1 * 60 * 1000, // 1 minute
+    refetchInterval: 60 * 1000, // Refetch every 60 seconds
   });
 
   const channelIds = channelMembers.map(m => m.channel_id);
 
   const { data: channels = [] } = useQuery({
     queryKey: ['userChannels', channelIds],
-    queryFn: async () => {
-      if (channelIds.length === 0) return [];
-      const allChannels = await base44.entities.Channel.list();
-      return allChannels.filter(c => channelIds.includes(c.id));
-    },
+    queryFn: () => base44.entities.Channel.filter({ id: { $in: channelIds } }),
     enabled: channelIds.length > 0,
+    staleTime: 2 * 60 * 1000, // 2 minutes
   });
 
   const projectIds = [...new Set(channels.map(c => c.project_id))];
 
   const { data: messages = [] } = useQuery({
     queryKey: ['recentMessages', projectIds],
-    queryFn: async () => {
-      if (projectIds.length === 0) return [];
-      const allMessages = await base44.entities.Message.list('-created_date', 50);
-      return allMessages.filter(m => projectIds.includes(m.project_id));
-    },
+    queryFn: () => base44.entities.Message.filter({ project_id: { $in: projectIds } }, '-created_date', 50),
     enabled: projectIds.length > 0,
+    staleTime: 30 * 1000, // 30 seconds
+    refetchInterval: 60 * 1000, // Refetch every 60 seconds
   });
 
   const { data: projects = [] } = useQuery({
     queryKey: ['messagingProjects', projectIds],
-    queryFn: async () => {
-      if (projectIds.length === 0) return [];
-      const allProjects = await base44.entities.Project.list();
-      return allProjects.filter(p => projectIds.includes(p.id));
-    },
+    queryFn: () => base44.entities.Project.filter({ id: { $in: projectIds } }),
     enabled: projectIds.length > 0,
+    staleTime: 5 * 60 * 1000, // 5 minutes
   });
 
   // Calculate unread messages per channel
