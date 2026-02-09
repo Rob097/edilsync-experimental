@@ -25,15 +25,17 @@ export default function Calendar() {
   const [selectedEvent, setSelectedEvent] = useState(null);
   const [eventDetailOpen, setEventDetailOpen] = useState(false);
 
-  const { data: user } = useQuery({
+  const { data: user, isLoading: userLoading } = useQuery({
     queryKey: ['currentUser'],
     queryFn: () => base44.auth.me(),
+    staleTime: 60 * 1000,
   });
 
   const { data: companyMemberships = [] } = useQuery({
     queryKey: ['userCompanies', user?.email],
     queryFn: () => base44.entities.CompanyMember.filter({ user_email: user?.email, status: 'active' }),
     enabled: !!user?.email,
+    staleTime: 2 * 60 * 1000,
   });
 
   const { data: companies = [] } = useQuery({
@@ -45,16 +47,20 @@ export default function Calendar() {
       return allCompanies.filter(c => companyIds.includes(c.id));
     },
     enabled: companyMemberships.length > 0,
+    staleTime: 5 * 60 * 1000,
   });
 
-  const { data: events = [] } = useQuery({
+  const { data: events = [], isLoading: eventsLoading } = useQuery({
     queryKey: ['events'],
     queryFn: () => base44.entities.Event.filter({ status: 'scheduled' }),
+    staleTime: 60 * 1000,
   });
 
-  const { data: eventParticipants = [] } = useQuery({
+  const { data: eventParticipants = [], isLoading: participantsLoading } = useQuery({
     queryKey: ['eventParticipants'],
     queryFn: () => base44.entities.EventParticipant.list(),
+    enabled: events.length > 0,
+    staleTime: 60 * 1000,
   });
 
   const currentContext = user?.active_context || 'personal';
@@ -141,6 +147,21 @@ export default function Calendar() {
   };
 
   const weekDays = ['Lun', 'Mar', 'Mer', 'Gio', 'Ven', 'Sab', 'Dom'];
+
+  if (userLoading || eventsLoading || participantsLoading) {
+    return (
+      <div className="space-y-6">
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+          <div className="space-y-2">
+            <Skeleton className="h-8 w-32" />
+            <Skeleton className="h-4 w-48" />
+          </div>
+          <Skeleton className="h-10 w-32" />
+        </div>
+        <Skeleton className="h-[600px] w-full" />
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-6">

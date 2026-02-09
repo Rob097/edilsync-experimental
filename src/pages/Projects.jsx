@@ -16,15 +16,17 @@ export default function Projects() {
   const [searchQuery, setSearchQuery] = useState('');
   const [statusFilter, setStatusFilter] = useState('all');
 
-  const { data: user } = useQuery({
+  const { data: user, isLoading: userLoading } = useQuery({
     queryKey: ['currentUser'],
     queryFn: () => base44.auth.me(),
+    staleTime: 60 * 1000,
   });
 
   const { data: companyMemberships = [] } = useQuery({
     queryKey: ['userCompanies', user?.email],
     queryFn: () => base44.entities.CompanyMember.filter({ user_email: user?.email, status: 'active' }),
     enabled: !!user?.email,
+    staleTime: 2 * 60 * 1000,
   });
 
   const { data: companies = [] } = useQuery({
@@ -36,6 +38,7 @@ export default function Projects() {
       return allCompanies.filter(c => companyIds.includes(c.id));
     },
     enabled: companyMemberships.length > 0,
+    staleTime: 5 * 60 * 1000,
   });
 
   const { data: projectParticipations = [] } = useQuery({
@@ -53,9 +56,10 @@ export default function Projects() {
       );
     },
     enabled: !!user?.id,
+    staleTime: 2 * 60 * 1000,
   });
 
-  const { data: projects = [], isLoading } = useQuery({
+  const { data: projects = [], isLoading: projectsLoading } = useQuery({
     queryKey: ['projects', projectParticipations],
     queryFn: async () => {
       if (projectParticipations.length === 0) return [];
@@ -64,12 +68,16 @@ export default function Projects() {
       return allProjects.filter(p => projectIds.includes(p.id));
     },
     enabled: projectParticipations.length > 0,
+    staleTime: 60 * 1000,
   });
 
   const { data: allParticipants = [] } = useQuery({
     queryKey: ['allParticipants'],
     queryFn: () => base44.entities.ProjectParticipant.filter({ status: 'active' }),
+    staleTime: 60 * 1000,
   });
+
+  const isLoading = userLoading || projectsLoading;
 
   const currentContext = user?.active_context || 'personal';
   const currentCompany = companies.find(c => c.id === user?.active_company_id);

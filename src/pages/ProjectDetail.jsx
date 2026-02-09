@@ -96,9 +96,10 @@ export default function ProjectDetail() {
     },
   });
 
-  const { data: user } = useQuery({
+  const { data: user, isLoading: userLoading } = useQuery({
     queryKey: ['currentUser'],
     queryFn: () => base44.auth.me(),
+    staleTime: 60 * 1000,
   });
 
   const { data: project, isLoading: projectLoading } = useQuery({
@@ -108,12 +109,14 @@ export default function ProjectDetail() {
       return projects[0];
     },
     enabled: !!projectId,
+    staleTime: 2 * 60 * 1000,
   });
 
   const { data: participants = [], isLoading: participantsLoading } = useQuery({
     queryKey: ['projectParticipants', projectId],
     queryFn: () => base44.entities.ProjectParticipant.filter({ project_id: projectId }),
-    enabled: !!projectId,
+    enabled: !!projectId && !!project,
+    staleTime: 60 * 1000,
   });
 
   const { data: companies = [] } = useQuery({
@@ -125,12 +128,14 @@ export default function ProjectDetail() {
       return allCompanies.filter(c => companyIds.includes(c.id));
     },
     enabled: participants.length > 0,
+    staleTime: 5 * 60 * 1000,
   });
 
   const { data: companyMemberships = [] } = useQuery({
     queryKey: ['userCompanies', user?.email],
     queryFn: () => base44.entities.CompanyMember.filter({ user_email: user?.email, status: 'active' }),
     enabled: !!user?.email,
+    staleTime: 2 * 60 * 1000,
   });
 
   // Check user's role in this project
@@ -160,7 +165,8 @@ export default function ProjectDetail() {
   const { data: allTasks = [] } = useQuery({
     queryKey: ['tasks', projectId],
     queryFn: () => base44.entities.Task.filter({ project_id: projectId }),
-    enabled: !!projectId,
+    enabled: !!projectId && !!project,
+    staleTime: 30 * 1000,
   });
   
   const blockedTasks = allTasks.filter(t => t.status === 'blocked');
@@ -197,7 +203,7 @@ export default function ProjectDetail() {
     }, 100);
   };
 
-  if (projectLoading) {
+  if (userLoading || projectLoading || (!!projectId && !project)) {
     return (
       <div className="space-y-6">
         <Skeleton className="h-8 w-48" />
@@ -206,7 +212,7 @@ export default function ProjectDetail() {
     );
   }
 
-  if (!project) {
+  if (!user || !project) {
     return (
       <EmptyState
         icon={Settings}
