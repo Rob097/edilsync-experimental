@@ -177,8 +177,12 @@ export default function ProjectDetail() {
     
     // Scroll after state update - only for lavori tab or when there's a specific itemId
     setTimeout(() => {
+      console.log("itemId", itemId);
+      console.log("tab", tab);
+      console.log("section", section);
       if (itemId) {
         const element = document.getElementById(itemId);
+        console.log("element", element);
         if (element) {
           element.scrollIntoView({ behavior: 'smooth', block: 'center' });
         }
