@@ -132,7 +132,7 @@ export default function MessageList({
   }
 
   return (
-    <div className="flex-1 overflow-y-auto p-4 space-y-4">
+    <div className="flex-1 overflow-y-auto p-4 space-y-3">
       {sortedMessages.map(message => {
         const isOwnMessage = message.sender_email === currentUserEmail;
         const senderDisplay = message.sender_context_type === 'company' && message.sender_company_name
@@ -140,24 +140,41 @@ export default function MessageList({
           : message.sender_name;
 
         return (
-          <div key={message.id} className="flex gap-3">
-            <Avatar className="h-10 w-10">
-              {message.sender_context_type === 'company' ? (
-                <Building2 className="h-5 w-5" />
-              ) : (
-                <User className="h-5 w-5" />
+          <div key={message.id} className={`flex gap-3 ${isOwnMessage ? 'flex-row-reverse' : ''}`}>
+            {!isOwnMessage && (
+              <Avatar className="h-8 w-8 flex-shrink-0">
+                {message.sender_context_type === 'company' ? (
+                  <Building2 className="h-4 w-4" />
+                ) : (
+                  <User className="h-4 w-4" />
+                )}
+              </Avatar>
+            )}
+            <div className={`flex flex-col max-w-[75%] ${isOwnMessage ? 'items-end' : 'items-start'}`}>
+              {!isOwnMessage && (
+                <div className="flex items-baseline gap-2 mb-1 px-1">
+                  <span className="font-semibold text-xs text-gray-700">{senderDisplay}</span>
+                  <span className="text-xs text-gray-400">
+                    {format(new Date(message.created_date), 'HH:mm', { locale: it })}
+                  </span>
+                </div>
               )}
-            </Avatar>
-            <div className="flex-1 min-w-0">
-              <div className="flex items-baseline gap-2 mb-1">
-                <span className="font-semibold text-sm">{senderDisplay}</span>
-                <span className="text-xs text-gray-500">
+              <div className={`rounded-2xl px-4 py-2.5 ${
+                isOwnMessage 
+                  ? 'bg-[#ef6144] text-white' 
+                  : 'bg-white border border-gray-200'
+              }`}>
+                <div className={`text-sm break-words whitespace-pre-wrap ${
+                  isOwnMessage ? 'text-white' : 'text-gray-700'
+                }`}>
+                  {parseMessageContent(message)}
+                </div>
+              </div>
+              {isOwnMessage && (
+                <span className="text-xs text-gray-400 mt-1 px-1">
                   {format(new Date(message.created_date), 'HH:mm', { locale: it })}
                 </span>
-              </div>
-              <div className="text-sm text-gray-700 break-words whitespace-pre-wrap">
-                {parseMessageContent(message)}
-              </div>
+              )}
             </div>
           </div>
         );
