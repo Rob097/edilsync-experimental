@@ -9,6 +9,7 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
+import SelectDocumentDialog from './SelectDocumentDialog';
 
 export default function MessageInput({ 
   channelId, 
@@ -25,6 +26,7 @@ export default function MessageInput({
   const [showMentions, setShowMentions] = useState(false);
   const [mentionSearch, setMentionSearch] = useState('');
   const [mentionType, setMentionType] = useState(null);
+  const [selectDocumentOpen, setSelectDocumentOpen] = useState(false);
   const textareaRef = useRef(null);
 
   const { data: tasks = [] } = useQuery({
@@ -160,8 +162,6 @@ export default function MessageInput({
   const insertDocument = (doc) => {
     const link = `#[${doc.name}](document:${doc.id}) `;
     setMessage(prev => prev + link);
-    setShowMentions(false);
-    setMentionType(null);
     textareaRef.current?.focus();
   };
 
@@ -292,37 +292,13 @@ export default function MessageInput({
           </PopoverContent>
         </Popover>
 
-        <Popover open={showMentions && mentionType === 'document'} onOpenChange={(open) => {
-          setShowMentions(open);
-          if (!open) setMentionType(null);
-        }}>
-          <PopoverTrigger asChild>
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={() => {
-                setMentionType('document');
-                setShowMentions(true);
-              }}
-            >
-              <Paperclip className="h-4 w-4" />
-            </Button>
-          </PopoverTrigger>
-          <PopoverContent className="w-64 p-2 max-h-64 overflow-y-auto">
-            <div className="space-y-1">
-              {documents.map(doc => (
-                <button
-                  key={doc.id}
-                  onClick={() => insertDocument(doc)}
-                  className="w-full text-left px-3 py-2 hover:bg-gray-100 rounded text-sm"
-                >
-                  <div className="font-medium truncate">{doc.name}</div>
-                  <div className="text-xs text-gray-500">{doc.file_type?.toUpperCase()}</div>
-                </button>
-              ))}
-            </div>
-          </PopoverContent>
-        </Popover>
+        <Button
+          variant="ghost"
+          size="icon"
+          onClick={() => setSelectDocumentOpen(true)}
+        >
+          <Paperclip className="h-4 w-4" />
+        </Button>
       </div>
 
       <div className="flex gap-2">
@@ -348,6 +324,13 @@ export default function MessageInput({
           <Send className="h-4 w-4" />
         </Button>
       </div>
+
+      <SelectDocumentDialog
+        projectId={projectId}
+        open={selectDocumentOpen}
+        onOpenChange={setSelectDocumentOpen}
+        onSelectDocument={insertDocument}
+      />
     </div>
   );
 }
