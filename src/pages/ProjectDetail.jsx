@@ -175,14 +175,14 @@ export default function ProjectDetail() {
       setInfoSection(section);
     }
     
-    // Scroll after state update
+    // Scroll after state update - only for lavori tab or when there's a specific itemId
     setTimeout(() => {
       if (itemId) {
         const element = document.getElementById(itemId);
         if (element) {
           element.scrollIntoView({ behavior: 'smooth', block: 'center' });
         }
-      } else if (section && section !== 'all') {
+      } else if (tab === 'lavori' && section && section !== 'all') {
         const sectionElement = document.getElementById(`section-${section}`);
         if (sectionElement) {
           sectionElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
