@@ -22,6 +22,7 @@ export default function MessagingNotifications({ userEmail }) {
     queryKey: ['allChannelMembers', userEmail],
     queryFn: () => base44.entities.ChannelMember.filter({ user_email: userEmail }),
     enabled: !!userEmail,
+    staleTime: 30 * 1000,
   });
 
   const channelIds = channelMembers.map(m => m.channel_id);
@@ -34,6 +35,7 @@ export default function MessagingNotifications({ userEmail }) {
       return allChannels.filter(c => channelIds.includes(c.id));
     },
     enabled: channelIds.length > 0,
+    staleTime: 30 * 1000,
   });
 
   const projectIds = [...new Set(channels.map(c => c.project_id))];
@@ -46,6 +48,8 @@ export default function MessagingNotifications({ userEmail }) {
       return allMessages.filter(m => projectIds.includes(m.project_id));
     },
     enabled: projectIds.length > 0,
+    staleTime: 10 * 1000,
+    refetchInterval: 30 * 1000,
   });
 
   const { data: projects = [] } = useQuery({
@@ -56,6 +60,7 @@ export default function MessagingNotifications({ userEmail }) {
       return allProjects.filter(p => projectIds.includes(p.id));
     },
     enabled: projectIds.length > 0,
+    staleTime: 2 * 60 * 1000,
   });
 
   // Calculate unread messages per channel
