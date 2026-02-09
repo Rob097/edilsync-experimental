@@ -80,7 +80,7 @@ export default function MessageList({
       <Badge 
         key={`${type}-${id}`}
         variant="outline" 
-        className="inline-flex items-center gap-1 cursor-pointer hover:bg-gray-100"
+        className="inline-flex items-center gap-1 cursor-pointer bg-gray-100"
         onClick={() => onNavigate && onNavigate(type, id)}
       >
         {icons[type]}
