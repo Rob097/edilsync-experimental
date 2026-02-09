@@ -16,6 +16,9 @@ export default function MessageList({
 }) {
   const queryClient = useQueryClient();
   const messagesEndRef = useRef(null);
+  const containerRef = useRef(null);
+  const prevChannelIdRef = useRef(channelId);
+  const prevMessageCountRef = useRef(0);
 
   const { data: messages = [], isLoading } = useQuery({
     queryKey: ['messages', channelId],
@@ -55,8 +58,16 @@ export default function MessageList({
   }, [messages.length, channelId]);
 
   useEffect(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
-  }, [messages]);
+    const channelChanged = prevChannelIdRef.current !== channelId;
+    const newMessageAdded = messages.length > prevMessageCountRef.current;
+    
+    if (channelChanged || newMessageAdded) {
+      messagesEndRef.current?.scrollIntoView({ behavior: channelChanged ? 'auto' : 'smooth' });
+    }
+    
+    prevChannelIdRef.current = channelId;
+    prevMessageCountRef.current = messages.length;
+  }, [messages, channelId]);
 
   const sortedMessages = [...messages].sort((a, b) => 
     new Date(a.created_date) - new Date(b.created_date)
@@ -126,7 +137,7 @@ export default function MessageList({
   }
 
   return (
-    <div className="flex-1 overflow-y-auto p-4 space-y-4">
+    <div ref={containerRef} className="flex-1 overflow-y-auto p-4 space-y-4">
       {sortedMessages.map(message => {
         const isOwnMessage = message.sender_email === currentUserEmail;
         const senderDisplay = message.sender_context_type === 'company' && message.sender_company_name
