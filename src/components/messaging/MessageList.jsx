@@ -1,0 +1,158 @@
+import React, { useEffect, useRef } from 'react';
+import { base44 } from '@/api/base44Client';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { Avatar } from "@/components/ui/avatar";
+import { Badge } from "@/components/ui/badge";
+import { Skeleton } from "@/components/ui/skeleton";
+import { format } from 'date-fns';
+import { it } from 'date-fns/locale';
+import { User, Building2, Flag, CheckCircle2, DollarSign } from "lucide-react";
+
+export default function MessageList({ 
+  channelId, 
+  projectId,
+  currentUserEmail,
+  onNavigate
+}) {
+  const queryClient = useQueryClient();
+  const messagesEndRef = useRef(null);
+
+  const { data: messages = [], isLoading } = useQuery({
+    queryKey: ['messages', channelId],
+    queryFn: () => base44.entities.Message.filter({ channel_id: channelId }),
+    enabled: !!channelId,
+  });
+
+  const { data: channelMember } = useQuery({
+    queryKey: ['channelMember', channelId, currentUserEmail],
+    queryFn: async () => {
+      const members = await base44.entities.ChannelMember.filter({ 
+        channel_id: channelId,
+        user_email: currentUserEmail
+      });
+      return members[0];
+    },
+    enabled: !!channelId && !!currentUserEmail,
+  });
+
+  const updateReadMutation = useMutation({
+    mutationFn: () => base44.entities.ChannelMember.update(channelMember.id, {
+      last_read_at: new Date().toISOString()
+    }),
+    onSuccess: () => {
+      queryClient.invalidateQueries(['channelMembers', projectId]);
+    },
+  });
+
+  useEffect(() => {
+    if (messages.length > 0 && channelMember) {
+      updateReadMutation.mutate();
+    }
+  }, [messages.length, channelId]);
+
+  useEffect(() => {
+    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+  }, [messages]);
+
+  const sortedMessages = [...messages].sort((a, b) => 
+    new Date(a.created_date) - new Date(b.created_date)
+  );
+
+  const renderMention = (type, id, text) => {
+    const icons = {
+      task: <CheckCircle2 className="h-3 w-3" />,
+      milestone: <Flag className="h-3 w-3" />,
+      change_request: <DollarSign className="h-3 w-3" />,
+      user: <User className="h-3 w-3" />
+    };
+
+    return (
+      <Badge 
+        key={`${type}-${id}`}
+        variant="outline" 
+        className="inline-flex items-center gap-1 cursor-pointer hover:bg-gray-100"
+        onClick={() => onNavigate && onNavigate(type, id)}
+      >
+        {icons[type]}
+        {text}
+      </Badge>
+    );
+  };
+
+  const parseMessageContent = (message) => {
+    const parts = [];
+    let lastIndex = 0;
+    const content = message.content;
+
+    // Parse mentions
+    const mentionRegex = /@\[([^\]]+)\]\(([^:]+):([^)]+)\)/g;
+    let match;
+
+    while ((match = mentionRegex.exec(content)) !== null) {
+      if (match.index > lastIndex) {
+        parts.push(content.substring(lastIndex, match.index));
+      }
+      
+      const [, text, type, id] = match;
+      parts.push(renderMention(type, id, text));
+      lastIndex = match.index + match[0].length;
+    }
+
+    if (lastIndex < content.length) {
+      parts.push(content.substring(lastIndex));
+    }
+
+    return parts.length > 0 ? parts : [content];
+  };
+
+  if (isLoading) {
+    return (
+      <div className="flex-1 overflow-y-auto p-4 space-y-4">
+        {[1, 2, 3].map(i => (
+          <div key={i} className="flex gap-3">
+            <Skeleton className="h-10 w-10 rounded-full" />
+            <div className="flex-1 space-y-2">
+              <Skeleton className="h-4 w-32" />
+              <Skeleton className="h-16 w-full" />
+            </div>
+          </div>
+        ))}
+      </div>
+    );
+  }
+
+  return (
+    <div className="flex-1 overflow-y-auto p-4 space-y-4">
+      {sortedMessages.map(message => {
+        const isOwnMessage = message.sender_email === currentUserEmail;
+        const senderDisplay = message.sender_context_type === 'company' && message.sender_company_name
+          ? `${message.sender_company_name} - ${message.sender_name}`
+          : message.sender_name;
+
+        return (
+          <div key={message.id} className="flex gap-3">
+            <Avatar className="h-10 w-10">
+              {message.sender_context_type === 'company' ? (
+                <Building2 className="h-5 w-5" />
+              ) : (
+                <User className="h-5 w-5" />
+              )}
+            </Avatar>
+            <div className="flex-1 min-w-0">
+              <div className="flex items-baseline gap-2 mb-1">
+                <span className="font-semibold text-sm">{senderDisplay}</span>
+                <span className="text-xs text-gray-500">
+                  {format(new Date(message.created_date), 'HH:mm', { locale: it })}
+                </span>
+              </div>
+              <div className="text-sm text-gray-700 break-words whitespace-pre-wrap">
+                {parseMessageContent(message)}
+              </div>
+            </div>
+          </div>
+        );
+      })}
+      <div ref={messagesEndRef} />
+    </div>
+  );
+}
