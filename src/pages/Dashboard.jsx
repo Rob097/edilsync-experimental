@@ -121,7 +121,7 @@ export default function Dashboard() {
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
           <h1 className="text-2xl font-bold text-gray-900">
-            Ciao, {user?.full_name?.split(' ')[0] || 'Utente'}
+            Ciao, {(user?.display_name || user?.full_name)?.split(' ')[0] || 'Utente'}
           </h1>
           <div className="flex items-center gap-2 mt-1">
             <span className="text-gray-500">Stai operando come</span>
