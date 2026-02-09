@@ -22,8 +22,7 @@ export default function MessageList({
     queryKey: ['messages', projectId],
     queryFn: () => base44.entities.Message.filter({ project_id: projectId }),
     enabled: !!projectId,
-    staleTime: 2 * 60 * 1000, // 2 minuti
-    refetchInterval: 60 * 1000, // Ricontrolla ogni 60 secondi per nuovi messaggi
+    staleTime: 5 * 60 * 1000, // 5 minuti
   });
 
   const messages = allMessages.filter(m => m.channel_id === channelId);
@@ -46,20 +45,16 @@ export default function MessageList({
     mutationFn: () => base44.entities.ChannelMember.update(channelMember.id, {
       last_read_at: new Date().toISOString()
     }),
-    onSuccess: () => {
-      queryClient.invalidateQueries(['channelMembers', projectId]);
-      queryClient.invalidateQueries(['allChannelMembers']);
-    },
   });
 
   useEffect(() => {
     if (messages.length > 0 && channelMember && !updateReadMutation.isPending) {
       const timer = setTimeout(() => {
         updateReadMutation.mutate();
-      }, 1000);
+      }, 2000);
       return () => clearTimeout(timer);
     }
-  }, [messages.length, channelId]);
+  }, [channelId]);
 
 
 
