@@ -3,7 +3,7 @@ import { base44 } from '@/api/base44Client';
 import { useMutation, useQueryClient, useQuery } from '@tanstack/react-query';
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
-import { Send, AtSign, Hash, Flag, DollarSign } from "lucide-react";
+import { Send, AtSign, Hash, Flag, DollarSign, Paperclip } from "lucide-react";
 import {
   Popover,
   PopoverContent,
@@ -43,6 +43,12 @@ export default function MessageInput({
     queryKey: ['changeRequests', projectId],
     queryFn: () => base44.entities.ChangeRequest.filter({ project_id: projectId }),
     enabled: !!projectId && mentionType === 'change_request',
+  });
+
+  const { data: documents = [] } = useQuery({
+    queryKey: ['documents', projectId],
+    queryFn: () => base44.entities.ProjectDocument.filter({ project_id: projectId }),
+    enabled: !!projectId && mentionType === 'document',
   });
 
   const sendMessageMutation = useMutation({
@@ -145,7 +151,16 @@ export default function MessageInput({
     if (mentionType === 'task') return tasks;
     if (mentionType === 'milestone') return milestones;
     if (mentionType === 'change_request') return changeRequests;
+    if (mentionType === 'document') return documents;
     return [];
+  };
+
+  const insertDocument = (doc) => {
+    const link = `#[${doc.name}](document:${doc.id}) `;
+    setMessage(prev => prev + link);
+    setShowMentions(false);
+    setMentionType(null);
+    textareaRef.current?.focus();
   };
 
   return (
