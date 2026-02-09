@@ -149,7 +149,7 @@ export default function MilestoneBoard({ projectId, project, canEdit, onMileston
             {months.map((month, idx) => (
               <div
                 key={idx}
-                className="flex-1 min-w-[60px] md:min-w-[80px] p-2 text-center text-xs md:text-sm font-medium border-r last:border-r-0"
+                className="flex-1 min-w-[60px] md:min-w-[80px] p-2 text-center text-xs md:text-sm font-medium border-r last:border-r-0 bg-gray-50"
               >
                 {format(month, 'MMM', { locale: it })}
               </div>
