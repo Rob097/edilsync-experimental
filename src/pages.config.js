@@ -54,9 +54,9 @@ import Dashboard from './pages/Dashboard';
 import NewCompany from './pages/NewCompany';
 import NewProject from './pages/NewProject';
 import Notifications from './pages/Notifications';
+import ProjectDetail from './pages/ProjectDetail';
 import Projects from './pages/Projects';
 import Settings from './pages/Settings';
-import ProjectDetail from './pages/ProjectDetail';
 import __Layout from './Layout.jsx';
 
 
@@ -68,9 +68,9 @@ export const PAGES = {
     "NewCompany": NewCompany,
     "NewProject": NewProject,
     "Notifications": Notifications,
+    "ProjectDetail": ProjectDetail,
     "Projects": Projects,
     "Settings": Settings,
-    "ProjectDetail": ProjectDetail,
 }
 
 export const pagesConfig = {

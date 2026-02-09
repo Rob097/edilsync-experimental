@@ -175,22 +175,24 @@ export default function ProjectDetail() {
       setInfoSection(section);
     }
     
-    // Scroll only for lavori tab
-    if (tab === 'lavori') {
-      setTimeout(() => {
-        if (itemId) {
-          const element = document.getElementById(itemId);
-          if (element) {
-            element.scrollIntoView({ behavior: 'smooth', block: 'center' });
-          }
-        } else if (section && section !== 'all') {
-          const sectionElement = document.getElementById(`section-${section}`);
-          if (sectionElement) {
-            sectionElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
-          }
+    // Scroll after state update - only for lavori tab or when there's a specific itemId
+    setTimeout(() => {
+      alert("itemId: " + itemId);
+      alert("tab: " + tab);
+      alert("section: " + section);
+      if (itemId) {
+        const element = document.getElementById(itemId);
+        alert("element: " + element);
+        if (element) {
+          element.scrollIntoView({ behavior: 'smooth', block: 'center' });
         }
-      }, 100);
-    }
+      } else if (tab === 'lavori' && section && section !== 'all') {
+        const sectionElement = document.getElementById(`section-${section}`);
+        if (sectionElement) {
+          sectionElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+      }
+    }, 100);
   };
 
   if (projectLoading) {
@@ -548,7 +550,7 @@ export default function ProjectDetail() {
 
           {/* Chat Section */}
           {(infoSection === 'all' || infoSection === 'chat') && (
-            <div>
+            <div id="section-chat">
               <h3 className="text-lg font-semibold mb-4">Messaggistica</h3>
               <ProjectMessaging
                 projectId={projectId}
@@ -570,7 +572,7 @@ export default function ProjectDetail() {
 
           {/* Participants Section */}
           {(infoSection === 'all' || infoSection === 'participants') && (
-            <Card>
+            <Card id="section-participants">
               <CardHeader className="flex flex-row items-center justify-between pb-4">
                 <CardTitle className="text-lg font-semibold">Partecipanti</CardTitle>
                 {canInvite && (
@@ -627,7 +629,7 @@ export default function ProjectDetail() {
 
           {/* Documents Section */}
           {(infoSection === 'all' || infoSection === 'documents') && (
-            <Card>
+            <Card id="section-documents">
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
                   <FileText className="h-5 w-5" />

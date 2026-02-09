@@ -32,19 +32,17 @@ export default function ProjectCard({ project, userRole, participantCount }) {
     <Link to={createPageUrl('ProjectDetail') + `?id=${project.id}`}>
       <Card className="my-2 bg-card text-card-foreground rounded-xl border shadow hover:shadow-md transition-all duration-200 border-gray-200 hover:border-[#ef6144]/30 cursor-pointer">
         <CardContent className="p-5">
-          <div className="mb-3">
-            <div className="flex items-start justify-between gap-2 mb-2">
-              <h3 className="font-semibold text-gray-900">{project.name}</h3>
-            </div>
-            <div className="flex flex-col sm:flex-row sm:items-center gap-2">
+          <div className="flex items-start justify-between mb-3">
+            <div>
+              <h3 className="font-semibold text-gray-900 mb-1">{project.name}</h3>
               <div className="flex items-center gap-1.5 text-sm text-gray-500">
-                <MapPin className="h-3.5 w-3.5 flex-shrink-0" />
-                <span className="truncate">{project.address}</span>
+                <MapPin className="h-3.5 w-3.5" />
+                <span className="truncate max-w-[200px]">{project.address}</span>
               </div>
-              <Badge className={`${status.color} font-medium w-fit`}>
-                {status.label}
-              </Badge>
             </div>
+            <Badge className={`${status.color} font-medium`}>
+              {status.label}
+            </Badge>
           </div>
           
           <div className="flex items-center gap-4 text-sm text-gray-500">
