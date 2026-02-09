@@ -44,7 +44,7 @@ import DocumentList from '@/components/project/DocumentList';
 import ActivityFeed from '@/components/project/ActivityFeed';
 import TaskList from '@/components/project/TaskList';
 import ChangeRequestList from '@/components/project/ChangeRequestList';
-import ProjectChat from '@/components/project/ProjectChat';
+import ProjectMessaging from '@/components/messaging/ProjectMessaging';
 import EmptyState from '@/components/ui/EmptyState';
 import EditProjectDialog from '@/components/project/EditProjectDialog';
 import MilestoneList from '@/components/project/MilestoneList';
@@ -546,17 +546,24 @@ export default function ProjectDetail() {
 
           {/* Chat Section */}
           {(infoSection === 'all' || infoSection === 'chat') && (
-            <Card id="section-chat">
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <MessageSquare className="h-5 w-5" />
-                  Chat di Cantiere
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <ProjectChat projectId={projectId} />
-              </CardContent>
-            </Card>
+            <div id="section-chat">
+              <h3 className="text-lg font-semibold mb-4">Messaggistica</h3>
+              <ProjectMessaging
+                projectId={projectId}
+                currentUser={user}
+                activeCompanyId={user?.active_company_id}
+                participants={activeParticipants}
+                onNavigate={(type, id) => {
+                  if (type === 'task') {
+                    navigateToSection('lavori', 'tasks', `task-${id}`);
+                  } else if (type === 'milestone') {
+                    navigateToSection('lavori', 'milestones', `milestone-${id}`);
+                  } else if (type === 'change_request') {
+                    navigateToSection('lavori', 'changes', `change-${id}`);
+                  }
+                }}
+              />
+            </div>
           )}
 
           {/* Participants Section */}
