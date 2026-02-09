@@ -3,7 +3,7 @@ import { base44 } from '@/api/base44Client';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { Avatar } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
-import { Skeleton } from "@/components/ui/skeleton";
+import { Skeleton } from "@/components/ui/skeleton.jsx";
 import { format } from 'date-fns';
 import { it } from 'date-fns/locale';
 import { User, Building2, Flag, CheckCircle2, DollarSign } from "lucide-react";
@@ -17,11 +17,16 @@ export default function MessageList({
   const queryClient = useQueryClient();
   const messagesEndRef = useRef(null);
 
-  const { data: messages = [], isLoading } = useQuery({
-    queryKey: ['messages', channelId],
-    queryFn: () => base44.entities.Message.filter({ channel_id: channelId }),
-    enabled: !!channelId,
+  // Use project-level messages and filter by channel for instant display
+  const { data: allMessages = [] } = useQuery({
+    queryKey: ['messages', projectId],
+    queryFn: () => base44.entities.Message.filter({ project_id: projectId }),
+    enabled: !!projectId,
+    staleTime: 5 * 60 * 1000, // 5 minuti
   });
+
+  const messages = allMessages.filter(m => m.channel_id === channelId);
+  const isLoading = false; // Messages are loaded at project level
 
   const { data: channelMember } = useQuery({
     queryKey: ['channelMember', channelId, currentUserEmail],
@@ -33,30 +38,31 @@ export default function MessageList({
       return members[0];
     },
     enabled: !!channelId && !!currentUserEmail,
+    staleTime: 60 * 1000, // 1 minuto
   });
+
+  const lastUpdateRef = useRef(null);
 
   const updateReadMutation = useMutation({
     mutationFn: () => base44.entities.ChannelMember.update(channelMember.id, {
       last_read_at: new Date().toISOString()
     }),
-    onSuccess: () => {
-      queryClient.invalidateQueries(['channelMembers', projectId]);
-      queryClient.invalidateQueries(['allChannelMembers']);
-    },
   });
 
   useEffect(() => {
+    // Prevent multiple updates for same channel
+    if (channelId === lastUpdateRef.current) return;
+    
     if (messages.length > 0 && channelMember && !updateReadMutation.isPending) {
+      lastUpdateRef.current = channelId;
       const timer = setTimeout(() => {
         updateReadMutation.mutate();
-      }, 1000);
+      }, 2000);
       return () => clearTimeout(timer);
     }
-  }, [messages.length, channelId]);
+  }, [channelId, channelMember?.id]);
 
-  useEffect(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
-  }, [messages]);
+
 
   const sortedMessages = [...messages].sort((a, b) => 
     new Date(a.created_date) - new Date(b.created_date)
@@ -126,7 +132,7 @@ export default function MessageList({
   }
 
   return (
-    <div className="flex-1 overflow-y-auto p-4 space-y-4">
+    <div className="flex-1 overflow-y-auto p-4 space-y-3">
       {sortedMessages.map(message => {
         const isOwnMessage = message.sender_email === currentUserEmail;
         const senderDisplay = message.sender_context_type === 'company' && message.sender_company_name
@@ -134,24 +140,41 @@ export default function MessageList({
           : message.sender_name;
 
         return (
-          <div key={message.id} className="flex gap-3">
-            <Avatar className="h-10 w-10">
-              {message.sender_context_type === 'company' ? (
-                <Building2 className="h-5 w-5" />
-              ) : (
-                <User className="h-5 w-5" />
+          <div key={message.id} className={`flex gap-3 ${isOwnMessage ? 'flex-row-reverse' : ''}`}>
+            {!isOwnMessage && (
+              <Avatar className="h-8 w-8 flex-shrink-0">
+                {message.sender_context_type === 'company' ? (
+                  <Building2 className="h-4 w-4" />
+                ) : (
+                  <User className="h-4 w-4" />
+                )}
+              </Avatar>
+            )}
+            <div className={`flex flex-col max-w-[75%] ${isOwnMessage ? 'items-end' : 'items-start'}`}>
+              {!isOwnMessage && (
+                <div className="flex items-baseline gap-2 mb-1 px-1">
+                  <span className="font-semibold text-xs text-gray-700">{senderDisplay}</span>
+                  <span className="text-xs text-gray-400">
+                    {format(new Date(message.created_date), 'HH:mm', { locale: it })}
+                  </span>
+                </div>
               )}
-            </Avatar>
-            <div className="flex-1 min-w-0">
-              <div className="flex items-baseline gap-2 mb-1">
-                <span className="font-semibold text-sm">{senderDisplay}</span>
-                <span className="text-xs text-gray-500">
+              <div className={`rounded-2xl px-4 py-2.5 ${
+                isOwnMessage 
+                  ? 'bg-[#ef6144] text-white' 
+                  : 'bg-white border border-gray-200'
+              }`}>
+                <div className={`text-sm break-words whitespace-pre-wrap ${
+                  isOwnMessage ? 'text-white' : 'text-gray-700'
+                }`}>
+                  {parseMessageContent(message)}
+                </div>
+              </div>
+              {isOwnMessage && (
+                <span className="text-xs text-gray-400 mt-1 px-1">
                   {format(new Date(message.created_date), 'HH:mm', { locale: it })}
                 </span>
-              </div>
-              <div className="text-sm text-gray-700 break-words whitespace-pre-wrap">
-                {parseMessageContent(message)}
-              </div>
+              )}
             </div>
           </div>
         );
