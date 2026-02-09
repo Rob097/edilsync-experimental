@@ -508,7 +508,7 @@ export default function ProjectDetail() {
         </TabsContent>
 
         {/* INFO & TEAM TAB */}
-        <TabsContent value="info" className="space-y-6" tabIndex={-1}>
+        <TabsContent value="info" className="space-y-6">
           {/* Section selector */}
           <div className="flex gap-2 flex-wrap">
             <Button
