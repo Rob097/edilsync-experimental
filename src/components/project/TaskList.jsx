@@ -1,16 +1,17 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { base44 } from '@/api/base44Client';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Plus, CheckCircle2, Clock, AlertCircle, Play, List, Grid3x3 } from "lucide-react";
+import { Plus, CheckCircle2, Clock, AlertCircle, Play, List, Grid3x3, Flag, X } from "lucide-react";
 import { format } from 'date-fns';
 import { it } from 'date-fns/locale';
 import EmptyState from '@/components/ui/EmptyState';
 import TaskDialog from './TaskDialog';
 import TaskBoard from './TaskBoard';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
 const statusConfig = {
   not_started: { label: 'Non iniziato', color: 'bg-gray-100 text-gray-700', icon: Clock },
@@ -19,17 +20,30 @@ const statusConfig = {
   blocked: { label: 'Bloccato', color: 'bg-red-100 text-red-700', icon: AlertCircle },
 };
 
-export default function TaskList({ projectId, canEdit }) {
+export default function TaskList({ projectId, canEdit, filterMilestoneId }) {
   const queryClient = useQueryClient();
   const [dialogOpen, setDialogOpen] = useState(false);
   const [selectedTask, setSelectedTask] = useState(null);
   const [viewMode, setViewMode] = useState('board'); // 'list' or 'board'
+  const [selectedMilestoneId, setSelectedMilestoneId] = useState(filterMilestoneId || 'all');
 
   const { data: tasks = [], isLoading } = useQuery({
     queryKey: ['tasks', projectId],
     queryFn: () => base44.entities.Task.filter({ project_id: projectId }),
     enabled: !!projectId,
   });
+
+  const { data: milestones = [] } = useQuery({
+    queryKey: ['milestones', projectId],
+    queryFn: () => base44.entities.Milestone.filter({ project_id: projectId }),
+    enabled: !!projectId,
+  });
+
+  useEffect(() => {
+    if (filterMilestoneId) {
+      setSelectedMilestoneId(filterMilestoneId);
+    }
+  }, [filterMilestoneId]);
 
   const handleEdit = (task) => {
     setSelectedTask(task);
@@ -41,7 +55,13 @@ export default function TaskList({ projectId, canEdit }) {
     setDialogOpen(true);
   };
 
-  const sortedTasks = [...tasks].sort((a, b) => {
+  const filteredTasks = selectedMilestoneId === 'all' 
+    ? tasks 
+    : selectedMilestoneId === 'none'
+    ? tasks.filter(t => !t.milestone_id)
+    : tasks.filter(t => t.milestone_id === selectedMilestoneId);
+
+  const sortedTasks = [...filteredTasks].sort((a, b) => {
     const statusOrder = { blocked: 0, in_progress: 1, not_started: 2, completed: 3 };
     return statusOrder[a.status] - statusOrder[b.status];
   });
@@ -50,7 +70,7 @@ export default function TaskList({ projectId, canEdit }) {
     <>
       <Card>
         <CardHeader className="flex flex-row items-center justify-between pb-4">
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-3 flex-1">
             <CardTitle>Attività</CardTitle>
             <div className="flex gap-1">
               <Button
@@ -81,11 +101,42 @@ export default function TaskList({ projectId, canEdit }) {
           )}
         </CardHeader>
         <CardContent>
+          {/* Milestone Filter */}
+          {milestones.length > 0 && (
+            <div className="mb-4 flex items-center gap-2">
+              <Flag className="h-4 w-4 text-gray-500" />
+              <Select value={selectedMilestoneId} onValueChange={setSelectedMilestoneId}>
+                <SelectTrigger className="w-[250px]">
+                  <SelectValue placeholder="Filtra per milestone" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">Tutte le attività</SelectItem>
+                  <SelectItem value="none">Senza milestone</SelectItem>
+                  {milestones.map(milestone => (
+                    <SelectItem key={milestone.id} value={milestone.id}>
+                      {milestone.title}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+              {selectedMilestoneId !== 'all' && (
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  onClick={() => setSelectedMilestoneId('all')}
+                  className="h-8 w-8"
+                >
+                  <X className="h-4 w-4" />
+                </Button>
+              )}
+            </div>
+          )}
           {viewMode === 'board' ? (
             <TaskBoard 
               projectId={projectId} 
               canEdit={canEdit}
               onTaskCreate={handleCreate}
+              filteredTasks={sortedTasks}
             />
           ) : isLoading ? (
             <div className="space-y-3">

@@ -77,6 +77,7 @@ export default function ProjectDetail() {
   const [infoSection, setInfoSection] = useState('all');
   const [documentUploadOpen, setDocumentUploadOpen] = useState(false);
   const [changeCreateOpen, setChangeCreateOpen] = useState(false);
+  const [taskFilterMilestoneId, setTaskFilterMilestoneId] = useState(null);
 
   const acceptInviteMutation = useMutation({
     mutationFn: (participantId) => base44.entities.ProjectParticipant.update(participantId, { status: 'active' }),
@@ -455,7 +456,11 @@ export default function ProjectDetail() {
               <div className="flex items-center justify-between mb-4">
                 <h3 className="text-lg font-semibold">Attività in Corso</h3>
               </div>
-              <TaskList projectId={projectId} canEdit={canEditTasks} />
+              <TaskList 
+                projectId={projectId} 
+                canEdit={canEditTasks} 
+                filterMilestoneId={taskFilterMilestoneId}
+              />
             </div>
           )}
           
@@ -487,8 +492,15 @@ export default function ProjectDetail() {
                 project={project}
                 canEdit={canEditTasks}
                 onNavigateToTasks={(milestoneId) => {
+                  setTaskFilterMilestoneId(milestoneId);
                   setActiveTab('lavori');
                   setLavoriSection('tasks');
+                  setTimeout(() => {
+                    const tasksSection = document.getElementById('section-tasks');
+                    if (tasksSection) {
+                      tasksSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    }
+                  }, 100);
                 }}
               />
             </div>
