@@ -180,14 +180,14 @@ export default function Layout({ children, currentPageName }) {
                   <Button variant="ghost" className="relative h-9 w-9 rounded-full">
                     <Avatar className="h-9 w-9">
                       <AvatarFallback className="bg-[#ef6144] text-white text-sm">
-                        {getInitials(user?.full_name)}
+                        {getInitials(user?.display_name || user?.full_name)}
                       </AvatarFallback>
                     </Avatar>
                   </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end" className="w-56">
                   <div className="px-2 py-1.5">
-                    <p className="text-sm font-medium">{user?.full_name}</p>
+                    <p className="text-sm font-medium">{user?.display_name || user?.full_name}</p>
                     <p className="text-xs text-gray-500">{user?.email}</p>
                   </div>
                   <DropdownMenuSeparator />
