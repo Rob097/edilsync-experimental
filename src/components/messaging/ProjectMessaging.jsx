@@ -38,13 +38,7 @@ export default function ProjectMessaging({
     staleTime: 5 * 60 * 1000, // 5 minuti
   });
 
-  // Prefetch messages for the project to speed up channel switching
-  const { data: allProjectMessages = [] } = useQuery({
-    queryKey: ['messages', projectId],
-    queryFn: () => base44.entities.Message.filter({ project_id: projectId }),
-    enabled: !!projectId,
-    staleTime: 2 * 60 * 1000, // 2 minuti
-  });
+
 
   const createChannelMutation = useMutation({
     mutationFn: async (channelData) => {
@@ -66,35 +60,39 @@ export default function ProjectMessaging({
 
   // Initialize channels
   useEffect(() => {
-    if (!projectId || !currentUser || initialized || channels.length > 0) return;
+    if (!projectId || !currentUser || initialized) return;
+    
+    // Only initialize if we have loaded channels and confirmed general doesn't exist
+    if (channelsLoading) return;
+    
+    const existingGeneral = channels.find(c => c.type === 'general' && c.project_id === projectId);
+    if (existingGeneral) {
+      setInitialized(true);
+      return;
+    }
 
     const initializeChannels = async () => {
       try {
-        // Check if general channel exists
-        const existingGeneral = channels.find(c => c.type === 'general' && c.project_id === projectId);
-        
-        if (!existingGeneral) {
-          const generalChannel = await createChannelMutation.mutateAsync({
-            project_id: projectId,
-            name: 'Generale',
-            type: 'general',
-            created_by_email: currentUser.email,
-          });
+        const generalChannel = await createChannelMutation.mutateAsync({
+          project_id: projectId,
+          name: 'Generale',
+          type: 'general',
+          created_by_email: currentUser.email,
+        });
 
-          // Add all participants to general channel (with delay to avoid rate limit)
-          for (let i = 0; i < participants.length; i++) {
-            const participant = participants[i];
-            await createMemberMutation.mutateAsync({
-              channel_id: generalChannel.id,
-              project_id: projectId,
-              participant_id: participant.id,
-              user_email: participant.user_email,
-              company_id: participant.company_id || null,
-              last_read_at: new Date().toISOString(),
-            });
-            if (i < participants.length - 1) {
-              await new Promise(resolve => setTimeout(resolve, 100));
-            }
+        // Add all participants to general channel (with delay to avoid rate limit)
+        for (let i = 0; i < participants.length; i++) {
+          const participant = participants[i];
+          await createMemberMutation.mutateAsync({
+            channel_id: generalChannel.id,
+            project_id: projectId,
+            participant_id: participant.id,
+            user_email: participant.user_email,
+            company_id: participant.company_id || null,
+            last_read_at: new Date().toISOString(),
+          });
+          if (i < participants.length - 1) {
+            await new Promise(resolve => setTimeout(resolve, 200));
           }
         }
 
@@ -106,7 +104,7 @@ export default function ProjectMessaging({
     };
 
     initializeChannels();
-  }, [projectId, currentUser, participants, channels, initialized]);
+  }, [projectId, currentUser, participants?.length, channelsLoading, initialized]);
 
   // Select first available channel
   useEffect(() => {

@@ -41,6 +41,8 @@ export default function MessageList({
     staleTime: 60 * 1000, // 1 minuto
   });
 
+  const lastUpdateRef = useRef(null);
+
   const updateReadMutation = useMutation({
     mutationFn: () => base44.entities.ChannelMember.update(channelMember.id, {
       last_read_at: new Date().toISOString()
@@ -48,13 +50,17 @@ export default function MessageList({
   });
 
   useEffect(() => {
+    // Prevent multiple updates for same channel
+    if (channelId === lastUpdateRef.current) return;
+    
     if (messages.length > 0 && channelMember && !updateReadMutation.isPending) {
+      lastUpdateRef.current = channelId;
       const timer = setTimeout(() => {
         updateReadMutation.mutate();
       }, 2000);
       return () => clearTimeout(timer);
     }
-  }, [channelId]);
+  }, [channelId, channelMember?.id]);
 
 
 
