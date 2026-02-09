@@ -374,6 +374,9 @@ export default function ProjectDetail() {
         </Card>
       )}
 
+      {/* Divider */}
+      <div className="border-t" />
+
       {/* Tabs */}
       <Tabs value={activeTab} onValueChange={setActiveTab}>
         <TabsList className="mb-4 flex-wrap h-auto">
