@@ -6,7 +6,7 @@ import { useQuery } from '@tanstack/react-query';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Skeleton } from "@/components/ui/skeleton";
+import { Skeleton } from "@/components/ui/skeleton.jsx";
 import { Plus, Search, FolderKanban } from "lucide-react";
 import ProjectCard from '@/components/project/ProjectCard';
 import EmptyState from '@/components/ui/EmptyState';
