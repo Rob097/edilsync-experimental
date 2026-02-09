@@ -515,43 +515,31 @@ export default function ProjectDetail() {
         {/* Info & TEAM TAB */}
         <TabsContent value="info" className="space-y-6">
           {/* Section selector */}
-          <div className="flex gap-2 flex-wrap" style={{ scrollMarginTop: 0 }}>
+          <div className="flex gap-2 flex-wrap">
             <Button
               variant={infoSection === 'all' ? 'default' : 'outline'}
-              onClick={(e) => {
-                e.preventDefault();
-                setInfoSection('all');
-              }}
+              onClick={() => setInfoSection('all')}
               className={infoSection === 'all' ? 'bg-[#ef6144] hover:bg-[#d9553a]' : ''}
             >
               Vedi Tutto
             </Button>
             <Button
               variant={infoSection === 'chat' ? 'default' : 'outline'}
-              onClick={(e) => {
-                e.preventDefault();
-                setInfoSection('chat');
-              }}
+              onClick={() => setInfoSection('chat')}
               className={infoSection === 'chat' ? 'bg-[#ef6144] hover:bg-[#d9553a]' : ''}
             >
               Chat
             </Button>
             <Button
               variant={infoSection === 'participants' ? 'default' : 'outline'}
-              onClick={(e) => {
-                e.preventDefault();
-                setInfoSection('participants');
-              }}
+              onClick={() => setInfoSection('participants')}
               className={infoSection === 'participants' ? 'bg-[#ef6144] hover:bg-[#d9553a]' : ''}
             >
               Partecipanti
             </Button>
             <Button
               variant={infoSection === 'documents' ? 'default' : 'outline'}
-              onClick={(e) => {
-                e.preventDefault();
-                setInfoSection('documents');
-              }}
+              onClick={() => setInfoSection('documents')}
               className={infoSection === 'documents' ? 'bg-[#ef6144] hover:bg-[#d9553a]' : ''}
             >
               Documenti
