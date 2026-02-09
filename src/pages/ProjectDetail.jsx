@@ -175,24 +175,22 @@ export default function ProjectDetail() {
       setInfoSection(section);
     }
     
-    // Scroll after state update - only for lavori tab or when there's a specific itemId
-    setTimeout(() => {
-      alert("itemId: " + itemId);
-      alert("tab: " + tab);
-      alert("section: " + section);
-      if (itemId) {
-        const element = document.getElementById(itemId);
-        alert("element: " + element);
-        if (element) {
-          element.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    // Scroll only for lavori tab
+    if (tab === 'lavori') {
+      setTimeout(() => {
+        if (itemId) {
+          const element = document.getElementById(itemId);
+          if (element) {
+            element.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          }
+        } else if (section && section !== 'all') {
+          const sectionElement = document.getElementById(`section-${section}`);
+          if (sectionElement) {
+            sectionElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          }
         }
-      } else if (tab === 'lavori' && section && section !== 'all') {
-        const sectionElement = document.getElementById(`section-${section}`);
-        if (sectionElement) {
-          sectionElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
-        }
-      }
-    }, 100);
+      }, 100);
+    }
   };
 
   if (projectLoading) {
