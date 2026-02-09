@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { base44 } from '@/api/base44Client';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { useMutation, useQueryClient, useQuery } from '@tanstack/react-query';
 import {
   Dialog,
   DialogContent,
@@ -13,9 +13,10 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Loader2, Trash2 } from "lucide-react";
+import { Badge } from "@/components/ui/badge";
+import { Loader2, Trash2, CheckCircle2 } from "lucide-react";
 
-export default function MilestoneDialog({ open, onOpenChange, projectId, milestone, nextOrderIndex }) {
+export default function MilestoneDialog({ open, onOpenChange, projectId, milestone, nextOrderIndex, onViewTasks }) {
   const queryClient = useQueryClient();
   
   const [formData, setFormData] = useState({
@@ -25,6 +26,15 @@ export default function MilestoneDialog({ open, onOpenChange, projectId, milesto
     status: 'pending',
     completion_date: '',
   });
+
+  const { data: tasks = [] } = useQuery({
+    queryKey: ['tasks', projectId],
+    queryFn: () => base44.entities.Task.filter({ project_id: projectId }),
+    enabled: !!projectId && !!milestone,
+  });
+
+  const milestoneTasks = milestone ? tasks.filter(t => t.milestone_id === milestone.id) : [];
+  const completedTasks = milestoneTasks.filter(t => t.status === 'completed').length;
 
   useEffect(() => {
     if (milestone) {
@@ -150,6 +160,32 @@ export default function MilestoneDialog({ open, onOpenChange, projectId, milesto
                 value={formData.completion_date}
                 onChange={(e) => handleChange('completion_date', e.target.value)}
               />
+            </div>
+          )}
+
+          {milestone && milestoneTasks.length > 0 && (
+            <div className="p-3 bg-gray-50 rounded-lg border">
+              <div className="flex items-center justify-between mb-2">
+                <div className="text-sm font-medium text-gray-700">Attività collegate</div>
+                <Badge variant="outline">
+                  {completedTasks}/{milestoneTasks.length} completate
+                </Badge>
+              </div>
+              {onViewTasks && (
+                <Button
+                  type="button"
+                  variant="outline"
+                  size="sm"
+                  onClick={() => {
+                    onOpenChange(false);
+                    onViewTasks(milestone.id);
+                  }}
+                  className="w-full"
+                >
+                  <CheckCircle2 className="h-4 w-4 mr-2" />
+                  Vedi attività
+                </Button>
+              )}
             </div>
           )}
 

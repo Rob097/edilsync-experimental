@@ -25,6 +25,7 @@ export default function TaskDialog({ open, onOpenChange, task, projectId }) {
     assigned_to_name: '',
     room_area: '',
     due_date: '',
+    milestone_id: '',
     blocked_reason: '',
     blocked_by_email: '',
     blocked_by_name: '',
@@ -41,6 +42,12 @@ export default function TaskDialog({ open, onOpenChange, task, projectId }) {
     enabled: !!projectId,
   });
 
+  const { data: milestones = [] } = useQuery({
+    queryKey: ['milestones', projectId],
+    queryFn: () => base44.entities.Milestone.filter({ project_id: projectId }),
+    enabled: !!projectId,
+  });
+
   useEffect(() => {
     if (task) {
       setFormData({
@@ -52,6 +59,7 @@ export default function TaskDialog({ open, onOpenChange, task, projectId }) {
         assigned_to_name: task.assigned_to_name || '',
         room_area: task.room_area || '',
         due_date: task.due_date || '',
+        milestone_id: task.milestone_id || '',
         blocked_reason: task.blocked_reason || '',
         blocked_by_email: task.blocked_by_email || '',
         blocked_by_name: task.blocked_by_name || '',
@@ -66,6 +74,7 @@ export default function TaskDialog({ open, onOpenChange, task, projectId }) {
         assigned_to_name: '',
         room_area: '',
         due_date: '',
+        milestone_id: '',
         blocked_reason: '',
         blocked_by_email: '',
         blocked_by_name: '',
@@ -182,6 +191,26 @@ export default function TaskDialog({ open, onOpenChange, task, projectId }) {
               value={formData.due_date}
               onChange={(e) => setFormData(prev => ({ ...prev, due_date: e.target.value }))}
             />
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="milestone">Milestone (opzionale)</Label>
+            <Select
+              value={formData.milestone_id || 'none'}
+              onValueChange={(v) => setFormData(prev => ({ ...prev, milestone_id: v === 'none' ? null : v }))}
+            >
+              <SelectTrigger>
+                <SelectValue placeholder="Seleziona milestone" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="none">Nessuna milestone</SelectItem>
+                {milestones.map(milestone => (
+                  <SelectItem key={milestone.id} value={milestone.id}>
+                    {milestone.title}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
           </div>
 
           {formData.status === 'blocked' && (

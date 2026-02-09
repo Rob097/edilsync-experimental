@@ -48,11 +48,7 @@ export default function MilestoneList({ projectId, project, canEdit, onNavigateT
   };
 
   const handleMilestoneClick = (milestone) => {
-    if (onNavigateToTasks) {
-      onNavigateToTasks(milestone.id);
-    } else if (canEdit) {
-      handleEdit(milestone);
-    }
+    handleEdit(milestone);
   };
 
   if (isLoading) {
@@ -196,6 +192,7 @@ export default function MilestoneList({ projectId, project, canEdit, onNavigateT
         projectId={projectId}
         milestone={editingMilestone}
         nextOrderIndex={milestones.length}
+        onViewTasks={onNavigateToTasks}
       />
     </>
   );

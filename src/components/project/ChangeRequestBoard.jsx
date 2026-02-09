@@ -46,7 +46,13 @@ export default function ChangeRequestBoard({ projectId, canCreateOrRespond, curr
   };
 
   const handleRequestClick = (request) => {
+    if (!canCreateOrRespond) return;
     setSelectedRequest(request);
+    setDialogOpen(true);
+  };
+
+  const handleCreate = () => {
+    setSelectedRequest(null);
     setDialogOpen(true);
   };
 
