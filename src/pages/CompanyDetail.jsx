@@ -31,9 +31,10 @@ export default function CompanyDetail() {
   const [inviteDialogOpen, setInviteDialogOpen] = useState(false);
   const [editDialogOpen, setEditDialogOpen] = useState(false);
 
-  const { data: user } = useQuery({
+  const { data: user, isLoading: userLoading } = useQuery({
     queryKey: ['currentUser'],
     queryFn: () => base44.auth.me(),
+    staleTime: 60 * 1000, // 1 minuto
   });
 
   const { data: company, isLoading: companyLoading } = useQuery({
@@ -43,12 +44,14 @@ export default function CompanyDetail() {
       return companies[0];
     },
     enabled: !!companyId,
+    staleTime: 2 * 60 * 1000, // 2 minuti
   });
 
   const { data: members = [], isLoading: membersLoading } = useQuery({
     queryKey: ['companyMembers', companyId],
     queryFn: () => base44.entities.CompanyMember.filter({ company_id: companyId }),
-    enabled: !!companyId,
+    enabled: !!companyId && !!company,
+    staleTime: 2 * 60 * 1000, // 2 minuti
   });
 
   // Check if current user is admin
@@ -58,7 +61,7 @@ export default function CompanyDetail() {
   const activeMembers = members.filter(m => m.status === 'active');
   const invitedMembers = members.filter(m => m.status === 'invited');
 
-  if (companyLoading || !user) {
+  if (userLoading || companyLoading) {
     return (
       <div className="space-y-6">
         <Skeleton className="h-8 w-48" />
@@ -67,7 +70,7 @@ export default function CompanyDetail() {
     );
   }
 
-  if (!company) {
+  if (!user || !company) {
     return (
       <EmptyState
         icon={Building2}

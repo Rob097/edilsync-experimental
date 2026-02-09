@@ -18,21 +18,24 @@ export default function ProjectMessaging({
   const [selectedChannelId, setSelectedChannelId] = useState(null);
   const [initialized, setInitialized] = useState(false);
 
-  const { data: channels = [] } = useQuery({
+  const { data: channels = [], isLoading: channelsLoading } = useQuery({
     queryKey: ['channels', projectId],
     queryFn: () => base44.entities.Channel.filter({ project_id: projectId }),
     enabled: !!projectId,
+    staleTime: 30 * 1000, // 30 secondi
   });
 
-  const { data: channelMembers = [] } = useQuery({
+  const { data: channelMembers = [], isLoading: membersLoading } = useQuery({
     queryKey: ['channelMembers', projectId],
     queryFn: () => base44.entities.ChannelMember.filter({ project_id: projectId }),
-    enabled: !!projectId,
+    enabled: !!projectId && channels.length > 0,
+    staleTime: 30 * 1000, // 30 secondi
   });
 
   const { data: companies = [] } = useQuery({
     queryKey: ['companies'],
     queryFn: () => base44.entities.Company.list(),
+    staleTime: 5 * 60 * 1000, // 5 minuti
   });
 
   const createChannelMutation = useMutation({
@@ -118,8 +121,19 @@ export default function ProjectMessaging({
   const selectedChannel = channels.find(c => c.id === selectedChannelId);
   const activeCompany = companies.find(c => c.id === activeCompanyId);
 
-  if (!currentUser) {
-    return <Skeleton className="h-96 w-full" />;
+  if (!currentUser || channelsLoading || membersLoading) {
+    return (
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-4 h-[600px]">
+        <Card className="md:col-span-1 p-4">
+          <div className="space-y-2">
+            {[1, 2, 3, 4].map(i => <Skeleton key={i} className="h-10 w-full" />)}
+          </div>
+        </Card>
+        <Card className="md:col-span-3 flex flex-col">
+          <Skeleton className="h-full w-full" />
+        </Card>
+      </div>
+    );
   }
 
   return (
