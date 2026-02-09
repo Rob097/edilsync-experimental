@@ -30,7 +30,7 @@ export default function ParticipantCard({ participant, companyName, isPending })
 
   return (
     <div className={`
-      flex items-center justify-between p-4 rounded-lg border
+      flex items-center justify-between p-4 rounded-lg border flex-row gap-0 md:flex-col md:gap-3
       ${isPending ? 'bg-gray-50 border-dashed' : 'bg-white border-gray-200'}
     `}>
       <div className="flex items-center gap-3">
