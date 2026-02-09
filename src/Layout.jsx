@@ -94,9 +94,13 @@ export default function Layout({ children, currentPageName }) {
         active_context: context,
         active_company_id: company?.id || null,
       });
-      // Invalida TUTTE le query per ricaricare tutti i dati con il nuovo contesto
+      
+      // Prima invalida e ricarica i dati utente
+      await queryClient.invalidateQueries({ queryKey: ['currentUser'] });
+      await queryClient.refetchQueries({ queryKey: ['currentUser'] });
+      
+      // Poi invalida e ricarica tutte le altre query
       await queryClient.invalidateQueries();
-      // Ricarica tutte le query attive
       await queryClient.refetchQueries();
     } finally {
       setIsChangingContext(false);
