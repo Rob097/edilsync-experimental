@@ -18,28 +18,44 @@ import { createPageUrl } from '@/utils';
 export default function MessagingNotifications({ userEmail }) {
   const navigate = useNavigate();
 
-  const { data: channels = [] } = useQuery({
-    queryKey: ['allChannels'],
-    queryFn: () => base44.entities.Channel.list(),
-    enabled: !!userEmail,
-  });
-
   const { data: channelMembers = [] } = useQuery({
     queryKey: ['allChannelMembers', userEmail],
     queryFn: () => base44.entities.ChannelMember.filter({ user_email: userEmail }),
     enabled: !!userEmail,
   });
 
+  const channelIds = channelMembers.map(m => m.channel_id);
+
+  const { data: channels = [] } = useQuery({
+    queryKey: ['userChannels', channelIds],
+    queryFn: async () => {
+      if (channelIds.length === 0) return [];
+      const allChannels = await base44.entities.Channel.list();
+      return allChannels.filter(c => channelIds.includes(c.id));
+    },
+    enabled: channelIds.length > 0,
+  });
+
+  const projectIds = [...new Set(channels.map(c => c.project_id))];
+
   const { data: messages = [] } = useQuery({
-    queryKey: ['recentMessages', userEmail],
-    queryFn: () => base44.entities.Message.list('-created_date', 100),
-    enabled: !!userEmail,
+    queryKey: ['recentMessages', projectIds],
+    queryFn: async () => {
+      if (projectIds.length === 0) return [];
+      const allMessages = await base44.entities.Message.list('-created_date', 50);
+      return allMessages.filter(m => projectIds.includes(m.project_id));
+    },
+    enabled: projectIds.length > 0,
   });
 
   const { data: projects = [] } = useQuery({
-    queryKey: ['allProjects'],
-    queryFn: () => base44.entities.Project.list(),
-    enabled: !!userEmail,
+    queryKey: ['messagingProjects', projectIds],
+    queryFn: async () => {
+      if (projectIds.length === 0) return [];
+      const allProjects = await base44.entities.Project.list();
+      return allProjects.filter(p => projectIds.includes(p.id));
+    },
+    enabled: projectIds.length > 0,
   });
 
   // Calculate unread messages per channel

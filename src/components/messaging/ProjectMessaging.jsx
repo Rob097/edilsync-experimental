@@ -58,98 +58,40 @@ export default function ProjectMessaging({
     if (!projectId || !currentUser || initialized || channels.length > 0) return;
 
     const initializeChannels = async () => {
-      // Create general channel
-      const generalChannel = await createChannelMutation.mutateAsync({
-        project_id: projectId,
-        name: 'Generale',
-        type: 'general',
-        created_by_email: currentUser.email,
-      });
-
-      // Add all participants to general channel
-      for (const participant of participants) {
-        await createMemberMutation.mutateAsync({
-          channel_id: generalChannel.id,
-          project_id: projectId,
-          participant_id: participant.id,
-          user_email: participant.user_email,
-          company_id: participant.company_id || null,
-          last_read_at: new Date().toISOString(),
-        });
-      }
-
-      // Create company channels for each company
-      const companyIds = [...new Set(participants.filter(p => p.company_id).map(p => p.company_id))];
-      for (const companyId of companyIds) {
-        const company = companies.find(c => c.id === companyId);
-        const companyChannel = await createChannelMutation.mutateAsync({
-          project_id: projectId,
-          name: company?.name || 'Azienda',
-          type: 'company',
-          company_id: companyId,
-          created_by_email: currentUser.email,
-        });
-
-        // Add company members
-        const companyParticipants = participants.filter(p => p.company_id === companyId);
-        for (const participant of companyParticipants) {
-          await createMemberMutation.mutateAsync({
-            channel_id: companyChannel.id,
+      try {
+        // Check if general channel exists
+        const existingGeneral = channels.find(c => c.type === 'general' && c.project_id === projectId);
+        
+        if (!existingGeneral) {
+          const generalChannel = await createChannelMutation.mutateAsync({
             project_id: projectId,
-            participant_id: participant.id,
-            user_email: participant.user_email,
-            company_id: companyId,
-            last_read_at: new Date().toISOString(),
-          });
-        }
-      }
-
-      // Create direct message channels for each participant
-      const currentParticipant = participants.find(p => p.user_email === currentUser.email);
-      for (const participant of participants) {
-        if (participant.id === currentParticipant?.id) continue;
-
-        const existingDM = channels.find(c =>
-          c.type === 'direct' &&
-          c.participant_ids?.includes(currentParticipant.id) &&
-          c.participant_ids?.includes(participant.id)
-        );
-
-        if (!existingDM) {
-          const dmName = participant.company_id
-            ? `${companies.find(c => c.id === participant.company_id)?.name || 'Azienda'}`
-            : participant.user_email;
-
-          const dmChannel = await createChannelMutation.mutateAsync({
-            project_id: projectId,
-            name: dmName,
-            type: 'direct',
-            is_direct: true,
-            participant_ids: [currentParticipant.id, participant.id],
+            name: 'Generale',
+            type: 'general',
             created_by_email: currentUser.email,
           });
 
-          await createMemberMutation.mutateAsync({
-            channel_id: dmChannel.id,
-            project_id: projectId,
-            participant_id: currentParticipant.id,
-            user_email: currentUser.email,
-            company_id: currentParticipant.company_id || null,
-            last_read_at: new Date().toISOString(),
-          });
-
-          await createMemberMutation.mutateAsync({
-            channel_id: dmChannel.id,
-            project_id: projectId,
-            participant_id: participant.id,
-            user_email: participant.user_email,
-            company_id: participant.company_id || null,
-            last_read_at: new Date().toISOString(),
-          });
+          // Add all participants to general channel (with delay to avoid rate limit)
+          for (let i = 0; i < participants.length; i++) {
+            const participant = participants[i];
+            await createMemberMutation.mutateAsync({
+              channel_id: generalChannel.id,
+              project_id: projectId,
+              participant_id: participant.id,
+              user_email: participant.user_email,
+              company_id: participant.company_id || null,
+              last_read_at: new Date().toISOString(),
+            });
+            if (i < participants.length - 1) {
+              await new Promise(resolve => setTimeout(resolve, 100));
+            }
+          }
         }
-      }
 
-      setInitialized(true);
+        setInitialized(true);
+      } catch (error) {
+        console.error('Failed to initialize channels:', error);
+        setInitialized(true);
+      }
     };
 
     initializeChannels();

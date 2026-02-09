@@ -41,12 +41,16 @@ export default function MessageList({
     }),
     onSuccess: () => {
       queryClient.invalidateQueries(['channelMembers', projectId]);
+      queryClient.invalidateQueries(['allChannelMembers']);
     },
   });
 
   useEffect(() => {
-    if (messages.length > 0 && channelMember) {
-      updateReadMutation.mutate();
+    if (messages.length > 0 && channelMember && !updateReadMutation.isPending) {
+      const timer = setTimeout(() => {
+        updateReadMutation.mutate();
+      }, 1000);
+      return () => clearTimeout(timer);
     }
   }, [messages.length, channelId]);
 

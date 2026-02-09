@@ -49,23 +49,28 @@ export default function MessageInput({
     mutationFn: async (messageData) => {
       const msg = await base44.entities.Message.create(messageData);
       
-      // Create notifications for mentioned users
+      // Create notifications for mentioned users (in background, don't wait)
       if (messageData.mentioned_user_emails?.length > 0) {
-        const channel = await base44.entities.Channel.filter({ id: channelId });
-        const project = await base44.entities.Project.filter({ id: projectId });
-        
-        for (const email of messageData.mentioned_user_emails) {
-          if (email !== currentUserEmail) {
-            await base44.entities.Notification.create({
-              user_email: email,
-              type: 'message_mention',
-              title: 'Sei stato menzionato',
-              message: `${messageData.sender_name} ti ha menzionato in "${channel[0]?.name}" nel progetto "${project[0]?.name}"`,
-              related_event_id: msg.id,
-              is_read: false
-            });
-          }
-        }
+        Promise.all([
+          base44.entities.Channel.filter({ id: channelId }),
+          base44.entities.Project.filter({ id: projectId })
+        ]).then(([channels, projects]) => {
+          const channel = channels[0];
+          const project = projects[0];
+          
+          messageData.mentioned_user_emails.forEach(email => {
+            if (email !== currentUserEmail) {
+              base44.entities.Notification.create({
+                user_email: email,
+                type: 'message_mention',
+                title: 'Sei stato menzionato',
+                message: `${messageData.sender_name} ti ha menzionato in "${channel?.name}" nel progetto "${project?.name}"`,
+                related_event_id: msg.id,
+                is_read: false
+              }).catch(err => console.error('Failed to send notification:', err));
+            }
+          });
+        }).catch(err => console.error('Failed to fetch channel/project:', err));
       }
       
       return msg;
