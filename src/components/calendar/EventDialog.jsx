@@ -209,7 +209,7 @@ export default function EventDialog({
             (p.type === 'company' && c.participant.company_id === p.company_id)
           );
 
-          await base44.entities.EventParticipant.create({
+          const eventParticipant = await base44.entities.EventParticipant.create({
             event_id: eventId,
             participant_type: p.type,
             user_id: p.type === 'user' ? p.user_id : null,
@@ -220,19 +220,10 @@ export default function EventDialog({
             conflict_event_id: conflict?.conflictingEvents[0]?.id || null,
           });
 
-          // Send notification
-          if (p.type === 'user' && p.email) {
-            await base44.entities.Notification.create({
-              user_email: p.email,
-              type: 'event_invite',
-              title: 'Nuovo invito evento',
-              message: conflict 
-                ? `Sei stato invitato a "${formData.title}". ATTENZIONE: hai un conflitto con "${conflict.conflictingEvents[0]?.title}".`
-                : `Sei stato invitato a "${formData.title}".`,
-              related_event_id: eventId,
-              is_read: false,
-            });
-          }
+          // Trigger backend function to send email and notification
+          await base44.functions.call('handleEventInvite', {
+            event_participant_id: eventParticipant.id,
+          });
         }
       }
 

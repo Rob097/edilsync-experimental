@@ -80,33 +80,10 @@ export default function InviteParticipantDialog({
 
       const participant = await base44.entities.ProjectParticipant.create(participantData);
 
-      // Create notification for company members or personal participant
-      if (participantType === 'company') {
-        const companyMembers = await base44.entities.CompanyMember.filter({ 
-          company_id: selectedCompanyId, 
-          status: 'active' 
-        });
-        
-        for (const member of companyMembers) {
-          await base44.entities.Notification.create({
-            user_email: member.user_email,
-            type: 'event_invite',
-            title: 'Invito a nuovo progetto',
-            message: `La tua società è stata invitata al progetto "${project?.name}" con ruolo ${projectRole}`,
-            related_event_id: projectId,
-            is_read: false,
-          });
-        }
-      } else {
-        await base44.entities.Notification.create({
-          user_email: email,
-          type: 'event_invite',
-          title: 'Invito a nuovo progetto',
-          message: `Sei stato invitato al progetto "${project?.name}" con ruolo ${projectRole}`,
-          related_event_id: projectId,
-          is_read: false,
-        });
-      }
+      // Trigger backend function to send emails and notifications
+      await base44.functions.call('handleProjectInvite', {
+        participant_id: participant.id,
+      });
 
       return participant;
     },
