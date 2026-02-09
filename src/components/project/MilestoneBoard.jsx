@@ -177,7 +177,7 @@ export default function MilestoneBoard({ projectId, project, canEdit, onMileston
                   <div
                     key={milestone.id}
                     className="flex relative"
-                    style={{ minHeight: '60px' }}
+                    style={{ minHeight: '90px' }}
                   >
                     {/* Month cells for borders */}
                     {months.map((month, monthIdx) => (
