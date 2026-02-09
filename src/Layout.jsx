@@ -28,6 +28,7 @@ import {
   HardHat
 } from "lucide-react";
 import ContextSwitcher from '@/components/context/ContextSwitcher';
+import MessagingNotifications from '@/components/messaging/MessagingNotifications';
 
 export default function Layout({ children, currentPageName }) {
   const location = useLocation();
@@ -131,6 +132,9 @@ export default function Layout({ children, currentPageName }) {
 
             {/* Right side */}
             <div className="flex items-center gap-3">
+              {/* Messaging Notifications */}
+              <MessagingNotifications userEmail={user?.email} />
+              
               {/* Notifications */}
               <Link to={createPageUrl('Notifications')}>
                 <Button variant="ghost" size="icon" className="relative">
