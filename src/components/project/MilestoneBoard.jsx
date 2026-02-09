@@ -145,7 +145,7 @@ export default function MilestoneBoard({ projectId, project, canEdit, onMileston
         {/* Gantt chart */}
         <div className="border rounded-lg overflow-x-auto bg-white">
           {/* Header with months */}
-          <div className="flex border-b bg-gray-50">
+          <div className="flex">
             {months.map((month, idx) => (
               <div
                 key={idx}
