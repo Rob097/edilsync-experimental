@@ -21,6 +21,8 @@ export default function MessageList({
     queryKey: ['messages', channelId],
     queryFn: () => base44.entities.Message.filter({ channel_id: channelId }),
     enabled: !!channelId,
+    staleTime: 10 * 1000, // 10 secondi
+    refetchInterval: 30 * 1000, // Ricontrolla ogni 30 secondi per nuovi messaggi
   });
 
   const { data: channelMember } = useQuery({
@@ -33,6 +35,7 @@ export default function MessageList({
       return members[0];
     },
     enabled: !!channelId && !!currentUserEmail,
+    staleTime: 60 * 1000, // 1 minuto
   });
 
   const updateReadMutation = useMutation({
@@ -54,9 +57,7 @@ export default function MessageList({
     }
   }, [messages.length, channelId]);
 
-  useEffect(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
-  }, [messages]);
+
 
   const sortedMessages = [...messages].sort((a, b) => 
     new Date(a.created_date) - new Date(b.created_date)
