@@ -12,6 +12,7 @@ import {
 } from "lucide-react";
 import { format, startOfMonth, endOfMonth, eachDayOfInterval, isSameMonth, isSameDay, addMonths, subMonths, startOfWeek, endOfWeek } from 'date-fns';
 import { it } from 'date-fns/locale';
+import { Skeleton } from "@/components/ui/skeleton.jsx";
 import ContextBadge from '@/components/context/ContextBadge';
 import CalendarDayView from '@/components/calendar/CalendarDayView';
 import EventDialog from '@/components/calendar/EventDialog';
