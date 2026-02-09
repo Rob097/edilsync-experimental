@@ -75,8 +75,8 @@ export default function ChangeRequestList({ projectId, canCreate, canRespond, cr
           </div>
           {canCreate && (
             <Button onClick={handleCreate} size="sm" className="bg-[#ef6144] hover:bg-[#d9553a]">
-              <Plus className="h-4 w-4 mr-1" />
-              Nuova Richiesta
+              <Plus className="h-4 w-4 md:mr-1" />
+              <span className="hidden md:inline">Nuova Richiesta</span>
             </Button>
           )}
         </CardHeader>

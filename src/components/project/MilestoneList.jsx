@@ -102,8 +102,8 @@ export default function MilestoneList({ projectId, project, canEdit, onNavigateT
               size="sm"
               className="bg-[#ef6144] hover:bg-[#d9553a]"
             >
-              <Plus className="h-4 w-4 mr-2" />
-              Aggiungi
+              <Plus className="h-4 w-4 md:mr-2" />
+              <span className="hidden md:inline">Aggiungi</span>
             </Button>
           )}
         </CardHeader>

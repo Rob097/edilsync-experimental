@@ -149,7 +149,7 @@ export default function MilestoneBoard({ projectId, project, canEdit, onMileston
             {months.map((month, idx) => (
               <div
                 key={idx}
-                className="flex-1 min-w-[80px] p-2 text-center text-sm font-medium border-r last:border-r-0"
+                className="flex-1 min-w-[60px] md:min-w-[80px] p-2 text-center text-xs md:text-sm font-medium border-r last:border-r-0"
               >
                 {format(month, 'MMM', { locale: it })}
               </div>
@@ -157,7 +157,7 @@ export default function MilestoneBoard({ projectId, project, canEdit, onMileston
           </div>
 
           {/* Milestones rows */}
-          <div className="min-h-[300px]">
+          <div className="min-h-[200px] md:min-h-[300px] relative" style={{ width: 'max-content', minWidth: '100%' }}>
             {milestonesInYear.length > 0 ? (
               milestonesInYear.map((milestone, milestoneIdx) => {
                 const Icon = statusConfig[milestone.status]?.icon || Flag;
@@ -177,13 +177,13 @@ export default function MilestoneBoard({ projectId, project, canEdit, onMileston
                   <div
                     key={milestone.id}
                     className="flex relative"
-                    style={{ minHeight: '80px' }}
+                    style={{ minHeight: '60px' }}
                   >
                     {/* Month cells for borders */}
                     {months.map((month, monthIdx) => (
                       <div
                         key={monthIdx}
-                        className="flex-1 min-w-[80px] border-r last:border-r-0"
+                        className="flex-1 min-w-[60px] md:min-w-[80px] border-r last:border-r-0"
                       />
                     ))}
                     
@@ -193,21 +193,22 @@ export default function MilestoneBoard({ projectId, project, canEdit, onMileston
                       style={{
                         left: `${startOffset}%`,
                         width: `${width}%`,
+                        minWidth: '80px',
                       }}
                       onClick={() => handleMilestoneClick(milestone)}
                     >
-                      <div className={`${statusConfig[milestone.status]?.color} text-white rounded-lg p-2 shadow-sm hover:shadow-md transition-shadow h-full flex flex-col justify-center`}>
+                      <div className={`${statusConfig[milestone.status]?.color} text-white rounded-lg p-1.5 md:p-2 shadow-sm hover:shadow-md transition-shadow h-full flex flex-col justify-center overflow-hidden`}>
                         <div className="flex items-center gap-1 mb-0.5">
-                          <Icon className="h-3 w-3 flex-shrink-0" />
-                          <span className="text-xs font-semibold truncate">
+                          <Icon className="h-2.5 w-2.5 md:h-3 md:w-3 flex-shrink-0" />
+                          <span className="text-[10px] md:text-xs font-semibold truncate">
                             {milestone.title}
                           </span>
                         </div>
-                        <div className="text-xs opacity-90 truncate">
+                        <div className="text-[9px] md:text-xs opacity-90 truncate">
                           {format(milestone.startDate, 'dd MMM', { locale: it })} - {format(milestone.endDate, 'dd MMM', { locale: it })}
                         </div>
                         {milestone.tasksCount > 0 && (
-                          <div className="text-xs opacity-90 mt-0.5">
+                          <div className="text-[9px] md:text-xs opacity-90 mt-0.5">
                             {milestone.completedTasksCount}/{milestone.tasksCount} ✓
                           </div>
                         )}
@@ -217,7 +218,7 @@ export default function MilestoneBoard({ projectId, project, canEdit, onMileston
                 );
               })
             ) : (
-              <div className="flex items-center justify-center h-48 text-gray-500 text-sm">
+              <div className="flex items-center justify-center h-48 text-gray-500 text-sm absolute inset-0">
                 Nessuna milestone per {currentYear}
               </div>
             )}
