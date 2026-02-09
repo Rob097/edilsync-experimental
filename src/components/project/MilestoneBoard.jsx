@@ -5,7 +5,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Flag, CheckCircle2, Clock, AlertCircle, Play, ChevronLeft, ChevronRight } from "lucide-react";
-import { format, startOfYear, endOfYear, eachMonthOfInterval, differenceInDays, addYears, subYears, getMonth } from 'date-fns';
+import { format, startOfYear, endOfYear, eachMonthOfInterval, differenceInDays, getMonth, getDaysInMonth, getDate, startOfMonth } from 'date-fns';
 import { it } from 'date-fns/locale';
 import EmptyState from '@/components/ui/EmptyState';
 import MilestoneDialog from './MilestoneDialog';
@@ -46,18 +46,28 @@ export default function MilestoneBoard({ projectId, project, canEdit, onMileston
 
   const milestonesInYear = useMemo(() => {
     return sortedMilestones.map(milestone => {
-      const milestoneDate = new Date(milestone.target_date);
-      const month = getMonth(milestoneDate);
-      const year = milestoneDate.getFullYear();
+      if (!milestone.start_date && !milestone.target_date) return null;
       
-      if (year !== currentYear) return null;
+      const startDate = milestone.start_date ? new Date(milestone.start_date) : new Date(milestone.target_date);
+      const endDate = new Date(milestone.target_date);
+      
+      const startYear = startDate.getFullYear();
+      const endYear = endDate.getFullYear();
+      
+      // Skip milestones not in current year
+      if (startYear !== currentYear && endYear !== currentYear) return null;
       
       const tasksForMilestone = tasks.filter(t => t.milestone_id === milestone.id);
       const completedTasks = tasksForMilestone.filter(t => t.status === 'completed').length;
       
       return {
         ...milestone,
-        month,
+        startDate,
+        endDate,
+        startMonth: getMonth(startDate),
+        endMonth: getMonth(endDate),
+        startDay: getDate(startDate),
+        endDay: getDate(endDate),
         tasksCount: tasksForMilestone.length,
         completedTasksCount: completedTasks,
       };
@@ -128,39 +138,61 @@ export default function MilestoneBoard({ projectId, project, canEdit, onMileston
             {milestonesInYear.length > 0 ? (
               milestonesInYear.map((milestone, milestoneIdx) => {
                 const Icon = statusConfig[milestone.status]?.icon || Flag;
+                const startMonth = milestone.startMonth;
+                const endMonth = milestone.endMonth;
+                
                 return (
                   <div
                     key={milestone.id}
-                    className="flex border-b hover:bg-gray-50 transition-colors"
+                    className="flex border-b hover:bg-gray-50 transition-colors relative"
+                    style={{ minHeight: '60px' }}
                   >
                     {months.map((month, monthIdx) => {
-                      const isCurrentMonth = monthIdx === milestone.month;
+                      const isInRange = monthIdx >= startMonth && monthIdx <= endMonth;
+                      const isStartMonth = monthIdx === startMonth;
+                      const isEndMonth = monthIdx === endMonth;
+                      
+                      const daysInMonth = getDaysInMonth(month);
+                      const startPercent = isStartMonth ? (milestone.startDay / daysInMonth) * 100 : 0;
+                      const endPercent = isEndMonth ? (milestone.endDay / daysInMonth) * 100 : 100;
                       
                       return (
                         <div
                           key={monthIdx}
-                          className="flex-1 min-w-[80px] p-2 border-r last:border-r-0 relative"
+                          className="flex-1 min-w-[80px] border-r last:border-r-0 relative"
                         >
-                          {isCurrentMonth && (
+                          {isInRange && (
                             <div
-                              onClick={() => handleMilestoneClick(milestone)}
-                              className="cursor-pointer"
+                              className="absolute top-2 bottom-2"
+                              style={{
+                                left: isStartMonth ? `${startPercent}%` : '0%',
+                                right: isEndMonth ? `${100 - endPercent}%` : '0%',
+                              }}
                             >
-                              <div className={`${statusConfig[milestone.status]?.color} text-white rounded-lg p-2 shadow-sm hover:shadow-md transition-shadow`}>
-                                <div className="flex items-center gap-1 mb-1">
-                                  <Icon className="h-3 w-3 flex-shrink-0" />
-                                  <span className="text-xs font-semibold line-clamp-1">
-                                    {milestone.title}
-                                  </span>
+                              <div
+                                onClick={() => handleMilestoneClick(milestone)}
+                                className="cursor-pointer h-full"
+                              >
+                                <div className={`${statusConfig[milestone.status]?.color} text-white rounded ${isStartMonth ? 'rounded-l-lg' : ''} ${isEndMonth ? 'rounded-r-lg' : ''} p-2 shadow-sm hover:shadow-md transition-shadow h-full flex flex-col justify-center`}>
+                                  {isStartMonth && (
+                                    <>
+                                      <div className="flex items-center gap-1 mb-0.5">
+                                        <Icon className="h-3 w-3 flex-shrink-0" />
+                                        <span className="text-xs font-semibold line-clamp-1">
+                                          {milestone.title}
+                                        </span>
+                                      </div>
+                                      <div className="text-xs opacity-90">
+                                        {format(milestone.startDate, 'dd MMM', { locale: it })} - {format(milestone.endDate, 'dd MMM', { locale: it })}
+                                      </div>
+                                      {milestone.tasksCount > 0 && (
+                                        <div className="text-xs opacity-90 mt-0.5">
+                                          {milestone.completedTasksCount}/{milestone.tasksCount} ✓
+                                        </div>
+                                      )}
+                                    </>
+                                  )}
                                 </div>
-                                <div className="text-xs opacity-90">
-                                  {format(new Date(milestone.target_date), 'dd MMM', { locale: it })}
-                                </div>
-                                {milestone.tasksCount > 0 && (
-                                  <div className="text-xs opacity-90 mt-1">
-                                    {milestone.completedTasksCount}/{milestone.tasksCount} ✓
-                                  </div>
-                                )}
                               </div>
                             </div>
                           )}

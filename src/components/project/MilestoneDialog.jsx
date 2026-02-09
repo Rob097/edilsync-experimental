@@ -22,10 +22,13 @@ export default function MilestoneDialog({ open, onOpenChange, projectId, milesto
   const [formData, setFormData] = useState({
     title: '',
     description: '',
+    start_date: '',
     target_date: '',
     status: 'pending',
     completion_date: '',
   });
+  
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
 
   const { data: tasks = [] } = useQuery({
     queryKey: ['tasks', projectId],
@@ -41,6 +44,7 @@ export default function MilestoneDialog({ open, onOpenChange, projectId, milesto
       setFormData({
         title: milestone.title || '',
         description: milestone.description || '',
+        start_date: milestone.start_date || '',
         target_date: milestone.target_date || '',
         status: milestone.status || 'pending',
         completion_date: milestone.completion_date || '',
@@ -49,11 +53,13 @@ export default function MilestoneDialog({ open, onOpenChange, projectId, milesto
       setFormData({
         title: '',
         description: '',
+        start_date: '',
         target_date: '',
         status: 'pending',
         completion_date: '',
       });
     }
+    setShowDeleteConfirm(false);
   }, [milestone, open]);
 
   const saveMutation = useMutation({
@@ -75,14 +81,34 @@ export default function MilestoneDialog({ open, onOpenChange, projectId, milesto
   });
 
   const deleteMutation = useMutation({
-    mutationFn: async () => {
+    mutationFn: async (deleteLinkedTasks) => {
+      if (deleteLinkedTasks) {
+        // Elimina tutte le attività collegate
+        const linkedTasks = milestoneTasks;
+        await Promise.all(linkedTasks.map(task => base44.entities.Task.delete(task.id)));
+      } else {
+        // Rimuovi solo il collegamento
+        const linkedTasks = milestoneTasks;
+        await Promise.all(linkedTasks.map(task => 
+          base44.entities.Task.update(task.id, { milestone_id: null })
+        ));
+      }
       await base44.entities.Milestone.delete(milestone.id);
     },
     onSuccess: () => {
       queryClient.invalidateQueries(['milestones']);
+      queryClient.invalidateQueries(['tasks']);
       onOpenChange(false);
     },
   });
+  
+  const handleDelete = () => {
+    if (milestoneTasks.length > 0) {
+      setShowDeleteConfirm(true);
+    } else {
+      deleteMutation.mutate(false);
+    }
+  };
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -126,14 +152,26 @@ export default function MilestoneDialog({ open, onOpenChange, projectId, milesto
             />
           </div>
 
-          <div className="space-y-2">
-            <Label htmlFor="target_date">Data obiettivo</Label>
-            <Input
-              id="target_date"
-              type="date"
-              value={formData.target_date}
-              onChange={(e) => handleChange('target_date', e.target.value)}
-            />
+          <div className="grid grid-cols-2 gap-4">
+            <div className="space-y-2">
+              <Label htmlFor="start_date">Data inizio</Label>
+              <Input
+                id="start_date"
+                type="date"
+                value={formData.start_date}
+                onChange={(e) => handleChange('start_date', e.target.value)}
+              />
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="target_date">Data obiettivo</Label>
+              <Input
+                id="target_date"
+                type="date"
+                value={formData.target_date}
+                onChange={(e) => handleChange('target_date', e.target.value)}
+              />
+            </div>
           </div>
 
           <div className="space-y-2">
@@ -163,38 +201,88 @@ export default function MilestoneDialog({ open, onOpenChange, projectId, milesto
             </div>
           )}
 
-          {milestone && milestoneTasks.length > 0 && (
+          {milestone && onViewTasks && (
             <div className="p-3 bg-gray-50 rounded-lg border">
               <div className="flex items-center justify-between mb-2">
                 <div className="text-sm font-medium text-gray-700">Attività collegate</div>
-                <Badge variant="outline">
-                  {completedTasks}/{milestoneTasks.length} completate
-                </Badge>
+                {milestoneTasks.length > 0 && (
+                  <Badge variant="outline">
+                    {completedTasks}/{milestoneTasks.length} completate
+                  </Badge>
+                )}
               </div>
-              {onViewTasks && (
+              <Button
+                type="button"
+                variant="outline"
+                size="sm"
+                onClick={() => {
+                  onOpenChange(false);
+                  onViewTasks(milestone.id);
+                }}
+                className="w-full"
+              >
+                <CheckCircle2 className="h-4 w-4 mr-2" />
+                {milestoneTasks.length > 0 
+                  ? `Vedi le ${milestoneTasks.length} attività` 
+                  : 'Vedi attività'}
+              </Button>
+            </div>
+          )}
+
+          {showDeleteConfirm && (
+            <div className="p-3 bg-red-50 rounded-lg border border-red-200 space-y-3">
+              <div className="text-sm font-medium text-red-900">
+                Questa milestone ha {milestoneTasks.length} attività collegate. Cosa vuoi fare?
+              </div>
+              <div className="flex flex-col gap-2">
                 <Button
                   type="button"
                   variant="outline"
                   size="sm"
                   onClick={() => {
-                    onOpenChange(false);
-                    onViewTasks(milestone.id);
+                    deleteMutation.mutate(false);
+                    setShowDeleteConfirm(false);
                   }}
+                  disabled={deleteMutation.isPending}
+                  className="w-full justify-start"
+                >
+                  Rimuovi collegamento, mantieni attività
+                </Button>
+                <Button
+                  type="button"
+                  variant="destructive"
+                  size="sm"
+                  onClick={() => {
+                    deleteMutation.mutate(true);
+                    setShowDeleteConfirm(false);
+                  }}
+                  disabled={deleteMutation.isPending}
+                  className="w-full justify-start"
+                >
+                  {deleteMutation.isPending ? (
+                    <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                  ) : null}
+                  Elimina milestone e tutte le attività
+                </Button>
+                <Button
+                  type="button"
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => setShowDeleteConfirm(false)}
                   className="w-full"
                 >
-                  <CheckCircle2 className="h-4 w-4 mr-2" />
-                  Vedi attività
+                  Annulla
                 </Button>
-              )}
+              </div>
             </div>
           )}
 
           <div className="flex gap-3 pt-2">
-            {milestone && (
+            {milestone && !showDeleteConfirm && (
               <Button
                 type="button"
                 variant="destructive"
-                onClick={() => deleteMutation.mutate()}
+                onClick={handleDelete}
                 disabled={deleteMutation.isPending}
               >
                 {deleteMutation.isPending ? (

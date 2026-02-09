@@ -180,11 +180,13 @@ export default function ChangeRequestBoard({ projectId, canCreateOrRespond, curr
 
       <ChangeRequestDialog
         open={dialogOpen}
-        onOpenChange={setDialogOpen}
-        changeRequest={selectedRequest}
+        onOpenChange={(open) => {
+          setDialogOpen(open);
+          if (!open) setSelectedRequest(null);
+        }}
+        request={selectedRequest}
         projectId={projectId}
-        canCreateOrRespond={canCreateOrRespond}
-        currentUserEmail={currentUserEmail}
+        canRespond={canCreateOrRespond}
       />
     </>
   );
