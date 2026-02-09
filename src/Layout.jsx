@@ -40,12 +40,14 @@ export default function Layout({ children, currentPageName }) {
   const { data: user } = useQuery({
     queryKey: ['currentUser'],
     queryFn: () => base44.auth.me(),
+    staleTime: 60 * 1000, // 1 minuto
   });
 
   const { data: companyMemberships = [] } = useQuery({
     queryKey: ['userCompanies', user?.email],
     queryFn: () => base44.entities.CompanyMember.filter({ user_email: user?.email, status: 'active' }),
     enabled: !!user?.email,
+    staleTime: 2 * 60 * 1000, // 2 minuti
   });
 
   const { data: companies = [] } = useQuery({
@@ -57,12 +59,15 @@ export default function Layout({ children, currentPageName }) {
       return allCompanies.filter(c => companyIds.includes(c.id));
     },
     enabled: companyMemberships.length > 0,
+    staleTime: 5 * 60 * 1000, // 5 minuti
   });
 
   const { data: notifications = [] } = useQuery({
     queryKey: ['notifications', user?.email],
     queryFn: () => base44.entities.Notification.filter({ user_email: user?.email, is_read: false }),
     enabled: !!user?.email,
+    staleTime: 30 * 1000, // 30 secondi
+    refetchInterval: 60 * 1000, // Ricontrolla ogni minuto
   });
 
   const unreadCount = notifications.length;

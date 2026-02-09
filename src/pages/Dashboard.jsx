@@ -23,12 +23,14 @@ export default function Dashboard() {
   const { data: user } = useQuery({
     queryKey: ['currentUser'],
     queryFn: () => base44.auth.me(),
+    staleTime: 60 * 1000, // 1 minuto
   });
 
   const { data: companyMemberships = [] } = useQuery({
     queryKey: ['userCompanies', user?.email],
     queryFn: () => base44.entities.CompanyMember.filter({ user_email: user?.email, status: 'active' }),
     enabled: !!user?.email,
+    staleTime: 2 * 60 * 1000, // 2 minuti
   });
 
   const { data: companies = [], isLoading: companiesLoading } = useQuery({
@@ -40,6 +42,7 @@ export default function Dashboard() {
       return allCompanies.filter(c => companyIds.includes(c.id));
     },
     enabled: companyMemberships.length > 0,
+    staleTime: 5 * 60 * 1000, // 5 minuti
   });
 
   const { data: projectParticipations = [] } = useQuery({
@@ -57,6 +60,7 @@ export default function Dashboard() {
       );
     },
     enabled: !!user?.id,
+    staleTime: 2 * 60 * 1000, // 2 minuti
   });
 
   const { data: projects = [], isLoading: projectsLoading } = useQuery({
@@ -68,6 +72,7 @@ export default function Dashboard() {
       return allProjects.filter(p => projectIds.includes(p.id));
     },
     enabled: projectParticipations.length > 0,
+    staleTime: 60 * 1000, // 1 minuto
   });
 
   const currentContext = user?.active_context || 'personal';
@@ -107,6 +112,7 @@ export default function Dashboard() {
       status: 'active' 
     }),
     enabled: !!user?.active_company_id && currentContext === 'company',
+    staleTime: 2 * 60 * 1000, // 2 minuti
   });
 
   return (
