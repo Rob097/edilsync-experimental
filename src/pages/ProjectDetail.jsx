@@ -175,22 +175,21 @@ export default function ProjectDetail() {
       setInfoSection(section);
     }
     
-    // Scroll after state update - only for lavori tab or when there's a specific itemId
+    // Scroll to tabs level after state update
     setTimeout(() => {
-      alert("itemId: " + itemId);
-      alert("tab: " + tab);
-      alert("section: " + section);
+      const tabsElement = document.querySelector('[role="tablist"]');
+      if (tabsElement) {
+        tabsElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+      
+      // Then scroll to specific item if provided
       if (itemId) {
-        const element = document.getElementById(itemId);
-        alert("element: " + element);
-        if (element) {
-          element.scrollIntoView({ behavior: 'smooth', block: 'center' });
-        }
-      } else if (tab === 'lavori' && section && section !== 'all') {
-        const sectionElement = document.getElementById(`section-${section}`);
-        if (sectionElement) {
-          sectionElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
-        }
+        setTimeout(() => {
+          const element = document.getElementById(itemId);
+          if (element) {
+            element.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          }
+        }, 300);
       }
     }, 100);
   };
@@ -382,7 +381,15 @@ export default function ProjectDetail() {
       <div className="border-t" />
 
       {/* Tabs */}
-      <Tabs value={activeTab} onValueChange={setActiveTab}>
+      <Tabs value={activeTab} onValueChange={(value) => {
+        setActiveTab(value);
+        setTimeout(() => {
+          const tabsElement = document.querySelector('[role="tablist"]');
+          if (tabsElement) {
+            tabsElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          }
+        }, 100);
+      }}>
         <TabsList className="mb-4 flex-wrap h-auto">
           <TabsTrigger value="cantiere" className="flex items-center gap-2">
             <Activity className="h-4 w-4" />
@@ -429,28 +436,60 @@ export default function ProjectDetail() {
           <div className="flex gap-2 flex-wrap">
             <Button
               variant={lavoriSection === 'all' ? 'default' : 'outline'}
-              onClick={() => setLavoriSection('all')}
+              onClick={() => {
+                setLavoriSection('all');
+                setTimeout(() => {
+                  const tabsElement = document.querySelector('[role="tablist"]');
+                  if (tabsElement) {
+                    tabsElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                  }
+                }, 100);
+              }}
               className={lavoriSection === 'all' ? 'bg-[#ef6144] hover:bg-[#d9553a]' : ''}
             >
               Vedi Tutto
             </Button>
             <Button
               variant={lavoriSection === 'tasks' ? 'default' : 'outline'}
-              onClick={() => setLavoriSection('tasks')}
+              onClick={() => {
+                setLavoriSection('tasks');
+                setTimeout(() => {
+                  const tabsElement = document.querySelector('[role="tablist"]');
+                  if (tabsElement) {
+                    tabsElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                  }
+                }, 100);
+              }}
               className={lavoriSection === 'tasks' ? 'bg-[#ef6144] hover:bg-[#d9553a]' : ''}
             >
               Attività
             </Button>
             <Button
               variant={lavoriSection === 'changes' ? 'default' : 'outline'}
-              onClick={() => setLavoriSection('changes')}
+              onClick={() => {
+                setLavoriSection('changes');
+                setTimeout(() => {
+                  const tabsElement = document.querySelector('[role="tablist"]');
+                  if (tabsElement) {
+                    tabsElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                  }
+                }, 100);
+              }}
               className={lavoriSection === 'changes' ? 'bg-[#ef6144] hover:bg-[#d9553a]' : ''}
             >
               Modifiche & Extra
             </Button>
             <Button
               variant={lavoriSection === 'milestones' ? 'default' : 'outline'}
-              onClick={() => setLavoriSection('milestones')}
+              onClick={() => {
+                setLavoriSection('milestones');
+                setTimeout(() => {
+                  const tabsElement = document.querySelector('[role="tablist"]');
+                  if (tabsElement) {
+                    tabsElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                  }
+                }, 100);
+              }}
               className={lavoriSection === 'milestones' ? 'bg-[#ef6144] hover:bg-[#d9553a]' : ''}
             >
               Milestones
@@ -520,28 +559,60 @@ export default function ProjectDetail() {
           <div className="flex gap-2 flex-wrap">
             <Button
               variant={infoSection === 'all' ? 'default' : 'outline'}
-              onClick={() => setInfoSection('all')}
+              onClick={() => {
+                setInfoSection('all');
+                setTimeout(() => {
+                  const tabsElement = document.querySelector('[role="tablist"]');
+                  if (tabsElement) {
+                    tabsElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                  }
+                }, 100);
+              }}
               className={infoSection === 'all' ? 'bg-[#ef6144] hover:bg-[#d9553a]' : ''}
             >
               Vedi Tutto
             </Button>
             <Button
               variant={infoSection === 'chat' ? 'default' : 'outline'}
-              onClick={() => setInfoSection('chat')}
+              onClick={() => {
+                setInfoSection('chat');
+                setTimeout(() => {
+                  const tabsElement = document.querySelector('[role="tablist"]');
+                  if (tabsElement) {
+                    tabsElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                  }
+                }, 100);
+              }}
               className={infoSection === 'chat' ? 'bg-[#ef6144] hover:bg-[#d9553a]' : ''}
             >
               Chat
             </Button>
             <Button
               variant={infoSection === 'participants' ? 'default' : 'outline'}
-              onClick={() => setInfoSection('participants')}
+              onClick={() => {
+                setInfoSection('participants');
+                setTimeout(() => {
+                  const tabsElement = document.querySelector('[role="tablist"]');
+                  if (tabsElement) {
+                    tabsElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                  }
+                }, 100);
+              }}
               className={infoSection === 'participants' ? 'bg-[#ef6144] hover:bg-[#d9553a]' : ''}
             >
               Partecipanti
             </Button>
             <Button
               variant={infoSection === 'documents' ? 'default' : 'outline'}
-              onClick={() => setInfoSection('documents')}
+              onClick={() => {
+                setInfoSection('documents');
+                setTimeout(() => {
+                  const tabsElement = document.querySelector('[role="tablist"]');
+                  if (tabsElement) {
+                    tabsElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                  }
+                }, 100);
+              }}
               className={infoSection === 'documents' ? 'bg-[#ef6144] hover:bg-[#d9553a]' : ''}
             >
               Documenti
