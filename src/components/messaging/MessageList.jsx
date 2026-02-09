@@ -15,7 +15,7 @@ export default function MessageList({
   onNavigate
 }) {
   const queryClient = useQueryClient();
-  const containerRef = useRef(null);
+  const messagesEndRef = useRef(null);
 
   const { data: messages = [], isLoading } = useQuery({
     queryKey: ['messages', channelId],
@@ -53,6 +53,10 @@ export default function MessageList({
       return () => clearTimeout(timer);
     }
   }, [messages.length, channelId]);
+
+  useEffect(() => {
+    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+  }, [messages]);
 
   const sortedMessages = [...messages].sort((a, b) => 
     new Date(a.created_date) - new Date(b.created_date)
@@ -122,7 +126,7 @@ export default function MessageList({
   }
 
   return (
-    <div ref={containerRef} className="flex-1 overflow-y-auto p-4 space-y-4">
+    <div className="flex-1 overflow-y-auto p-4 space-y-4">
       {sortedMessages.map(message => {
         const isOwnMessage = message.sender_email === currentUserEmail;
         const senderDisplay = message.sender_context_type === 'company' && message.sender_company_name
@@ -152,6 +156,7 @@ export default function MessageList({
           </div>
         );
       })}
+      <div ref={messagesEndRef} />
     </div>
   );
 }
