@@ -18,16 +18,18 @@ const columns = [
   { id: 'blocked', label: 'Bloccato', color: 'bg-red-100' },
 ];
 
-export default function TaskBoard({ projectId, canEdit, onTaskCreate }) {
+export default function TaskBoard({ projectId, canEdit, onTaskCreate, filteredTasks }) {
   const queryClient = useQueryClient();
   const [dialogOpen, setDialogOpen] = useState(false);
   const [selectedTask, setSelectedTask] = useState(null);
 
-  const { data: tasks = [], isLoading } = useQuery({
+  const { data: allTasks = [], isLoading } = useQuery({
     queryKey: ['tasks', projectId],
     queryFn: () => base44.entities.Task.filter({ project_id: projectId }),
     enabled: !!projectId,
   });
+
+  const tasks = filteredTasks || allTasks;
 
   const updateTaskMutation = useMutation({
     mutationFn: ({ taskId, status }) => base44.entities.Task.update(taskId, { 
