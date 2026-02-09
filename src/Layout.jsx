@@ -95,14 +95,10 @@ export default function Layout({ children, currentPageName }) {
         active_company_id: company?.id || null,
       });
       
-      // Prima invalida e ricarica i dati utente
-      await queryClient.invalidateQueries({ queryKey: ['currentUser'] });
-      await queryClient.refetchQueries({ queryKey: ['currentUser'] });
-      
-      // Poi invalida e ricarica tutte le altre query
-      await queryClient.invalidateQueries();
-      await queryClient.refetchQueries();
-    } finally {
+      // Redirect to Dashboard and reload the entire page
+      window.location.href = createPageUrl('Dashboard');
+    } catch (error) {
+      console.error('Failed to change context:', error);
       setIsChangingContext(false);
     }
   };
