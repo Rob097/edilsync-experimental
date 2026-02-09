@@ -3,6 +3,9 @@ import { base44 } from '@/api/base44Client';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { Card } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton.jsx";
+import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
+import { Button } from "@/components/ui/button";
+import { Menu } from "lucide-react";
 import ChannelList from './ChannelList';
 import MessageList from './MessageList';
 import MessageInput from './MessageInput';
@@ -17,6 +20,7 @@ export default function ProjectMessaging({
   const queryClient = useQueryClient();
   const [selectedChannelId, setSelectedChannelId] = useState(null);
   const [initialized, setInitialized] = useState(false);
+  const [sidebarOpen, setSidebarOpen] = useState(false);
 
   const { data: channels = [], isLoading: channelsLoading } = useQuery({
     queryKey: ['channels', projectId],
@@ -129,22 +133,16 @@ export default function ProjectMessaging({
 
   if (!currentUser || channelsLoading) {
     return (
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4 h-[600px]">
-        <Card className="md:col-span-1 p-4">
-          <div className="space-y-2">
-            {[1, 2, 3, 4].map(i => <Skeleton key={i} className="h-10 w-full" />)}
-          </div>
-        </Card>
-        <Card className="md:col-span-3 flex flex-col">
-          <Skeleton className="h-full w-full" />
-        </Card>
-      </div>
+      <Card className="flex flex-col h-[80vh] md:h-[600px]">
+        <Skeleton className="h-full w-full" />
+      </Card>
     );
   }
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-4 gap-4 h-[600px] md:h-[600px] sm:h-[800px]">
-      <Card className="md:col-span-1 p-4 overflow-y-auto">
+    <div className="flex gap-4 h-[80vh] md:h-[600px]">
+      {/* Desktop sidebar - always visible */}
+      <Card className="hidden md:flex md:col-span-1 p-4 overflow-y-auto w-64">
         <ChannelList
           projectId={projectId}
           currentUserEmail={currentUser.email}
@@ -155,14 +153,40 @@ export default function ProjectMessaging({
         />
       </Card>
 
-      <Card className="md:col-span-3 flex flex-col overflow-hidden">
+      {/* Mobile sidebar - hidden, shown in sheet */}
+      <Sheet open={sidebarOpen} onOpenChange={setSidebarOpen}>
+        <SheetContent side="left" className="w-64 p-0">
+          <div className="p-4 overflow-y-auto h-full">
+            <ChannelList
+              projectId={projectId}
+              currentUserEmail={currentUser.email}
+              activeCompanyId={activeCompanyId}
+              selectedChannelId={selectedChannelId}
+              onSelectChannel={(channelId) => {
+                setSelectedChannelId(channelId);
+                setSidebarOpen(false);
+              }}
+              participants={participants}
+            />
+          </div>
+        </SheetContent>
+      </Sheet>
+
+      <Card className="flex-1 flex flex-col overflow-hidden">
         {selectedChannel ? (
           <>
-            <div className="border-b p-4">
-              <h3 className="font-semibold">{selectedChannel.name}</h3>
-              {selectedChannel.description && (
-                <p className="text-sm text-gray-500 mt-1">{selectedChannel.description}</p>
-              )}
+            <div className="border-b p-4 flex items-center justify-between">
+              <div>
+                <h3 className="font-semibold">{selectedChannel.name}</h3>
+                {selectedChannel.description && (
+                  <p className="text-sm text-gray-500 mt-1">{selectedChannel.description}</p>
+                )}
+              </div>
+              <SheetTrigger asChild className="md:hidden">
+                <Button variant="ghost" size="icon">
+                  <Menu className="h-5 w-5" />
+                </Button>
+              </SheetTrigger>
             </div>
             <MessageList
               channelId={selectedChannelId}
