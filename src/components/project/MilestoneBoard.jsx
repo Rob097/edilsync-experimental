@@ -204,7 +204,7 @@ export default function MilestoneBoard({ projectId, project, canEdit, onMileston
                             {milestone.title}
                           </span>
                         </div>
-                        <div className="text-[9px] md:text-xs opacity-90 truncate overflow-clip">
+                        <div className="text-[9px] md:text-xs opacity-90 truncate overflow-clip!">
                           {format(milestone.startDate, 'dd MMM', { locale: it })} - {format(milestone.endDate, 'dd MMM', { locale: it })}
                         </div>
                         {milestone.tasksCount > 0 && (
