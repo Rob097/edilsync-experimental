@@ -33,20 +33,13 @@ export default function InviteMemberDialog({ open, onOpenChange, companyId }) {
 
   const inviteMutation = useMutation({
     mutationFn: async () => {
-      const member = await base44.entities.CompanyMember.create({
+      return base44.entities.CompanyMember.create({
         company_id: companyId,
         user_email: email,
         role: role,
         profession: profession,
         status: 'invited',
       });
-
-      // Trigger backend function to send email and notification
-      await base44.functions.call('handleCompanyInvite', {
-        member_id: member.id,
-      });
-
-      return member;
     },
     onSuccess: () => {
       queryClient.invalidateQueries(['companyMembers', companyId]);
