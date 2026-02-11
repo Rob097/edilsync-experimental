@@ -94,9 +94,18 @@ export default function NewProject() {
       return project;
     },
     onSuccess: async (project) => {
+      // Invalidate and refetch all relevant queries
       await queryClient.invalidateQueries(['projects']);
       await queryClient.invalidateQueries(['userProjectParticipations']);
+      await queryClient.invalidateQueries(['currentUser']);
+      
+      // Wait for user data to be updated by the backend
+      await new Promise(resolve => setTimeout(resolve, 500));
+      
+      // Refetch user to get updated project_ids
+      await queryClient.refetchQueries(['currentUser']);
       await queryClient.refetchQueries(['userProjectParticipations']);
+      
       navigate(createPageUrl('ProjectDetail') + `?id=${project.id}`);
     },
   });
