@@ -62,8 +62,6 @@ export default function NewCompany() {
       });
 
       // Add current user to General channel
-      // Note: We need to get the participant ID first, but since we just created the member
-      // we'll fetch it or use a placeholder for now
       const membershipCheck = await base44.entities.CompanyMember.filter({
         company_id: company.id,
         user_email: user?.email,
@@ -84,7 +82,9 @@ export default function NewCompany() {
     onSuccess: (company) => {
       queryClient.invalidateQueries(['companies']);
       queryClient.invalidateQueries(['userCompanies']);
-      navigate(createPageUrl('CompanyDetail') + `?id=${company.id}`);
+      queryClient.invalidateQueries(['currentUser']);
+      // Reload the page to ensure all context is updated
+      window.location.href = createPageUrl('Companies');
     },
   });
 
