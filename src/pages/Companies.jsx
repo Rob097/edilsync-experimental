@@ -40,8 +40,12 @@ export default function Companies() {
     queryFn: async () => {
       if (companyMemberships.length === 0) return [];
       const companyIds = companyMemberships.map(m => m.company_id);
-      const allCompanies = await base44.entities.Company.list();
-      return allCompanies.filter(c => companyIds.includes(c.id));
+      // Fetch companies individually to avoid RLS issues
+      const companiesPromises = companyIds.map(id => 
+        base44.entities.Company.filter({ id }).then(results => results[0]).catch(() => null)
+      );
+      const fetchedCompanies = await Promise.all(companiesPromises);
+      return fetchedCompanies.filter(c => c !== null);
     },
     enabled: companyMemberships.length > 0,
     staleTime: 5 * 60 * 1000,
