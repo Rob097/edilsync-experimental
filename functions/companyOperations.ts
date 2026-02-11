@@ -19,14 +19,24 @@ Deno.serve(async (req) => {
 
     // LIST/READ - solo i partecipanti possono leggere
     if (operation === 'list' || operation === 'filter') {
-      const allCompanies = await base44.asServiceRole.entities.Company.list();
       const memberships = await base44.asServiceRole.entities.CompanyMember.filter({
         user_email: user.email,
         status: 'active'
       });
       const userCompanyIds = memberships.map(m => m.company_id);
       
-      let filtered = allCompanies.filter(c => userCompanyIds.includes(c.id));
+      // Prende solo le companies esistenti
+      const companiesPromises = userCompanyIds.map(async (companyId) => {
+        try {
+          return await base44.asServiceRole.entities.Company.get(companyId);
+        } catch {
+          return null;
+        }
+      });
+      
+      const allCompanies = (await Promise.all(companiesPromises)).filter(c => c !== null);
+      
+      let filtered = allCompanies;
       
       if (operation === 'filter' && query) {
         filtered = filtered.filter(c => {
@@ -42,7 +52,7 @@ Deno.serve(async (req) => {
 
     // GET - solo i partecipanti possono leggere
     if (operation === 'get') {
-      const company = await base44.asServiceRole.entities.Company.get(id);
+      // Prima verifica membership
       const membership = await base44.asServiceRole.entities.CompanyMember.filter({
         company_id: id,
         user_email: user.email,
@@ -53,7 +63,13 @@ Deno.serve(async (req) => {
         return Response.json({ error: 'Forbidden: Not a company member' }, { status: 403 });
       }
       
-      return Response.json({ success: true, data: company });
+      // Poi prende la company
+      try {
+        const company = await base44.asServiceRole.entities.Company.get(id);
+        return Response.json({ success: true, data: company });
+      } catch (error) {
+        return Response.json({ error: 'Company not found' }, { status: 404 });
+      }
     }
 
     // UPDATE - solo gli admin possono aggiornare
