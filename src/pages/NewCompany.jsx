@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
 import { base44 } from '@/api/base44Client';
+import { secureApi } from '@/components/secureApi';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -40,10 +41,10 @@ export default function NewCompany() {
   const createCompanyMutation = useMutation({
     mutationFn: async (data) => {
       // Create company
-      const company = await base44.entities.Company.create(data);
+      const company = await secureApi.company.create(data);
 
       // Create General channel for the company
-      const generalChannel = await base44.entities.Channel.create({
+      const generalChannel = await secureApi.channel.create({
         project_id: null,
         company_id: company.id,
         name: 'General',
@@ -52,7 +53,7 @@ export default function NewCompany() {
       });
 
       // Add current user as admin
-      await base44.entities.CompanyMember.create({
+      await secureApi.companyMember.create({
         company_id: company.id,
         user_id: user?.id,
         user_email: user?.email,
@@ -62,15 +63,10 @@ export default function NewCompany() {
       });
 
       // Add current user to General channel
-      // Note: We need to get the participant ID first, but since we just created the member
-      // we'll fetch it or use a placeholder for now
-      const membershipCheck = await base44.entities.CompanyMember.filter({
-        company_id: company.id,
-        user_email: user?.email,
-      });
+      const membershipCheck = await secureApi.companyMember.list(company.id);
 
       if (membershipCheck.length > 0) {
-        await base44.entities.ChannelMember.create({
+        await secureApi.channelMember.create({
           channel_id: generalChannel.id,
           project_id: null,
           participant_id: membershipCheck[0].id,
@@ -82,7 +78,6 @@ export default function NewCompany() {
       return company;
     },
     onSuccess: (company) => {
-      // Reload the page to refresh user data with new company_ids
       window.location.href = createPageUrl('CompanyDetail') + `?id=${company.id}`;
     },
   });

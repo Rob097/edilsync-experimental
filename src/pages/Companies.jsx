@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
 import { base44 } from '@/api/base44Client';
+import { secureApi } from '@/components/secureApi';
 import { useQuery } from '@tanstack/react-query';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -36,18 +37,8 @@ export default function Companies() {
   });
 
   const { data: companies = [], isLoading: companiesLoading } = useQuery({
-    queryKey: ['companies', companyMemberships],
-    queryFn: async () => {
-      if (companyMemberships.length === 0) return [];
-      const companyIds = companyMemberships.map(m => m.company_id);
-      // Fetch companies individually to avoid RLS issues
-      const companiesPromises = companyIds.map(id => 
-        base44.entities.Company.filter({ id }).then(results => results[0]).catch(() => null)
-      );
-      const fetchedCompanies = await Promise.all(companiesPromises);
-      return fetchedCompanies.filter(c => c !== null);
-    },
-    enabled: companyMemberships.length > 0,
+    queryKey: ['companies'],
+    queryFn: () => secureApi.company.list(),
     staleTime: 5 * 60 * 1000,
   });
 

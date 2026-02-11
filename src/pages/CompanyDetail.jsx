@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
 import { base44 } from '@/api/base44Client';
+import { secureApi } from '@/components/secureApi';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -39,19 +40,16 @@ export default function CompanyDetail() {
 
   const { data: company, isLoading: companyLoading } = useQuery({
     queryKey: ['company', companyId],
-    queryFn: async () => {
-      const companies = await base44.entities.Company.filter({ id: companyId });
-      return companies[0];
-    },
+    queryFn: () => secureApi.company.get(companyId),
     enabled: !!companyId,
-    staleTime: 2 * 60 * 1000, // 2 minuti
+    staleTime: 2 * 60 * 1000,
   });
 
   const { data: members = [], isLoading: membersLoading } = useQuery({
     queryKey: ['companyMembers', companyId],
-    queryFn: () => base44.entities.CompanyMember.filter({ company_id: companyId }),
+    queryFn: () => secureApi.companyMember.list(companyId),
     enabled: !!companyId && !!company,
-    staleTime: 2 * 60 * 1000, // 2 minuti
+    staleTime: 2 * 60 * 1000,
   });
 
   // Check if current user is admin
