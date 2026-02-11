@@ -53,6 +53,20 @@ export default function NewProject() {
   const currentContext = user?.active_context || 'personal';
   const currentCompany = companies.find(c => c.id === user?.active_company_id);
 
+  // Check if user is admin of current company
+  const isCompanyAdmin = React.useMemo(() => {
+    if (currentContext !== 'company' || !user?.active_company_id) return false;
+    const membership = companyMemberships.find(m => m.company_id === user.active_company_id);
+    return membership?.role === 'admin';
+  }, [currentContext, user?.active_company_id, companyMemberships]);
+
+  // Prevent project creation if in company context and not admin
+  React.useEffect(() => {
+    if (currentContext === 'company' && !isCompanyAdmin && companyMemberships.length > 0) {
+      navigate(createPageUrl('Projects'));
+    }
+  }, [currentContext, isCompanyAdmin, companyMemberships.length, navigate]);
+
   const createProjectMutation = useMutation({
     mutationFn: async (data) => {
       const { my_role, homeowner_email, ...projectData } = data;
@@ -65,8 +79,17 @@ export default function NewProject() {
         owner_user_id: user?.id,
       });
 
+      // Create General channel for the project
+      const generalChannel = await base44.entities.Channel.create({
+        project_id: project.id,
+        company_id: null,
+        name: 'General',
+        type: 'general',
+        description: 'Canale generale per comunicazioni all\'interno del progetto',
+      });
+
       // Create participant for project creator (homeowner or contractor)
-      await base44.entities.ProjectParticipant.create({
+      const creatorParticipant = await base44.entities.ProjectParticipant.create({
         project_id: project.id,
         participant_type: currentContext,
         user_id: currentContext === 'personal' ? user?.id : null,
@@ -75,6 +98,15 @@ export default function NewProject() {
         project_role: my_role,
         status: 'active',
         can_invite: true,
+      });
+
+      // Add creator to General channel
+      await base44.entities.ChannelMember.create({
+        channel_id: generalChannel.id,
+        project_id: project.id,
+        participant_id: creatorParticipant.id,
+        user_email: user?.email,
+        company_id: currentContext === 'company' ? user?.active_company_id : null,
       });
 
       // If contractor, invite homeowner

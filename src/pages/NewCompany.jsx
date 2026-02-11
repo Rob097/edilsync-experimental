@@ -13,6 +13,20 @@ import { ArrowLeft, Loader2 } from "lucide-react";
 export default function NewCompany() {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
+
+  const { data: user } = useQuery({
+    queryKey: ['currentUser'],
+    queryFn: () => base44.auth.me(),
+  });
+
+  // Prevent company creation if in company context
+  const currentContext = user?.active_context || 'personal';
+  
+  React.useEffect(() => {
+    if (currentContext === 'company') {
+      navigate(createPageUrl('Companies'));
+    }
+  }, [currentContext, navigate]);
   
   const [formData, setFormData] = useState({
     name: '',
@@ -23,15 +37,19 @@ export default function NewCompany() {
     description: '',
   });
 
-  const { data: user } = useQuery({
-    queryKey: ['currentUser'],
-    queryFn: () => base44.auth.me(),
-  });
-
   const createCompanyMutation = useMutation({
     mutationFn: async (data) => {
       // Create company
       const company = await base44.entities.Company.create(data);
+
+      // Create General channel for the company
+      const generalChannel = await base44.entities.Channel.create({
+        project_id: null,
+        company_id: company.id,
+        name: 'General',
+        type: 'company',
+        description: 'Canale generale per comunicazioni all\'interno della società',
+      });
 
       // Add current user as admin
       await base44.entities.CompanyMember.create({
@@ -42,6 +60,24 @@ export default function NewCompany() {
         profession: 'general',
         status: 'active',
       });
+
+      // Add current user to General channel
+      // Note: We need to get the participant ID first, but since we just created the member
+      // we'll fetch it or use a placeholder for now
+      const membershipCheck = await base44.entities.CompanyMember.filter({
+        company_id: company.id,
+        user_email: user?.email,
+      });
+
+      if (membershipCheck.length > 0) {
+        await base44.entities.ChannelMember.create({
+          channel_id: generalChannel.id,
+          project_id: null,
+          participant_id: membershipCheck[0].id,
+          user_email: user?.email,
+          company_id: company.id,
+        });
+      }
 
       return company;
     },
