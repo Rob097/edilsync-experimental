@@ -51,12 +51,12 @@ import Calendar from './pages/Calendar';
 import Companies from './pages/Companies';
 import CompanyDetail from './pages/CompanyDetail';
 import Dashboard from './pages/Dashboard';
-import NewCompany from './pages/NewCompany';
 import NewProject from './pages/NewProject';
 import Notifications from './pages/Notifications';
 import ProjectDetail from './pages/ProjectDetail';
 import Projects from './pages/Projects';
 import Settings from './pages/Settings';
+import NewCompany from './pages/NewCompany';
 import __Layout from './Layout.jsx';
 
 
@@ -65,12 +65,12 @@ export const PAGES = {
     "Companies": Companies,
     "CompanyDetail": CompanyDetail,
     "Dashboard": Dashboard,
-    "NewCompany": NewCompany,
     "NewProject": NewProject,
     "Notifications": Notifications,
     "ProjectDetail": ProjectDetail,
     "Projects": Projects,
     "Settings": Settings,
+    "NewCompany": NewCompany,
 }
 
 export const pagesConfig = {

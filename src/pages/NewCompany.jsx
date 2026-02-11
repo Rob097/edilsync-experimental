@@ -82,9 +82,8 @@ export default function NewCompany() {
       return company;
     },
     onSuccess: (company) => {
-      queryClient.invalidateQueries(['companies']);
-      queryClient.invalidateQueries(['userCompanies']);
-      navigate(createPageUrl('CompanyDetail') + `?id=${company.id}`);
+      // Reload the page to refresh user data with new company_ids
+      window.location.href = createPageUrl('CompanyDetail') + `?id=${company.id}`;
     },
   });
 
