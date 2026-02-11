@@ -93,9 +93,10 @@ export default function NewProject() {
 
       return project;
     },
-    onSuccess: (project) => {
-      queryClient.invalidateQueries(['projects']);
-      queryClient.invalidateQueries(['userProjectParticipations']);
+    onSuccess: async (project) => {
+      await queryClient.invalidateQueries(['projects']);
+      await queryClient.invalidateQueries(['userProjectParticipations']);
+      await queryClient.refetchQueries(['userProjectParticipations']);
       navigate(createPageUrl('ProjectDetail') + `?id=${project.id}`);
     },
   });
