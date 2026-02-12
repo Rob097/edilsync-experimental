@@ -138,16 +138,6 @@ export default function Layout({ children, currentPageName }) {
 
             {/* Desktop Nav */}
             <nav className="hidden md:flex items-center gap-1">
-              {currentContext === 'company' && (
-                <Link
-                  to={createPageUrl('NewCompany')}
-                  className="flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium text-gray-400 cursor-not-allowed opacity-50"
-                  onClick={(e) => e.preventDefault()}
-                >
-                  <Building2 className="h-4 w-4" />
-                  Nuova Società
-                </Link>
-              )}
               {navItems.map((item) => {
                 const isActive = currentPageName === item.page;
                 return (
