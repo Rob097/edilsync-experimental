@@ -62,6 +62,9 @@ export default function Layout({ children, currentPageName }) {
     staleTime: 5 * 60 * 1000, // 5 minuti
   });
 
+  const currentContext = user?.active_context || 'personal';
+  const currentCompany = companies.find(c => c.id === user?.active_company_id);
+
   const { data: notifications = [] } = useQuery({
     queryKey: ['notifications', user?.email, currentContext, user?.active_company_id],
     queryFn: () => {
@@ -84,9 +87,6 @@ export default function Layout({ children, currentPageName }) {
   });
 
   const unreadCount = notifications.length;
-
-  const currentContext = user?.active_context || 'personal';
-  const currentCompany = companies.find(c => c.id === user?.active_company_id);
 
   const companiesNavItem = currentContext === 'personal'
     ? { name: 'Società', icon: Building2, page: 'Companies', path: createPageUrl('Companies') }
