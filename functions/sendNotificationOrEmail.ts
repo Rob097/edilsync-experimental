@@ -30,9 +30,17 @@ Deno.serve(async (req) => {
     } = payload;
 
     // Validate required fields
-    if (!action_type || !recipient_email || !notification_data) {
+    if (!action_type || !recipient_email) {
       return Response.json(
-        { error: 'Missing required fields: action_type, recipient_email, notification_data' },
+        { error: 'Missing required fields: action_type, recipient_email' },
+        { status: 400 }
+      );
+    }
+    
+    // At least one of notification_data or email_data must be provided
+    if (!notification_data && !email_data) {
+      return Response.json(
+        { error: 'At least one of notification_data or email_data must be provided' },
         { status: 400 }
       );
     }
@@ -61,8 +69,8 @@ Deno.serve(async (req) => {
       email_sent: false,
     };
 
-    // Send notification if enabled
-    if (actionPrefs.notification) {
+    // Send notification if enabled and notification_data is provided
+    if (notification_data && actionPrefs.notification) {
       await base44.asServiceRole.entities.Notification.create({
         user_email: recipient_email,
         context_type: context_type || 'personal',

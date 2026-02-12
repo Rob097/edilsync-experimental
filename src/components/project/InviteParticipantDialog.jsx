@@ -123,6 +123,7 @@ export default function InviteParticipantDialog({
         
         const company = allCompanies.find(c => c.id === selectedCompanyId);
         
+        // Send notifications to all company members
         for (const member of companyMembers) {
           await base44.functions.invoke('sendNotificationOrEmail', {
             action_type: 'project_invite',
@@ -135,9 +136,21 @@ export default function InviteParticipantDialog({
               message: `La tua società è stata invitata al progetto "${project?.name}" con ruolo ${projectRole}`,
               related_event_id: projectId,
             },
+            email_data: null, // No email to individual members
+          });
+        }
+        
+        // Send email only to company email address if exists
+        if (company?.email) {
+          await base44.functions.invoke('sendNotificationOrEmail', {
+            action_type: 'project_invite',
+            recipient_email: company.email,
+            context_type: 'company',
+            context_company_id: selectedCompanyId,
+            notification_data: null, // No notification to company email
             email_data: {
               subject: `Invito a nuovo progetto: ${project?.name}`,
-              body: `Ciao,\n\nLa tua società ${company?.name} è stata invitata al progetto "${project?.name}" con ruolo ${projectRole}.\n\nAccedi all'applicazione per visualizzare i dettagli del progetto.\n\nCordiali saluti,\nIl team EdilSync`,
+              body: `Gentile ${company?.name},\n\nLa vostra società è stata invitata al progetto "${project?.name}" con ruolo ${projectRole}.\n\nI membri della società riceveranno una notifica nell'applicazione.\n\nCordiali saluti,\nIl team EdilSync`,
             },
           });
         }
