@@ -148,6 +148,7 @@ export default function InviteParticipantDialog({
             recipient_email: company.email,
             context_type: 'company',
             context_company_id: selectedCompanyId,
+            skip_preferences_check: true, // Skip preferences check for company email
             notification_data: null, // No notification to company email
             email_data: {
               subject: `Invito a nuovo progetto: ${project?.name}`,

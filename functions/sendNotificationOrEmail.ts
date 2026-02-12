@@ -27,6 +27,7 @@ Deno.serve(async (req) => {
       context_company_id,
       notification_data,
       email_data,
+      skip_preferences_check,
     } = payload;
 
     // Validate required fields
@@ -45,24 +46,31 @@ Deno.serve(async (req) => {
       );
     }
 
-    // Get or create user preferences
-    let preferences = await base44.asServiceRole.entities.NotificationPreference.filter({
-      user_email: recipient_email,
-    });
-
-    let userPrefs;
-    if (preferences.length === 0) {
-      // Create default preferences for this user
-      const newPref = await base44.asServiceRole.entities.NotificationPreference.create({
-        user_email: recipient_email,
-        preferences: DEFAULT_PREFERENCES,
-      });
-      userPrefs = newPref.preferences;
+    // Get or create user preferences (skip if skip_preferences_check is true)
+    let actionPrefs;
+    
+    if (skip_preferences_check) {
+      // Force send without checking preferences (used for company emails)
+      actionPrefs = { notification: true, email: true };
     } else {
-      userPrefs = preferences[0].preferences;
-    }
+      let preferences = await base44.entities.NotificationPreference.filter({
+        user_email: recipient_email,
+      });
 
-    const actionPrefs = userPrefs[action_type] || DEFAULT_PREFERENCES[action_type] || { notification: false, email: false };
+      let userPrefs;
+      if (preferences.length === 0) {
+        // Create default preferences for this user
+        const newPref = await base44.entities.NotificationPreference.create({
+          user_email: recipient_email,
+          preferences: DEFAULT_PREFERENCES,
+        });
+        userPrefs = newPref.preferences;
+      } else {
+        userPrefs = preferences[0].preferences;
+      }
+
+      actionPrefs = userPrefs[action_type] || DEFAULT_PREFERENCES[action_type] || { notification: false, email: false };
+    }
 
     const results = {
       notification_sent: false,
@@ -71,7 +79,7 @@ Deno.serve(async (req) => {
 
     // Send notification if enabled and notification_data is provided
     if (notification_data && actionPrefs.notification) {
-      await base44.asServiceRole.entities.Notification.create({
+      await base44.entities.Notification.create({
         user_email: recipient_email,
         context_type: context_type || 'personal',
         context_company_id: context_company_id || null,
@@ -86,7 +94,7 @@ Deno.serve(async (req) => {
 
     // Send email if enabled and email_data is provided
     if (actionPrefs.email && email_data) {
-      await base44.asServiceRole.integrations.Core.SendEmail({
+      await base44.integrations.Core.SendEmail({
         to: recipient_email,
         subject: email_data.subject,
         body: email_data.body,
