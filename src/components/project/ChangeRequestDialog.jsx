@@ -12,7 +12,6 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Loader2, CheckCircle2, XCircle } from "lucide-react";
-import ParticipantSelector from '@/components/project/ParticipantSelector';
 
 export default function ChangeRequestDialog({ open, onOpenChange, request, projectId, canRespond }) {
   const queryClient = useQueryClient();
@@ -22,12 +21,6 @@ export default function ChangeRequestDialog({ open, onOpenChange, request, proje
     cost_impact: '',
     time_impact_days: '',
     response_note: '',
-    assigned_participant_id: '',
-    assigned_participant_type: '',
-    assigned_user_email: '',
-    assigned_user_name: '',
-    assigned_company_id: '',
-    assigned_company_name: '',
   });
 
   const { data: user } = useQuery({
@@ -43,12 +36,6 @@ export default function ChangeRequestDialog({ open, onOpenChange, request, proje
         cost_impact: request.cost_impact || '',
         time_impact_days: request.time_impact_days || '',
         response_note: request.response_note || '',
-        assigned_participant_id: request.assigned_participant_id || '',
-        assigned_participant_type: request.assigned_participant_type || '',
-        assigned_user_email: request.assigned_user_email || '',
-        assigned_user_name: request.assigned_user_name || '',
-        assigned_company_id: request.assigned_company_id || '',
-        assigned_company_name: request.assigned_company_name || '',
       });
     } else {
       setFormData({
@@ -57,12 +44,6 @@ export default function ChangeRequestDialog({ open, onOpenChange, request, proje
         cost_impact: '',
         time_impact_days: '',
         response_note: '',
-        assigned_participant_id: '',
-        assigned_participant_type: '',
-        assigned_user_email: '',
-        assigned_user_name: '',
-        assigned_company_id: '',
-        assigned_company_name: '',
       });
     }
   }, [request, open]);
@@ -108,12 +89,6 @@ export default function ChangeRequestDialog({ open, onOpenChange, request, proje
       description: formData.description,
       cost_impact: formData.cost_impact ? parseFloat(formData.cost_impact) : 0,
       time_impact_days: formData.time_impact_days ? parseInt(formData.time_impact_days) : 0,
-      assigned_participant_id: formData.assigned_participant_id || null,
-      assigned_participant_type: formData.assigned_participant_type || null,
-      assigned_user_email: formData.assigned_user_email || null,
-      assigned_user_name: formData.assigned_user_name || null,
-      assigned_company_id: formData.assigned_company_id || null,
-      assigned_company_name: formData.assigned_company_name || null,
     };
     saveMutation.mutate(data);
   };
@@ -188,15 +163,6 @@ export default function ChangeRequestDialog({ open, onOpenChange, request, proje
               />
             </div>
           </div>
-
-          {!request && (
-            <ParticipantSelector
-              projectId={projectId}
-              value={formData.assigned_participant_id}
-              onChange={(assigneeData) => setFormData(prev => ({ ...prev, ...assigneeData }))}
-              label="Assegnato a (opzionale)"
-            />
-          )}
 
           {request && canRespond && isPending && (
             <div className="space-y-2 pt-4 border-t">

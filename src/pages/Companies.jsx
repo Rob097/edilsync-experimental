@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
 import { base44 } from '@/api/base44Client';
-import { secureApi } from '@/components/secureApi';
 import { useQuery } from '@tanstack/react-query';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -37,8 +36,14 @@ export default function Companies() {
   });
 
   const { data: companies = [], isLoading: companiesLoading } = useQuery({
-    queryKey: ['companies'],
-    queryFn: () => secureApi.company.list(),
+    queryKey: ['companies', companyMemberships],
+    queryFn: async () => {
+      if (companyMemberships.length === 0) return [];
+      const companyIds = companyMemberships.map(m => m.company_id);
+      const allCompanies = await base44.entities.Company.list();
+      return allCompanies.filter(c => companyIds.includes(c.id));
+    },
+    enabled: companyMemberships.length > 0,
     staleTime: 5 * 60 * 1000,
   });
 

@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
 import { base44 } from '@/api/base44Client';
-import { secureApi } from '@/components/secureApi';
 import { useQuery } from '@tanstack/react-query';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -61,8 +60,14 @@ export default function Projects() {
   });
 
   const { data: projects = [], isLoading: projectsLoading } = useQuery({
-    queryKey: ['projects'],
-    queryFn: () => secureApi.project.list(),
+    queryKey: ['projects', projectParticipations],
+    queryFn: async () => {
+      if (projectParticipations.length === 0) return [];
+      const projectIds = [...new Set(projectParticipations.map(p => p.project_id))];
+      const allProjects = await base44.entities.Project.list('-created_date');
+      return allProjects.filter(p => projectIds.includes(p.id));
+    },
+    enabled: projectParticipations.length > 0,
     staleTime: 60 * 1000,
   });
 

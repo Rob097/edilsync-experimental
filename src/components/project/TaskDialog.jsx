@@ -13,7 +13,6 @@ import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Loader2 } from "lucide-react";
-import ParticipantSelector from '@/components/project/ParticipantSelector';
 
 export default function TaskDialog({ open, onOpenChange, task, projectId }) {
   const queryClient = useQueryClient();
@@ -21,12 +20,9 @@ export default function TaskDialog({ open, onOpenChange, task, projectId }) {
     title: '',
     description: '',
     status: 'not_started',
-    assigned_participant_id: '',
-    assigned_participant_type: '',
-    assigned_user_email: '',
-    assigned_user_name: '',
-    assigned_company_id: '',
-    assigned_company_name: '',
+    assigned_to_type: 'contractor',
+    assigned_to_email: '',
+    assigned_to_name: '',
     room_area: '',
     due_date: '',
     milestone_id: '',
@@ -58,12 +54,9 @@ export default function TaskDialog({ open, onOpenChange, task, projectId }) {
         title: task.title || '',
         description: task.description || '',
         status: task.status || 'not_started',
-        assigned_participant_id: task.assigned_participant_id || '',
-        assigned_participant_type: task.assigned_participant_type || '',
-        assigned_user_email: task.assigned_user_email || '',
-        assigned_user_name: task.assigned_user_name || '',
-        assigned_company_id: task.assigned_company_id || '',
-        assigned_company_name: task.assigned_company_name || '',
+        assigned_to_type: task.assigned_to_type || 'contractor',
+        assigned_to_email: task.assigned_to_email || '',
+        assigned_to_name: task.assigned_to_name || '',
         room_area: task.room_area || '',
         due_date: task.due_date || '',
         milestone_id: task.milestone_id || '',
@@ -72,47 +65,13 @@ export default function TaskDialog({ open, onOpenChange, task, projectId }) {
         blocked_by_name: task.blocked_by_name || '',
       });
     } else {
-      // Set default assignee based on context
-      const currentContext = user?.active_context || 'personal';
-      let defaultAssignee = {};
-      
-      if (currentContext === 'personal') {
-        // Default: assign to current user
-        const userParticipant = participants.find(p => 
-          p.participant_type === 'personal' && p.user_email === user?.email
-        );
-        if (userParticipant) {
-          defaultAssignee = {
-            assigned_participant_id: userParticipant.id,
-            assigned_participant_type: 'personal',
-            assigned_user_email: user?.email,
-            assigned_user_name: user?.full_name || user?.display_name,
-            assigned_company_id: '',
-            assigned_company_name: '',
-          };
-        }
-      } else if (currentContext === 'company' && user?.active_company_id) {
-        // Default: assign to current company
-        const companyParticipant = participants.find(p => 
-          p.participant_type === 'company' && p.company_id === user.active_company_id
-        );
-        if (companyParticipant) {
-          defaultAssignee = {
-            assigned_participant_id: companyParticipant.id,
-            assigned_participant_type: 'company',
-            assigned_user_email: '',
-            assigned_user_name: '',
-            assigned_company_id: companyParticipant.company_id,
-            assigned_company_name: companyParticipant.company_name,
-          };
-        }
-      }
-
       setFormData({
         title: '',
         description: '',
         status: 'not_started',
-        ...defaultAssignee,
+        assigned_to_type: 'contractor',
+        assigned_to_email: '',
+        assigned_to_name: '',
         room_area: '',
         due_date: '',
         milestone_id: '',
@@ -121,7 +80,7 @@ export default function TaskDialog({ open, onOpenChange, task, projectId }) {
         blocked_by_name: '',
       });
     }
-  }, [task, open, user, participants]);
+  }, [task, open]);
 
   const saveMutation = useMutation({
     mutationFn: async (data) => {
@@ -214,11 +173,15 @@ export default function TaskDialog({ open, onOpenChange, task, projectId }) {
             </div>
           </div>
 
-          <ParticipantSelector
-            projectId={projectId}
-            value={formData.assigned_participant_id}
-            onChange={(assigneeData) => setFormData(prev => ({ ...prev, ...assigneeData }))}
-          />
+          <div className="space-y-2">
+            <Label htmlFor="assigned_to_name">Assegnato a</Label>
+            <Input
+              id="assigned_to_name"
+              value={formData.assigned_to_name}
+              onChange={(e) => setFormData(prev => ({ ...prev, assigned_to_name: e.target.value }))}
+              placeholder="Nome persona o società"
+            />
+          </div>
 
           <div className="space-y-2">
             <Label htmlFor="due_date">Data scadenza</Label>

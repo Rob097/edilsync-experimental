@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
 import { base44 } from '@/api/base44Client';
-import { secureApi } from '@/components/secureApi';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -14,20 +13,6 @@ import { ArrowLeft, Loader2 } from "lucide-react";
 export default function NewCompany() {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
-
-  const { data: user } = useQuery({
-    queryKey: ['currentUser'],
-    queryFn: () => base44.auth.me(),
-  });
-
-  // Prevent company creation if in company context
-  const currentContext = user?.active_context || 'personal';
-  
-  React.useEffect(() => {
-    if (currentContext === 'company') {
-      navigate(createPageUrl('Companies'));
-    }
-  }, [currentContext, navigate]);
   
   const [formData, setFormData] = useState({
     name: '',
@@ -38,22 +23,18 @@ export default function NewCompany() {
     description: '',
   });
 
+  const { data: user } = useQuery({
+    queryKey: ['currentUser'],
+    queryFn: () => base44.auth.me(),
+  });
+
   const createCompanyMutation = useMutation({
     mutationFn: async (data) => {
       // Create company
-      const company = await secureApi.company.create(data);
-
-      // Create General channel for the company
-      const generalChannel = await secureApi.channel.create({
-        project_id: null,
-        company_id: company.id,
-        name: 'General',
-        type: 'company',
-        description: 'Canale generale per comunicazioni all\'interno della società',
-      });
+      const company = await base44.entities.Company.create(data);
 
       // Add current user as admin
-      await secureApi.companyMember.create({
+      await base44.entities.CompanyMember.create({
         company_id: company.id,
         user_id: user?.id,
         user_email: user?.email,
@@ -62,23 +43,12 @@ export default function NewCompany() {
         status: 'active',
       });
 
-      // Add current user to General channel
-      const membershipCheck = await secureApi.companyMember.list(company.id);
-
-      if (membershipCheck.length > 0) {
-        await secureApi.channelMember.create({
-          channel_id: generalChannel.id,
-          project_id: null,
-          participant_id: membershipCheck[0].id,
-          user_email: user?.email,
-          company_id: company.id,
-        });
-      }
-
       return company;
     },
     onSuccess: (company) => {
-      window.location.href = createPageUrl('CompanyDetail') + `?id=${company.id}`;
+      queryClient.invalidateQueries(['companies']);
+      queryClient.invalidateQueries(['userCompanies']);
+      navigate(createPageUrl('CompanyDetail') + `?id=${company.id}`);
     },
   });
 
