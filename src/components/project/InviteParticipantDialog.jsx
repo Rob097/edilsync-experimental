@@ -48,6 +48,12 @@ export default function InviteParticipantDialog({
     queryFn: () => base44.auth.me(),
   });
 
+  const { data: companyMemberships = [] } = useQuery({
+    queryKey: ['userCompanyMemberships', user?.email],
+    queryFn: () => base44.entities.CompanyMember.filter({ user_email: user?.email, status: 'active' }),
+    enabled: !!user?.email,
+  });
+
   const { data: project } = useQuery({
     queryKey: ['project', projectId],
     queryFn: async () => {
@@ -59,6 +65,14 @@ export default function InviteParticipantDialog({
 
   const inviteMutation = useMutation({
     mutationFn: async () => {
+      // Security check: If inviting as company, user must be admin of that company
+      if (participantType === 'company' && selectedCompanyId) {
+        const membership = companyMemberships.find(m => m.company_id === selectedCompanyId);
+        if (!membership || membership.role !== 'admin') {
+          throw new Error('Solo gli amministratori della società possono invitare partecipanti a nome della società');
+        }
+      }
+
       const participantData = {
         project_id: projectId,
         participant_type: participantType,

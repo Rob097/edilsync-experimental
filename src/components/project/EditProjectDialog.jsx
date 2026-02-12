@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { base44 } from '@/api/base44Client';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { useMutation, useQueryClient, useQuery } from '@tanstack/react-query';
 import {
   Dialog,
   DialogContent,
@@ -17,6 +17,23 @@ import { Loader2 } from "lucide-react";
 
 export default function EditProjectDialog({ open, onOpenChange, project }) {
   const queryClient = useQueryClient();
+
+  const { data: user } = useQuery({
+    queryKey: ['currentUser'],
+    queryFn: () => base44.auth.me(),
+  });
+
+  const { data: companyMemberships = [] } = useQuery({
+    queryKey: ['userCompanyMemberships', user?.email],
+    queryFn: () => base44.entities.CompanyMember.filter({ user_email: user?.email, status: 'active' }),
+    enabled: !!user?.email,
+  });
+
+  const { data: projectParticipants = [] } = useQuery({
+    queryKey: ['projectParticipants', project?.id],
+    queryFn: () => base44.entities.ProjectParticipant.filter({ project_id: project.id }),
+    enabled: !!project?.id,
+  });
   
   const [formData, setFormData] = useState({
     name: '',
@@ -42,6 +59,15 @@ export default function EditProjectDialog({ open, onOpenChange, project }) {
 
   const updateProjectMutation = useMutation({
     mutationFn: async (data) => {
+      // Security check: If user is participating as company, must be admin
+      const userParticipation = projectParticipants.find(p => p.user_email === user?.email);
+      if (userParticipation?.participant_type === 'company' && userParticipation?.company_id) {
+        const membership = companyMemberships.find(m => m.company_id === userParticipation.company_id);
+        if (!membership || membership.role !== 'admin') {
+          throw new Error('Solo gli amministratori della società possono modificare il progetto');
+        }
+      }
+      
       return await base44.entities.Project.update(project.id, data);
     },
     onSuccess: () => {

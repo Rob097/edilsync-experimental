@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { base44 } from '@/api/base44Client';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { useMutation, useQueryClient, useQuery } from '@tanstack/react-query';
 import {
   Dialog,
   DialogContent,
@@ -26,8 +26,27 @@ export default function CreateChannelDialog({
   const [description, setDescription] = useState('');
   const [selectedParticipants, setSelectedParticipants] = useState([]);
 
+  const { data: user } = useQuery({
+    queryKey: ['currentUser'],
+    queryFn: () => base44.auth.me(),
+  });
+
+  const { data: companyMemberships = [] } = useQuery({
+    queryKey: ['userCompanyMemberships', user?.email],
+    queryFn: () => base44.entities.CompanyMember.filter({ user_email: user?.email, status: 'active' }),
+    enabled: !!user?.email,
+  });
+
   const createChannelMutation = useMutation({
     mutationFn: async (channelData) => {
+      // Security check: If creating as company (activeCompanyId set), user must be admin
+      if (activeCompanyId) {
+        const membership = companyMemberships.find(m => m.company_id === activeCompanyId);
+        if (!membership || membership.role !== 'admin') {
+          throw new Error('Solo gli amministratori della società possono creare canali a nome della società');
+        }
+      }
+
       const channel = await base44.entities.Channel.create(channelData);
       
       // Add members

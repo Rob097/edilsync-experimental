@@ -28,6 +28,12 @@ export default function ChangeRequestDialog({ open, onOpenChange, request, proje
     queryFn: () => base44.auth.me(),
   });
 
+  const { data: projectParticipants = [] } = useQuery({
+    queryKey: ['projectParticipants', projectId],
+    queryFn: () => base44.entities.ProjectParticipant.filter({ project_id: projectId }),
+    enabled: !!projectId && !request,
+  });
+
   useEffect(() => {
     if (request) {
       setFormData({
@@ -53,6 +59,12 @@ export default function ChangeRequestDialog({ open, onOpenChange, request, proje
       if (request) {
         return base44.entities.ChangeRequest.update(request.id, data);
       } else {
+        // Security check: Only homeowner can create change request
+        const userParticipation = projectParticipants.find(p => p.user_email === user?.email);
+        if (!userParticipation || userParticipation.project_role !== 'homeowner') {
+          throw new Error('Solo il committente del progetto può creare richieste di modifica');
+        }
+
         return base44.entities.ChangeRequest.create({
           ...data,
           project_id: projectId,
