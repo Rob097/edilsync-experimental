@@ -31,17 +31,22 @@ Deno.serve(async (req) => {
       return Response.json({ success: true, data: members });
     }
 
-    // CREATE - solo gli admin possono aggiungere partecipanti
+    // CREATE - creatore della società o admin possono aggiungere membri
     if (operation === 'create') {
-      const membership = await base44.asServiceRole.entities.CompanyMember.filter({
-        company_id: data.company_id,
-        user_email: user.email,
-        role: 'admin',
-        status: 'active'
-      });
+      const company = await base44.asServiceRole.entities.Company.get(data.company_id);
+      const isCompanyCreator = company.created_by === user.email;
       
-      if (membership.length === 0) {
-        return Response.json({ error: 'Forbidden: Only company admins can add members' }, { status: 403 });
+      if (!isCompanyCreator) {
+        const membership = await base44.asServiceRole.entities.CompanyMember.filter({
+          company_id: data.company_id,
+          user_email: user.email,
+          role: 'admin',
+          status: 'active'
+        });
+        
+        if (membership.length === 0) {
+          return Response.json({ error: 'Forbidden: Only company admins can add members' }, { status: 403 });
+        }
       }
       
       const member = await base44.asServiceRole.entities.CompanyMember.create(data);
