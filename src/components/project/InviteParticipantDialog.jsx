@@ -118,12 +118,13 @@ export default function InviteParticipantDialog({
       if (participantType === 'company') {
         const companyMembers = await base44.entities.CompanyMember.filter({ 
           company_id: selectedCompanyId, 
-          status: 'active' 
+          status: 'active',
+          role: 'admin'
         });
         
         const company = allCompanies.find(c => c.id === selectedCompanyId);
         
-        // Send notifications to all company members
+        // Send notifications to company admins only
         for (const member of companyMembers) {
           await base44.functions.invoke('sendNotificationOrEmail', {
             action_type: 'project_invite',
