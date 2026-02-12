@@ -1,6 +1,8 @@
 import React from 'react';
 import { base44 } from '@/api/base44Client';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { useNavigate } from 'react-router-dom';
+import { createPageUrl } from '@/utils';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -35,6 +37,7 @@ const typeColors = {
 
 export default function Notifications() {
   const queryClient = useQueryClient();
+  const navigate = useNavigate();
 
   const { data: user } = useQuery({
     queryKey: ['currentUser'],
@@ -113,6 +116,40 @@ export default function Notifications() {
     },
   });
 
+  const handleNotificationClick = async (notification) => {
+    // Mark as read
+    if (!notification.is_read) {
+      await markAsReadMutation.mutateAsync(notification.id);
+    }
+
+    // Navigate based on notification type
+    if (!notification.related_event_id) return;
+
+    switch (notification.type) {
+      case 'project_invite':
+        // Navigate to project detail page
+        navigate(createPageUrl('ProjectDetail') + `?id=${notification.related_event_id}`);
+        break;
+      
+      case 'event_invite':
+      case 'event_cancelled':
+      case 'event_updated':
+      case 'conflict_resolved':
+        // Navigate to calendar
+        navigate(createPageUrl('Calendar'));
+        break;
+      
+      case 'message_mention':
+        // Navigate to project detail (messages tab)
+        navigate(createPageUrl('ProjectDetail') + `?id=${notification.related_event_id}`);
+        break;
+      
+      default:
+        // No specific navigation
+        break;
+    }
+  };
+
   const sortedNotifications = [...notifications].sort((a, b) => 
     new Date(b.created_date) - new Date(a.created_date)
   );
@@ -157,7 +194,8 @@ export default function Notifications() {
                 return (
                   <div
                     key={notification.id}
-                    className={`p-4 flex items-start gap-4 ${!notification.is_read ? 'bg-[#ef6144]/5' : ''}`}
+                    className={`p-4 flex items-start gap-4 ${!notification.is_read ? 'bg-[#ef6144]/5' : ''} hover:bg-gray-50 cursor-pointer transition-colors`}
+                    onClick={() => handleNotificationClick(notification)}
                   >
                     <div className={`w-10 h-10 rounded-lg flex items-center justify-center flex-shrink-0 ${colorClass}`}>
                       <Icon className="h-5 w-5" />
@@ -176,7 +214,10 @@ export default function Notifications() {
                           <Button
                             variant="ghost"
                             size="sm"
-                            onClick={() => markAsReadMutation.mutate(notification.id)}
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              markAsReadMutation.mutate(notification.id);
+                            }}
                           >
                             <Check className="h-4 w-4" />
                           </Button>
