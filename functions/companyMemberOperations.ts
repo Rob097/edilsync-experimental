@@ -31,12 +31,14 @@ Deno.serve(async (req) => {
       return Response.json({ success: true, data: members });
     }
 
-    // CREATE - creatore della società o admin possono aggiungere membri
+    // CREATE - permetti se non ci sono membri (setup iniziale) o se l'utente è admin
     if (operation === 'create') {
-      const company = await base44.asServiceRole.entities.Company.get(data.company_id);
-      const isCompanyCreator = company.created_by === user.email;
+      const existingMembers = await base44.asServiceRole.entities.CompanyMember.filter({
+        company_id: data.company_id
+      });
       
-      if (!isCompanyCreator) {
+      // Se non ci sono membri, è il setup iniziale - permetti
+      if (existingMembers.length > 0) {
         const membership = await base44.asServiceRole.entities.CompanyMember.filter({
           company_id: data.company_id,
           user_email: user.email,
