@@ -33,8 +33,10 @@ export default function ActivityFeed({ projectId, onItemClick }) {
 
   const { data: messages = [] } = useQuery({
     queryKey: ['projectMessages', projectId],
-    queryFn: () => base44.entities.ProjectMessage.filter({ project_id: projectId }),
+    queryFn: () => base44.entities.Message.filter({ project_id: projectId }),
     enabled: !!projectId,
+    staleTime: 2 * 60 * 1000,
+    refetchOnWindowFocus: false,
   });
 
   const { data: documents = [] } = useQuery({
@@ -86,7 +88,7 @@ export default function ActivityFeed({ projectId, onItemClick }) {
         date: msg.created_date,
         icon: MessageSquare,
         color: 'text-gray-600',
-        title: `${msg.sender_name}: ${msg.message.substring(0, 50)}${msg.message.length > 50 ? '...' : ''}`,
+        title: `${msg.sender_name}: ${msg.content.substring(0, 50)}${msg.content.length > 50 ? '...' : ''}`,
         description: format(new Date(msg.created_date), 'HH:mm'),
         data: msg,
       });
