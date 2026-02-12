@@ -116,7 +116,8 @@ export default function ProjectDetail() {
     queryKey: ['projectParticipants', projectId],
     queryFn: () => base44.entities.ProjectParticipant.filter({ project_id: projectId }),
     enabled: !!projectId && !!project,
-    staleTime: 60 * 1000,
+    staleTime: 2 * 60 * 1000,
+    refetchOnWindowFocus: false,
   });
 
   const { data: companies = [] } = useQuery({
@@ -166,7 +167,8 @@ export default function ProjectDetail() {
     queryKey: ['tasks', projectId],
     queryFn: () => base44.entities.Task.filter({ project_id: projectId }),
     enabled: !!projectId && !!project,
-    staleTime: 30 * 1000,
+    staleTime: 2 * 60 * 1000,
+    refetchOnWindowFocus: false,
   });
   
   const blockedTasks = allTasks.filter(t => t.status === 'blocked');
