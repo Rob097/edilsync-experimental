@@ -28,13 +28,18 @@ Deno.serve(async (req) => {
       return Response.json({ success: true, data: messages });
     }
 
-    // CREATE - tutti i partecipanti possono creare
+    // CREATE - creatore del canale o partecipanti possono creare
     if (operation === 'create') {
-      const members = await base44.asServiceRole.entities.ChannelMember.filter({ channel_id: data.channel_id });
-      const isMember = members.some(m => m.user_email === user.email);
+      const channel = await base44.asServiceRole.entities.Channel.get(data.channel_id);
+      const isChannelCreator = channel.created_by === user.email;
       
-      if (!isMember) {
-        return Response.json({ error: 'Forbidden: Not a channel member' }, { status: 403 });
+      if (!isChannelCreator) {
+        const members = await base44.asServiceRole.entities.ChannelMember.filter({ channel_id: data.channel_id });
+        const isMember = members.some(m => m.user_email === user.email);
+        
+        if (!isMember) {
+          return Response.json({ error: 'Forbidden: Not a channel member' }, { status: 403 });
+        }
       }
       
       const message = await base44.asServiceRole.entities.Message.create(data);

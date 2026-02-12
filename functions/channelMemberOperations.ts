@@ -31,16 +31,18 @@ Deno.serve(async (req) => {
       return Response.json({ success: true, data: members });
     }
 
-    // CREATE - creatore e partecipanti possono creare
+    // CREATE - creatore del canale può sempre aggiungere, altrimenti devi essere membro
     if (operation === 'create') {
       const channel = await base44.asServiceRole.entities.Channel.get(data.channel_id);
-      const members = await base44.asServiceRole.entities.ChannelMember.filter({ channel_id: data.channel_id });
+      const isChannelCreator = channel.created_by === user.email;
       
-      const isCreator = channel.created_by === user.email;
-      const isMember = members.some(m => m.user_email === user.email);
-      
-      if (!isCreator && !isMember) {
-        return Response.json({ error: 'Forbidden: Only channel creator or members can add members' }, { status: 403 });
+      if (!isChannelCreator) {
+        const members = await base44.asServiceRole.entities.ChannelMember.filter({ channel_id: data.channel_id });
+        const isMember = members.some(m => m.user_email === user.email);
+        
+        if (!isMember) {
+          return Response.json({ error: 'Forbidden: Only channel creator or members can add members' }, { status: 403 });
+        }
       }
       
       const member = await base44.asServiceRole.entities.ChannelMember.create(data);

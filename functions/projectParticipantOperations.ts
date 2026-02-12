@@ -31,30 +31,35 @@ Deno.serve(async (req) => {
       return Response.json({ success: true, data: participants });
     }
 
-    // CREATE - tutti i partecipanti possono creare (con restrizioni per società)
+    // CREATE - creatore del progetto o partecipanti possono creare
     if (operation === 'create') {
-      const participation = await base44.asServiceRole.entities.ProjectParticipant.filter({
-        project_id: data.project_id,
-        user_email: user.email,
-        status: 'active'
-      });
+      const project = await base44.asServiceRole.entities.Project.get(data.project_id);
+      const isProjectCreator = project.created_by === user.email;
       
-      if (participation.length === 0) {
-        return Response.json({ error: 'Forbidden: Not a project participant' }, { status: 403 });
-      }
-      
-      // Se il partecipante è una società, verifica che sia admin
-      const userParticipation = participation[0];
-      if (userParticipation.participant_type === 'company') {
-        const membership = await base44.asServiceRole.entities.CompanyMember.filter({
-          company_id: userParticipation.company_id,
+      if (!isProjectCreator) {
+        const participation = await base44.asServiceRole.entities.ProjectParticipant.filter({
+          project_id: data.project_id,
           user_email: user.email,
-          role: 'admin',
           status: 'active'
         });
         
-        if (membership.length === 0) {
-          return Response.json({ error: 'Forbidden: Only company admins can add participants' }, { status: 403 });
+        if (participation.length === 0) {
+          return Response.json({ error: 'Forbidden: Not a project participant' }, { status: 403 });
+        }
+        
+        // Se il partecipante è una società, verifica che sia admin
+        const userParticipation = participation[0];
+        if (userParticipation.participant_type === 'company') {
+          const membership = await base44.asServiceRole.entities.CompanyMember.filter({
+            company_id: userParticipation.company_id,
+            user_email: user.email,
+            role: 'admin',
+            status: 'active'
+          });
+          
+          if (membership.length === 0) {
+            return Response.json({ error: 'Forbidden: Only company admins can add participants' }, { status: 403 });
+          }
         }
       }
       

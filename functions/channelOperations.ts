@@ -49,41 +49,51 @@ Deno.serve(async (req) => {
     // CREATE - dipende dal contesto
     if (operation === 'create') {
       if (data.project_id) {
-        // Canale di progetto
-        const participation = await base44.asServiceRole.entities.ProjectParticipant.filter({
-          project_id: data.project_id,
-          user_email: user.email,
-          status: 'active'
-        });
+        // Canale di progetto - verifica che sia partecipante o creatore del progetto
+        const project = await base44.asServiceRole.entities.Project.get(data.project_id);
+        const isProjectCreator = project.created_by === user.email;
         
-        if (participation.length === 0) {
-          return Response.json({ error: 'Forbidden: Not a project participant' }, { status: 403 });
-        }
-        
-        // Se il partecipante è una società, verifica che sia admin
-        const userParticipation = participation[0];
-        if (userParticipation.participant_type === 'company') {
-          const membership = await base44.asServiceRole.entities.CompanyMember.filter({
-            company_id: userParticipation.company_id,
+        if (!isProjectCreator) {
+          const participation = await base44.asServiceRole.entities.ProjectParticipant.filter({
+            project_id: data.project_id,
             user_email: user.email,
-            role: 'admin',
+            status: 'active'
+          });
+          
+          if (participation.length === 0) {
+            return Response.json({ error: 'Forbidden: Not a project participant' }, { status: 403 });
+          }
+          
+          // Se il partecipante è una società, verifica che sia admin
+          const userParticipation = participation[0];
+          if (userParticipation.participant_type === 'company') {
+            const membership = await base44.asServiceRole.entities.CompanyMember.filter({
+              company_id: userParticipation.company_id,
+              user_email: user.email,
+              role: 'admin',
+              status: 'active'
+            });
+            
+            if (membership.length === 0) {
+              return Response.json({ error: 'Forbidden: Only company admins can create channels' }, { status: 403 });
+            }
+          }
+        }
+      } else if (data.company_id) {
+        // Canale di società - verifica che sia membro o creatore della società
+        const company = await base44.asServiceRole.entities.Company.get(data.company_id);
+        const isCompanyCreator = company.created_by === user.email;
+        
+        if (!isCompanyCreator) {
+          const membership = await base44.asServiceRole.entities.CompanyMember.filter({
+            company_id: data.company_id,
+            user_email: user.email,
             status: 'active'
           });
           
           if (membership.length === 0) {
-            return Response.json({ error: 'Forbidden: Only company admins can create channels' }, { status: 403 });
+            return Response.json({ error: 'Forbidden: Not a company member' }, { status: 403 });
           }
-        }
-      } else if (data.company_id) {
-        // Canale di società
-        const membership = await base44.asServiceRole.entities.CompanyMember.filter({
-          company_id: data.company_id,
-          user_email: user.email,
-          status: 'active'
-        });
-        
-        if (membership.length === 0) {
-          return Response.json({ error: 'Forbidden: Not a company member' }, { status: 403 });
         }
       }
       

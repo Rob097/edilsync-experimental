@@ -31,16 +31,21 @@ Deno.serve(async (req) => {
       return Response.json({ success: true, data: comments });
     }
 
-    // CREATE - tutti i partecipanti possono creare
+    // CREATE - creatore del progetto o partecipanti possono creare
     if (operation === 'create') {
-      const participation = await base44.asServiceRole.entities.ProjectParticipant.filter({
-        project_id: data.project_id,
-        user_email: user.email,
-        status: 'active'
-      });
+      const project = await base44.asServiceRole.entities.Project.get(data.project_id);
+      const isProjectCreator = project.created_by === user.email;
       
-      if (participation.length === 0) {
-        return Response.json({ error: 'Forbidden: Not a project participant' }, { status: 403 });
+      if (!isProjectCreator) {
+        const participation = await base44.asServiceRole.entities.ProjectParticipant.filter({
+          project_id: data.project_id,
+          user_email: user.email,
+          status: 'active'
+        });
+        
+        if (participation.length === 0) {
+          return Response.json({ error: 'Forbidden: Not a project participant' }, { status: 403 });
+        }
       }
       
       const comment = await base44.asServiceRole.entities.DocumentComment.create(data);
