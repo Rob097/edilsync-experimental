@@ -85,9 +85,8 @@ export default function Layout({ children, currentPageName }) {
 
   const unreadCount = notifications.length;
 
-  const currentCompany = companies.find(c => c.id === user?.active_company_id);
-  
   const currentContext = user?.active_context || 'personal';
+  const currentCompany = companies.find(c => c.id === user?.active_company_id);
 
   const companiesNavItem = currentContext === 'personal'
     ? { name: 'Società', icon: Building2, page: 'Companies', path: createPageUrl('Companies') }
