@@ -80,26 +80,22 @@ Deno.serve(async (req) => {
           }
         }
       } else if (data.company_id) {
-        // Canale di società - permetti se è il creatore o se non ci sono ancora membri (setup iniziale)
-        const company = await base44.asServiceRole.entities.Company.get(data.company_id);
-        const isCompanyCreator = company.created_by === user.email;
+        // Canale di società - controlla se ci sono membri
+        const allMembers = await base44.asServiceRole.entities.CompanyMember.filter({
+          company_id: data.company_id
+        });
         
-        if (!isCompanyCreator) {
-          const allMembers = await base44.asServiceRole.entities.CompanyMember.filter({
-            company_id: data.company_id
-          });
+        // Se ci sono membri, l'utente deve essere uno di loro
+        if (allMembers.length > 0) {
+          const membership = allMembers.find(m => 
+            m.user_email === user.email && m.status === 'active'
+          );
           
-          // Se non ci sono membri, è il setup iniziale - permetti
-          if (allMembers.length > 0) {
-            const membership = allMembers.filter(m => 
-              m.user_email === user.email && m.status === 'active'
-            );
-            
-            if (membership.length === 0) {
-              return Response.json({ error: 'Forbidden: Not a company member' }, { status: 403 });
-            }
+          if (!membership) {
+            return Response.json({ error: 'Forbidden: Not a company member' }, { status: 403 });
           }
         }
+        // Se non ci sono membri, è il setup iniziale - permetti a chiunque stia creando
       }
       
       const channel = await base44.asServiceRole.entities.Channel.create(data);
