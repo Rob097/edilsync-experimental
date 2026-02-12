@@ -125,15 +125,21 @@ export default function CreateChannelDialog({
           <div>
             <Label>Partecipanti (minimo 2)</Label>
             <div className="mt-2 space-y-2 max-h-48 overflow-y-auto border rounded-lg p-3">
-              {participants.map(participant => (
-                <div key={participant.id} className="flex items-center gap-2">
-                  <Checkbox
-                    checked={selectedParticipants.includes(participant.id)}
-                    onCheckedChange={() => toggleParticipant(participant.id)}
-                  />
-                  <span className="text-sm">{participant.user_email}</span>
-                </div>
-              ))}
+              {participants.map(participant => {
+                const displayName = participant.participant_type === 'company' 
+                  ? (participant.company_name || 'Società')
+                  : (participant.user_name || participant.user_email);
+                
+                return (
+                  <div key={participant.id} className="flex items-center gap-2">
+                    <Checkbox
+                      checked={selectedParticipants.includes(participant.id)}
+                      onCheckedChange={() => toggleParticipant(participant.id)}
+                    />
+                    <span className="text-sm">{displayName}</span>
+                  </div>
+                );
+              })}
             </div>
           </div>
 
