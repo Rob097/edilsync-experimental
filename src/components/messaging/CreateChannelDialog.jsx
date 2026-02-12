@@ -37,6 +37,16 @@ export default function CreateChannelDialog({
     enabled: !!user?.email,
   });
 
+  const { data: allUsers = [] } = useQuery({
+    queryKey: ['allUsers'],
+    queryFn: () => base44.entities.User.list(),
+  });
+
+  const { data: allCompanies = [] } = useQuery({
+    queryKey: ['allCompanies'],
+    queryFn: () => base44.entities.Company.list(),
+  });
+
   const createChannelMutation = useMutation({
     mutationFn: async (channelData) => {
       // Security check: If creating as company (activeCompanyId set), user must be admin
@@ -126,9 +136,14 @@ export default function CreateChannelDialog({
             <Label>Partecipanti (minimo 2)</Label>
             <div className="mt-2 space-y-2 max-h-48 overflow-y-auto border rounded-lg p-3">
               {participants.map(participant => {
-                const displayName = participant.participant_type === 'company' 
-                  ? (participant.company_name || 'Società')
-                  : (participant.user_name || participant.user_email);
+                let displayName;
+                if (participant.participant_type === 'company') {
+                  const company = allCompanies.find(c => c.id === participant.company_id);
+                  displayName = company?.name || 'Società';
+                } else {
+                  const user = allUsers.find(u => u.email === participant.user_email);
+                  displayName = user?.display_name || participant.user_email;
+                }
                 
                 return (
                   <div key={participant.id} className="flex items-center gap-2">
