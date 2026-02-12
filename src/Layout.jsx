@@ -63,8 +63,21 @@ export default function Layout({ children, currentPageName }) {
   });
 
   const { data: notifications = [] } = useQuery({
-    queryKey: ['notifications', user?.email],
-    queryFn: () => base44.entities.Notification.filter({ user_email: user?.email, is_read: false }),
+    queryKey: ['notifications', user?.email, currentContext, user?.active_company_id],
+    queryFn: () => {
+      const filter = {
+        user_email: user?.email,
+        is_read: false,
+        context_type: currentContext,
+      };
+      
+      // If in company context, also filter by company_id
+      if (currentContext === 'company' && user?.active_company_id) {
+        filter.context_company_id = user.active_company_id;
+      }
+      
+      return base44.entities.Notification.filter(filter);
+    },
     enabled: !!user?.email,
     staleTime: 30 * 1000, // 30 secondi
     refetchInterval: 60 * 1000, // Ricontrolla ogni minuto

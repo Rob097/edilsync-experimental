@@ -124,7 +124,9 @@ export default function InviteParticipantDialog({
         for (const member of companyMembers) {
           await base44.entities.Notification.create({
             user_email: member.user_email,
-            type: 'event_invite',
+            context_type: 'company',
+            context_company_id: selectedCompanyId,
+            type: 'project_invite',
             title: 'Invito a nuovo progetto',
             message: `La tua società è stata invitata al progetto "${project?.name}" con ruolo ${projectRole}`,
             related_event_id: projectId,
@@ -134,7 +136,8 @@ export default function InviteParticipantDialog({
       } else {
         await base44.entities.Notification.create({
           user_email: email,
-          type: 'event_invite',
+          context_type: 'personal',
+          type: 'project_invite',
           title: 'Invito a nuovo progetto',
           message: `Sei stato invitato al progetto "${project?.name}" con ruolo ${projectRole}`,
           related_event_id: projectId,
