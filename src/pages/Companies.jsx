@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
 import { base44 } from '@/api/base44Client';
 import { useQuery } from '@tanstack/react-query';
@@ -11,6 +11,7 @@ import CompanyCard from '@/components/company/CompanyCard';
 import EmptyState from '@/components/ui/EmptyState';
 
 export default function Companies() {
+  const navigate = useNavigate();
   const [searchQuery, setSearchQuery] = useState('');
 
   const { data: user, isLoading: userLoading } = useQuery({
@@ -24,9 +25,9 @@ export default function Companies() {
   // If in company context, redirect to company detail
   React.useEffect(() => {
     if (currentContext === 'company' && user?.active_company_id) {
-      window.location.href = createPageUrl('CompanyDetail') + `?id=${user.active_company_id}`;
+      navigate(createPageUrl('CompanyDetail') + `?id=${user.active_company_id}`);
     }
-  }, [currentContext, user?.active_company_id]);
+  }, [currentContext, user?.active_company_id, navigate]);
 
   const { data: companyMemberships = [] } = useQuery({
     queryKey: ['userCompanies', user?.email],
@@ -126,7 +127,7 @@ export default function Companies() {
               : "Non fai parte di nessuna società. Creane una nuova o attendi un invito."
           }
           actionLabel={!searchQuery ? "Crea Società" : undefined}
-          onAction={!searchQuery ? () => window.location.href = createPageUrl('NewCompany') : undefined}
+          onAction={!searchQuery ? () => navigate(createPageUrl('NewCompany')) : undefined}
         />
       )}
     </div>

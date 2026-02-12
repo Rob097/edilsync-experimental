@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
 import { base44 } from '@/api/base44Client';
 import { useQuery } from '@tanstack/react-query';
@@ -20,6 +20,8 @@ import EmptyState from '@/components/ui/EmptyState';
 import ContextBadge from '@/components/context/ContextBadge';
 
 export default function Dashboard() {
+  const navigate = useNavigate();
+  
   const { data: user } = useQuery({
     queryKey: ['currentUser'],
     queryFn: () => base44.auth.me(),
@@ -250,7 +252,7 @@ export default function Dashboard() {
                   : "Questa società non ha ancora progetti. Crea il primo cantiere."
               }
               actionLabel="Nuovo Progetto"
-              onAction={() => window.location.href = createPageUrl('NewProject')}
+              onAction={() => navigate(createPageUrl('NewProject'))}
             />
           )}
         </CardContent>
@@ -291,7 +293,7 @@ export default function Dashboard() {
                 title="Nessuna società"
                 description="Non fai parte di nessuna società. Creane una o attendi un invito."
                 actionLabel="Crea Società"
-                onAction={() => window.location.href = createPageUrl('NewCompany')}
+                onAction={() => navigate(createPageUrl('NewCompany'))}
               />
             )}
           </CardContent>
