@@ -114,34 +114,48 @@ export default function InviteParticipantDialog({
         });
       }
 
-      // Create notification for company members or personal participant
+      // Send notification/email via backend function
       if (participantType === 'company') {
         const companyMembers = await base44.entities.CompanyMember.filter({ 
           company_id: selectedCompanyId, 
           status: 'active' 
         });
         
+        const company = allCompanies.find(c => c.id === selectedCompanyId);
+        
         for (const member of companyMembers) {
-          await base44.entities.Notification.create({
-            user_email: member.user_email,
+          await base44.functions.invoke('sendNotificationOrEmail', {
+            action_type: 'project_invite',
+            recipient_email: member.user_email,
             context_type: 'company',
             context_company_id: selectedCompanyId,
-            type: 'project_invite',
-            title: 'Invito a nuovo progetto',
-            message: `La tua società è stata invitata al progetto "${project?.name}" con ruolo ${projectRole}`,
-            related_event_id: projectId,
-            is_read: false,
+            notification_data: {
+              type: 'project_invite',
+              title: 'Invito a nuovo progetto',
+              message: `La tua società è stata invitata al progetto "${project?.name}" con ruolo ${projectRole}`,
+              related_event_id: projectId,
+            },
+            email_data: {
+              subject: `Invito a nuovo progetto: ${project?.name}`,
+              body: `Ciao,\n\nLa tua società ${company?.name} è stata invitata al progetto "${project?.name}" con ruolo ${projectRole}.\n\nAccedi all'applicazione per visualizzare i dettagli del progetto.\n\nCordiali saluti,\nIl team EdilSync`,
+            },
           });
         }
       } else {
-        await base44.entities.Notification.create({
-          user_email: email,
+        await base44.functions.invoke('sendNotificationOrEmail', {
+          action_type: 'project_invite',
+          recipient_email: email,
           context_type: 'personal',
-          type: 'project_invite',
-          title: 'Invito a nuovo progetto',
-          message: `Sei stato invitato al progetto "${project?.name}" con ruolo ${projectRole}`,
-          related_event_id: projectId,
-          is_read: false,
+          notification_data: {
+            type: 'project_invite',
+            title: 'Invito a nuovo progetto',
+            message: `Sei stato invitato al progetto "${project?.name}" con ruolo ${projectRole}`,
+            related_event_id: projectId,
+          },
+          email_data: {
+            subject: `Invito a nuovo progetto: ${project?.name}`,
+            body: `Ciao,\n\nSei stato invitato al progetto "${project?.name}" con ruolo ${projectRole}.\n\nAccedi all'applicazione per visualizzare i dettagli del progetto.\n\nCordiali saluti,\nIl team EdilSync`,
+          },
         });
       }
 
