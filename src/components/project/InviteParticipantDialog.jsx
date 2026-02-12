@@ -94,6 +94,26 @@ export default function InviteParticipantDialog({
 
       const participant = await base44.entities.ProjectParticipant.create(participantData);
 
+      // Find General channel for this project
+      const channels = await base44.entities.Channel.filter({ 
+        project_id: projectId, 
+        type: 'general',
+        name: 'General'
+      });
+
+      if (channels.length > 0) {
+        const generalChannel = channels[0];
+        // Add participant to General channel
+        await base44.entities.ChannelMember.create({
+          channel_id: generalChannel.id,
+          project_id: projectId,
+          participant_id: participant.id,
+          user_email: participantType === 'personal' ? email : null,
+          company_id: participantType === 'company' ? selectedCompanyId : null,
+          last_read_at: new Date().toISOString(),
+        });
+      }
+
       // Create notification for company members or personal participant
       if (participantType === 'company') {
         const companyMembers = await base44.entities.CompanyMember.filter({ 

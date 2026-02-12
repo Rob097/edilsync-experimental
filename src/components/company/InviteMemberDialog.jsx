@@ -33,13 +33,35 @@ export default function InviteMemberDialog({ open, onOpenChange, companyId }) {
 
   const inviteMutation = useMutation({
     mutationFn: async () => {
-      return base44.entities.CompanyMember.create({
+      const member = await base44.entities.CompanyMember.create({
         company_id: companyId,
         user_email: email,
         role: role,
         profession: profession,
         status: 'invited',
       });
+
+      // Find General channel for this company
+      const channels = await base44.entities.Channel.filter({ 
+        company_id: companyId, 
+        type: 'company',
+        name: 'General'
+      });
+
+      if (channels.length > 0) {
+        const generalChannel = channels[0];
+        // Add member to General channel
+        await base44.entities.ChannelMember.create({
+          channel_id: generalChannel.id,
+          project_id: null,
+          participant_id: member.id,
+          user_email: email,
+          company_id: companyId,
+          last_read_at: new Date().toISOString(),
+        });
+      }
+
+      return member;
     },
     onSuccess: () => {
       queryClient.invalidateQueries(['companyMembers', companyId]);

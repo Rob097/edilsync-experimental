@@ -12,6 +12,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Loader2, CheckCircle2, XCircle } from "lucide-react";
+import AssigneeSelector from './AssigneeSelector';
 
 export default function ChangeRequestDialog({ open, onOpenChange, request, projectId, canRespond }) {
   const queryClient = useQueryClient();
@@ -20,6 +21,7 @@ export default function ChangeRequestDialog({ open, onOpenChange, request, proje
     description: '',
     cost_impact: '',
     time_impact_days: '',
+    assigned_participant_id: '',
     response_note: '',
   });
 
@@ -30,8 +32,13 @@ export default function ChangeRequestDialog({ open, onOpenChange, request, proje
 
   const { data: projectParticipants = [] } = useQuery({
     queryKey: ['projectParticipants', projectId],
-    queryFn: () => base44.entities.ProjectParticipant.filter({ project_id: projectId }),
-    enabled: !!projectId && !request,
+    queryFn: () => base44.entities.ProjectParticipant.filter({ project_id: projectId, status: 'active' }),
+    enabled: !!projectId,
+  });
+
+  const { data: companies = [] } = useQuery({
+    queryKey: ['companies'],
+    queryFn: () => base44.entities.Company.list(),
   });
 
   useEffect(() => {
@@ -41,6 +48,7 @@ export default function ChangeRequestDialog({ open, onOpenChange, request, proje
         description: request.description || '',
         cost_impact: request.cost_impact || '',
         time_impact_days: request.time_impact_days || '',
+        assigned_participant_id: request.assigned_participant_id || '',
         response_note: request.response_note || '',
       });
     } else {
@@ -49,6 +57,7 @@ export default function ChangeRequestDialog({ open, onOpenChange, request, proje
         description: '',
         cost_impact: '',
         time_impact_days: '',
+        assigned_participant_id: '',
         response_note: '',
       });
     }
@@ -96,11 +105,23 @@ export default function ChangeRequestDialog({ open, onOpenChange, request, proje
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    
+    // Find assignee details if assigned
+    const assignee = formData.assigned_participant_id 
+      ? projectParticipants.find(p => p.id === formData.assigned_participant_id)
+      : null;
+    
     const data = {
       title: formData.title,
       description: formData.description,
       cost_impact: formData.cost_impact ? parseFloat(formData.cost_impact) : 0,
       time_impact_days: formData.time_impact_days ? parseInt(formData.time_impact_days) : 0,
+      assigned_participant_id: formData.assigned_participant_id || null,
+      assigned_participant_type: assignee?.participant_type || null,
+      assigned_user_email: assignee?.participant_type === 'personal' ? assignee.user_email : null,
+      assigned_user_name: assignee?.participant_type === 'personal' ? assignee.user_email : null,
+      assigned_company_id: assignee?.participant_type === 'company' ? assignee.company_id : null,
+      assigned_company_name: assignee?.participant_type === 'company' ? companies.find(c => c.id === assignee.company_id)?.name : null,
     };
     saveMutation.mutate(data);
   };
@@ -175,6 +196,16 @@ export default function ChangeRequestDialog({ open, onOpenChange, request, proje
               />
             </div>
           </div>
+
+          {!request && (
+            <AssigneeSelector
+              participants={projectParticipants}
+              companies={companies}
+              value={formData.assigned_participant_id}
+              onChange={(option) => setFormData(prev => ({ ...prev, assigned_participant_id: option?.id || '' }))}
+              label="Assegna a (opzionale)"
+            />
+          )}
 
           {request && canRespond && isPending && (
             <div className="space-y-2 pt-4 border-t">

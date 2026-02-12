@@ -34,13 +34,33 @@ export default function NewCompany() {
       const company = await base44.entities.Company.create(data);
 
       // Add current user as admin
-      await base44.entities.CompanyMember.create({
+      const companyMember = await base44.entities.CompanyMember.create({
         company_id: company.id,
         user_id: user?.id,
         user_email: user?.email,
         role: 'admin',
         profession: 'general',
         status: 'active',
+      });
+
+      // Create General channel for company
+      const channel = await base44.entities.Channel.create({
+        project_id: null,
+        company_id: company.id,
+        name: 'General',
+        type: 'company',
+        description: 'Canale generale per comunicazioni all\'interno della società',
+        created_by_email: user?.email,
+      });
+
+      // Add current user as channel member
+      await base44.entities.ChannelMember.create({
+        channel_id: channel.id,
+        project_id: null,
+        participant_id: companyMember.id,
+        user_email: user?.email,
+        company_id: company.id,
+        last_read_at: new Date().toISOString(),
       });
 
       return company;

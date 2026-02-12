@@ -13,6 +13,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Loader2 } from "lucide-react";
+import AssigneeSelector from './AssigneeSelector';
 
 export default function TaskDialog({ open, onOpenChange, task, projectId }) {
   const queryClient = useQueryClient();
@@ -20,9 +21,7 @@ export default function TaskDialog({ open, onOpenChange, task, projectId }) {
     title: '',
     description: '',
     status: 'not_started',
-    assigned_to_type: 'contractor',
-    assigned_to_email: '',
-    assigned_to_name: '',
+    assigned_participant_id: '',
     room_area: '',
     due_date: '',
     milestone_id: '',
@@ -48,15 +47,18 @@ export default function TaskDialog({ open, onOpenChange, task, projectId }) {
     enabled: !!projectId,
   });
 
+  const { data: companies = [] } = useQuery({
+    queryKey: ['companies'],
+    queryFn: () => base44.entities.Company.list(),
+  });
+
   useEffect(() => {
     if (task) {
       setFormData({
         title: task.title || '',
         description: task.description || '',
         status: task.status || 'not_started',
-        assigned_to_type: task.assigned_to_type || 'contractor',
-        assigned_to_email: task.assigned_to_email || '',
-        assigned_to_name: task.assigned_to_name || '',
+        assigned_participant_id: task.assigned_participant_id || '',
         room_area: task.room_area || '',
         due_date: task.due_date || '',
         milestone_id: task.milestone_id || '',
@@ -65,13 +67,23 @@ export default function TaskDialog({ open, onOpenChange, task, projectId }) {
         blocked_by_name: task.blocked_by_name || '',
       });
     } else {
+      // Set default assignee based on context
+      let defaultAssignee = '';
+      if (user?.active_context === 'personal') {
+        // Find user's personal participation
+        const userParticipation = participants.find(p => p.user_email === user?.email && p.participant_type === 'personal');
+        defaultAssignee = userParticipation?.id || '';
+      } else if (user?.active_context === 'company' && user?.active_company_id) {
+        // Find company's participation
+        const companyParticipation = participants.find(p => p.company_id === user?.active_company_id && p.participant_type === 'company');
+        defaultAssignee = companyParticipation?.id || '';
+      }
+
       setFormData({
         title: '',
         description: '',
         status: 'not_started',
-        assigned_to_type: 'contractor',
-        assigned_to_email: '',
-        assigned_to_name: '',
+        assigned_participant_id: defaultAssignee,
         room_area: '',
         due_date: '',
         milestone_id: '',
@@ -80,7 +92,7 @@ export default function TaskDialog({ open, onOpenChange, task, projectId }) {
         blocked_by_name: '',
       });
     }
-  }, [task, open]);
+  }, [task, open, user, participants]);
 
   const saveMutation = useMutation({
     mutationFn: async (data) => {
@@ -106,15 +118,34 @@ export default function TaskDialog({ open, onOpenChange, task, projectId }) {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    
+    // Find assignee details
+    const assignee = participants.find(p => p.id === formData.assigned_participant_id);
+    
     const data = {
-      ...formData,
       project_id: projectId,
+      title: formData.title,
+      description: formData.description,
+      status: formData.status,
+      assigned_participant_id: formData.assigned_participant_id,
+      assigned_participant_type: assignee?.participant_type || 'personal',
+      assigned_user_email: assignee?.participant_type === 'personal' ? assignee.user_email : null,
+      assigned_user_name: assignee?.participant_type === 'personal' ? assignee.user_email : null,
+      assigned_company_id: assignee?.participant_type === 'company' ? assignee.company_id : null,
+      assigned_company_name: assignee?.participant_type === 'company' ? companies.find(c => c.id === assignee.company_id)?.name : null,
+      room_area: formData.room_area,
+      due_date: formData.due_date || null,
+      milestone_id: formData.milestone_id || null,
+      blocked_reason: formData.status === 'blocked' ? formData.blocked_reason : null,
+      blocked_by_email: formData.status === 'blocked' ? formData.blocked_by_email : null,
+      blocked_by_name: formData.status === 'blocked' ? formData.blocked_by_name : null,
       blocked_date: formData.status === 'blocked' ? new Date().toISOString() : null,
     };
+    
     saveMutation.mutate(data);
   };
 
-  const isValid = formData.title;
+  const isValid = formData.title && formData.assigned_participant_id;
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -173,15 +204,12 @@ export default function TaskDialog({ open, onOpenChange, task, projectId }) {
             </div>
           </div>
 
-          <div className="space-y-2">
-            <Label htmlFor="assigned_to_name">Assegnato a</Label>
-            <Input
-              id="assigned_to_name"
-              value={formData.assigned_to_name}
-              onChange={(e) => setFormData(prev => ({ ...prev, assigned_to_name: e.target.value }))}
-              placeholder="Nome persona o società"
-            />
-          </div>
+          <AssigneeSelector
+            participants={participants}
+            companies={companies}
+            value={formData.assigned_participant_id}
+            onChange={(option) => setFormData(prev => ({ ...prev, assigned_participant_id: option.id }))}
+          />
 
           <div className="space-y-2">
             <Label htmlFor="due_date">Data scadenza</Label>
