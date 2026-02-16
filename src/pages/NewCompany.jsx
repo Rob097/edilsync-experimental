@@ -63,6 +63,14 @@ export default function NewCompany() {
         last_read_at: new Date().toISOString(),
       });
 
+      // Immediately update user access arrays (so RLS works without waiting for automation)
+      const currentCompanyIds = user?.company_ids || [];
+      const currentAdminIds = user?.admin_company_ids || [];
+      await base44.auth.updateMe({
+        company_ids: [...new Set([...currentCompanyIds, company.id])],
+        admin_company_ids: [...new Set([...currentAdminIds, company.id])],
+      });
+
       return company;
     },
     onSuccess: (company) => {

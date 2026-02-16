@@ -107,6 +107,12 @@ export default function NewProject() {
         last_read_at: new Date().toISOString(),
       });
 
+      // Immediately update user access arrays (so RLS works without waiting for automation)
+      const currentProjectIds = user?.project_ids || [];
+      await base44.auth.updateMe({
+        project_ids: [...new Set([...currentProjectIds, project.id])],
+      });
+
       // If contractor, invite homeowner
       if (my_role === 'contractor' && homeowner_email) {
         await base44.entities.ProjectParticipant.create({
