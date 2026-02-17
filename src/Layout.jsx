@@ -3,9 +3,17 @@ import { Link, useLocation } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
 import { base44 } from '@/api/base44Client';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
+import { I18nextProvider } from 'react-i18next';
+import { initializeI18n } from '@/components/i18n/i18nConfig';
+import i18next from '@/components/i18n/i18nConfig';
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { useLanguage } from '@/components/i18n/useLanguage';
+
+// Initialize i18n once
+if (!i18next.isInitialized) {
+  initializeI18n();
+}
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -130,10 +138,11 @@ export default function Layout({ children, currentPageName }) {
   };
 
   return (
-    <TourProvider>
-      {isChangingContext && <FullPageLoader message="Cambio contesto in corso..." />}
-      <TourOverlay />
-      <div className="min-h-screen bg-gray-50 flex flex-col">
+    <I18nextProvider i18n={i18next}>
+      <TourProvider>
+        {isChangingContext && <FullPageLoader message="Cambio contesto in corso..." />}
+        <TourOverlay />
+        <div className="min-h-screen bg-gray-50 flex flex-col">
       {/* Header */}
       <header className="bg-white border-b border-gray-200 sticky top-0 z-50 pointer-events-auto">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -307,6 +316,7 @@ export default function Layout({ children, currentPageName }) {
       <CookieBanner />
       <AssistantFloatingButton />
     </div>
-    </TourProvider>
+      </TourProvider>
+    </I18nextProvider>
   );
 }
