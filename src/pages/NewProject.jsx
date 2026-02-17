@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
 import { base44 } from '@/api/base44Client';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { useLanguage } from '@/components/i18n/useLanguage';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -14,6 +15,7 @@ import { ArrowLeft, Loader2 } from "lucide-react";
 import ContextBadge from '@/components/context/ContextBadge';
 
 export default function NewProject() {
+  const { t } = useLanguage();
   const navigate = useNavigate();
   const queryClient = useQueryClient();
   
@@ -154,54 +156,54 @@ export default function NewProject() {
         className="mb-4"
       >
         <ArrowLeft className="h-4 w-4 mr-2" />
-        Indietro
+        {t('common.back')}
       </Button>
 
       <Card>
         <CardHeader>
-          <CardTitle>Nuovo Progetto</CardTitle>
+          <CardTitle>{t('newProject.title')}</CardTitle>
           <CardDescription className="flex items-center gap-2">
-            Stai creando un progetto come
+            {t('newProject.creating')}
             <ContextBadge context={currentContext} companyName={currentCompany?.name} />
           </CardDescription>
         </CardHeader>
         <CardContent>
           <form onSubmit={handleSubmit} className="space-y-6">
             <div className="space-y-2">
-              <Label htmlFor="name">Nome del progetto *</Label>
+              <Label htmlFor="name">{t('newProject.projectName')} *</Label>
               <Input
                 id="name"
                 value={formData.name}
                 onChange={(e) => handleChange('name', e.target.value)}
-                placeholder="Es. Ristrutturazione Via Roma 15"
+                placeholder={t('newProject.projectNamePlaceholder')}
                 required
               />
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="address">Indirizzo del cantiere *</Label>
+              <Label htmlFor="address">{t('newProject.siteAddress')} *</Label>
               <Input
                 id="address"
                 value={formData.address}
                 onChange={(e) => handleChange('address', e.target.value)}
-                placeholder="Es. Via Roma 15, 20121 Milano"
+                placeholder={t('newProject.siteAddressPlaceholder')}
                 required
               />
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="description">Descrizione</Label>
+              <Label htmlFor="description">{t('newProject.description')}</Label>
               <Textarea
                 id="description"
                 value={formData.description}
                 onChange={(e) => handleChange('description', e.target.value)}
-                placeholder="Descrivi brevemente il progetto..."
+                placeholder={t('newProject.descriptionPlaceholder')}
                 rows={3}
               />
             </div>
 
             <div className="space-y-2">
-              <Label>Il tuo ruolo nel progetto</Label>
+              <Label>{t('newProject.yourRole')}</Label>
               <Select 
                 value={formData.my_role} 
                 onValueChange={(v) => handleChange('my_role', v)}
@@ -211,53 +213,53 @@ export default function NewProject() {
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="homeowner">Committente</SelectItem>
+                  <SelectItem value="homeowner">{t('newProject.homeowner')}</SelectItem>
                   {currentContext === 'company' && (
-                    <SelectItem value="contractor">Contractor</SelectItem>
+                    <SelectItem value="contractor">{t('newProject.contractor')}</SelectItem>
                   )}
                 </SelectContent>
               </Select>
               {currentContext === 'personal' && (
                 <p className="text-xs text-gray-500">
-                  Come privato puoi creare progetti solo come committente
+                  {t('newProject.personalNote')}
                 </p>
               )}
             </div>
 
             {currentContext === 'company' && formData.my_role === 'contractor' && (
               <div className="space-y-2">
-                <Label htmlFor="homeowner_email">Email del committente *</Label>
+                <Label htmlFor="homeowner_email">{t('newProject.homeownerEmail')} *</Label>
                 <Input
                   id="homeowner_email"
                   type="email"
                   value={formData.homeowner_email}
                   onChange={(e) => handleChange('homeowner_email', e.target.value)}
-                  placeholder="email@committente.it"
+                  placeholder={t('newProject.homeownerEmailPlaceholder')}
                   required
                 />
                 <p className="text-xs text-gray-500">
-                  Il committente riceverà un invito al progetto
+                  {t('newProject.homeownerNote')}
                 </p>
               </div>
             )}
 
             <div className="space-y-2">
-              <Label>Stato</Label>
+              <Label>{t('newProject.status')}</Label>
               <Select value={formData.status} onValueChange={(v) => handleChange('status', v)}>
                 <SelectTrigger>
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="planning">Pianificazione</SelectItem>
-                  <SelectItem value="in_progress">In corso</SelectItem>
-                  <SelectItem value="on_hold">In pausa</SelectItem>
+                  <SelectItem value="planning">{t('newProject.planning')}</SelectItem>
+                  <SelectItem value="in_progress">{t('newProject.inProgress')}</SelectItem>
+                  <SelectItem value="on_hold">{t('newProject.onHold')}</SelectItem>
                 </SelectContent>
               </Select>
             </div>
 
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-2">
-                <Label htmlFor="start_date">Data inizio prevista</Label>
+                <Label htmlFor="start_date">{t('newProject.startDate')}</Label>
                 <Input
                   id="start_date"
                   type="date"
@@ -266,7 +268,7 @@ export default function NewProject() {
                 />
               </div>
               <div className="space-y-2">
-                <Label htmlFor="end_date">Data fine prevista</Label>
+                <Label htmlFor="end_date">{t('newProject.endDate')}</Label>
                 <Input
                   id="end_date"
                   type="date"
@@ -283,7 +285,7 @@ export default function NewProject() {
                 onClick={() => navigate(-1)}
                 className="flex-1"
               >
-                Annulla
+                {t('newProject.cancel')}
               </Button>
               <Button
                 type="submit"
@@ -293,7 +295,7 @@ export default function NewProject() {
                 {createProjectMutation.isPending && (
                   <Loader2 className="h-4 w-4 mr-2 animate-spin" />
                 )}
-                Crea Progetto
+                {t('newProject.create')}
               </Button>
             </div>
           </form>
