@@ -463,15 +463,15 @@ export default function ProjectDetail() {
         }, 100);
       }}>
         <TabsList className="mb-4 flex-wrap h-auto">
-          <TabsTrigger value="cantiere" className="flex items-center gap-2">
+          <TabsTrigger value="cantiere" data-tour-tab="overview" className="flex items-center gap-2">
             <Activity className="h-4 w-4" />
             Cantiere
           </TabsTrigger>
-          <TabsTrigger value="lavori" className="flex items-center gap-2">
+          <TabsTrigger value="lavori" data-tour-tab="tasks" className="flex items-center gap-2">
             <CheckCircle2 className="h-4 w-4" />
             Lavori
           </TabsTrigger>
-          <TabsTrigger value="info" className="flex items-center gap-2">
+          <TabsTrigger value="info" data-tour-tab="team" className="flex items-center gap-2">
             <Users className="h-4 w-4" />
             Info & Team
           </TabsTrigger>
