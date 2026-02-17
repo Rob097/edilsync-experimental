@@ -11,9 +11,11 @@ import { Plus, Search, FolderKanban } from "lucide-react";
 import ProjectCard from '@/components/project/ProjectCard';
 import EmptyState from '@/components/ui/EmptyState';
 import ContextBadge from '@/components/context/ContextBadge';
+import { useLanguage } from '@/components/i18n/useLanguage';
 
 export default function Projects() {
   const navigate = useNavigate();
+  const { t } = useLanguage();
   const [searchQuery, setSearchQuery] = useState('');
   const [statusFilter, setStatusFilter] = useState('all');
 
@@ -131,16 +133,16 @@ export default function Projects() {
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">Progetti</h1>
+          <h1 className="text-2xl font-bold text-gray-900">{t('common.projects')}</h1>
           <div className="flex items-center gap-2 mt-1">
-            <span className="text-gray-500">Visualizzazione</span>
+            <span className="text-gray-500">{t('dashboard.workingAs')}</span>
             <ContextBadge context={currentContext} companyName={currentCompany?.name} />
           </div>
         </div>
         <Link to={createPageUrl('NewProject')}>
           <Button className="bg-[#ef6144] hover:bg-[#d9553a]">
             <Plus className="h-4 w-4 mr-2" />
-            Nuovo Progetto
+            {t('common.newProject')}
           </Button>
         </Link>
       </div>
@@ -150,7 +152,7 @@ export default function Projects() {
         <div className="relative flex-1 max-w-md">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
           <Input
-            placeholder="Cerca progetti..."
+            placeholder={t('common.searchProjects')}
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             className="pl-10"
@@ -158,10 +160,10 @@ export default function Projects() {
         </div>
         <Tabs value={statusFilter} onValueChange={setStatusFilter}>
           <TabsList>
-            <TabsTrigger value="all">Tutti</TabsTrigger>
-            <TabsTrigger value="planning">Pianificazione</TabsTrigger>
-            <TabsTrigger value="in_progress">In corso</TabsTrigger>
-            <TabsTrigger value="completed">Completati</TabsTrigger>
+            <TabsTrigger value="all">{t('common.all')}</TabsTrigger>
+            <TabsTrigger value="planning">{t('project.status.planning')}</TabsTrigger>
+            <TabsTrigger value="in_progress">{t('project.status.in_progress')}</TabsTrigger>
+            <TabsTrigger value="completed">{t('project.status.completed')}</TabsTrigger>
           </TabsList>
         </Tabs>
       </div>
@@ -187,15 +189,15 @@ export default function Projects() {
       ) : (
         <EmptyState
           icon={FolderKanban}
-          title={searchQuery || statusFilter !== 'all' ? "Nessun risultato" : "Nessun progetto"}
+          title={searchQuery || statusFilter !== 'all' ? t('common.noResults') : t('dashboard.noProjects')}
           description={
             searchQuery || statusFilter !== 'all'
-              ? "Prova a modificare i filtri di ricerca."
+              ? t('common.tryModifyingFilters')
               : currentContext === 'personal'
-                ? "Non hai ancora progetti personali. Crea il tuo primo cantiere."
-                : "Questa società non ha ancora progetti."
+                ? t('dashboard.noPersonalProjects')
+                : t('dashboard.noCompanyProjects')
           }
-          actionLabel={!searchQuery && statusFilter === 'all' ? "Nuovo Progetto" : undefined}
+          actionLabel={!searchQuery && statusFilter === 'all' ? t('common.newProject') : undefined}
           onAction={!searchQuery && statusFilter === 'all' ? () => navigate(createPageUrl('NewProject')) : undefined}
         />
       )}
