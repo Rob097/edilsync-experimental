@@ -125,7 +125,7 @@ export default function Dashboard() {
   });
 
   return (
-    <div className="space-y-8 overflow-x-hidden">
+    <div className="space-y-8 min-w-0">
       {/* Welcome section */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>

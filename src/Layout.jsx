@@ -273,7 +273,7 @@ export default function Layout({ children, currentPageName }) {
       </header>
 
       {/* Main content */}
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 flex-1">
+      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 flex-1 w-full overflow-x-hidden">
         {children}
       </main>
 
