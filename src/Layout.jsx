@@ -213,6 +213,17 @@ export default function Layout({ children, currentPageName }) {
                       Impostazioni
                     </Link>
                   </DropdownMenuItem>
+                  {user?.role === 'admin' && (
+                    <>
+                      <DropdownMenuSeparator />
+                      <DropdownMenuItem asChild>
+                        <Link to={createPageUrl('SystemDashboard')} className="cursor-pointer">
+                          <LayoutDashboard className="h-4 w-4 mr-2" />
+                          Dashboard di Sistema
+                        </Link>
+                      </DropdownMenuItem>
+                    </>
+                  )}
                   <DropdownMenuSeparator />
                   <DropdownMenuItem 
                     onClick={() => base44.auth.logout()}

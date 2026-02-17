@@ -60,6 +60,7 @@ import ProjectDetail from './pages/ProjectDetail';
 import Projects from './pages/Projects';
 import Settings from './pages/Settings';
 import TermsOfService from './pages/TermsOfService';
+import SystemDashboard from './pages/SystemDashboard';
 import __Layout from './Layout.jsx';
 
 
@@ -77,6 +78,7 @@ export const PAGES = {
     "Projects": Projects,
     "Settings": Settings,
     "TermsOfService": TermsOfService,
+    "SystemDashboard": SystemDashboard,
 }
 
 export const pagesConfig = {
