@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { base44 } from '@/api/base44Client';
 import { useMutation, useQueryClient, useQuery } from '@tanstack/react-query';
+import { useLanguage } from '@/components/i18n/useLanguage';
 import {
   Dialog,
   DialogContent,
@@ -14,18 +15,19 @@ import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Loader2 } from "lucide-react";
 
-const professions = [
-  { value: 'general', label: 'Generale' },
-  { value: 'architect', label: 'Architetto' },
-  { value: 'engineer', label: 'Ingegnere' },
-  { value: 'surveyor', label: 'Geometra' },
-  { value: 'designer', label: 'Designer' },
-  { value: 'accountant', label: 'Contabile' },
-  { value: 'other', label: 'Altro' },
-];
-
 export default function InviteMemberDialog({ open, onOpenChange, companyId }) {
+  const { t } = useLanguage();
   const queryClient = useQueryClient();
+  
+  const professions = [
+    { value: 'general', label: t('inviteMemberDialog.general') },
+    { value: 'architect', label: t('inviteMemberDialog.architect') },
+    { value: 'engineer', label: t('inviteMemberDialog.engineer') },
+    { value: 'surveyor', label: t('inviteMemberDialog.surveyor') },
+    { value: 'designer', label: t('inviteMemberDialog.designer') },
+    { value: 'accountant', label: t('inviteMemberDialog.accountant') },
+    { value: 'other', label: t('inviteMemberDialog.other') },
+  ];
   
   const [email, setEmail] = useState('');
   const [role, setRole] = useState('member');
@@ -114,40 +116,40 @@ export default function InviteMemberDialog({ open, onOpenChange, companyId }) {
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
-          <DialogTitle>Invita Membro</DialogTitle>
+          <DialogTitle>{t('inviteMemberDialog.title')}</DialogTitle>
           <DialogDescription>
-            Invita una nuova persona a far parte della società.
+            {t('inviteMemberDialog.description')}
           </DialogDescription>
         </DialogHeader>
 
         <form onSubmit={handleSubmit} className="space-y-6 mt-4">
           <div className="space-y-2">
-            <Label htmlFor="email">Email *</Label>
+            <Label htmlFor="email">{t('inviteMemberDialog.email')} *</Label>
             <Input
               id="email"
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              placeholder="email@esempio.it"
+              placeholder={t('inviteMemberDialog.emailPlaceholder')}
               required
             />
           </div>
 
           <div className="space-y-2">
-            <Label>Ruolo nella società</Label>
+            <Label>{t('inviteMemberDialog.role')}</Label>
             <Select value={role} onValueChange={setRole}>
               <SelectTrigger>
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="admin">Amministratore</SelectItem>
-                <SelectItem value="member">Membro</SelectItem>
+                <SelectItem value="admin">{t('inviteMemberDialog.admin')}</SelectItem>
+                <SelectItem value="member">{t('inviteMemberDialog.member')}</SelectItem>
               </SelectContent>
             </Select>
           </div>
 
           <div className="space-y-2">
-            <Label>Professione</Label>
+            <Label>{t('inviteMemberDialog.profession')}</Label>
             <Select value={profession} onValueChange={setProfession}>
               <SelectTrigger>
                 <SelectValue />
@@ -169,7 +171,7 @@ export default function InviteMemberDialog({ open, onOpenChange, companyId }) {
               onClick={() => onOpenChange(false)}
               className="flex-1"
             >
-              Annulla
+              {t('inviteMemberDialog.cancel')}
             </Button>
             <Button
               type="submit"
@@ -179,7 +181,7 @@ export default function InviteMemberDialog({ open, onOpenChange, companyId }) {
               {inviteMutation.isPending && (
                 <Loader2 className="h-4 w-4 mr-2 animate-spin" />
               )}
-              Invita
+              {t('inviteMemberDialog.invite')}
             </Button>
           </div>
         </form>
