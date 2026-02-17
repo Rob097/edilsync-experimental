@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 import { useTour } from './TourProvider';
 
 /**
@@ -7,16 +7,20 @@ import { useTour } from './TourProvider';
  */
 export default function TourLauncher({ tourId, steps, trigger = true, delay = 500 }) {
   const { startTour } = useTour();
+  const hasStartedRef = useRef(false);
 
   useEffect(() => {
-    if (!trigger || !tourId || !steps) return;
+    if (!trigger || !tourId || !steps || hasStartedRef.current) return;
 
     const timer = setTimeout(() => {
-      startTour(tourId, steps);
+      const success = startTour(tourId, steps);
+      if (success) {
+        hasStartedRef.current = true;
+      }
     }, delay);
 
     return () => clearTimeout(timer);
-  }, [tourId, steps, trigger, delay, startTour]);
+  }, [tourId, trigger]);
 
   return null;
 }
