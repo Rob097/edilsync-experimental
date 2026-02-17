@@ -98,7 +98,14 @@ export default function Dashboard() {
   const recentProjects = contextProjects.slice(0, 3);
 
   const getProjectRole = (projectId) => {
-    const participation = projectParticipations.find(p => p.project_id === projectId);
+    const participation = projectParticipations.find(p => {
+      if (p.project_id !== projectId) return false;
+      if (currentContext === 'personal') {
+        return p.participant_type === 'personal' && p.user_id === user?.id;
+      } else {
+        return p.participant_type === 'company' && p.company_id === user?.active_company_id;
+      }
+    });
     return participation?.project_role;
   };
 
