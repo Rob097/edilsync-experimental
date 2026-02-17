@@ -5,10 +5,11 @@ import { Card } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton.jsx";
 import { Sheet, SheetContent, SheetTrigger, SheetClose } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
-import { Menu } from "lucide-react";
+import { Menu, Users } from "lucide-react";
 import ChannelList from './ChannelList';
 import MessageList from './MessageList';
 import MessageInput from './MessageInput';
+import ChannelMembersDialog from './ChannelMembersDialog';
 
 export default function ProjectMessaging({ 
   projectId,
@@ -21,6 +22,7 @@ export default function ProjectMessaging({
   const [selectedChannelId, setSelectedChannelId] = useState(null);
   const [initialized, setInitialized] = useState(false);
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [membersDialogOpen, setMembersDialogOpen] = useState(false);
 
   const { data: channels = [], isLoading: channelsLoading } = useQuery({
     queryKey: ['channels', projectId],
@@ -164,11 +166,21 @@ export default function ProjectMessaging({
                     <p className="text-sm text-gray-500 mt-1">{selectedChannel.description}</p>
                   )}
                 </div>
-                <SheetTrigger asChild className="md:hidden">
-                  <Button variant="ghost" size="icon">
-                    <Menu className="h-5 w-5" />
+                <div className="flex items-center gap-1">
+                  <Button 
+                    variant="ghost" 
+                    size="icon"
+                    onClick={() => setMembersDialogOpen(true)}
+                    title="Membri del canale"
+                  >
+                    <Users className="h-5 w-5" />
                   </Button>
-                </SheetTrigger>
+                  <SheetTrigger asChild className="md:hidden">
+                    <Button variant="ghost" size="icon">
+                      <Menu className="h-5 w-5" />
+                    </Button>
+                  </SheetTrigger>
+                </div>
               </div>
             <MessageList
               channelId={selectedChannelId}
@@ -210,6 +222,13 @@ export default function ProjectMessaging({
           </div>
         </SheetContent>
       </Sheet>
+      <ChannelMembersDialog
+        open={membersDialogOpen}
+        onOpenChange={setMembersDialogOpen}
+        channelId={selectedChannelId}
+        projectId={projectId}
+        canManage={true}
+      />
     </div>
   );
 }
