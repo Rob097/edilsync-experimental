@@ -40,6 +40,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { format } from 'date-fns';
 import { it } from 'date-fns/locale';
+import { useLanguage } from '@/components/i18n/useLanguage';
 import InviteParticipantDialog from '@/components/project/InviteParticipantDialog';
 import ParticipantCard from '@/components/project/ParticipantCard';
 import DocumentList from '@/components/project/DocumentList';
@@ -66,6 +67,7 @@ const statusConfig = {
 };
 
 export default function ProjectDetail() {
+  const { t } = useLanguage();
   const navigate = useNavigate();
   const queryClient = useQueryClient();
   const urlParams = new URLSearchParams(window.location.search);
@@ -271,9 +273,9 @@ export default function ProjectDetail() {
     return (
       <EmptyState
         icon={Settings}
-        title="Progetto non trovato"
-        description="Il progetto richiesto non esiste o non hai i permessi per visualizzarlo."
-        actionLabel="Torna ai progetti"
+        title={t('projectDetail.projectNotFound')}
+        description={t('projectDetail.projectNotFoundDescription')}
+        actionLabel={t('projectDetail.backToProjects')}
         onAction={() => navigate(createPageUrl('Projects'))}
       />
     );
@@ -300,9 +302,9 @@ export default function ProjectDetail() {
           <CardContent className="p-4">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
               <div>
-                <h3 className="font-semibold text-gray-900">Sei stato invitato a questo progetto</h3>
+                <h3 className="font-semibold text-gray-900">{t('projectDetail.youAreInvited')}</h3>
                 <p className="text-sm text-gray-600 mt-1">
-                  Accetta l'invito per partecipare alle attività del cantiere
+                  {t('projectDetail.acceptInviteDescription')}
                 </p>
               </div>
               <div className="flex gap-2">
@@ -311,14 +313,14 @@ export default function ProjectDetail() {
                   onClick={() => declineInviteMutation.mutate(userParticipation.id)}
                   disabled={declineInviteMutation.isPending}
                 >
-                  Rifiuta
+                  {t('projectDetail.decline')}
                 </Button>
                 <Button 
                   className="bg-[#ef6144] hover:bg-[#d9553a]"
                   onClick={() => acceptInviteMutation.mutate(userParticipation.id)}
                   disabled={acceptInviteMutation.isPending}
                 >
-                  Accetta
+                  {t('projectDetail.accept')}
                 </Button>
               </div>
             </div>
@@ -335,7 +337,7 @@ export default function ProjectDetail() {
             className="mb-2 -ml-3"
           >
             <ArrowLeft className="h-4 w-4 mr-2" />
-            Progetti
+            {t('common.projects')}
           </Button>
           <h1 className="text-2xl font-bold text-gray-900 mb-2">{project.name}</h1>
           <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3">
@@ -353,7 +355,7 @@ export default function ProjectDetail() {
             className="w-full sm:w-auto"
           >
             <Settings className="h-4 w-4 mr-2" />
-            Modifica
+            {t('projectDetail.edit')}
           </Button>
         )}
       </div>
@@ -363,14 +365,14 @@ export default function ProjectDetail() {
         <Card>
           <CardContent className="p-4">
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-lg bg-[#ef6144]/10 flex items-center justify-center">
-                <Users className="h-5 w-5 text-[#ef6144]" />
-              </div>
-              <div>
-                <p className="text-2xl font-bold">{activeParticipants.length}</p>
-                <p className="text-sm text-gray-500">Partecipanti</p>
-              </div>
-            </div>
+               <div className="w-10 h-10 rounded-lg bg-[#ef6144]/10 flex items-center justify-center">
+                 <Users className="h-5 w-5 text-[#ef6144]" />
+               </div>
+               <div>
+                 <p className="text-2xl font-bold">{activeParticipants.length}</p>
+                 <p className="text-sm text-gray-500">{t('projectDetail.participants')}</p>
+               </div>
+             </div>
           </CardContent>
         </Card>
         {project.start_date && (
@@ -381,11 +383,11 @@ export default function ProjectDetail() {
                   <Calendar className="h-5 w-5 text-blue-600" />
                 </div>
                 <div>
-                  <p className="text-lg font-semibold">
-                    {format(new Date(project.start_date), 'd MMM yyyy', { locale: it })}
-                  </p>
-                  <p className="text-sm text-gray-500">Data inizio</p>
-                </div>
+                   <p className="text-lg font-semibold">
+                     {format(new Date(project.start_date), 'd MMM yyyy', { locale: it })}
+                   </p>
+                   <p className="text-sm text-gray-500">{t('projectDetail.startDate')}</p>
+                 </div>
               </div>
             </CardContent>
           </Card>
@@ -398,11 +400,11 @@ export default function ProjectDetail() {
                   <Calendar className="h-5 w-5 text-green-600" />
                 </div>
                 <div>
-                  <p className="text-lg font-semibold">
-                    {format(new Date(project.end_date), 'd MMM yyyy', { locale: it })}
-                  </p>
-                  <p className="text-sm text-gray-500">Data fine</p>
-                </div>
+                   <p className="text-lg font-semibold">
+                     {format(new Date(project.end_date), 'd MMM yyyy', { locale: it })}
+                   </p>
+                   <p className="text-sm text-gray-500">{t('projectDetail.endDate')}</p>
+                 </div>
               </div>
             </CardContent>
           </Card>
@@ -425,11 +427,11 @@ export default function ProjectDetail() {
             <div className="flex items-start gap-3">
               <AlertCircle className="h-5 w-5 text-red-600 mt-0.5 flex-shrink-0" />
               <div className="flex-1">
-                <h3 className="font-semibold text-red-900">Cantiere Fermo</h3>
+                <h3 className="font-semibold text-red-900">{t('projectDetail.projectStopped')}</h3>
                 <p className="text-sm text-red-700 mt-1">
                   {blockedTasks.length === 1 
-                    ? `1 attività bloccata` 
-                    : `${blockedTasks.length} attività bloccate`}
+                    ? `1 ${t('projectDetail.blockedTasks')}` 
+                    : `${blockedTasks.length} ${t('projectDetail.blockedTasks')}`}
                   {blockedTasks[0]?.blocked_by_name && ` • In attesa di ${blockedTasks[0].blocked_by_name}`}
                 </p>
                 <Button
@@ -437,7 +439,7 @@ export default function ProjectDetail() {
                   className="text-red-700 hover:text-red-900 p-0 h-auto mt-1"
                   onClick={() => setActiveTab('lavori')}
                 >
-                  Vedi dettagli →
+                  {t('projectDetail.seeDetails')}
                 </Button>
               </div>
             </div>
@@ -465,15 +467,15 @@ export default function ProjectDetail() {
         <TabsList className="mb-4 flex-wrap h-auto">
           <TabsTrigger value="cantiere" className="flex items-center gap-2">
             <Activity className="h-4 w-4" />
-            Cantiere
+            {t('projectDetail.tabs.overview')}
           </TabsTrigger>
           <TabsTrigger value="lavori" className="flex items-center gap-2">
             <CheckCircle2 className="h-4 w-4" />
-            Lavori
+            {t('projectDetail.tabs.tasks')}
           </TabsTrigger>
           <TabsTrigger value="info" className="flex items-center gap-2">
             <Users className="h-4 w-4" />
-            Info & Team
+            {t('projectDetail.tabs.info')}
           </TabsTrigger>
         </TabsList>
 
@@ -507,84 +509,84 @@ export default function ProjectDetail() {
           {/* Section selector */}
           <div className="flex gap-2 flex-wrap">
             <Button
-              variant={lavoriSection === 'all' ? 'default' : 'outline'}
-              onClick={() => {
-                setLavoriSection('all');
-                setTimeout(() => {
-                  const tabsElement = document.querySelector('[role="tablist"]');
-                  if (tabsElement) {
-                    const offset = 100;
-                    const elementPosition = tabsElement.getBoundingClientRect().top;
-                    const offsetPosition = elementPosition + window.pageYOffset - offset;
-                    window.scrollTo({ top: offsetPosition, behavior: 'smooth' });
-                  }
-                }, 100);
-              }}
-              className={lavoriSection === 'all' ? 'bg-[#ef6144] hover:bg-[#d9553a]' : ''}
-            >
-              Vedi Tutto
-            </Button>
+               variant={lavoriSection === 'all' ? 'default' : 'outline'}
+               onClick={() => {
+                 setLavoriSection('all');
+                 setTimeout(() => {
+                   const tabsElement = document.querySelector('[role="tablist"]');
+                   if (tabsElement) {
+                     const offset = 100;
+                     const elementPosition = tabsElement.getBoundingClientRect().top;
+                     const offsetPosition = elementPosition + window.pageYOffset - offset;
+                     window.scrollTo({ top: offsetPosition, behavior: 'smooth' });
+                   }
+                 }, 100);
+               }}
+               className={lavoriSection === 'all' ? 'bg-[#ef6144] hover:bg-[#d9553a]' : ''}
+             >
+               {t('projectDetail.sections.viewAll')}
+             </Button>
             <Button
-              variant={lavoriSection === 'tasks' ? 'default' : 'outline'}
-              onClick={() => {
-                setLavoriSection('tasks');
-                setTimeout(() => {
-                  const tabsElement = document.querySelector('[role="tablist"]');
-                  if (tabsElement) {
-                    const offset = 100;
-                    const elementPosition = tabsElement.getBoundingClientRect().top;
-                    const offsetPosition = elementPosition + window.pageYOffset - offset;
-                    window.scrollTo({ top: offsetPosition, behavior: 'smooth' });
-                  }
-                }, 100);
-              }}
-              className={lavoriSection === 'tasks' ? 'bg-[#ef6144] hover:bg-[#d9553a]' : ''}
-            >
-              Attività
-            </Button>
+               variant={lavoriSection === 'tasks' ? 'default' : 'outline'}
+               onClick={() => {
+                 setLavoriSection('tasks');
+                 setTimeout(() => {
+                   const tabsElement = document.querySelector('[role="tablist"]');
+                   if (tabsElement) {
+                     const offset = 100;
+                     const elementPosition = tabsElement.getBoundingClientRect().top;
+                     const offsetPosition = elementPosition + window.pageYOffset - offset;
+                     window.scrollTo({ top: offsetPosition, behavior: 'smooth' });
+                   }
+                 }, 100);
+               }}
+               className={lavoriSection === 'tasks' ? 'bg-[#ef6144] hover:bg-[#d9553a]' : ''}
+             >
+               {t('common.tasks')}
+             </Button>
             <Button
-              variant={lavoriSection === 'changes' ? 'default' : 'outline'}
-              onClick={() => {
-                setLavoriSection('changes');
-                setTimeout(() => {
-                  const tabsElement = document.querySelector('[role="tablist"]');
-                  if (tabsElement) {
-                    const offset = 100;
-                    const elementPosition = tabsElement.getBoundingClientRect().top;
-                    const offsetPosition = elementPosition + window.pageYOffset - offset;
-                    window.scrollTo({ top: offsetPosition, behavior: 'smooth' });
-                  }
-                }, 100);
-              }}
-              className={lavoriSection === 'changes' ? 'bg-[#ef6144] hover:bg-[#d9553a]' : ''}
-            >
-              Modifiche & Extra
-            </Button>
+               variant={lavoriSection === 'changes' ? 'default' : 'outline'}
+               onClick={() => {
+                 setLavoriSection('changes');
+                 setTimeout(() => {
+                   const tabsElement = document.querySelector('[role="tablist"]');
+                   if (tabsElement) {
+                     const offset = 100;
+                     const elementPosition = tabsElement.getBoundingClientRect().top;
+                     const offsetPosition = elementPosition + window.pageYOffset - offset;
+                     window.scrollTo({ top: offsetPosition, behavior: 'smooth' });
+                   }
+                 }, 100);
+               }}
+               className={lavoriSection === 'changes' ? 'bg-[#ef6144] hover:bg-[#d9553a]' : ''}
+             >
+               {t('projectDetail.sections.changesExtras')}
+             </Button>
             <Button
-              variant={lavoriSection === 'milestones' ? 'default' : 'outline'}
-              onClick={() => {
-                setLavoriSection('milestones');
-                setTimeout(() => {
-                  const tabsElement = document.querySelector('[role="tablist"]');
-                  if (tabsElement) {
-                    const offset = 100;
-                    const elementPosition = tabsElement.getBoundingClientRect().top;
-                    const offsetPosition = elementPosition + window.pageYOffset - offset;
-                    window.scrollTo({ top: offsetPosition, behavior: 'smooth' });
-                  }
-                }, 100);
-              }}
-              className={lavoriSection === 'milestones' ? 'bg-[#ef6144] hover:bg-[#d9553a]' : ''}
-            >
-              Milestones
-            </Button>
+               variant={lavoriSection === 'milestones' ? 'default' : 'outline'}
+               onClick={() => {
+                 setLavoriSection('milestones');
+                 setTimeout(() => {
+                   const tabsElement = document.querySelector('[role="tablist"]');
+                   if (tabsElement) {
+                     const offset = 100;
+                     const elementPosition = tabsElement.getBoundingClientRect().top;
+                     const offsetPosition = elementPosition + window.pageYOffset - offset;
+                     window.scrollTo({ top: offsetPosition, behavior: 'smooth' });
+                   }
+                 }, 100);
+               }}
+               className={lavoriSection === 'milestones' ? 'bg-[#ef6144] hover:bg-[#d9553a]' : ''}
+             >
+               {t('projectDetail.sections.milestones')}
+             </Button>
           </div>
 
           {/* Tasks section */}
           {(lavoriSection === 'all' || lavoriSection === 'tasks') && (
             <div id="section-tasks">
               <div className="flex items-center justify-between mb-4">
-                <h3 className="text-lg font-semibold">Attività in Corso</h3>
+                <h3 className="text-lg font-semibold">{t('projectDetail.sections.activities')}</h3>
               </div>
               <TaskList 
                 projectId={projectId} 
@@ -598,7 +600,7 @@ export default function ProjectDetail() {
           {(lavoriSection === 'all' || lavoriSection === 'changes') && (
             <div id="section-changes" className={lavoriSection === 'all' ? 'border-t pt-6' : ''}>
               <div className="flex items-center justify-between mb-4">
-                <h3 className="text-lg font-semibold">Modifiche & Extra</h3>
+                <h3 className="text-lg font-semibold">{t('projectDetail.sections.changesExtras')}</h3>
               </div>
               <ChangeRequestList 
                 projectId={projectId} 
@@ -615,7 +617,7 @@ export default function ProjectDetail() {
           {(lavoriSection === 'all' || lavoriSection === 'milestones') && (
             <div id="section-milestones" className={lavoriSection === 'all' ? 'border-t pt-6' : ''}>
               <div className="flex items-center justify-between mb-4">
-                <h3 className="text-lg font-semibold">Milestones</h3>
+                <h3 className="text-lg font-semibold">{t('projectDetail.sections.milestones')}</h3>
               </div>
               <MilestoneList 
                 projectId={projectId}
@@ -642,83 +644,83 @@ export default function ProjectDetail() {
           {/* Section selector */}
           <div className="flex gap-2 flex-wrap">
             <Button
-              variant={infoSection === 'all' ? 'default' : 'outline'}
-              onClick={() => {
-                setInfoSection('all');
-                setTimeout(() => {
-                  const tabsElement = document.querySelector('[role="tablist"]');
-                  if (tabsElement) {
-                    const offset = 100;
-                    const elementPosition = tabsElement.getBoundingClientRect().top;
-                    const offsetPosition = elementPosition + window.pageYOffset - offset;
-                    window.scrollTo({ top: offsetPosition, behavior: 'smooth' });
-                  }
-                }, 100);
-              }}
-              className={infoSection === 'all' ? 'bg-[#ef6144] hover:bg-[#d9553a]' : ''}
-            >
-              Vedi Tutto
-            </Button>
-            <Button
-              variant={infoSection === 'chat' ? 'default' : 'outline'}
-              onClick={() => {
-                setInfoSection('chat');
-                setTimeout(() => {
-                  const tabsElement = document.querySelector('[role="tablist"]');
-                  if (tabsElement) {
-                    const offset = 100;
-                    const elementPosition = tabsElement.getBoundingClientRect().top;
-                    const offsetPosition = elementPosition + window.pageYOffset - offset;
-                    window.scrollTo({ top: offsetPosition, behavior: 'smooth' });
-                  }
-                }, 100);
-              }}
-              className={infoSection === 'chat' ? 'bg-[#ef6144] hover:bg-[#d9553a]' : ''}
-            >
-              Chat
-            </Button>
-            <Button
-              variant={infoSection === 'participants' ? 'default' : 'outline'}
-              onClick={() => {
-                setInfoSection('participants');
-                setTimeout(() => {
-                  const tabsElement = document.querySelector('[role="tablist"]');
-                  if (tabsElement) {
-                    const offset = 100;
-                    const elementPosition = tabsElement.getBoundingClientRect().top;
-                    const offsetPosition = elementPosition + window.pageYOffset - offset;
-                    window.scrollTo({ top: offsetPosition, behavior: 'smooth' });
-                  }
-                }, 100);
-              }}
-              className={infoSection === 'participants' ? 'bg-[#ef6144] hover:bg-[#d9553a]' : ''}
-            >
-              Partecipanti
-            </Button>
-            <Button
-              variant={infoSection === 'documents' ? 'default' : 'outline'}
-              onClick={() => {
-                setInfoSection('documents');
-                setTimeout(() => {
-                  const tabsElement = document.querySelector('[role="tablist"]');
-                  if (tabsElement) {
-                    const offset = 100;
-                    const elementPosition = tabsElement.getBoundingClientRect().top;
-                    const offsetPosition = elementPosition + window.pageYOffset - offset;
-                    window.scrollTo({ top: offsetPosition, behavior: 'smooth' });
-                  }
-                }, 100);
-              }}
-              className={infoSection === 'documents' ? 'bg-[#ef6144] hover:bg-[#d9553a]' : ''}
-            >
-              Documenti
-            </Button>
+               variant={infoSection === 'all' ? 'default' : 'outline'}
+               onClick={() => {
+                 setInfoSection('all');
+                 setTimeout(() => {
+                   const tabsElement = document.querySelector('[role="tablist"]');
+                   if (tabsElement) {
+                     const offset = 100;
+                     const elementPosition = tabsElement.getBoundingClientRect().top;
+                     const offsetPosition = elementPosition + window.pageYOffset - offset;
+                     window.scrollTo({ top: offsetPosition, behavior: 'smooth' });
+                   }
+                 }, 100);
+               }}
+               className={infoSection === 'all' ? 'bg-[#ef6144] hover:bg-[#d9553a]' : ''}
+             >
+               {t('projectDetail.sections.viewAll')}
+             </Button>
+             <Button
+               variant={infoSection === 'chat' ? 'default' : 'outline'}
+               onClick={() => {
+                 setInfoSection('chat');
+                 setTimeout(() => {
+                   const tabsElement = document.querySelector('[role="tablist"]');
+                   if (tabsElement) {
+                     const offset = 100;
+                     const elementPosition = tabsElement.getBoundingClientRect().top;
+                     const offsetPosition = elementPosition + window.pageYOffset - offset;
+                     window.scrollTo({ top: offsetPosition, behavior: 'smooth' });
+                   }
+                 }, 100);
+               }}
+               className={infoSection === 'chat' ? 'bg-[#ef6144] hover:bg-[#d9553a]' : ''}
+             >
+               {t('projectDetail.sections.messaging')}
+             </Button>
+             <Button
+               variant={infoSection === 'participants' ? 'default' : 'outline'}
+               onClick={() => {
+                 setInfoSection('participants');
+                 setTimeout(() => {
+                   const tabsElement = document.querySelector('[role="tablist"]');
+                   if (tabsElement) {
+                     const offset = 100;
+                     const elementPosition = tabsElement.getBoundingClientRect().top;
+                     const offsetPosition = elementPosition + window.pageYOffset - offset;
+                     window.scrollTo({ top: offsetPosition, behavior: 'smooth' });
+                   }
+                 }, 100);
+               }}
+               className={infoSection === 'participants' ? 'bg-[#ef6144] hover:bg-[#d9553a]' : ''}
+             >
+               {t('projectDetail.sections.participants')}
+             </Button>
+             <Button
+               variant={infoSection === 'documents' ? 'default' : 'outline'}
+               onClick={() => {
+                 setInfoSection('documents');
+                 setTimeout(() => {
+                   const tabsElement = document.querySelector('[role="tablist"]');
+                   if (tabsElement) {
+                     const offset = 100;
+                     const elementPosition = tabsElement.getBoundingClientRect().top;
+                     const offsetPosition = elementPosition + window.pageYOffset - offset;
+                     window.scrollTo({ top: offsetPosition, behavior: 'smooth' });
+                   }
+                 }, 100);
+               }}
+               className={infoSection === 'documents' ? 'bg-[#ef6144] hover:bg-[#d9553a]' : ''}
+             >
+               {t('projectDetail.sections.documents')}
+             </Button>
           </div>
 
           {/* Chat Section */}
           {(infoSection === 'all' || infoSection === 'chat') && (
             <div id="section-chat">
-              <h3 className="text-lg font-semibold mb-4">Messaggistica</h3>
+              <h3 className="text-lg font-semibold mb-4">{t('projectDetail.sections.messaging')}</h3>
               <ProjectMessaging
                 projectId={projectId}
                 currentUser={user}
@@ -741,14 +743,14 @@ export default function ProjectDetail() {
           {(infoSection === 'all' || infoSection === 'participants') && (
             <Card id="section-participants">
               <CardHeader className="flex flex-row items-center justify-between pb-4">
-                <CardTitle className="text-lg font-semibold">Partecipanti</CardTitle>
+                <CardTitle className="text-lg font-semibold">{t('projectDetail.sections.participants')}</CardTitle>
                 {canInvite && (
                   <Button 
                     onClick={() => setInviteDialogOpen(true)}
                     className="bg-[#ef6144] hover:bg-[#d9553a]"
                   >
                     <UserPlus className="h-4 w-4 mr-2" />
-                    Invita
+                    {t('projectDetail.invite')}
                   </Button>
                 )}
               </CardHeader>
@@ -772,14 +774,14 @@ export default function ProjectDetail() {
                 ) : (
                   <EmptyState
                     icon={Users}
-                    title="Nessun partecipante"
-                    description="Invita contractor, progettisti e altri professionisti."
+                    title={t('projectDetail.sections.noParticipants')}
+                    description={t('projectDetail.sections.inviteParticipants')}
                   />
                 )}
 
                 {invitedParticipants.length > 0 && (
                   <div className="mt-6 pt-6 border-t">
-                    <h4 className="text-sm font-medium text-gray-500 mb-3">In attesa di conferma</h4>
+                    <h4 className="text-sm font-medium text-gray-500 mb-3">{t('projectDetail.sections.pendingConfirmation')}</h4>
                     <div className="space-y-3">
                       {invitedParticipants.map(participant => (
                         <ParticipantCard
@@ -804,7 +806,7 @@ export default function ProjectDetail() {
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
                   <FileText className="h-5 w-5" />
-                  Documenti
+                  {t('projectDetail.sections.documents')}
                 </CardTitle>
               </CardHeader>
               <CardContent>
@@ -844,7 +846,7 @@ export default function ProjectDetail() {
             className="w-full flex items-center gap-3 px-4 py-3 hover:bg-gray-50 rounded-lg text-left transition-colors"
           >
             <Upload className="h-5 w-5 text-gray-700" />
-            <span className="font-medium">Carica Allegato</span>
+            <span className="font-medium">{t('projectDetail.quickActions.uploadAttachment')}</span>
           </button>
           <button
             onClick={() => {
@@ -854,7 +856,7 @@ export default function ProjectDetail() {
             className="w-full flex items-center gap-3 px-4 py-3 hover:bg-gray-50 rounded-lg text-left transition-colors"
           >
             <CheckCircle2 className="h-5 w-5 text-gray-700" />
-            <span className="font-medium">Aggiorna Task</span>
+            <span className="font-medium">{t('projectDetail.quickActions.updateTask')}</span>
           </button>
           <button
             onClick={() => {
@@ -865,7 +867,7 @@ export default function ProjectDetail() {
             className="w-full flex items-center gap-3 px-4 py-3 hover:bg-gray-50 rounded-lg text-left transition-colors"
           >
             <DollarSign className="h-5 w-5 text-gray-700" />
-            <span className="font-medium">Nuova Modifica</span>
+            <span className="font-medium">{t('projectDetail.quickActions.newChange')}</span>
           </button>
         </div>
       )}

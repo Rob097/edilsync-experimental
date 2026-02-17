@@ -56,11 +56,11 @@ import NewCompany from './pages/NewCompany';
 import NewProject from './pages/NewProject';
 import Notifications from './pages/Notifications';
 import PrivacyPolicy from './pages/PrivacyPolicy';
+import ProjectDetail from './pages/ProjectDetail';
 import Projects from './pages/Projects';
 import Settings from './pages/Settings';
 import SystemDashboard from './pages/SystemDashboard';
 import TermsOfService from './pages/TermsOfService';
-import ProjectDetail from './pages/ProjectDetail';
 import __Layout from './Layout.jsx';
 
 
@@ -74,11 +74,11 @@ export const PAGES = {
     "NewProject": NewProject,
     "Notifications": Notifications,
     "PrivacyPolicy": PrivacyPolicy,
+    "ProjectDetail": ProjectDetail,
     "Projects": Projects,
     "Settings": Settings,
     "SystemDashboard": SystemDashboard,
     "TermsOfService": TermsOfService,
-    "ProjectDetail": ProjectDetail,
 }
 
 export const pagesConfig = {
