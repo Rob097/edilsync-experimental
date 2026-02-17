@@ -5,6 +5,7 @@ import { base44 } from '@/api/base44Client';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { useLanguage } from '@/components/i18n/useLanguage';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -34,6 +35,7 @@ import FullPageLoader from '@/components/ui/FullPageLoader';
 import CookieBanner from '@/components/legal/CookieBanner';
 import Footer from '@/components/legal/Footer';
 import AssistantFloatingButton from '@/components/assistant/AssistantFloatingButton';
+import LanguageSelector from '@/components/language/LanguageSelector';
 import TourProvider from '@/components/tour/TourProvider';
 import TourOverlay from '@/components/tour/TourOverlay';
 
@@ -42,6 +44,7 @@ export default function Layout({ children, currentPageName }) {
   const queryClient = useQueryClient();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [isChangingContext, setIsChangingContext] = useState(false);
+  const { t } = useLanguage();
 
   const { data: user } = useQuery({
     queryKey: ['currentUser'],
@@ -95,13 +98,13 @@ export default function Layout({ children, currentPageName }) {
   const unreadCount = notifications.length;
 
   const companiesNavItem = currentContext === 'personal'
-    ? { name: 'Società', icon: Building2, page: 'Companies', path: createPageUrl('Companies') }
-    : { name: 'Società', icon: Building2, page: 'CompanyDetail', path: createPageUrl('CompanyDetail') + `?id=${user?.active_company_id}` };
+    ? { name: t('navigation.companies'), icon: Building2, page: 'Companies', path: createPageUrl('Companies') }
+    : { name: t('navigation.companies'), icon: Building2, page: 'CompanyDetail', path: createPageUrl('CompanyDetail') + `?id=${user?.active_company_id}` };
 
   const navItems = [
-    { name: 'Dashboard', icon: LayoutDashboard, page: 'Dashboard', path: createPageUrl('Dashboard') },
-    { name: 'Progetti', icon: FolderKanban, page: 'Projects', path: createPageUrl('Projects') },
-    { name: 'Calendario', icon: Calendar, page: 'Calendar', path: createPageUrl('Calendar') },
+    { name: t('navigation.dashboard'), icon: LayoutDashboard, page: 'Dashboard', path: createPageUrl('Dashboard') },
+    { name: t('navigation.projects'), icon: FolderKanban, page: 'Projects', path: createPageUrl('Projects') },
+    { name: t('navigation.calendar'), icon: Calendar, page: 'Calendar', path: createPageUrl('Calendar') },
     companiesNavItem,
   ];
 
@@ -216,16 +219,20 @@ export default function Layout({ children, currentPageName }) {
                   <DropdownMenuItem asChild>
                     <Link to={createPageUrl('Settings')} className="cursor-pointer">
                       <Settings className="h-4 w-4 mr-2" />
-                      Impostazioni
+                      {t('navigation.settings')}
                     </Link>
                   </DropdownMenuItem>
+                  <DropdownMenuSeparator />
+                  <div className="px-2 py-2">
+                    <LanguageSelector />
+                  </div>
                   {user?.role === 'admin' && (
                     <>
                       <DropdownMenuSeparator />
                       <DropdownMenuItem asChild>
                         <Link to={createPageUrl('SystemDashboard')} className="cursor-pointer">
                           <LayoutDashboard className="h-4 w-4 mr-2" />
-                          Dashboard di Sistema
+                          {t('navigation.systemDashboard')}
                         </Link>
                       </DropdownMenuItem>
                     </>
@@ -236,7 +243,7 @@ export default function Layout({ children, currentPageName }) {
                     className="text-red-600 cursor-pointer"
                   >
                     <LogOut className="h-4 w-4 mr-2" />
-                    Esci
+                    {t('navigation.logout')}
                   </DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
