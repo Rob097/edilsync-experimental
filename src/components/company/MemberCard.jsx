@@ -1,6 +1,9 @@
-import React from 'react';
+import React, { useState } from 'react';
+import { base44 } from '@/api/base44Client';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { Badge } from "@/components/ui/badge";
-import { User, Clock, Shield } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { User, Clock, Shield, Trash2, Loader2 } from "lucide-react";
 
 const roleLabels = {
   admin: 'Amministratore',
@@ -17,7 +20,20 @@ const professionLabels = {
   other: 'Altro',
 };
 
-export default function MemberCard({ member, isCurrentUser, isPending }) {
+export default function MemberCard({ member, isCurrentUser, isPending, isAdmin, companyId, canRemoveSelf = true }) {
+  const queryClient = useQueryClient();
+  const [confirmRemove, setConfirmRemove] = useState(false);
+
+  const removeMutation = useMutation({
+    mutationFn: () => base44.entities.CompanyMember.delete(member.id),
+    onSuccess: () => {
+      queryClient.invalidateQueries(['companyMembers', companyId]);
+    },
+  });
+
+  // Admin can remove others but not themselves
+  const canRemove = isAdmin && (!isCurrentUser || canRemoveSelf);
+
   return (
     <div className={`
       flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-4 rounded-lg border
@@ -58,6 +74,36 @@ export default function MemberCard({ member, isCurrentUser, isPending }) {
           {member.role === 'admin' && <Shield className="h-3 w-3 mr-1" />}
           {roleLabels[member.role] || member.role}
         </Badge>
+        {canRemove && (
+          confirmRemove ? (
+            <div className="flex items-center gap-1">
+              <Button
+                variant="destructive"
+                size="sm"
+                onClick={() => removeMutation.mutate()}
+                disabled={removeMutation.isPending}
+              >
+                {removeMutation.isPending ? <Loader2 className="h-3 w-3 animate-spin" /> : 'Conferma'}
+              </Button>
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => setConfirmRemove(false)}
+              >
+                Annulla
+              </Button>
+            </div>
+          ) : (
+            <Button
+              variant="ghost"
+              size="icon"
+              className="h-8 w-8 text-gray-400 hover:text-red-500"
+              onClick={() => setConfirmRemove(true)}
+            >
+              <Trash2 className="h-4 w-4" />
+            </Button>
+          )
+        )}
       </div>
     </div>
   );
