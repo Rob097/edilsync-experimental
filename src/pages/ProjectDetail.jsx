@@ -272,8 +272,8 @@ export default function ProjectDetail() {
 
   const status = statusConfig[project.status] || statusConfig.planning;
 
-  // Show invite banner only if the context-specific participation is invited
-  const isInvited = contextParticipation?.status === 'invited';
+  // Show invite banner only if the context-specific participation is "invited"
+  const isInvited = contextParticipation && contextParticipation.status === 'invited';
 
   return (
     <div className="space-y-6">
