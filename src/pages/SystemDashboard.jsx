@@ -175,6 +175,10 @@ export default function SystemDashboard() {
     enabled: user?.role === 'admin',
   });
 
+  const isLoading = userLoading || usersLoading || companiesLoading || projectsLoading || tasksLoading || 
+                    milestonesLoading || changeRequestsLoading || messagesLoading || documentsLoading || 
+                    eventsLoading || notificationsLoading || companyMembersLoading;
+
   // Calculate statistics
   const stats = useMemo(() => {
     // Always return stats even if arrays are empty
@@ -319,11 +323,7 @@ export default function SystemDashboard() {
         topCompanies: companyActivity,
       },
     };
-  }, [allUsers, companies, companyMembers, projects, tasks, milestones, changeRequests, messages, documents, events, notifications]);
-
-  const isLoading = userLoading || usersLoading || companiesLoading || projectsLoading || tasksLoading || 
-                    milestonesLoading || changeRequestsLoading || messagesLoading || documentsLoading || 
-                    eventsLoading || notificationsLoading || companyMembersLoading;
+  }, [allUsers, companies, companyMembers, projects, tasks, milestones, changeRequests, messages, documents, events, notifications, isLoading]);
 
   // Access control
   if (userLoading) {
