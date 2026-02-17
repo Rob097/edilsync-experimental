@@ -116,10 +116,8 @@ export default function Dashboard() {
     return membership?.role;
   };
 
-  // Check if user just registered (no projects, no companies, no tour completed/dismissed)
-  const isNewUser = user && 
-    projects.length === 0 && 
-    companies.length === 0 && 
+  // Start onboarding tour if not completed/dismissed
+  const shouldStartOnboarding = user && 
     !user.tour_state?.onboarding_completed && 
     !user.tour_state?.onboarding_dismissed;
 
@@ -135,12 +133,12 @@ export default function Dashboard() {
 
   return (
     <div className="space-y-8 min-w-0">
-      {/* Launch onboarding tour for new users */}
+      {/* Launch onboarding tour */}
       <TourLauncher 
         tourId="onboarding" 
         steps={onboardingTour.steps} 
-        trigger={isNewUser}
-        delay={1000}
+        trigger={shouldStartOnboarding}
+        delay={1500}
       />
 
       {/* Welcome section */}
