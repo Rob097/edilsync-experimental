@@ -9,9 +9,11 @@ import { Skeleton } from "@/components/ui/skeleton.jsx";
 import { Plus, Search, Building2 } from "lucide-react";
 import CompanyCard from '@/components/company/CompanyCard';
 import EmptyState from '@/components/ui/EmptyState';
+import { useLanguage } from '@/components/i18n/useLanguage';
 
 export default function Companies() {
   const navigate = useNavigate();
+  const { t } = useLanguage();
   const [searchQuery, setSearchQuery] = useState('');
 
   const { data: user, isLoading: userLoading } = useQuery({
@@ -76,14 +78,14 @@ export default function Companies() {
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">Le tue Società</h1>
-          <p className="text-gray-500 mt-1">Gestisci le società di cui fai parte</p>
+          <h1 className="text-2xl font-bold text-gray-900">{t('dashboard.yourCompanies')}</h1>
+          <p className="text-gray-500 mt-1">{t('companies.manageCompanies')}</p>
         </div>
         {currentContext === 'personal' && (
           <Link to={createPageUrl('NewCompany')}>
             <Button className="bg-[#ef6144] hover:bg-[#d9553a]">
               <Plus className="h-4 w-4 mr-2" />
-              Nuova Società
+              {t('common.newCompany')}
             </Button>
           </Link>
         )}
@@ -93,7 +95,7 @@ export default function Companies() {
       <div className="relative max-w-md">
         <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
         <Input
-          placeholder="Cerca società..."
+          placeholder={t('common.searchCompanies')}
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
           className="pl-10"
@@ -121,13 +123,13 @@ export default function Companies() {
       ) : (
         <EmptyState
           icon={Building2}
-          title={searchQuery ? "Nessun risultato" : "Nessuna società"}
+          title={searchQuery ? t('common.noResults') : t('dashboard.noCompanies')}
           description={
             searchQuery
-              ? "Prova a modificare i termini di ricerca."
-              : "Non fai parte di nessuna società. Creane una nuova o attendi un invito."
+              ? t('common.tryModifyingSearchTerms')
+              : t('dashboard.noCompaniesDescription')
           }
-          actionLabel={!searchQuery ? "Crea Società" : undefined}
+          actionLabel={!searchQuery ? t('common.newCompany') : undefined}
           onAction={!searchQuery ? () => navigate(createPageUrl('NewCompany')) : undefined}
         />
       )}
