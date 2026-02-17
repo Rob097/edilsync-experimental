@@ -34,73 +34,151 @@ export default function SystemDashboard() {
   // Fetch all data
   const { data: allUsers = [], isLoading: usersLoading } = useQuery({
     queryKey: ['allUsers'],
-    queryFn: () => base44.asServiceRole.entities.User.list(),
+    queryFn: async () => {
+      try {
+        return await base44.asServiceRole.entities.User.list();
+      } catch (error) {
+        console.error('Error fetching users:', error);
+        return [];
+      }
+    },
     enabled: user?.role === 'admin',
   });
 
   const { data: companies = [], isLoading: companiesLoading } = useQuery({
     queryKey: ['allCompanies'],
-    queryFn: () => base44.asServiceRole.entities.Company.list(),
+    queryFn: async () => {
+      try {
+        return await base44.asServiceRole.entities.Company.list();
+      } catch (error) {
+        console.error('Error fetching companies:', error);
+        return [];
+      }
+    },
     enabled: user?.role === 'admin',
   });
 
   const { data: companyMembers = [], isLoading: companyMembersLoading } = useQuery({
     queryKey: ['allCompanyMembers'],
-    queryFn: () => base44.asServiceRole.entities.CompanyMember.list(),
+    queryFn: async () => {
+      try {
+        return await base44.asServiceRole.entities.CompanyMember.list();
+      } catch (error) {
+        console.error('Error fetching company members:', error);
+        return [];
+      }
+    },
     enabled: user?.role === 'admin',
   });
 
   const { data: projects = [], isLoading: projectsLoading } = useQuery({
     queryKey: ['allProjects'],
-    queryFn: () => base44.asServiceRole.entities.Project.list(),
+    queryFn: async () => {
+      try {
+        return await base44.asServiceRole.entities.Project.list();
+      } catch (error) {
+        console.error('Error fetching projects:', error);
+        return [];
+      }
+    },
     enabled: user?.role === 'admin',
   });
 
   const { data: tasks = [], isLoading: tasksLoading } = useQuery({
     queryKey: ['allTasks'],
-    queryFn: () => base44.asServiceRole.entities.Task.list(),
+    queryFn: async () => {
+      try {
+        return await base44.asServiceRole.entities.Task.list();
+      } catch (error) {
+        console.error('Error fetching tasks:', error);
+        return [];
+      }
+    },
     enabled: user?.role === 'admin',
   });
 
   const { data: milestones = [], isLoading: milestonesLoading } = useQuery({
     queryKey: ['allMilestones'],
-    queryFn: () => base44.asServiceRole.entities.Milestone.list(),
+    queryFn: async () => {
+      try {
+        return await base44.asServiceRole.entities.Milestone.list();
+      } catch (error) {
+        console.error('Error fetching milestones:', error);
+        return [];
+      }
+    },
     enabled: user?.role === 'admin',
   });
 
   const { data: changeRequests = [], isLoading: changeRequestsLoading } = useQuery({
     queryKey: ['allChangeRequests'],
-    queryFn: () => base44.asServiceRole.entities.ChangeRequest.list(),
+    queryFn: async () => {
+      try {
+        return await base44.asServiceRole.entities.ChangeRequest.list();
+      } catch (error) {
+        console.error('Error fetching change requests:', error);
+        return [];
+      }
+    },
     enabled: user?.role === 'admin',
   });
 
   const { data: messages = [], isLoading: messagesLoading } = useQuery({
     queryKey: ['allMessages'],
-    queryFn: () => base44.asServiceRole.entities.Message.list(),
+    queryFn: async () => {
+      try {
+        return await base44.asServiceRole.entities.Message.list();
+      } catch (error) {
+        console.error('Error fetching messages:', error);
+        return [];
+      }
+    },
     enabled: user?.role === 'admin',
   });
 
   const { data: documents = [], isLoading: documentsLoading } = useQuery({
     queryKey: ['allDocuments'],
-    queryFn: () => base44.asServiceRole.entities.ProjectDocument.list(),
+    queryFn: async () => {
+      try {
+        return await base44.asServiceRole.entities.ProjectDocument.list();
+      } catch (error) {
+        console.error('Error fetching documents:', error);
+        return [];
+      }
+    },
     enabled: user?.role === 'admin',
   });
 
   const { data: events = [], isLoading: eventsLoading } = useQuery({
     queryKey: ['allEvents'],
-    queryFn: () => base44.asServiceRole.entities.Event.list(),
+    queryFn: async () => {
+      try {
+        return await base44.asServiceRole.entities.Event.list();
+      } catch (error) {
+        console.error('Error fetching events:', error);
+        return [];
+      }
+    },
     enabled: user?.role === 'admin',
   });
 
   const { data: notifications = [], isLoading: notificationsLoading } = useQuery({
     queryKey: ['allNotifications'],
-    queryFn: () => base44.asServiceRole.entities.Notification.list(),
+    queryFn: async () => {
+      try {
+        return await base44.asServiceRole.entities.Notification.list();
+      } catch (error) {
+        console.error('Error fetching notifications:', error);
+        return [];
+      }
+    },
     enabled: user?.role === 'admin',
   });
 
   // Calculate statistics
   const stats = useMemo(() => {
-    if (!allUsers.length) return null;
+    // Always return stats even if arrays are empty
+    if (isLoading) return null;
 
     // User stats
     const adminUsers = allUsers.filter(u => u.role === 'admin').length;
