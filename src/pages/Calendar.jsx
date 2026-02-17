@@ -17,8 +17,10 @@ import ContextBadge from '@/components/context/ContextBadge';
 import CalendarDayView from '@/components/calendar/CalendarDayView';
 import EventDialog from '@/components/calendar/EventDialog';
 import EventDetailDialog from '@/components/calendar/EventDetailDialog';
+import { useLanguage } from '@/components/i18n/useLanguage';
 
 export default function Calendar() {
+  const { t } = useLanguage();
   const [currentDate, setCurrentDate] = useState(new Date());
   const [selectedDate, setSelectedDate] = useState(null);
   const [viewMode, setViewMode] = useState('month'); // month, week
@@ -169,15 +171,15 @@ export default function Calendar() {
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">Calendario</h1>
+          <h1 className="text-2xl font-bold text-gray-900">{t('calendar.title')}</h1>
           <div className="flex items-center gap-2 mt-1">
-            <span className="text-gray-500">Visualizzazione</span>
+            <span className="text-gray-500">{t('dashboard.workingAs')}</span>
             <ContextBadge context={currentContext} companyName={currentCompany?.name} />
           </div>
         </div>
         <Button onClick={handleCreateEvent} className="bg-[#ef6144] hover:bg-[#d9553a]">
           <Plus className="h-4 w-4 mr-2" />
-          Nuovo Evento
+          {t('calendar.newEvent')}
         </Button>
       </div>
 
@@ -199,7 +201,7 @@ export default function Calendar() {
           size="sm"
           onClick={() => setCurrentDate(new Date())}
         >
-          Oggi
+          {t('calendar.today')}
         </Button>
       </div>
 
