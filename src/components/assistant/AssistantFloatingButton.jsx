@@ -3,7 +3,7 @@ import { base44 } from '@/api/base44Client';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet";
-import { Sparkles, Send, Mic, MicOff, Loader2, MessageSquare, X, Plus, Trash2, History } from "lucide-react";
+import { Sparkles, Send, Mic, MicOff, Loader2, MessageSquare, X, Plus, Trash2, History, MessageCircle } from "lucide-react";
 import { Textarea } from "@/components/ui/textarea";
 import MessageBubble from "@/components/assistant/MessageBubble";
 import SuggestedMessages from "@/components/assistant/SuggestedMessages";
@@ -296,6 +296,21 @@ export default function AssistantFloatingButton({ className }) {
                 <p className="text-xs text-gray-500">Sempre qui per aiutarti</p>
               </div>
               <div className="flex gap-2">
+                <a 
+                  href={base44.agents.getWhatsAppConnectURL('edilsync_assistant')} 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className="inline-block"
+                >
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    title="Apri su WhatsApp"
+                    className="text-green-600 hover:bg-green-50"
+                  >
+                    <MessageCircle className="h-4 w-4" />
+                  </Button>
+                </a>
                 <Button
                   variant="ghost"
                   size="icon"
