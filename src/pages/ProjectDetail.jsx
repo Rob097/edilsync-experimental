@@ -187,10 +187,8 @@ export default function ProjectDetail() {
   // Fallback: if no match for current context, use any active participation
   const userParticipation = contextParticipation || allUserParticipations.find(p => p.status === 'active') || allUserParticipations[0];
 
-  // Has ANY active participation (regardless of context) - used to show full project content
-  const hasAnyActiveParticipation = allUserParticipations.some(p => p.status === 'active');
-  // Is the context-specific participation active?
-  const isActiveParticipant = hasAnyActiveParticipation;
+  // Is the CURRENT CONTEXT participation active? This controls what content is shown
+  const isActiveParticipant = contextParticipation?.status === 'active';
   
   const canInvite = isActiveParticipant && (userParticipation?.can_invite || userParticipation?.project_role === 'homeowner');
   const canEditTasks = isActiveParticipant;
