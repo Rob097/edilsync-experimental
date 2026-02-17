@@ -3,6 +3,7 @@ import { base44 } from '@/api/base44Client';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
+import { useLanguage } from '@/components/i18n/useLanguage';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -36,6 +37,7 @@ const typeColors = {
 };
 
 export default function Notifications() {
+  const { t } = useLanguage();
   const queryClient = useQueryClient();
   const navigate = useNavigate();
 
@@ -135,9 +137,9 @@ export default function Notifications() {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">Notifiche</h1>
+          <h1 className="text-2xl font-bold text-gray-900">{t('notificationsPage.title')}</h1>
           <p className="text-gray-500 mt-1">
-            {unreadCount > 0 ? `${unreadCount} non lette` : 'Tutte lette'}
+            {unreadCount > 0 ? `${unreadCount} ${t('notificationsPage.unread')}` : t('notificationsPage.allRead')}
           </p>
         </div>
         {unreadCount > 0 && (
@@ -147,7 +149,7 @@ export default function Notifications() {
             disabled={markAllAsReadMutation.isPending}
           >
             <CheckCheck className="h-4 w-4 mr-2" />
-            Segna tutte come lette
+            {t('notificationsPage.markAllAsRead')}
           </Button>
         )}
       </div>
@@ -209,8 +211,8 @@ export default function Notifications() {
             <div className="p-8">
               <EmptyState
                 icon={Bell}
-                title="Nessuna notifica"
-                description="Non hai ancora ricevuto notifiche."
+                title={t('notificationsPage.noNotifications')}
+                description={t('notificationsPage.noNotificationsDescription')}
               />
             </div>
           )}
