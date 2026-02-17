@@ -33,6 +33,7 @@ import MessagingNotifications from '@/components/messaging/MessagingNotification
 import FullPageLoader from '@/components/ui/FullPageLoader';
 import CookieBanner from '@/components/legal/CookieBanner';
 import Footer from '@/components/legal/Footer';
+import AssistantFloatingButton from '@/components/assistant/AssistantFloatingButton';
 
 export default function Layout({ children, currentPageName }) {
   const location = useLocation();
@@ -281,6 +282,7 @@ export default function Layout({ children, currentPageName }) {
 
       <Footer />
       <CookieBanner />
+      <AssistantFloatingButton />
     </div>
     </>
   );

@@ -72,7 +72,6 @@ export default function ProjectDetail() {
   const [inviteDialogOpen, setInviteDialogOpen] = useState(false);
   const [editProjectDialogOpen, setEditProjectDialogOpen] = useState(false);
   const [activeTab, setActiveTab] = useState('cantiere');
-  const [quickActionOpen, setQuickActionOpen] = useState(false);
   const [lavoriSection, setLavoriSection] = useState('all');
   const [infoSection, setInfoSection] = useState('all');
   const [documentUploadOpen, setDocumentUploadOpen] = useState(false);
@@ -805,53 +804,7 @@ export default function ProjectDetail() {
       </Tabs>
       }
 
-      {/* Quick Action FAB */}
-      {isActiveParticipant && (
-        <button
-          onClick={() => setQuickActionOpen(!quickActionOpen)}
-          className="fixed bottom-6 right-6 w-14 h-14 rounded-full bg-[#ef6144] hover:bg-[#d9553a] text-white shadow-lg flex items-center justify-center z-50 transition-transform hover:scale-110"
-        >
-          <Plus className={`h-6 w-6 transition-transform ${quickActionOpen ? 'rotate-45' : ''}`} />
-        </button>
-      )}
 
-      {/* Quick Action Menu */}
-      {quickActionOpen && (
-        <div className="fixed bottom-24 right-6 bg-white rounded-lg shadow-xl border p-2 z-50 min-w-[200px]">
-          <button
-            onClick={() => {
-              setQuickActionOpen(false);
-              navigateToSection('info', 'documents');
-              setTimeout(() => setDocumentUploadOpen(true), 200);
-            }}
-            className="w-full flex items-center gap-3 px-4 py-3 hover:bg-gray-50 rounded-lg text-left transition-colors"
-          >
-            <Upload className="h-5 w-5 text-[#ef6144]" />
-            <span className="font-medium">Carica Allegato</span>
-          </button>
-          <button
-            onClick={() => {
-              setQuickActionOpen(false);
-              navigateToSection('lavori', 'tasks');
-            }}
-            className="w-full flex items-center gap-3 px-4 py-3 hover:bg-gray-50 rounded-lg text-left transition-colors"
-          >
-            <CheckCircle2 className="h-5 w-5 text-[#ef6144]" />
-            <span className="font-medium">Aggiorna Task</span>
-          </button>
-          <button
-            onClick={() => {
-              setQuickActionOpen(false);
-              navigateToSection('lavori', 'changes');
-              setTimeout(() => setChangeCreateOpen(true), 200);
-            }}
-            className="w-full flex items-center gap-3 px-4 py-3 hover:bg-gray-50 rounded-lg text-left transition-colors"
-          >
-            <DollarSign className="h-5 w-5 text-[#ef6144]" />
-            <span className="font-medium">Nuova Modifica</span>
-          </button>
-        </div>
-      )}
 
       <InviteParticipantDialog
         open={inviteDialogOpen}
