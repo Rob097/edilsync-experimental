@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { base44 } from '@/api/base44Client';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { useLanguage } from '@/components/i18n/useLanguage';
 import {
   Dialog,
   DialogContent,
@@ -15,6 +16,7 @@ import { Loader2, CheckCircle2, XCircle } from "lucide-react";
 import AssigneeSelector from './AssigneeSelector';
 
 export default function ChangeRequestDialog({ open, onOpenChange, request, projectId, canRespond }) {
+  const { t } = useLanguage();
   const queryClient = useQueryClient();
   const [formData, setFormData] = useState({
     title: '',
@@ -138,30 +140,30 @@ export default function ChangeRequestDialog({ open, onOpenChange, request, proje
       <DialogContent className="sm:max-w-lg max-h-[90vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle>
-            {request ? 'Richiesta di Modifica' : 'Nuova Richiesta di Modifica'}
+            {request ? t('changeRequestDialog.editTitle') : t('changeRequestDialog.newTitle')}
           </DialogTitle>
         </DialogHeader>
 
         <form onSubmit={handleSubmit} className="space-y-4 mt-4">
           <div className="space-y-2">
-            <Label htmlFor="title">Titolo *</Label>
+            <Label htmlFor="title">{t('changeRequestDialog.title')} *</Label>
             <Input
               id="title"
               value={formData.title}
               onChange={(e) => setFormData(prev => ({ ...prev, title: e.target.value }))}
-              placeholder="Es. Cambiare tipo di piastrelle"
+              placeholder={t('changeRequestDialog.titlePlaceholder')}
               required
               disabled={!!request}
             />
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="description">Descrizione *</Label>
+            <Label htmlFor="description">{t('changeRequestDialog.description')} *</Label>
             <Textarea
               id="description"
               value={formData.description}
               onChange={(e) => setFormData(prev => ({ ...prev, description: e.target.value }))}
-              placeholder="Descrivi la modifica richiesta..."
+              placeholder={t('changeRequestDialog.descriptionPlaceholder')}
               rows={3}
               required
               disabled={!!request}
@@ -170,7 +172,7 @@ export default function ChangeRequestDialog({ open, onOpenChange, request, proje
 
           <div className="grid grid-cols-2 gap-4">
             <div className="space-y-2">
-              <Label htmlFor="cost_impact">Costo aggiuntivo (€)</Label>
+              <Label htmlFor="cost_impact">{t('changeRequestDialog.costImpact')}</Label>
               <Input
                 id="cost_impact"
                 type="number"
@@ -178,93 +180,93 @@ export default function ChangeRequestDialog({ open, onOpenChange, request, proje
                 step="0.01"
                 value={formData.cost_impact}
                 onChange={(e) => setFormData(prev => ({ ...prev, cost_impact: e.target.value }))}
-                placeholder="0.00"
+                placeholder={t('changeRequestDialog.costPlaceholder')}
                 disabled={!!request}
               />
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="time_impact_days">Giorni aggiuntivi</Label>
+              <Label htmlFor="time_impact_days">{t('changeRequestDialog.timeImpact')}</Label>
               <Input
                 id="time_impact_days"
                 type="number"
                 min="0"
                 value={formData.time_impact_days}
                 onChange={(e) => setFormData(prev => ({ ...prev, time_impact_days: e.target.value }))}
-                placeholder="0"
+                placeholder={t('changeRequestDialog.timePlaceholder')}
                 disabled={!!request}
               />
             </div>
           </div>
 
           {!request && (
-            <AssigneeSelector
-              participants={projectParticipants}
-              companies={companies}
-              value={formData.assigned_participant_id}
-              onChange={(option) => setFormData(prev => ({ ...prev, assigned_participant_id: option?.id || '' }))}
-              label="Assegna a (opzionale)"
-            />
-          )}
+             <AssigneeSelector
+               participants={projectParticipants}
+               companies={companies}
+               value={formData.assigned_participant_id}
+               onChange={(option) => setFormData(prev => ({ ...prev, assigned_participant_id: option?.id || '' }))}
+               label={t('changeRequestDialog.assignTo')}
+             />
+           )}
 
           {request && canRespond && isPending && (
-            <div className="space-y-2 pt-4 border-t">
-              <Label htmlFor="response_note">Risposta</Label>
-              <Textarea
-                id="response_note"
-                value={formData.response_note}
-                onChange={(e) => setFormData(prev => ({ ...prev, response_note: e.target.value }))}
-                placeholder="Aggiungi una nota opzionale..."
-                rows={2}
-              />
-            </div>
-          )}
+             <div className="space-y-2 pt-4 border-t">
+               <Label htmlFor="response_note">{t('changeRequestDialog.response')}</Label>
+               <Textarea
+                 id="response_note"
+                 value={formData.response_note}
+                 onChange={(e) => setFormData(prev => ({ ...prev, response_note: e.target.value }))}
+                 placeholder={t('changeRequestDialog.responsePlaceholder')}
+                 rows={2}
+               />
+             </div>
+           )}
 
           <div className="flex gap-3 pt-2">
-            {request && canRespond && isPending ? (
-              <>
-                <Button
-                  type="button"
-                  variant="outline"
-                  onClick={() => handleResponse('rejected')}
-                  disabled={respondMutation.isPending}
-                  className="flex-1"
-                >
-                  <XCircle className="h-4 w-4 mr-2" />
-                  Rifiuta
-                </Button>
-                <Button
-                  type="button"
-                  onClick={() => handleResponse('approved')}
-                  disabled={respondMutation.isPending}
-                  className="flex-1 bg-green-600 hover:bg-green-700"
-                >
-                  {respondMutation.isPending ? (
-                    <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-                  ) : (
-                    <CheckCircle2 className="h-4 w-4 mr-2" />
-                  )}
-                  Approva
-                </Button>
-              </>
-            ) : (
-              <>
-                <Button type="button" variant="outline" onClick={() => onOpenChange(false)} className="flex-1">
-                  {request ? 'Chiudi' : 'Annulla'}
-                </Button>
-                {!request && (
-                  <Button
-                    type="submit"
-                    className="flex-1 bg-[#ef6144] hover:bg-[#d9553a]"
-                    disabled={!isValid || saveMutation.isPending}
-                  >
-                    {saveMutation.isPending && <Loader2 className="h-4 w-4 mr-2 animate-spin" />}
-                    Invia Richiesta
-                  </Button>
-                )}
-              </>
-            )}
-          </div>
+             {request && canRespond && isPending ? (
+               <>
+                 <Button
+                   type="button"
+                   variant="outline"
+                   onClick={() => handleResponse('rejected')}
+                   disabled={respondMutation.isPending}
+                   className="flex-1"
+                 >
+                   <XCircle className="h-4 w-4 mr-2" />
+                   {t('changeRequestDialog.reject')}
+                 </Button>
+                 <Button
+                   type="button"
+                   onClick={() => handleResponse('approved')}
+                   disabled={respondMutation.isPending}
+                   className="flex-1 bg-green-600 hover:bg-green-700"
+                 >
+                   {respondMutation.isPending ? (
+                     <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                   ) : (
+                     <CheckCircle2 className="h-4 w-4 mr-2" />
+                   )}
+                   {t('changeRequestDialog.approve')}
+                 </Button>
+               </>
+             ) : (
+               <>
+                 <Button type="button" variant="outline" onClick={() => onOpenChange(false)} className="flex-1">
+                   {request ? t('changeRequestDialog.close') : t('changeRequestDialog.cancel')}
+                 </Button>
+                 {!request && (
+                   <Button
+                     type="submit"
+                     className="flex-1 bg-[#ef6144] hover:bg-[#d9553a]"
+                     disabled={!isValid || saveMutation.isPending}
+                   >
+                     {saveMutation.isPending && <Loader2 className="h-4 w-4 mr-2 animate-spin" />}
+                     {t('changeRequestDialog.submit')}
+                   </Button>
+                 )}
+               </>
+             )}
+           </div>
         </form>
       </DialogContent>
     </Dialog>
