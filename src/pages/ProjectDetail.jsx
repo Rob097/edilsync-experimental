@@ -407,7 +407,7 @@ export default function ProjectDetail() {
       )}
 
       {/* Blocked Banner */}
-      {blockedTasks.length > 0 && (
+      {isActiveParticipant && blockedTasks.length > 0 && (
         <Card className="border-red-300 bg-red-50">
           <CardContent className="p-4">
             <div className="flex items-start gap-3">
@@ -798,7 +798,7 @@ export default function ProjectDetail() {
               <CardContent>
                 <DocumentList 
                   projectId={projectId}
-                  canUpload={!!userParticipation}
+                  canUpload={isActiveParticipant}
                   currentUserEmail={user?.email}
                   uploadDialogOpen={documentUploadOpen}
                   onUploadDialogChange={setDocumentUploadOpen}
