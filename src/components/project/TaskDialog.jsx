@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { base44 } from '@/api/base44Client';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { useLanguage } from '@/components/i18n/useLanguage';
 import {
   Dialog,
   DialogContent,
@@ -16,6 +17,7 @@ import { Loader2 } from "lucide-react";
 import AssigneeSelector from './AssigneeSelector';
 
 export default function TaskDialog({ open, onOpenChange, task, projectId }) {
+  const { t } = useLanguage();
   const queryClient = useQueryClient();
   const [formData, setFormData] = useState({
     title: '',
@@ -151,55 +153,55 @@ export default function TaskDialog({ open, onOpenChange, task, projectId }) {
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-lg max-h-[90vh] overflow-y-auto">
         <DialogHeader>
-          <DialogTitle>{task ? 'Modifica Task' : 'Nuovo Task'}</DialogTitle>
+          <DialogTitle>{task ? t('taskDialog.editTitle') : t('taskDialog.newTitle')}</DialogTitle>
         </DialogHeader>
 
         <form onSubmit={handleSubmit} className="space-y-4 mt-4">
           <div className="space-y-2">
-            <Label htmlFor="title">Titolo *</Label>
+            <Label htmlFor="title">{t('taskDialog.title')} *</Label>
             <Input
               id="title"
               value={formData.title}
               onChange={(e) => setFormData(prev => ({ ...prev, title: e.target.value }))}
-              placeholder="Es. Installare controsoffitto cucina"
+              placeholder={t('taskDialog.titlePlaceholder')}
               required
             />
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="description">Descrizione</Label>
+            <Label htmlFor="description">{t('taskDialog.description')}</Label>
             <Textarea
               id="description"
               value={formData.description}
               onChange={(e) => setFormData(prev => ({ ...prev, description: e.target.value }))}
-              placeholder="Descrizione opzionale..."
+              placeholder={t('taskDialog.descriptionPlaceholder')}
               rows={2}
             />
           </div>
 
           <div className="grid grid-cols-2 gap-4">
             <div className="space-y-2">
-              <Label htmlFor="status">Stato</Label>
+              <Label htmlFor="status">{t('taskDialog.status')}</Label>
               <Select value={formData.status} onValueChange={(v) => setFormData(prev => ({ ...prev, status: v }))}>
                 <SelectTrigger>
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="not_started">Non iniziato</SelectItem>
-                  <SelectItem value="in_progress">In corso</SelectItem>
-                  <SelectItem value="completed">Completato</SelectItem>
-                  <SelectItem value="blocked">Bloccato</SelectItem>
+                  <SelectItem value="not_started">{t('taskDialog.notStarted')}</SelectItem>
+                  <SelectItem value="in_progress">{t('taskDialog.inProgress')}</SelectItem>
+                  <SelectItem value="completed">{t('taskDialog.completed')}</SelectItem>
+                  <SelectItem value="blocked">{t('taskDialog.blocked')}</SelectItem>
                 </SelectContent>
               </Select>
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="room_area">Stanza/Area</Label>
+              <Label htmlFor="room_area">{t('taskDialog.roomArea')}</Label>
               <Input
                 id="room_area"
                 value={formData.room_area}
                 onChange={(e) => setFormData(prev => ({ ...prev, room_area: e.target.value }))}
-                placeholder="Es. Cucina"
+                placeholder={t('taskDialog.roomAreaPlaceholder')}
               />
             </div>
           </div>
@@ -212,7 +214,7 @@ export default function TaskDialog({ open, onOpenChange, task, projectId }) {
           />
 
           <div className="space-y-2">
-            <Label htmlFor="due_date">Data scadenza</Label>
+            <Label htmlFor="due_date">{t('taskDialog.dueDate')}</Label>
             <Input
               id="due_date"
               type="date"
@@ -222,16 +224,16 @@ export default function TaskDialog({ open, onOpenChange, task, projectId }) {
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="milestone">Milestone (opzionale)</Label>
+            <Label htmlFor="milestone">{t('taskDialog.milestone')}</Label>
             <Select
               value={formData.milestone_id || 'none'}
               onValueChange={(v) => setFormData(prev => ({ ...prev, milestone_id: v === 'none' ? null : v }))}
             >
               <SelectTrigger>
-                <SelectValue placeholder="Seleziona milestone" />
+                <SelectValue placeholder={t('taskDialog.selectMilestone')} />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="none">Nessuna milestone</SelectItem>
+                <SelectItem value="none">{t('taskDialog.noMilestone')}</SelectItem>
                 {milestones.map(milestone => (
                   <SelectItem key={milestone.id} value={milestone.id}>
                     {milestone.title}
@@ -242,54 +244,54 @@ export default function TaskDialog({ open, onOpenChange, task, projectId }) {
           </div>
 
           {formData.status === 'blocked' && (
-            <>
-              <div className="space-y-2">
-                <Label htmlFor="blocked_reason">Motivo blocco *</Label>
-                <Textarea
-                  id="blocked_reason"
-                  value={formData.blocked_reason}
-                  onChange={(e) => setFormData(prev => ({ ...prev, blocked_reason: e.target.value }))}
-                  placeholder="Es. In attesa di selezione materiali"
-                  rows={2}
-                />
-              </div>
+             <>
+               <div className="space-y-2">
+                 <Label htmlFor="blocked_reason">{t('taskDialog.blockedReason')} *</Label>
+                 <Textarea
+                   id="blocked_reason"
+                   value={formData.blocked_reason}
+                   onChange={(e) => setFormData(prev => ({ ...prev, blocked_reason: e.target.value }))}
+                   placeholder={t('taskDialog.blockedReasonPlaceholder')}
+                   rows={2}
+                 />
+               </div>
 
-              <div className="space-y-2">
-                <Label htmlFor="blocked_by_name">Bloccato da</Label>
-                <Input
-                  id="blocked_by_name"
-                  value={formData.blocked_by_name}
-                  onChange={(e) => setFormData(prev => ({ ...prev, blocked_by_name: e.target.value }))}
-                  placeholder="Nome persona responsabile"
-                />
-              </div>
-            </>
-          )}
+               <div className="space-y-2">
+                 <Label htmlFor="blocked_by_name">{t('taskDialog.blockedBy')}</Label>
+                 <Input
+                   id="blocked_by_name"
+                   value={formData.blocked_by_name}
+                   onChange={(e) => setFormData(prev => ({ ...prev, blocked_by_name: e.target.value }))}
+                   placeholder={t('taskDialog.blockedByPlaceholder')}
+                 />
+               </div>
+             </>
+           )}
 
           <div className="flex gap-3 pt-2">
-            {task && task.created_by === user?.email && (
-              <Button
-                type="button"
-                variant="destructive"
-                onClick={() => deleteMutation.mutate()}
-                disabled={deleteMutation.isPending}
-              >
-                Elimina
-              </Button>
-            )}
-            <div className="flex-1" />
-            <Button type="button" variant="outline" onClick={() => onOpenChange(false)}>
-              Annulla
-            </Button>
-            <Button
-              type="submit"
-              className="bg-[#ef6144] hover:bg-[#d9553a]"
-              disabled={!isValid || saveMutation.isPending}
-            >
-              {saveMutation.isPending && <Loader2 className="h-4 w-4 mr-2 animate-spin" />}
-              {task ? 'Salva' : 'Crea'}
-            </Button>
-          </div>
+             {task && task.created_by === user?.email && (
+               <Button
+                 type="button"
+                 variant="destructive"
+                 onClick={() => deleteMutation.mutate()}
+                 disabled={deleteMutation.isPending}
+               >
+                 {t('taskDialog.delete')}
+               </Button>
+             )}
+             <div className="flex-1" />
+             <Button type="button" variant="outline" onClick={() => onOpenChange(false)}>
+               {t('taskDialog.cancel')}
+             </Button>
+             <Button
+               type="submit"
+               className="bg-[#ef6144] hover:bg-[#d9553a]"
+               disabled={!isValid || saveMutation.isPending}
+             >
+               {saveMutation.isPending && <Loader2 className="h-4 w-4 mr-2 animate-spin" />}
+               {task ? t('taskDialog.save') : t('taskDialog.create')}
+             </Button>
+           </div>
         </form>
       </DialogContent>
     </Dialog>
