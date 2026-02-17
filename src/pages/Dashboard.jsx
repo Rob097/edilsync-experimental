@@ -3,6 +3,8 @@ import { Link, useNavigate } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
 import { base44 } from '@/api/base44Client';
 import { useQuery } from '@tanstack/react-query';
+import TourLauncher from '@/components/tour/TourLauncher';
+import { onboardingTour } from '@/components/tour/tours/onboardingTour';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton.jsx";
@@ -114,6 +116,13 @@ export default function Dashboard() {
     return membership?.role;
   };
 
+  // Check if user just registered (no projects, no companies, no tour completed/dismissed)
+  const isNewUser = user && 
+    projects.length === 0 && 
+    companies.length === 0 && 
+    !user.tour_state?.onboarding_completed && 
+    !user.tour_state?.onboarding_dismissed;
+
   const { data: currentCompanyMembers = [] } = useQuery({
     queryKey: ['currentCompanyMembers', user?.active_company_id],
     queryFn: () => base44.entities.CompanyMember.filter({ 
@@ -126,6 +135,14 @@ export default function Dashboard() {
 
   return (
     <div className="space-y-8 min-w-0">
+      {/* Launch onboarding tour for new users */}
+      <TourLauncher 
+        tourId="onboarding" 
+        steps={onboardingTour.steps} 
+        trigger={isNewUser}
+        delay={1000}
+      />
+
       {/* Welcome section */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
