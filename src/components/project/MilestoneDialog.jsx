@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { base44 } from '@/api/base44Client';
 import { useMutation, useQueryClient, useQuery } from '@tanstack/react-query';
+import { useLanguage } from '@/components/i18n/useLanguage';
 import {
   Dialog,
   DialogContent,
@@ -17,6 +18,7 @@ import { Badge } from "@/components/ui/badge";
 import { Loader2, Trash2, CheckCircle2 } from "lucide-react";
 
 export default function MilestoneDialog({ open, onOpenChange, projectId, milestone, nextOrderIndex, onViewTasks }) {
+  const { t } = useLanguage();
   const queryClient = useQueryClient();
 
   const { data: user } = useQuery({
@@ -149,38 +151,38 @@ export default function MilestoneDialog({ open, onOpenChange, projectId, milesto
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-lg">
         <DialogHeader>
-          <DialogTitle>{milestone ? 'Modifica Milestone' : 'Nuova Milestone'}</DialogTitle>
+          <DialogTitle>{milestone ? t('milestoneDialog.editTitle') : t('milestoneDialog.newTitle')}</DialogTitle>
           <DialogDescription>
-            {milestone ? 'Aggiorna i dettagli della milestone.' : 'Aggiungi un traguardo importante al progetto.'}
+            {milestone ? t('milestoneDialog.editDescription') : t('milestoneDialog.newDescription')}
           </DialogDescription>
         </DialogHeader>
 
         <form onSubmit={handleSubmit} className="space-y-4 mt-4">
           <div className="space-y-2">
-            <Label htmlFor="title">Titolo *</Label>
+            <Label htmlFor="title">{t('milestoneDialog.title')} *</Label>
             <Input
               id="title"
               value={formData.title}
               onChange={(e) => handleChange('title', e.target.value)}
-              placeholder="Es. Demolizione completata"
+              placeholder={t('milestoneDialog.titlePlaceholder')}
               required
             />
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="description">Descrizione</Label>
+            <Label htmlFor="description">{t('milestoneDialog.description')}</Label>
             <Textarea
               id="description"
               value={formData.description}
               onChange={(e) => handleChange('description', e.target.value)}
-              placeholder="Dettagli opzionali..."
+              placeholder={t('milestoneDialog.descriptionPlaceholder')}
               rows={2}
             />
           </div>
 
           <div className="grid grid-cols-2 gap-4">
             <div className="space-y-2">
-              <Label htmlFor="start_date">Data inizio</Label>
+              <Label htmlFor="start_date">{t('milestoneDialog.startDate')}</Label>
               <Input
                 id="start_date"
                 type="date"
@@ -190,7 +192,7 @@ export default function MilestoneDialog({ open, onOpenChange, projectId, milesto
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="target_date">Data obiettivo</Label>
+              <Label htmlFor="target_date">{t('milestoneDialog.targetDate')}</Label>
               <Input
                 id="target_date"
                 type="date"
@@ -201,23 +203,23 @@ export default function MilestoneDialog({ open, onOpenChange, projectId, milesto
           </div>
 
           <div className="space-y-2">
-            <Label>Stato</Label>
+            <Label>{t('milestoneDialog.status')}</Label>
             <Select value={formData.status} onValueChange={(v) => handleChange('status', v)}>
               <SelectTrigger>
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="pending">In attesa</SelectItem>
-                <SelectItem value="in_progress">In corso</SelectItem>
-                <SelectItem value="completed">Completato</SelectItem>
-                <SelectItem value="delayed">Ritardo</SelectItem>
+                <SelectItem value="pending">{t('milestoneDialog.pending')}</SelectItem>
+                <SelectItem value="in_progress">{t('milestoneDialog.inProgress')}</SelectItem>
+                <SelectItem value="completed">{t('milestoneDialog.completed')}</SelectItem>
+                <SelectItem value="delayed">{t('milestoneDialog.delayed')}</SelectItem>
               </SelectContent>
             </Select>
           </div>
 
           {formData.status === 'completed' && (
             <div className="space-y-2">
-              <Label htmlFor="completion_date">Data completamento</Label>
+              <Label htmlFor="completion_date">{t('milestoneDialog.completionDate')}</Label>
               <Input
                 id="completion_date"
                 type="date"
@@ -230,10 +232,10 @@ export default function MilestoneDialog({ open, onOpenChange, projectId, milesto
           {milestone && onViewTasks && (
             <div className="p-3 bg-gray-50 rounded-lg border">
               <div className="flex items-center justify-between mb-2">
-                <div className="text-sm font-medium text-gray-700">Attività collegate</div>
+                <div className="text-sm font-medium text-gray-700">{t('milestoneDialog.linkedTasks')}</div>
                 {milestoneTasks.length > 0 && (
                   <Badge variant="outline">
-                    {completedTasks}/{milestoneTasks.length} completate
+                    {completedTasks}/{milestoneTasks.length} {t('milestoneDialog.completed_tasks')}
                   </Badge>
                 )}
               </div>
@@ -249,8 +251,8 @@ export default function MilestoneDialog({ open, onOpenChange, projectId, milesto
               >
                 <CheckCircle2 className="h-4 w-4 mr-2" />
                 {milestoneTasks.length > 0 
-                  ? `Vedi le ${milestoneTasks.length} attività` 
-                  : 'Vedi attività'}
+                  ? t('milestoneDialog.viewTasksCount', { count: milestoneTasks.length })
+                  : t('milestoneDialog.viewTasks')}
               </Button>
             </div>
           )}
@@ -258,7 +260,7 @@ export default function MilestoneDialog({ open, onOpenChange, projectId, milesto
           {showDeleteConfirm && (
             <div className="p-3 bg-red-50 rounded-lg border border-red-200 space-y-3">
               <div className="text-sm font-medium text-red-900">
-                Questa milestone ha {milestoneTasks.length} attività collegate. Cosa vuoi fare?
+                {t('milestoneDialog.deleteConfirmTitle', { count: milestoneTasks.length })}
               </div>
               <div className="flex flex-col gap-2">
                 <Button
@@ -272,7 +274,7 @@ export default function MilestoneDialog({ open, onOpenChange, projectId, milesto
                   disabled={deleteMutation.isPending}
                   className="w-full justify-start"
                 >
-                  Rimuovi collegamento, mantieni attività
+                  {t('milestoneDialog.removeLink')}
                 </Button>
                 <Button
                   type="button"
@@ -288,7 +290,7 @@ export default function MilestoneDialog({ open, onOpenChange, projectId, milesto
                   {deleteMutation.isPending ? (
                     <Loader2 className="h-4 w-4 mr-2 animate-spin" />
                   ) : null}
-                  Elimina milestone e tutte le attività
+                  {t('milestoneDialog.deleteAll')}
                 </Button>
                 <Button
                   type="button"
@@ -297,7 +299,7 @@ export default function MilestoneDialog({ open, onOpenChange, projectId, milesto
                   onClick={() => setShowDeleteConfirm(false)}
                   className="w-full"
                 >
-                  Annulla
+                  {t('milestoneDialog.cancel')}
                 </Button>
               </div>
             </div>
@@ -324,7 +326,7 @@ export default function MilestoneDialog({ open, onOpenChange, projectId, milesto
               onClick={() => onOpenChange(false)}
               className="flex-1"
             >
-              Annulla
+              {t('milestoneDialog.cancel')}
             </Button>
             <Button
               type="submit"
@@ -334,7 +336,7 @@ export default function MilestoneDialog({ open, onOpenChange, projectId, milesto
               {saveMutation.isPending && (
                 <Loader2 className="h-4 w-4 mr-2 animate-spin" />
               )}
-              {milestone ? 'Salva' : 'Crea'}
+              {milestone ? t('milestoneDialog.save') : t('milestoneDialog.create')}
             </Button>
           </div>
         </form>
