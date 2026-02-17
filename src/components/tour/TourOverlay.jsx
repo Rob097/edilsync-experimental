@@ -64,7 +64,7 @@ export default function TourOverlay() {
 
   return (
     <>
-      {/* Overlay backdrop - only show when there's a target element */}
+      {/* Overlay backdrop + spotlight - only show when there's a target element */}
       {hasTarget && (
         <div 
           ref={overlayRef}
@@ -91,7 +91,7 @@ export default function TourOverlay() {
       )}
 
       {/* Tooltip */}
-      <TourTooltip highlightRect={highlightRect} />
+      <TourTooltip highlightRect={hasTarget ? highlightRect : null} />
     </>
   );
 }
