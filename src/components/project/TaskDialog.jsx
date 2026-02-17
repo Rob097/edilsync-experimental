@@ -267,7 +267,7 @@ export default function TaskDialog({ open, onOpenChange, task, projectId }) {
           )}
 
           <div className="flex gap-3 pt-2">
-            {task && (
+            {task && task.created_by === user?.email && (
               <Button
                 type="button"
                 variant="destructive"
