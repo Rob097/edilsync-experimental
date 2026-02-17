@@ -37,19 +37,24 @@ export default function AssistantFloatingButton({ className }) {
     staleTime: 0,
   });
 
-  // Delete conversation mutation
+  // Delete conversation mutation - tracks deleted IDs in localStorage
   const deleteConversationMutation = useMutation({
     mutationFn: async (convId) => {
-      // Base44 agents don't have a delete method, so we update metadata to mark as deleted
-      await base44.agents.updateConversation(convId, {
-        metadata: { deleted: true, deleted_at: new Date().toISOString() }
-      });
+      const deletedIds = JSON.parse(localStorage.getItem('deleted_conversations') || '[]');
+      deletedIds.push(convId);
+      localStorage.setItem('deleted_conversations', JSON.stringify(deletedIds));
+      return convId;
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['assistantConversations'] });
       toast.success('Chat eliminata');
     },
   });
+
+  // Get deleted conversation IDs from localStorage
+  const getDeletedConversationIds = () => {
+    return JSON.parse(localStorage.getItem('deleted_conversations') || '[]');
+  };
 
   // Load or create conversation when opening
   useEffect(() => {
@@ -60,8 +65,9 @@ export default function AssistantFloatingButton({ className }) {
         // Check localStorage for last conversation ID
         const lastConvId = localStorage.getItem('assistant_conversation_id');
         
-        // Filter out deleted conversations
-        const activeConversations = conversations.filter(c => !c.metadata?.deleted);
+        // Filter out deleted conversations (from localStorage)
+        const deletedIds = getDeletedConversationIds();
+        const activeConversations = conversations.filter(c => !deletedIds.includes(c.id));
         
         if (lastConvId && activeConversations.find(c => c.id === lastConvId)) {
           // Load last conversation
@@ -233,7 +239,8 @@ export default function AssistantFloatingButton({ className }) {
     await deleteConversationMutation.mutateAsync(convId);
   };
 
-  const activeConversations = conversations.filter(c => !c.metadata?.deleted).sort((a, b) => 
+  const deletedIds = getDeletedConversationIds();
+  const activeConversations = conversations.filter(c => !deletedIds.includes(c.id)).sort((a, b) => 
     new Date(b.updated_date || b.created_date) - new Date(a.updated_date || a.created_date)
   );
 
