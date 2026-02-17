@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { base44 } from '@/api/base44Client';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { useLanguage } from '@/components/i18n/useLanguage';
 import {
   Dialog,
   DialogContent,
@@ -15,23 +16,24 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Loader2, Building2, User } from "lucide-react";
 
-const projectRoles = [
-  { value: 'contractor', label: 'Contractor', description: 'Impresa che esegue i lavori principali' },
-  { value: 'subcontractor', label: 'Subappaltatore', description: 'Lavora per conto di un contractor' },
-  { value: 'architect', label: 'Architetto', description: 'Progettista architettonico' },
-  { value: 'engineer', label: 'Ingegnere', description: 'Progettista strutturale o impiantistico' },
-  { value: 'surveyor', label: 'Geometra', description: 'Supporto tecnico e pratiche' },
-  { value: 'designer', label: 'Designer', description: 'Progettista di interni' },
-  { value: 'consultant', label: 'Consulente', description: 'Consulenza specializzata' },
-];
-
 export default function InviteParticipantDialog({ 
   open, 
   onOpenChange, 
   projectId,
   currentUserParticipation 
 }) {
+  const { t } = useLanguage();
   const queryClient = useQueryClient();
+  
+  const projectRoles = [
+    { value: 'contractor', label: t('inviteParticipantDialog.contractor'), description: t('inviteParticipantDialog.contractorDesc') },
+    { value: 'subcontractor', label: t('inviteParticipantDialog.subcontractor'), description: t('inviteParticipantDialog.subcontractorDesc') },
+    { value: 'architect', label: t('inviteParticipantDialog.architectRole'), description: t('inviteParticipantDialog.architectDesc') },
+    { value: 'engineer', label: t('inviteParticipantDialog.engineer'), description: t('inviteParticipantDialog.engineerDesc') },
+    { value: 'surveyor', label: t('inviteParticipantDialog.surveyor'), description: t('inviteParticipantDialog.surveyorDesc') },
+    { value: 'designer', label: t('inviteParticipantDialog.designer'), description: t('inviteParticipantDialog.designerDesc') },
+    { value: 'consultant', label: t('inviteParticipantDialog.consultant'), description: t('inviteParticipantDialog.consultantDesc') },
+  ];
   
   const [participantType, setParticipantType] = useState('company');
   const [email, setEmail] = useState('');
@@ -218,16 +220,16 @@ export default function InviteParticipantDialog({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
-          <DialogTitle>Invita Partecipante</DialogTitle>
+          <DialogTitle>{t('inviteParticipantDialog.title')}</DialogTitle>
           <DialogDescription>
-            Invita una società o un professionista a partecipare al progetto.
+            {t('inviteParticipantDialog.description')}
           </DialogDescription>
         </DialogHeader>
 
         <form onSubmit={handleSubmit} className="space-y-6 mt-4">
           {/* Participant Type */}
           <div className="space-y-3">
-            <Label>Tipo di partecipante</Label>
+            <Label>{t('inviteParticipantDialog.participantType')}</Label>
             <RadioGroup 
               value={participantType} 
               onValueChange={setParticipantType}
@@ -236,22 +238,22 @@ export default function InviteParticipantDialog({
               <div>
                 <RadioGroupItem value="company" id="company" className="peer sr-only" />
                 <Label
-                  htmlFor="company"
-                  className="flex flex-col items-center justify-center rounded-lg border-2 border-gray-200 p-4 cursor-pointer hover:bg-gray-50 peer-data-[state=checked]:border-[#ef6144] peer-data-[state=checked]:bg-[#ef6144]/5"
-                >
-                  <Building2 className="h-6 w-6 mb-2 text-gray-500" />
-                  <span className="font-medium">Società</span>
-                </Label>
-              </div>
-              <div>
-                <RadioGroupItem value="personal" id="personal" className="peer sr-only" />
-                <Label
-                  htmlFor="personal"
-                  className="flex flex-col items-center justify-center rounded-lg border-2 border-gray-200 p-4 cursor-pointer hover:bg-gray-50 peer-data-[state=checked]:border-[#ef6144] peer-data-[state=checked]:bg-[#ef6144]/5"
-                >
-                  <User className="h-6 w-6 mb-2 text-gray-500" />
-                  <span className="font-medium">Persona</span>
-                </Label>
+                    htmlFor="company"
+                    className="flex flex-col items-center justify-center rounded-lg border-2 border-gray-200 p-4 cursor-pointer hover:bg-gray-50 peer-data-[state=checked]:border-[#ef6144] peer-data-[state=checked]:bg-[#ef6144]/5"
+                  >
+                    <Building2 className="h-6 w-6 mb-2 text-gray-500" />
+                    <span className="font-medium">{t('inviteParticipantDialog.company')}</span>
+                  </Label>
+                </div>
+                <div>
+                  <RadioGroupItem value="personal" id="personal" className="peer sr-only" />
+                  <Label
+                    htmlFor="personal"
+                    className="flex flex-col items-center justify-center rounded-lg border-2 border-gray-200 p-4 cursor-pointer hover:bg-gray-50 peer-data-[state=checked]:border-[#ef6144] peer-data-[state=checked]:bg-[#ef6144]/5"
+                  >
+                    <User className="h-6 w-6 mb-2 text-gray-500" />
+                    <span className="font-medium">{t('inviteParticipantDialog.person')}</span>
+                  </Label>
               </div>
             </RadioGroup>
           </div>
@@ -259,10 +261,10 @@ export default function InviteParticipantDialog({
           {/* Company or Email */}
           {participantType === 'company' ? (
             <div className="space-y-2">
-              <Label>Seleziona società</Label>
+              <Label>{t('inviteParticipantDialog.selectCompany')}</Label>
               <Select value={selectedCompanyId} onValueChange={setSelectedCompanyId}>
                 <SelectTrigger>
-                  <SelectValue placeholder="Scegli una società..." />
+                  <SelectValue placeholder={t('inviteParticipantDialog.selectCompanyPlaceholder')} />
                 </SelectTrigger>
                 <SelectContent>
                   {allCompanies.map(company => (
@@ -275,23 +277,23 @@ export default function InviteParticipantDialog({
             </div>
           ) : (
             <div className="space-y-2">
-              <Label htmlFor="email">Email</Label>
+              <Label htmlFor="email">{t('inviteParticipantDialog.email')}</Label>
               <Input
                 id="email"
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                placeholder="email@esempio.it"
+                placeholder={t('inviteParticipantDialog.emailPlaceholder')}
               />
             </div>
           )}
 
           {/* Role */}
           <div className="space-y-2">
-            <Label>Ruolo nel progetto</Label>
+            <Label>{t('inviteParticipantDialog.projectRole')}</Label>
             <Select value={projectRole} onValueChange={setProjectRole}>
               <SelectTrigger>
-                <SelectValue placeholder="Seleziona ruolo..." />
+                <SelectValue placeholder={t('inviteParticipantDialog.selectRolePlaceholder')} />
               </SelectTrigger>
               <SelectContent>
                 {availableRoles.map(role => (
@@ -313,7 +315,7 @@ export default function InviteParticipantDialog({
               onClick={() => onOpenChange(false)}
               className="flex-1"
             >
-              Annulla
+              {t('inviteParticipantDialog.cancel')}
             </Button>
             <Button
               type="submit"
@@ -323,7 +325,7 @@ export default function InviteParticipantDialog({
               {inviteMutation.isPending && (
                 <Loader2 className="h-4 w-4 mr-2 animate-spin" />
               )}
-              Invita
+              {t('inviteParticipantDialog.invite')}
             </Button>
           </div>
         </form>
