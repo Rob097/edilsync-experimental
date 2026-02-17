@@ -80,10 +80,53 @@ export default function ProjectDetail() {
   const [taskFilterMilestoneId, setTaskFilterMilestoneId] = useState(null);
 
   const acceptInviteMutation = useMutation({
-    mutationFn: (participantId) => base44.entities.ProjectParticipant.update(participantId, { status: 'active' }),
+    mutationFn: async (participantId) => {
+      await base44.entities.ProjectParticipant.update(participantId, { status: 'active' });
+      
+      // Add user to General channel
+      const channels = await base44.entities.Channel.filter({ 
+        project_id: projectId, 
+        type: 'general'
+      });
+      
+      if (channels.length > 0) {
+        const generalChannel = channels[0];
+        const participant = participants.find(p => p.id === participantId);
+        if (participant) {
+          // Check if already a member
+          const existingMembers = await base44.entities.ChannelMember.filter({ 
+            channel_id: generalChannel.id 
+          });
+          const alreadyMember = existingMembers.some(m => 
+            (participant.participant_type === 'personal' && m.user_email === participant.user_email) ||
+            (participant.participant_type === 'company' && m.company_id === participant.company_id)
+          );
+          
+          if (!alreadyMember) {
+            await base44.entities.ChannelMember.create({
+              channel_id: generalChannel.id,
+              project_id: projectId,
+              participant_id: participant.id,
+              user_email: participant.user_email || null,
+              company_id: participant.company_id || null,
+              last_read_at: new Date().toISOString(),
+            });
+          }
+        }
+      }
+      
+      // Sync user access
+      const currentUser = await base44.auth.me();
+      await base44.functions.invoke('syncUserAccess', { user_email: currentUser.email });
+      await base44.auth.updateMe({ 
+        project_ids: [...(currentUser.project_ids || []), projectId].filter((v, i, a) => a.indexOf(v) === i)
+      });
+    },
     onSuccess: () => {
       queryClient.invalidateQueries(['projectParticipants', projectId]);
       queryClient.invalidateQueries(['userProjectParticipations']);
+      queryClient.invalidateQueries(['channels', projectId]);
+      queryClient.invalidateQueries(['channelMembers', projectId]);
     },
   });
 
