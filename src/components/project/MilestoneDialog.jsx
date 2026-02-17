@@ -304,7 +304,7 @@ export default function MilestoneDialog({ open, onOpenChange, projectId, milesto
           )}
 
           <div className="flex gap-3 pt-2">
-            {milestone && !showDeleteConfirm && (
+            {milestone && !showDeleteConfirm && milestone.created_by === user?.email && (
               <Button
                 type="button"
                 variant="destructive"

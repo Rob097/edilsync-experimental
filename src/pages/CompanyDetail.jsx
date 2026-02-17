@@ -204,11 +204,14 @@ export default function CompanyDetail() {
           ) : activeMembers.length > 0 ? (
             <div className="space-y-3">
               {activeMembers.map(member => (
-                <MemberCard
-                  key={member.id}
-                  member={member}
-                  isCurrentUser={member.user_email === user?.email}
-                />
+              <MemberCard
+              key={member.id}
+              member={member}
+              isCurrentUser={member.user_email === user?.email}
+              isAdmin={isAdmin}
+              companyId={companyId}
+              canRemoveSelf={false}
+              />
               ))}
             </div>
           ) : (
@@ -224,11 +227,13 @@ export default function CompanyDetail() {
               <h4 className="text-sm font-medium text-gray-500 mb-3">In attesa di conferma</h4>
               <div className="space-y-3">
                 {invitedMembers.map(member => (
-                  <MemberCard
-                    key={member.id}
-                    member={member}
-                    isPending
-                  />
+                <MemberCard
+                  key={member.id}
+                  member={member}
+                  isPending
+                  isAdmin={isAdmin}
+                  companyId={companyId}
+                />
                 ))}
               </div>
             </div>
