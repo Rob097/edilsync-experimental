@@ -1,5 +1,5 @@
 import React from 'react';
-import { useLanguage } from '@/lib/useLanguage';
+import { useLanguage } from '@/components/i18n/useLanguage';
 import {
   Select,
   SelectContent,
