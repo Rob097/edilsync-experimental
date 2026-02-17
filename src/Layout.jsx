@@ -34,6 +34,8 @@ import FullPageLoader from '@/components/ui/FullPageLoader';
 import CookieBanner from '@/components/legal/CookieBanner';
 import Footer from '@/components/legal/Footer';
 import AssistantFloatingButton from '@/components/assistant/AssistantFloatingButton';
+import TourProvider from '@/components/tour/TourProvider';
+import TourOverlay from '@/components/tour/TourOverlay';
 
 export default function Layout({ children, currentPageName }) {
   const location = useLocation();
@@ -125,8 +127,9 @@ export default function Layout({ children, currentPageName }) {
   };
 
   return (
-    <>
+    <TourProvider>
       {isChangingContext && <FullPageLoader message="Cambio contesto in corso..." />}
+      <TourOverlay />
       <div className="min-h-screen bg-gray-50 flex flex-col">
       {/* Header */}
       <header className="bg-white border-b border-gray-200 sticky top-0 z-50 pointer-events-auto">
@@ -166,10 +169,12 @@ export default function Layout({ children, currentPageName }) {
             {/* Right side */}
             <div className="flex items-center gap-3">
               {/* Messaging Notifications */}
-              <MessagingNotifications userEmail={user?.email} />
+              <div data-tour="messaging">
+                <MessagingNotifications userEmail={user?.email} />
+              </div>
               
               {/* Notifications */}
-              <Link to={createPageUrl('Notifications')}>
+              <Link to={createPageUrl('Notifications')} data-tour="notifications">
                 <Button variant="ghost" size="icon" className="relative">
                   <Bell className="h-5 w-5 text-gray-600" />
                   {unreadCount > 0 && (
@@ -181,7 +186,7 @@ export default function Layout({ children, currentPageName }) {
               </Link>
 
               {/* Desktop Context Switcher */}
-              <div className="hidden md:block">
+              <div className="hidden md:block" data-tour="context-switcher">
                 <ContextSwitcher
                   currentContext={currentContext}
                   currentCompany={currentCompany}
@@ -294,6 +299,6 @@ export default function Layout({ children, currentPageName }) {
       <CookieBanner />
       <AssistantFloatingButton />
     </div>
-    </>
+    </TourProvider>
   );
 }

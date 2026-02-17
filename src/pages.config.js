@@ -59,8 +59,8 @@ import PrivacyPolicy from './pages/PrivacyPolicy';
 import ProjectDetail from './pages/ProjectDetail';
 import Projects from './pages/Projects';
 import Settings from './pages/Settings';
-import TermsOfService from './pages/TermsOfService';
 import SystemDashboard from './pages/SystemDashboard';
+import TermsOfService from './pages/TermsOfService';
 import __Layout from './Layout.jsx';
 
 
@@ -77,8 +77,8 @@ export const PAGES = {
     "ProjectDetail": ProjectDetail,
     "Projects": Projects,
     "Settings": Settings,
-    "TermsOfService": TermsOfService,
     "SystemDashboard": SystemDashboard,
+    "TermsOfService": TermsOfService,
 }
 
 export const pagesConfig = {
