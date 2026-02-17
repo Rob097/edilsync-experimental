@@ -50,16 +50,17 @@
 import Calendar from './pages/Calendar';
 import Companies from './pages/Companies';
 import CompanyDetail from './pages/CompanyDetail';
+import CookiePolicy from './pages/CookiePolicy';
 import Dashboard from './pages/Dashboard';
 import NewCompany from './pages/NewCompany';
 import NewProject from './pages/NewProject';
 import Notifications from './pages/Notifications';
+import PrivacyPolicy from './pages/PrivacyPolicy';
 import ProjectDetail from './pages/ProjectDetail';
 import Projects from './pages/Projects';
 import Settings from './pages/Settings';
-import PrivacyPolicy from './pages/PrivacyPolicy';
 import TermsOfService from './pages/TermsOfService';
-import CookiePolicy from './pages/CookiePolicy';
+import Assistant from './pages/Assistant';
 import __Layout from './Layout.jsx';
 
 
@@ -67,16 +68,17 @@ export const PAGES = {
     "Calendar": Calendar,
     "Companies": Companies,
     "CompanyDetail": CompanyDetail,
+    "CookiePolicy": CookiePolicy,
     "Dashboard": Dashboard,
     "NewCompany": NewCompany,
     "NewProject": NewProject,
     "Notifications": Notifications,
+    "PrivacyPolicy": PrivacyPolicy,
     "ProjectDetail": ProjectDetail,
     "Projects": Projects,
     "Settings": Settings,
-    "PrivacyPolicy": PrivacyPolicy,
     "TermsOfService": TermsOfService,
-    "CookiePolicy": CookiePolicy,
+    "Assistant": Assistant,
 }
 
 export const pagesConfig = {

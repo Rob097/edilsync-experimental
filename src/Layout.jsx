@@ -25,7 +25,8 @@ import {
   Check,
   Calendar,
   Bell,
-  HardHat
+  HardHat,
+  Sparkles
 } from "lucide-react";
 import ContextSwitcher from '@/components/context/ContextSwitcher';
 import MessagingNotifications from '@/components/messaging/MessagingNotifications';
@@ -99,6 +100,7 @@ export default function Layout({ children, currentPageName }) {
     { name: 'Progetti', icon: FolderKanban, page: 'Projects', path: createPageUrl('Projects') },
     { name: 'Calendario', icon: Calendar, page: 'Calendar', path: createPageUrl('Calendar') },
     companiesNavItem,
+    { name: 'Assistente AI', icon: Sparkles, page: 'Assistant', path: createPageUrl('Assistant') },
   ];
 
   const handleContextChange = async (context, company) => {
