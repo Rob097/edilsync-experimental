@@ -192,10 +192,12 @@ export default function ProjectDetail() {
     return false;
   });
 
-  const canInvite = userParticipation?.can_invite || userParticipation?.project_role === 'homeowner';
-  const canEditTasks = !!userParticipation;
-  const canCreateChangeRequest = userParticipation?.project_role === 'homeowner' || project?.owner_user_id === user?.id;
-  const canRespondToChangeRequest = userParticipation?.project_role === 'homeowner' || project?.owner_user_id === user?.id;
+  const isActiveParticipant = userParticipation?.status === 'active';
+  const canInvite = isActiveParticipant && (userParticipation?.can_invite || userParticipation?.project_role === 'homeowner');
+  const canEditTasks = isActiveParticipant;
+  const canCreateChangeRequest = isActiveParticipant && (userParticipation?.project_role === 'homeowner' || project?.owner_user_id === user?.id);
+  const canRespondToChangeRequest = isActiveParticipant && (userParticipation?.project_role === 'homeowner' || project?.owner_user_id === user?.id);
+  const canRemoveParticipants = isActiveParticipant && (userParticipation?.project_role === 'homeowner' || project?.owner_user_id === user?.id || canInvite);
 
   const getCompanyName = (companyId) => {
     const company = companies.find(c => c.id === companyId);
