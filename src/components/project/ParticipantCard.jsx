@@ -1,6 +1,9 @@
-import React from 'react';
+import React, { useState } from 'react';
+import { base44 } from '@/api/base44Client';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { Badge } from "@/components/ui/badge";
-import { Building2, User, Clock } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Building2, User, Clock, Trash2, Loader2 } from "lucide-react";
 
 const roleLabels = {
   homeowner: 'Committente',
@@ -24,9 +27,28 @@ const roleColors = {
   consultant: 'bg-gray-100 text-gray-700',
 };
 
-export default function ParticipantCard({ participant, companyName, isPending }) {
+export default function ParticipantCard({ participant, companyName, isPending, canRemove, projectId }) {
   const isCompany = participant.participant_type === 'company';
   const roleColor = roleColors[participant.project_role] || 'bg-gray-100 text-gray-700';
+  const queryClient = useQueryClient();
+  const [confirmRemove, setConfirmRemove] = useState(false);
+
+  const removeMutation = useMutation({
+    mutationFn: async () => {
+      // Remove from all channels first
+      const channelMembers = await base44.entities.ChannelMember.filter({ project_id: projectId });
+      const memberEntries = channelMembers.filter(m => m.participant_id === participant.id);
+      for (const m of memberEntries) {
+        await base44.entities.ChannelMember.delete(m.id);
+      }
+      // Then remove/decline the participant
+      await base44.entities.ProjectParticipant.update(participant.id, { status: 'removed' });
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries(['projectParticipants', projectId]);
+      queryClient.invalidateQueries(['channelMembers', projectId]);
+    },
+  });
 
   return (
     <div className={`
@@ -63,6 +85,36 @@ export default function ParticipantCard({ participant, companyName, isPending })
         <Badge className={roleColor}>
           {roleLabels[participant.project_role] || participant.project_role}
         </Badge>
+        {canRemove && (
+          confirmRemove ? (
+            <div className="flex items-center gap-1">
+              <Button
+                variant="destructive"
+                size="sm"
+                onClick={() => removeMutation.mutate()}
+                disabled={removeMutation.isPending}
+              >
+                {removeMutation.isPending ? <Loader2 className="h-3 w-3 animate-spin" /> : 'Conferma'}
+              </Button>
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => setConfirmRemove(false)}
+              >
+                Annulla
+              </Button>
+            </div>
+          ) : (
+            <Button
+              variant="ghost"
+              size="icon"
+              className="h-8 w-8 text-gray-400 hover:text-red-500"
+              onClick={() => setConfirmRemove(true)}
+            >
+              <Trash2 className="h-4 w-4" />
+            </Button>
+          )
+        )}
       </div>
     </div>
   );
