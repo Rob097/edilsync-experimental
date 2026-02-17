@@ -200,6 +200,13 @@ export default function ProjectDetail() {
   const canRespondToChangeRequest = isActiveParticipant && (userParticipation?.project_role === 'homeowner' || project?.owner_user_id === user?.id);
   const canRemoveParticipants = isActiveParticipant && (userParticipation?.project_role === 'homeowner' || project?.owner_user_id === user?.id || canInvite);
 
+  // Start project tour when viewing project detail
+  const shouldStartProjectTour = user && 
+    project && 
+    isActiveParticipant &&
+    !user.tour_state?.projects_completed && 
+    !user.tour_state?.projects_dismissed;
+
   const getCompanyName = (companyId) => {
     const company = companies.find(c => c.id === companyId);
     return company?.name || 'Società';
@@ -279,6 +286,14 @@ export default function ProjectDetail() {
 
   return (
     <div className="space-y-6">
+      {/* Launch project tour */}
+      <TourLauncher 
+        tourId="projects" 
+        steps={projectTour.steps} 
+        trigger={shouldStartProjectTour}
+        delay={1000}
+      />
+
       {/* Invitation Banner */}
       {isInvited && (
         <Card className="border-[#ef6144] bg-[#ef6144]/5">

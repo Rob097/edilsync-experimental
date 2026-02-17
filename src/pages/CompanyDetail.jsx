@@ -63,6 +63,13 @@ export default function CompanyDetail() {
   const activeMembers = members.filter(m => m.status === 'active');
   const invitedMembers = members.filter(m => m.status === 'invited');
 
+  // Start company tour when viewing company detail as active member
+  const shouldStartCompanyTour = user && 
+    company && 
+    currentUserMembership?.status === 'active' &&
+    !user.tour_state?.companies_completed && 
+    !user.tour_state?.companies_dismissed;
+
   if (userLoading || companyLoading) {
     return (
       <div className="space-y-6">
@@ -89,6 +96,14 @@ export default function CompanyDetail() {
 
   return (
     <div className="space-y-6">
+      {/* Launch company tour */}
+      <TourLauncher 
+        tourId="companies" 
+        steps={companyTour.steps} 
+        trigger={shouldStartCompanyTour}
+        delay={1000}
+      />
+
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-4">
         <div className="flex-1 min-w-0">
