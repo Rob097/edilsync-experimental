@@ -1,6 +1,7 @@
 import React, { useState, useRef } from 'react';
 import { base44 } from '@/api/base44Client';
 import { useMutation, useQueryClient, useQuery } from '@tanstack/react-query';
+import { useLanguage } from '@/components/i18n/useLanguage';
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Send, AtSign, Hash, Flag, DollarSign, Paperclip } from "lucide-react";
@@ -21,6 +22,7 @@ export default function MessageInput({
   activeCompanyName,
   participants
 }) {
+  const { t } = useLanguage();
   const queryClient = useQueryClient();
   const [message, setMessage] = useState('');
   const [showMentions, setShowMentions] = useState(false);
@@ -306,7 +308,7 @@ export default function MessageInput({
           ref={textareaRef}
           value={message}
           onChange={(e) => setMessage(e.target.value)}
-          placeholder="Scrivi un messaggio..."
+          placeholder={t('messageInput.placeholder')}
           className="resize-none"
           rows={3}
           onKeyDown={(e) => {
