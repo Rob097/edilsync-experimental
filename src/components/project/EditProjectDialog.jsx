@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { base44 } from '@/api/base44Client';
 import { useMutation, useQueryClient, useQuery } from '@tanstack/react-query';
+import { useLanguage } from '@/components/i18n/useLanguage';
 import {
   Dialog,
   DialogContent,
@@ -16,6 +17,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Loader2 } from "lucide-react";
 
 export default function EditProjectDialog({ open, onOpenChange, project }) {
+  const { t } = useLanguage();
   const queryClient = useQueryClient();
 
   const { data: user } = useQuery({
@@ -90,15 +92,15 @@ export default function EditProjectDialog({ open, onOpenChange, project }) {
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-lg max-h-[90vh] overflow-y-auto">
         <DialogHeader>
-          <DialogTitle>Modifica Progetto</DialogTitle>
+          <DialogTitle>{t('editProjectDialog.title')}</DialogTitle>
           <DialogDescription>
-            Aggiorna le informazioni del progetto.
+            {t('editProjectDialog.description')}
           </DialogDescription>
         </DialogHeader>
 
         <form onSubmit={handleSubmit} className="space-y-4 mt-4">
           <div className="space-y-2">
-            <Label htmlFor="name">Nome del progetto *</Label>
+            <Label htmlFor="name">{t('editProjectDialog.projectName')} *</Label>
             <Input
               id="name"
               value={formData.name}
@@ -108,7 +110,7 @@ export default function EditProjectDialog({ open, onOpenChange, project }) {
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="address">Indirizzo del cantiere *</Label>
+            <Label htmlFor="address">{t('editProjectDialog.siteAddress')} *</Label>
             <Input
               id="address"
               value={formData.address}
@@ -118,7 +120,7 @@ export default function EditProjectDialog({ open, onOpenChange, project }) {
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="description">Descrizione</Label>
+            <Label htmlFor="description">{t('editProjectDialog.projectDescription')}</Label>
             <Textarea
               id="description"
               value={formData.description}
@@ -128,23 +130,23 @@ export default function EditProjectDialog({ open, onOpenChange, project }) {
           </div>
 
           <div className="space-y-2">
-            <Label>Stato</Label>
+            <Label>{t('editProjectDialog.status')}</Label>
             <Select value={formData.status} onValueChange={(v) => handleChange('status', v)}>
               <SelectTrigger>
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="planning">Pianificazione</SelectItem>
-                <SelectItem value="in_progress">In corso</SelectItem>
-                <SelectItem value="completed">Completato</SelectItem>
-                <SelectItem value="on_hold">In pausa</SelectItem>
+                <SelectItem value="planning">{t('editProjectDialog.planning')}</SelectItem>
+                <SelectItem value="in_progress">{t('editProjectDialog.inProgress')}</SelectItem>
+                <SelectItem value="completed">{t('editProjectDialog.completed')}</SelectItem>
+                <SelectItem value="on_hold">{t('editProjectDialog.onHold')}</SelectItem>
               </SelectContent>
             </Select>
           </div>
 
           <div className="grid grid-cols-2 gap-4">
             <div className="space-y-2">
-              <Label htmlFor="start_date">Data inizio</Label>
+              <Label htmlFor="start_date">{t('editProjectDialog.startDate')}</Label>
               <Input
                 id="start_date"
                 type="date"
@@ -153,7 +155,7 @@ export default function EditProjectDialog({ open, onOpenChange, project }) {
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="end_date">Data fine</Label>
+              <Label htmlFor="end_date">{t('editProjectDialog.endDate')}</Label>
               <Input
                 id="end_date"
                 type="date"
@@ -170,7 +172,7 @@ export default function EditProjectDialog({ open, onOpenChange, project }) {
               onClick={() => onOpenChange(false)}
               className="flex-1"
             >
-              Annulla
+              {t('editProjectDialog.cancel')}
             </Button>
             <Button
               type="submit"
@@ -180,7 +182,7 @@ export default function EditProjectDialog({ open, onOpenChange, project }) {
               {updateProjectMutation.isPending && (
                 <Loader2 className="h-4 w-4 mr-2 animate-spin" />
               )}
-              Salva
+              {t('editProjectDialog.save')}
             </Button>
           </div>
         </form>
