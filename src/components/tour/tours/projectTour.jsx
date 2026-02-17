@@ -42,7 +42,7 @@ export const projectTour = {
       content: 'Nella sezione Lavori puoi creare task, organizzarli in milestone, e monitorare il progresso. Ogni task ha un responsabile e una scadenza.',
       placement: 'bottom',
       padding: 8,
-      clickTab: 'team',
+      clickTab: 'lavori',
     },
     {
       target: '#section-participants',
@@ -50,6 +50,7 @@ export const projectTour = {
       content: 'Qui gestisci i partecipanti al progetto, carichi documenti, gestisci le variazioni e comunichi con il team.',
       placement: 'bottom',
       padding: 8,
+      clickTab: 'info',
     },
     {
       target: null,
