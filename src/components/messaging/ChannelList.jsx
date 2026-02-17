@@ -42,11 +42,14 @@ export default function ChannelList({
 
   // Filter channels based on membership
   const myChannels = channels.filter(channel => {
-    const membership = channelMembers.find(m => 
-      m.channel_id === channel.id && 
-      m.user_email === currentUserEmail &&
-      (!activeCompanyId || m.company_id === activeCompanyId)
-    );
+    const membership = channelMembers.find(m => {
+      if (m.channel_id !== channel.id) return false;
+      // Match by user email
+      if (m.user_email === currentUserEmail) return true;
+      // Match by company id (for company participants)
+      if (activeCompanyId && m.company_id === activeCompanyId) return true;
+      return false;
+    });
     return !!membership;
   });
 
