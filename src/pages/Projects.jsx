@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
 import { base44 } from '@/api/base44Client';
-import { useQuery } from '@tantml:react-query';
+import { useQuery } from '@tanstack/react-query';
 import TourLauncher from '@/components/tour/TourLauncher';
 import { projectTour } from '@/components/tour/tours/projectTour';
 import { Button } from "@/components/ui/button";
