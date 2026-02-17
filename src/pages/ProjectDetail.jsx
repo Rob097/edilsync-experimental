@@ -334,7 +334,7 @@ export default function ProjectDetail() {
             <Badge className={`${status.color} w-fit`}>{status.label}</Badge>
           </div>
         </div>
-        {project.owner_user_id === user?.id && (
+        {isActiveParticipant && project.owner_user_id === user?.id && (
           <Button
             variant="outline"
             onClick={() => setEditProjectDialogOpen(true)}
@@ -434,9 +434,10 @@ export default function ProjectDetail() {
       )}
 
       {/* Divider */}
-      <div className="border-t" />
+      {isActiveParticipant && <div className="border-t" />}
 
-      {/* Tabs */}
+      {/* Tabs - only for active participants */}
+      {!isActiveParticipant ? null :
       <Tabs value={activeTab} onValueChange={(value) => {
         setActiveTab(value);
         setTimeout(() => {
@@ -807,9 +808,10 @@ export default function ProjectDetail() {
           )}
         </TabsContent>
       </Tabs>
+      }
 
       {/* Quick Action FAB */}
-      {userParticipation && (
+      {isActiveParticipant && (
         <button
           onClick={() => setQuickActionOpen(!quickActionOpen)}
           className="fixed bottom-6 right-6 w-14 h-14 rounded-full bg-[#ef6144] hover:bg-[#d9553a] text-white shadow-lg flex items-center justify-center z-50 transition-transform hover:scale-110"
