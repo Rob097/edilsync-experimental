@@ -272,6 +272,7 @@ export default function AssistantFloatingButton({ className }) {
     <>
       {/* Floating Button */}
       <Button
+        data-tour="assistant"
         onClick={() => setIsOpen(true)}
         className={cn(
           "fixed bottom-6 right-6 h-14 w-14 rounded-full shadow-lg bg-gradient-to-br from-[#ef6144] to-orange-600 hover:from-[#ef6144]/90 hover:to-orange-600/90 z-50",
