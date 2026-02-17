@@ -20,9 +20,11 @@ import ProjectCard from '@/components/project/ProjectCard';
 import CompanyCard from '@/components/company/CompanyCard';
 import EmptyState from '@/components/ui/EmptyState';
 import ContextBadge from '@/components/context/ContextBadge';
+import { useLanguage } from '@/components/i18n/useLanguage';
 
 export default function Dashboard() {
   const navigate = useNavigate();
+  const { t } = useLanguage();
   
   const { data: user } = useQuery({
     queryKey: ['currentUser'],
@@ -145,17 +147,17 @@ export default function Dashboard() {
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
           <h1 className="text-2xl font-bold text-gray-900">
-            Ciao, {(user?.display_name || user?.full_name)?.split(' ')[0] || 'Utente'}
+            {t('dashboard.greetingPrefix')} {(user?.display_name || user?.full_name)?.split(' ')[0] || 'Utente'}
           </h1>
           <div className="flex items-center gap-2 mt-1">
-            <span className="text-gray-500">Stai operando come</span>
+            <span className="text-gray-500">{t('dashboard.workingAs')}</span>
             <ContextBadge context={currentContext} companyName={currentCompany?.name} />
           </div>
         </div>
         <Link to={createPageUrl('NewProject')}>
           <Button className="bg-[#ef6144] hover:bg-[#d9553a]">
             <Plus className="h-4 w-4 mr-2" />
-            Nuovo Progetto
+            {t('common.newProject')}
           </Button>
         </Link>
       </div>
@@ -170,7 +172,7 @@ export default function Dashboard() {
               </div>
               <div>
                 <p className="text-2xl font-bold text-gray-900">{contextProjects.length}</p>
-                <p className="text-sm text-gray-500">Progetti</p>
+                <p className="text-sm text-gray-500">{t('common.projects')}</p>
               </div>
             </div>
           </CardContent>
@@ -185,7 +187,7 @@ export default function Dashboard() {
                 <p className="text-2xl font-bold text-gray-900">
                   {contextProjects.filter(p => p.status === 'in_progress').length}
                 </p>
-                <p className="text-sm text-gray-500">In corso</p>
+                <p className="text-sm text-gray-500">{t('project.status.in_progress')}</p>
               </div>
             </div>
           </CardContent>
@@ -200,7 +202,7 @@ export default function Dashboard() {
                 <p className="text-2xl font-bold text-gray-900">
                   {contextProjects.filter(p => p.status === 'completed').length}
                 </p>
-                <p className="text-sm text-gray-500">Completati</p>
+                <p className="text-sm text-gray-500">{t('project.status.completed')}</p>
               </div>
             </div>
           </CardContent>
@@ -214,7 +216,7 @@ export default function Dashboard() {
                 </div>
                 <div>
                   <p className="text-2xl font-bold text-gray-900">{companies.length}</p>
-                  <p className="text-sm text-gray-500">Società</p>
+                  <p className="text-sm text-gray-500">{t('common.companies')}</p>
                 </div>
               </div>
             </CardContent>
@@ -228,7 +230,7 @@ export default function Dashboard() {
                 </div>
                 <div>
                   <p className="text-2xl font-bold text-gray-900">{currentCompanyMembers.length}</p>
-                  <p className="text-sm text-gray-500">Membri</p>
+                  <p className="text-sm text-gray-500">{t('common.members')}</p>
                 </div>
               </div>
             </CardContent>
@@ -239,10 +241,10 @@ export default function Dashboard() {
       {/* Recent Projects */}
       <Card>
         <CardHeader className="flex flex-row items-center justify-between pb-4">
-          <CardTitle className="text-lg font-semibold">Progetti Recenti</CardTitle>
+          <CardTitle className="text-lg font-semibold">{t('dashboard.recentProjects')}</CardTitle>
           <Link to={createPageUrl('Projects')}>
             <Button variant="ghost" size="sm" className="text-[#ef6144]">
-              Vedi tutti
+              {t('common.seeAll')}
               <ArrowRight className="h-4 w-4 ml-1" />
             </Button>
           </Link>
@@ -267,13 +269,13 @@ export default function Dashboard() {
           ) : (
             <EmptyState
               icon={FolderKanban}
-              title="Nessun progetto"
+              title={t('dashboard.noProjects')}
               description={
                 currentContext === 'personal'
-                  ? "Non hai ancora progetti personali. Crea il tuo primo cantiere."
-                  : "Questa società non ha ancora progetti. Crea il primo cantiere."
+                  ? t('dashboard.noPersonalProjects')
+                  : t('dashboard.noCompanyProjects')
               }
-              actionLabel="Nuovo Progetto"
+              actionLabel={t('common.newProject')}
               onAction={() => navigate(createPageUrl('NewProject'))}
             />
           )}
@@ -284,10 +286,10 @@ export default function Dashboard() {
       {currentContext === 'personal' && (
         <Card>
           <CardHeader className="flex flex-row items-center justify-between pb-4">
-            <CardTitle className="text-lg font-semibold">Le tue Società</CardTitle>
+            <CardTitle className="text-lg font-semibold">{t('dashboard.yourCompanies')}</CardTitle>
             <Link to={createPageUrl('Companies')}>
               <Button variant="ghost" size="sm" className="text-[#ef6144]">
-                Vedi tutte
+                {t('common.seeAll')}
                 <ArrowRight className="h-4 w-4 ml-1" />
               </Button>
             </Link>
@@ -312,9 +314,9 @@ export default function Dashboard() {
             ) : (
               <EmptyState
                 icon={Building2}
-                title="Nessuna società"
-                description="Non fai parte di nessuna società. Creane una o attendi un invito."
-                actionLabel="Crea Società"
+                title={t('dashboard.noCompanies')}
+                description={t('dashboard.noCompaniesDescription')}
+                actionLabel={t('common.newCompany')}
                 onAction={() => navigate(createPageUrl('NewCompany'))}
               />
             )}
