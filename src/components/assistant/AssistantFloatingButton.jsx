@@ -119,10 +119,14 @@ export default function AssistantFloatingButton({ className }) {
     return () => unsubscribe();
   }, [conversationId]);
 
-  // Auto-scroll to bottom
+  // Auto-scroll to bottom when messages change or sheet opens
   useEffect(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
-  }, [messages]);
+    if (isOpen && !showConversations && messages.length > 0) {
+      setTimeout(() => {
+        messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+      }, 100);
+    }
+  }, [messages, isOpen, showConversations]);
 
   // Initialize speech recognition
   useEffect(() => {
