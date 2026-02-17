@@ -805,7 +805,53 @@ export default function ProjectDetail() {
       </Tabs>
       }
 
+      {/* Quick Action FAB - positioned next to Assistant button */}
+      {isActiveParticipant && (
+        <button
+          onClick={() => setQuickActionOpen(!quickActionOpen)}
+          className="fixed bottom-6 right-24 w-14 h-14 rounded-full bg-gray-700 hover:bg-gray-600 text-white shadow-lg flex items-center justify-center z-50 transition-transform hover:scale-110"
+        >
+          <Plus className={`h-6 w-6 transition-transform ${quickActionOpen ? 'rotate-45' : ''}`} />
+        </button>
+      )}
 
+      {/* Quick Action Menu */}
+      {quickActionOpen && (
+        <div className="fixed bottom-24 right-24 bg-white rounded-lg shadow-xl border p-2 z-50 min-w-[200px]">
+          <button
+            onClick={() => {
+              setQuickActionOpen(false);
+              navigateToSection('info', 'documents');
+              setTimeout(() => setDocumentUploadOpen(true), 200);
+            }}
+            className="w-full flex items-center gap-3 px-4 py-3 hover:bg-gray-50 rounded-lg text-left transition-colors"
+          >
+            <Upload className="h-5 w-5 text-gray-700" />
+            <span className="font-medium">Carica Allegato</span>
+          </button>
+          <button
+            onClick={() => {
+              setQuickActionOpen(false);
+              navigateToSection('lavori', 'tasks');
+            }}
+            className="w-full flex items-center gap-3 px-4 py-3 hover:bg-gray-50 rounded-lg text-left transition-colors"
+          >
+            <CheckCircle2 className="h-5 w-5 text-gray-700" />
+            <span className="font-medium">Aggiorna Task</span>
+          </button>
+          <button
+            onClick={() => {
+              setQuickActionOpen(false);
+              navigateToSection('lavori', 'changes');
+              setTimeout(() => setChangeCreateOpen(true), 200);
+            }}
+            className="w-full flex items-center gap-3 px-4 py-3 hover:bg-gray-50 rounded-lg text-left transition-colors"
+          >
+            <DollarSign className="h-5 w-5 text-gray-700" />
+            <span className="font-medium">Nuova Modifica</span>
+          </button>
+        </div>
+      )}
 
       <InviteParticipantDialog
         open={inviteDialogOpen}
