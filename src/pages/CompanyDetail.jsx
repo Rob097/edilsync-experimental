@@ -200,7 +200,7 @@ export default function CompanyDetail() {
       )}
 
       {/* Members */}
-      <Card>
+      <Card data-tour="company-members">
         <CardHeader className="flex flex-row items-center justify-between pb-4">
           <CardTitle className="text-lg font-semibold">Membri</CardTitle>
           {isAdmin && (

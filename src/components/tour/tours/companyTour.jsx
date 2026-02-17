@@ -22,7 +22,7 @@ export const companyTour = {
       placement: 'center',
     },
     {
-      target: 'h4:contains("Membri")',
+      target: '[data-tour="company-members"]',
       title: 'Gestisci il Team 👥',
       content: 'Nella sezione Membri puoi vedere tutti i componenti del team, invitare nuovi professionisti e gestire i ruoli.',
       placement: 'top',
