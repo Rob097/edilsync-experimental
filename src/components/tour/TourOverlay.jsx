@@ -58,35 +58,37 @@ export default function TourOverlay() {
 
   if (!isVisible || !activeTour) return null;
 
-  // Only show overlay (backdrop + spotlight) when highlighting a specific element
-  // For center placement (no target), only show tooltip
   const hasTarget = activeTour.steps[currentStep]?.target;
 
   return (
     <>
-      {/* Overlay backdrop + spotlight - only show when there's a target element */}
-      {hasTarget && (
+      {/* Overlay backdrop - show only when NO target (popup centrale) */}
+      {!hasTarget && (
         <div 
-          ref={overlayRef}
           className="fixed inset-0 z-[9998] pointer-events-none"
           style={{
             background: 'rgba(0, 0, 0, 0.3)',
           }}
+        />
+      )}
+
+      {/* Spotlight - show only when there's a target element */}
+      {hasTarget && highlightRect && (
+        <div
+          ref={overlayRef}
+          className="fixed inset-0 z-[9998] pointer-events-none"
         >
-          {/* Spotlight hole */}
-          {highlightRect && (
-            <div
-              className="absolute transition-all duration-300 rounded-lg pointer-events-auto"
-              style={{
-                top: `${highlightRect.top}px`,
-                left: `${highlightRect.left}px`,
-                width: `${highlightRect.width}px`,
-                height: `${highlightRect.height}px`,
-                boxShadow: '0 0 0 9999px rgba(0, 0, 0, 0.3), 0 0 20px rgba(239, 97, 68, 0.5)',
-                border: '2px solid #ef6144',
-              }}
-            />
-          )}
+          <div
+            className="absolute transition-all duration-300 rounded-lg pointer-events-auto"
+            style={{
+              top: `${highlightRect.top}px`,
+              left: `${highlightRect.left}px`,
+              width: `${highlightRect.width}px`,
+              height: `${highlightRect.height}px`,
+              boxShadow: '0 0 0 9999px rgba(0, 0, 0, 0.3), 0 0 20px rgba(239, 97, 68, 0.5)',
+              border: '2px solid #ef6144',
+            }}
+          />
         </div>
       )}
 
