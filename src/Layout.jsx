@@ -101,7 +101,6 @@ export default function Layout({ children, currentPageName }) {
     { name: 'Progetti', icon: FolderKanban, page: 'Projects', path: createPageUrl('Projects') },
     { name: 'Calendario', icon: Calendar, page: 'Calendar', path: createPageUrl('Calendar') },
     companiesNavItem,
-    { name: 'Assistente AI', icon: Sparkles, page: 'Assistant', path: createPageUrl('Assistant') },
   ];
 
   const handleContextChange = async (context, company) => {

@@ -72,6 +72,7 @@ export default function ProjectDetail() {
   const [inviteDialogOpen, setInviteDialogOpen] = useState(false);
   const [editProjectDialogOpen, setEditProjectDialogOpen] = useState(false);
   const [activeTab, setActiveTab] = useState('cantiere');
+  const [quickActionOpen, setQuickActionOpen] = useState(false);
   const [lavoriSection, setLavoriSection] = useState('all');
   const [infoSection, setInfoSection] = useState('all');
   const [documentUploadOpen, setDocumentUploadOpen] = useState(false);
