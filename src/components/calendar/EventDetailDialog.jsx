@@ -46,6 +46,9 @@ export default function EventDetailDialog({ open, onOpenChange, event, user, com
 
   const currentContext = user?.active_context || 'personal';
   const isCreator = event?.creator_email === user?.email;
+  const companyIds = companyMemberships?.map(m => m.company_id) || [];
+  const canManageEvent = isCreator || 
+    (event?.owner_type === 'company' && companyIds.includes(event?.owner_company_id));
   
   // Find participation matching current context
   const userParticipation = participants.find(p => {
@@ -249,8 +252,8 @@ export default function EventDetailDialog({ open, onOpenChange, event, user, com
             </div>
           )}
 
-          {/* Creator actions */}
-          {isCreator && (
+          {/* Creator/manager actions */}
+          {canManageEvent && (
             <div className="space-y-2">
               <Button
                 variant="outline"
