@@ -85,6 +85,12 @@ export default function InviteParticipantDialog({
         participantData.company_id = selectedCompanyId;
       } else {
         participantData.user_email = email;
+        // Try to find user_id
+        const users = await base44.entities.User.list();
+        const foundUser = users.find(u => u.email === email);
+        if (foundUser) {
+          participantData.user_id = foundUser.id;
+        }
       }
 
       // If current user is a contractor, mark this as a subcontractor invite
