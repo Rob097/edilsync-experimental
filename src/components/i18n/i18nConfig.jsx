@@ -212,6 +212,64 @@ const itTranslations = {
     "thisWeek": "Questa settimana",
     "thisMonth": "Questo mese"
   },
+  "projectDetail": {
+    "projectNotFound": "Progetto non trovato",
+    "projectNotFoundDescription": "Il progetto richiesto non esiste o non hai i permessi per visualizzarlo.",
+    "backToProjects": "Torna ai progetti",
+    "youAreInvited": "Sei stato invitato a questo progetto",
+    "acceptInviteDescription": "Accetta l'invito per partecipare alle attività del cantiere",
+    "decline": "Rifiuta",
+    "accept": "Accetta",
+    "participants": "Partecipanti",
+    "startDate": "Data inizio",
+    "endDate": "Data fine",
+    "edit": "Modifica",
+    "projectStopped": "Cantiere Fermo",
+    "blockedTasks": "attività bloccate",
+    "seeDetails": "Vedi dettagli →",
+    "tabs": {
+      "overview": "Cantiere",
+      "tasks": "Lavori",
+      "info": "Info & Team"
+    },
+    "sections": {
+      "viewAll": "Vedi Tutto",
+      "activities": "Attività in Corso",
+      "changesExtras": "Modifiche & Extra",
+      "milestones": "Milestones",
+      "messaging": "Messaggistica",
+      "documents": "Documenti",
+      "noParticipants": "Nessun partecipante",
+      "inviteParticipants": "Invita contractor, progettisti e altri professionisti.",
+      "pendingConfirmation": "In attesa di conferma"
+    },
+    "quickActions": {
+      "uploadAttachment": "Carica Allegato",
+      "updateTask": "Aggiorna Task",
+      "newChange": "Nuova Modifica"
+    },
+    "invite": "Invita"
+  },
+  "settings": {
+    "title": "Impostazioni",
+    "description": "Gestisci il tuo profilo e le tue preferenze",
+    "profile": "Profilo",
+    "communications": "Comunicazioni",
+    "profileUpdated": "Profilo aggiornato con successo",
+    "fullName": "Nome completo",
+    "email": "Email",
+    "emailCannotBeChanged": "L'email non può essere modificata",
+    "phone": "Telefono",
+    "saveChanges": "Salva modifiche"
+  },
+  "notificationsPage": {
+    "title": "Notifiche",
+    "unread": "non lette",
+    "allRead": "Tutte lette",
+    "markAllAsRead": "Segna tutte come lette",
+    "noNotifications": "Nessuna notifica",
+    "noNotificationsDescription": "Non hai ancora ricevuto notifiche."
+  },
   "tour": {
     "dashboard": "Questo è il tuo dashboard. Qui vedi una panoramica dei tuoi progetti.",
     "projects": "Gestisci tutti i tuoi progetti edilizi da questa sezione.",
@@ -433,6 +491,64 @@ const enTranslations = {
     "tomorrow": "Tomorrow",
     "thisWeek": "This week",
     "thisMonth": "This month"
+  },
+  "projectDetail": {
+    "projectNotFound": "Project not found",
+    "projectNotFoundDescription": "The requested project does not exist or you do not have permission to view it.",
+    "backToProjects": "Back to projects",
+    "youAreInvited": "You have been invited to this project",
+    "acceptInviteDescription": "Accept the invitation to participate in project activities",
+    "decline": "Decline",
+    "accept": "Accept",
+    "participants": "Participants",
+    "startDate": "Start date",
+    "endDate": "End date",
+    "edit": "Edit",
+    "projectStopped": "Project Stopped",
+    "blockedTasks": "blocked tasks",
+    "seeDetails": "See details →",
+    "tabs": {
+      "overview": "Overview",
+      "tasks": "Tasks",
+      "info": "Info & Team"
+    },
+    "sections": {
+      "viewAll": "View All",
+      "activities": "Ongoing Activities",
+      "changesExtras": "Changes & Extras",
+      "milestones": "Milestones",
+      "messaging": "Messaging",
+      "documents": "Documents",
+      "noParticipants": "No participants",
+      "inviteParticipants": "Invite contractors, designers and other professionals.",
+      "pendingConfirmation": "Awaiting confirmation"
+    },
+    "quickActions": {
+      "uploadAttachment": "Upload Attachment",
+      "updateTask": "Update Task",
+      "newChange": "New Change"
+    },
+    "invite": "Invite"
+  },
+  "settings": {
+    "title": "Settings",
+    "description": "Manage your profile and preferences",
+    "profile": "Profile",
+    "communications": "Communications",
+    "profileUpdated": "Profile updated successfully",
+    "fullName": "Full name",
+    "email": "Email",
+    "emailCannotBeChanged": "Email cannot be changed",
+    "phone": "Phone",
+    "saveChanges": "Save changes"
+  },
+  "notificationsPage": {
+    "title": "Notifications",
+    "unread": "unread",
+    "allRead": "All read",
+    "markAllAsRead": "Mark all as read",
+    "noNotifications": "No notifications",
+    "noNotificationsDescription": "You have not received any notifications yet."
   },
   "tour": {
     "dashboard": "This is your dashboard. Here you see an overview of your projects.",
