@@ -26,7 +26,19 @@ const itTranslations = {
     "previous": "Precedente",
     "more": "Altro",
     "noData": "Nessun dato disponibile",
-    "selectLanguage": "Seleziona Lingua"
+    "selectLanguage": "Seleziona Lingua",
+    "newProject": "Nuovo Progetto",
+    "newCompany": "Nuova Società",
+    "projects": "Progetti",
+    "companies": "Società",
+    "members": "Membri",
+    "seeAll": "Vedi tutti",
+    "all": "Tutti",
+    "noResults": "Nessun risultato",
+    "tryModifyingFilters": "Prova a modificare i filtri di ricerca.",
+    "tryModifyingSearchTerms": "Prova a modificare i termini di ricerca.",
+    "searchProjects": "Cerca progetti...",
+    "searchCompanies": "Cerca società..."
   },
   "navigation": {
     "dashboard": "Dashboard",
@@ -53,37 +65,39 @@ const itTranslations = {
   },
   "dashboard": {
     "welcome": "Benvenuto",
-    "newProject": "Nuovo Progetto",
     "projectStats": "Statistiche Progetti",
     "totalProjects": "Progetti Totali",
-    "inProgress": "In Corso",
-    "completed": "Completati",
-    "companies": "Società",
-    "members": "Membri",
     "recentProjects": "Progetti Recenti",
     "viewAll": "Visualizza Tutto",
-    "noProjects": "Nessun progetto disponibile"
+    "noProjects": "Nessun progetto",
+    "noPersonalProjects": "Non hai ancora progetti personali. Crea il tuo primo cantiere.",
+    "noCompanyProjects": "Questa società non ha ancora progetti. Crea il primo cantiere.",
+    "greetingPrefix": "Ciao,",
+    "workingAs": "Stai operando come",
+    "yourCompanies": "Le tue Società",
+    "noCompanies": "Nessuna società",
+    "noCompaniesDescription": "Non fai parte di nessuna società. Creane una o attendi un invito."
   },
   "projects": {
     "title": "Progetti",
-    "newProject": "Nuovo Progetto",
     "filter": "Filtra",
-    "all": "Tutti",
-    "planning": "Pianificazione",
-    "inProgress": "In Corso",
-    "completed": "Completati",
-    "onHold": "In Sospeso",
     "participants": "Partecipanti",
     "tasks": "Task",
-    "noProjects": "Nessun progetto trovato"
+    "noProjects": "Nessun progetto trovato",
+    "status": {
+      "planning": "Pianificazione",
+      "in_progress": "In corso",
+      "completed": "Completati",
+      "on_hold": "In Sospeso"
+    }
   },
   "companies": {
     "title": "Società",
-    "newCompany": "Nuova Società",
     "members": "Membri",
     "admin": "Amministratore",
     "member": "Membro",
-    "noCompanies": "Nessuna società disponibile"
+    "noCompanies": "Nessuna società disponibile",
+    "manageCompanies": "Gestisci le società di cui fai parte"
   },
   "tasks": {
     "task": "Task",
@@ -110,10 +124,14 @@ const itTranslations = {
     "targetDate": "Data Target",
     "completionDate": "Data Completamento"
   },
+  "calendar": {
+    "title": "Calendario",
+    "newEvent": "Nuovo Evento",
+    "today": "Oggi"
+  },
   "events": {
     "event": "Evento",
     "events": "Eventi",
-    "newEvent": "Nuovo Evento",
     "calendar": "Calendario",
     "title": "Titolo",
     "startTime": "Orario Inizio",
