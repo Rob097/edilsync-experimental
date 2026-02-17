@@ -58,7 +58,18 @@ export default function TourProvider({ children }) {
     if (!activeTour) return;
     
     if (currentStep < activeTour.steps.length - 1) {
-      setCurrentStep(currentStep + 1);
+      const nextStepIndex = currentStep + 1;
+      const nextStepConfig = activeTour.steps[nextStepIndex];
+      
+      // Click tab if specified in the step
+      if (nextStepConfig?.clickTab) {
+        const tabButton = document.querySelector(`[data-tour-tab="${nextStepConfig.clickTab}"]`);
+        if (tabButton) {
+          setTimeout(() => tabButton.click(), 100);
+        }
+      }
+      
+      setCurrentStep(nextStepIndex);
     } else {
       completeTour();
     }
@@ -66,7 +77,18 @@ export default function TourProvider({ children }) {
 
   const prevStep = () => {
     if (currentStep > 0) {
-      setCurrentStep(currentStep - 1);
+      const prevStepIndex = currentStep - 1;
+      const prevStepConfig = activeTour?.steps[prevStepIndex];
+      
+      // Click tab if specified in the step
+      if (prevStepConfig?.clickTab) {
+        const tabButton = document.querySelector(`[data-tour-tab="${prevStepConfig.clickTab}"]`);
+        if (tabButton) {
+          setTimeout(() => tabButton.click(), 100);
+        }
+      }
+      
+      setCurrentStep(prevStepIndex);
     }
   };
 
