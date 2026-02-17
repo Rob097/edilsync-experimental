@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
 import { base44 } from '@/api/base44Client';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { useLanguage } from '@/components/i18n/useLanguage';
 import TourLauncher from '@/components/tour/TourLauncher';
 import { companyTour } from '@/components/tour/tours/companyTour';
 import { Button } from "@/components/ui/button";
@@ -25,6 +26,7 @@ import MemberCard from '@/components/company/MemberCard';
 import EditCompanyDialog from '@/components/company/EditCompanyDialog';
 
 export default function CompanyDetail() {
+  const { t } = useLanguage();
   const navigate = useNavigate();
   const queryClient = useQueryClient();
   const urlParams = new URLSearchParams(window.location.search);
@@ -83,9 +85,9 @@ export default function CompanyDetail() {
     return (
       <EmptyState
         icon={Building2}
-        title="Società non trovata"
-        description="La società richiesta non esiste o non hai i permessi per visualizzarla."
-        actionLabel="Torna alle società"
+        title={t('companyDetail.companyNotFound')}
+        description={t('companyDetail.companyNotFoundDescription')}
+        actionLabel={t('companyDetail.backToCompanies')}
         onAction={() => navigate(createPageUrl('Companies'))}
       />
     );
@@ -114,7 +116,7 @@ export default function CompanyDetail() {
               className="mb-2 -ml-3"
             >
               <ArrowLeft className="h-4 w-4 mr-2" />
-              Società
+              {t('common.companies')}
             </Button>
           )}
           <div className="flex items-center gap-3">
@@ -136,7 +138,7 @@ export default function CompanyDetail() {
             className="w-full sm:w-auto"
           >
             <Settings className="h-4 w-4 mr-2" />
-            Modifica
+            {t('companyDetail.edit')}
           </Button>
         )}
       </div>
@@ -151,7 +153,7 @@ export default function CompanyDetail() {
                   <MapPin className="h-5 w-5 text-gray-500" />
                 </div>
                 <div>
-                  <p className="text-sm text-gray-500">Indirizzo</p>
+                  <p className="text-sm text-gray-500">{t('companyDetail.address')}</p>
                   <p className="font-medium">{company.address}</p>
                 </div>
               </div>
@@ -166,7 +168,7 @@ export default function CompanyDetail() {
                   <Phone className="h-5 w-5 text-gray-500" />
                 </div>
                 <div>
-                  <p className="text-sm text-gray-500">Telefono</p>
+                  <p className="text-sm text-gray-500">{t('companyDetail.phone')}</p>
                   <p className="font-medium">{company.phone}</p>
                 </div>
               </div>
@@ -181,7 +183,7 @@ export default function CompanyDetail() {
                   <Mail className="h-5 w-5 text-gray-500" />
                 </div>
                 <div>
-                  <p className="text-sm text-gray-500">Email</p>
+                  <p className="text-sm text-gray-500">{t('companyDetail.email')}</p>
                   <p className="font-medium">{company.email}</p>
                 </div>
               </div>
@@ -202,14 +204,14 @@ export default function CompanyDetail() {
       {/* Members */}
       <Card data-tour="company-members">
         <CardHeader className="flex flex-row items-center justify-between pb-4">
-          <CardTitle className="text-lg font-semibold">Membri</CardTitle>
+          <CardTitle className="text-lg font-semibold">{t('companyDetail.members')}</CardTitle>
           {isAdmin && (
             <Button 
               onClick={() => setInviteDialogOpen(true)}
               className="bg-[#ef6144] hover:bg-[#d9553a]"
             >
               <UserPlus className="h-4 w-4 mr-2" />
-              Invita
+              {t('companyDetail.invite')}
             </Button>
           )}
         </CardHeader>
@@ -234,14 +236,14 @@ export default function CompanyDetail() {
           ) : (
             <EmptyState
               icon={Users}
-              title="Nessun membro"
-              description="Invita i membri del team a far parte della società."
+              title={t('companyDetail.noMembers')}
+              description={t('companyDetail.inviteMembersDescription')}
             />
           )}
 
           {invitedMembers.length > 0 && (
             <div className="mt-6 pt-6 border-t">
-              <h4 className="text-sm font-medium text-gray-500 mb-3">In attesa di conferma</h4>
+              <h4 className="text-sm font-medium text-gray-500 mb-3">{t('companyDetail.pendingConfirmation')}</h4>
               <div className="space-y-3">
                 {invitedMembers.map(member => (
                 <MemberCard
