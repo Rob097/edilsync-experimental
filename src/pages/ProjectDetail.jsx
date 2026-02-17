@@ -751,6 +751,8 @@ export default function ProjectDetail() {
                         key={participant.id}
                         participant={participant}
                         companyName={participant.company_id ? getCompanyName(participant.company_id) : null}
+                        canRemove={canRemoveParticipants && participant.id !== userParticipation?.id && participant.project_role !== 'homeowner'}
+                        projectId={projectId}
                       />
                     ))}
                   </div>
@@ -772,6 +774,8 @@ export default function ProjectDetail() {
                           participant={participant}
                           companyName={participant.company_id ? getCompanyName(participant.company_id) : null}
                           isPending
+                          canRemove={canRemoveParticipants}
+                          projectId={projectId}
                         />
                       ))}
                     </div>
