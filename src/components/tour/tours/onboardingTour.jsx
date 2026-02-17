@@ -1,0 +1,73 @@
+export const onboardingTour = {
+  id: 'onboarding',
+  steps: [
+    {
+      target: null,
+      title: 'Benvenuto in EdilSync! 🎉',
+      content: 'Ti guideremo attraverso le funzionalità principali dell\'app per aiutarti a iniziare subito. Questo tour richiederà solo 2 minuti.',
+      placement: 'center',
+    },
+    {
+      target: 'a[href*="Dashboard"]',
+      title: 'Dashboard',
+      content: 'Qui troverai una panoramica generale dei tuoi progetti, società e attività recenti. È il tuo punto di partenza.',
+      placement: 'bottom',
+      padding: 8,
+    },
+    {
+      target: 'a[href*="Projects"]',
+      title: 'Progetti',
+      content: 'Gestisci tutti i tuoi cantieri: crea nuovi progetti, monitora lo stato dei lavori, assegna task e collabora con il team.',
+      placement: 'bottom',
+      padding: 8,
+    },
+    {
+      target: 'a[href*="Calendar"]',
+      title: 'Calendario',
+      content: 'Pianifica appuntamenti, sopralluoghi e scadenze. Tutti gli eventi sono sincronizzati con i tuoi progetti.',
+      placement: 'bottom',
+      padding: 8,
+    },
+    {
+      target: 'a[href*="Companies"]',
+      title: 'Società',
+      content: 'Gestisci le tue società, invita membri del team e organizza la collaborazione tra professionisti.',
+      placement: 'bottom',
+      padding: 8,
+    },
+    {
+      target: '[data-tour="context-switcher"]',
+      title: 'Cambio Contesto',
+      content: 'Passa rapidamente tra lavoro personale e società. Ogni contesto ha i suoi progetti, membri e dati separati.',
+      placement: 'left',
+      padding: 8,
+    },
+    {
+      target: '[data-tour="notifications"]',
+      title: 'Notifiche',
+      content: 'Ricevi aggiornamenti in tempo reale su inviti, task assegnati, cambiamenti di stato e messaggi.',
+      placement: 'left',
+      padding: 8,
+    },
+    {
+      target: '[data-tour="messaging"]',
+      title: 'Messaggistica',
+      content: 'Comunica con il team tramite canali dedicati per ogni progetto o società. Ricevi notifiche sui nuovi messaggi.',
+      placement: 'left',
+      padding: 8,
+    },
+    {
+      target: '[data-tour="assistant"]',
+      title: 'Assistente AI',
+      content: 'Il tuo assistente personale è sempre disponibile per aiutarti con qualsiasi domanda o operazione nell\'app.',
+      placement: 'left',
+      padding: 12,
+    },
+    {
+      target: null,
+      title: 'Tutto Pronto! 🚀',
+      content: 'Ora sei pronto per iniziare. Crea il tuo primo progetto o società, oppure esplora liberamente l\'app. Buon lavoro!',
+      placement: 'center',
+    },
+  ],
+};

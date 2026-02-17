@@ -1,0 +1,73 @@
+export const projectTour = {
+  id: 'projects',
+  steps: [
+    {
+      target: null,
+      title: 'Benvenuto nel tuo primo progetto! 🏗️',
+      content: 'Ti mostreremo le funzionalità essenziali per gestire il cantiere in modo efficace.',
+      placement: 'center',
+    },
+    {
+      target: '[data-tour="project-status"]',
+      title: 'Stato del Progetto',
+      content: 'Monitora lo stato generale del cantiere: pianificazione, in corso, completato o in pausa.',
+      placement: 'bottom',
+      padding: 8,
+    },
+    {
+      target: '[data-tour="project-stats"]',
+      title: 'Statistiche Rapide',
+      content: 'Vedi a colpo d\'occhio task completati, partecipanti attivi e documenti caricati.',
+      placement: 'bottom',
+      padding: 8,
+    },
+    {
+      target: '[data-tour="project-tabs"]',
+      title: 'Sezioni del Progetto',
+      content: 'Organizza il lavoro in sezioni: cantiere (panoramica), lavori (task e milestone) e team (partecipanti e documenti).',
+      placement: 'bottom',
+      padding: 8,
+    },
+    {
+      target: '[data-tour="activity-feed"]',
+      title: 'Feed Attività',
+      content: 'Resta aggiornato su tutte le azioni nel progetto: task completati, documenti caricati, variazioni richieste.',
+      placement: 'right',
+      padding: 8,
+    },
+    {
+      target: '[data-tour="task-list"]',
+      title: 'Gestione Task',
+      content: 'Crea, assegna e monitora i task del cantiere. Ogni task può essere associato a una milestone e ha un responsabile.',
+      placement: 'top',
+      padding: 8,
+    },
+    {
+      target: '[data-tour="milestone-list"]',
+      title: 'Milestone',
+      content: 'Organizza i lavori in fasi (SAL). Ogni milestone raggruppa task correlati e ha date di inizio e fine.',
+      placement: 'top',
+      padding: 8,
+    },
+    {
+      target: '[data-tour="project-messaging"]',
+      title: 'Messaggistica Progetto',
+      content: 'Comunica con il team tramite canali dedicati. Ogni progetto ha il suo canale generale più eventuali canali custom.',
+      placement: 'top',
+      padding: 8,
+    },
+    {
+      target: '[data-tour="quick-action"]',
+      title: 'Azioni Rapide',
+      content: 'Accedi velocemente alle operazioni più comuni: caricare documenti, aggiornare task o creare variazioni.',
+      placement: 'left',
+      padding: 12,
+    },
+    {
+      target: null,
+      title: 'Progetto Pronto! ✅',
+      content: 'Ora puoi iniziare a lavorare sul cantiere. Invita i membri del team e inizia a organizzare i lavori!',
+      placement: 'center',
+    },
+  ],
+};
