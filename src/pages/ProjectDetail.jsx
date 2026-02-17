@@ -81,52 +81,38 @@ export default function ProjectDetail() {
 
   const acceptInviteMutation = useMutation({
     mutationFn: async (participantId) => {
+      // Step 1: Accept the invitation
       await base44.entities.ProjectParticipant.update(participantId, { status: 'active' });
       
-      // Add user to General channel
-      const channels = await base44.entities.Channel.filter({ 
-        project_id: projectId, 
-        type: 'general'
-      });
-      
-      if (channels.length > 0) {
-        const generalChannel = channels[0];
-        const participant = participants.find(p => p.id === participantId);
-        if (participant) {
-          // Check if already a member
-          const existingMembers = await base44.entities.ChannelMember.filter({ 
-            channel_id: generalChannel.id 
-          });
-          const alreadyMember = existingMembers.some(m => 
-            (participant.participant_type === 'personal' && m.user_email === participant.user_email) ||
-            (participant.participant_type === 'company' && m.company_id === participant.company_id)
-          );
-          
-          if (!alreadyMember) {
-            await base44.entities.ChannelMember.create({
-              channel_id: generalChannel.id,
-              project_id: projectId,
-              participant_id: participant.id,
-              user_email: participant.user_email || null,
-              company_id: participant.company_id || null,
-              last_read_at: new Date().toISOString(),
-            });
-          }
-        }
-      }
-      
-      // Sync user access
+      // Step 2: Sync user access (this updates project_ids on user entity)
       const currentUser = await base44.auth.me();
       await base44.functions.invoke('syncUserAccess', { user_email: currentUser.email });
-      await base44.auth.updateMe({ 
-        project_ids: [...(currentUser.project_ids || []), projectId].filter((v, i, a) => a.indexOf(v) === i)
-      });
+      
+      // Step 3: Add user to General channel (fire-and-forget, non-blocking)
+      const participant = participants.find(p => p.id === participantId);
+      if (participant) {
+        const channels = await base44.entities.Channel.filter({ 
+          project_id: projectId, 
+          type: 'general'
+        });
+        if (channels.length > 0) {
+          await base44.entities.ChannelMember.create({
+            channel_id: channels[0].id,
+            project_id: projectId,
+            participant_id: participant.id,
+            user_email: participant.user_email || null,
+            company_id: participant.company_id || null,
+            last_read_at: new Date().toISOString(),
+          });
+        }
+      }
     },
     onSuccess: () => {
       queryClient.invalidateQueries(['projectParticipants', projectId]);
       queryClient.invalidateQueries(['userProjectParticipations']);
       queryClient.invalidateQueries(['channels', projectId]);
       queryClient.invalidateQueries(['channelMembers', projectId]);
+      queryClient.invalidateQueries(['currentUser']);
     },
   });
 
@@ -182,17 +168,30 @@ export default function ProjectDetail() {
     staleTime: 2 * 60 * 1000,
   });
 
-  // Check user's role in this project
-  const userParticipation = participants.find(p => {
+  // Find ALL participations for this user (personal + company)
+  const userCompanyIds = companyMemberships.map(m => m.company_id);
+  const allUserParticipations = participants.filter(p => {
     if (p.participant_type === 'personal' && p.user_id === user?.id) return true;
-    if (p.participant_type === 'company') {
-      const userCompanyIds = companyMemberships.map(m => m.company_id);
-      return userCompanyIds.includes(p.company_id);
-    }
+    if (p.participant_type === 'company' && userCompanyIds.includes(p.company_id)) return true;
     return false;
   });
 
-  const isActiveParticipant = userParticipation?.status === 'active';
+  // Context-aware participation: pick the one matching current context
+  const currentContext = user?.active_context || 'personal';
+  const contextParticipation = allUserParticipations.find(p => {
+    if (currentContext === 'personal') return p.participant_type === 'personal';
+    if (currentContext === 'company') return p.participant_type === 'company' && p.company_id === user?.active_company_id;
+    return false;
+  });
+
+  // Fallback: if no match for current context, use any active participation
+  const userParticipation = contextParticipation || allUserParticipations.find(p => p.status === 'active') || allUserParticipations[0];
+
+  // Has ANY active participation (regardless of context) - used to show full project content
+  const hasAnyActiveParticipation = allUserParticipations.some(p => p.status === 'active');
+  // Is the context-specific participation active?
+  const isActiveParticipant = hasAnyActiveParticipation;
+  
   const canInvite = isActiveParticipant && (userParticipation?.can_invite || userParticipation?.project_role === 'homeowner');
   const canEditTasks = isActiveParticipant;
   const canCreateChangeRequest = isActiveParticipant && (userParticipation?.project_role === 'homeowner' || project?.owner_user_id === user?.id);
@@ -273,12 +272,8 @@ export default function ProjectDetail() {
 
   const status = statusConfig[project.status] || statusConfig.planning;
 
-  const currentContext = user?.active_context || 'personal';
-  
-  const isInvited = userParticipation?.status === 'invited' && (
-    (userParticipation.participant_type === 'personal' && currentContext === 'personal') ||
-    (userParticipation.participant_type === 'company' && currentContext === 'company' && userParticipation.company_id === user?.active_company_id)
-  );
+  // Show invite banner only if the context-specific participation is invited
+  const isInvited = contextParticipation?.status === 'invited';
 
   return (
     <div className="space-y-6">
