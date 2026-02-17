@@ -29,10 +29,26 @@ export default function AssistantFloatingButton({ className }) {
     queryFn: () => base44.auth.me(),
   });
 
-  // Fetch all user conversations
+  // Fetch all user conversations filtered by active context
   const { data: conversations = [], refetch: refetchConversations } = useQuery({
-    queryKey: ['assistantConversations'],
-    queryFn: () => base44.agents.listConversations({ agent_name: "edilsync_assistant" }),
+    queryKey: ['assistantConversations', user?.active_context, user?.active_company_id],
+    queryFn: async () => {
+      const allConversations = await base44.agents.listConversations({ agent_name: "edilsync_assistant" });
+      // Filter conversations by active context
+      const currentContext = user?.active_context || 'personal';
+      const currentCompanyId = user?.active_company_id || null;
+      
+      return allConversations.filter(conv => {
+        const convContext = conv.metadata?.context || 'personal';
+        const convCompanyId = conv.metadata?.company_id || null;
+        
+        if (currentContext === 'personal') {
+          return convContext === 'personal';
+        } else {
+          return convContext === 'company' && convCompanyId === currentCompanyId;
+        }
+      });
+    },
     enabled: !!user && isOpen,
     staleTime: 0,
   });
@@ -84,11 +100,13 @@ export default function AssistantFloatingButton({ className }) {
           setMessages(conv.messages || []);
           localStorage.setItem('assistant_conversation_id', conv.id);
         } else {
-          // Create new conversation
+          // Create new conversation with context info
           const conv = await base44.agents.createConversation({
             agent_name: "edilsync_assistant",
             metadata: {
               name: `Chat ${format(new Date(), 'dd/MM/yyyy HH:mm', { locale: it })}`,
+              context: user?.active_context || 'personal',
+              company_id: user?.active_company_id || null,
             }
           });
           setConversationId(conv.id);
@@ -206,6 +224,8 @@ export default function AssistantFloatingButton({ className }) {
         agent_name: "edilsync_assistant",
         metadata: {
           name: `Chat ${format(new Date(), 'dd/MM/yyyy HH:mm', { locale: it })}`,
+          context: user?.active_context || 'personal',
+          company_id: user?.active_company_id || null,
         }
       });
       setConversationId(conv.id);
