@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { base44 } from '@/api/base44Client';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { useLanguage } from '@/components/i18n/useLanguage';
 import {
   Dialog,
   DialogContent,
@@ -15,6 +16,7 @@ import { Label } from "@/components/ui/label";
 import { Loader2 } from "lucide-react";
 
 export default function EditCompanyDialog({ open, onOpenChange, company }) {
+  const { t } = useLanguage();
   const queryClient = useQueryClient();
   
   const [formData, setFormData] = useState({
@@ -63,15 +65,15 @@ export default function EditCompanyDialog({ open, onOpenChange, company }) {
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-lg max-h-[90vh] overflow-y-auto">
         <DialogHeader>
-          <DialogTitle>Modifica Società</DialogTitle>
+          <DialogTitle>{t('editCompanyDialog.title')}</DialogTitle>
           <DialogDescription>
-            Aggiorna le informazioni della società.
+            {t('editCompanyDialog.description')}
           </DialogDescription>
         </DialogHeader>
 
         <form onSubmit={handleSubmit} className="space-y-4 mt-4">
           <div className="space-y-2">
-            <Label htmlFor="name">Nome Società *</Label>
+            <Label htmlFor="name">{t('editCompanyDialog.companyName')} *</Label>
             <Input
               id="name"
               value={formData.name}
@@ -81,7 +83,7 @@ export default function EditCompanyDialog({ open, onOpenChange, company }) {
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="vat_number">Partita IVA</Label>
+            <Label htmlFor="vat_number">{t('editCompanyDialog.vatNumber')}</Label>
             <Input
               id="vat_number"
               value={formData.vat_number}
@@ -91,7 +93,7 @@ export default function EditCompanyDialog({ open, onOpenChange, company }) {
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="address">Indirizzo</Label>
+            <Label htmlFor="address">{t('editCompanyDialog.address')}</Label>
             <Input
               id="address"
               value={formData.address}
@@ -101,7 +103,7 @@ export default function EditCompanyDialog({ open, onOpenChange, company }) {
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="phone">Telefono</Label>
+            <Label htmlFor="phone">{t('editCompanyDialog.phone')}</Label>
             <Input
               id="phone"
               value={formData.phone}
@@ -111,7 +113,7 @@ export default function EditCompanyDialog({ open, onOpenChange, company }) {
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="email">Email</Label>
+            <Label htmlFor="email">{t('editCompanyDialog.email')}</Label>
             <Input
               id="email"
               type="email"
@@ -122,7 +124,7 @@ export default function EditCompanyDialog({ open, onOpenChange, company }) {
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="description">Descrizione</Label>
+            <Label htmlFor="description">{t('editCompanyDialog.description')}</Label>
             <Textarea
               id="description"
               value={formData.description}
@@ -139,7 +141,7 @@ export default function EditCompanyDialog({ open, onOpenChange, company }) {
               onClick={() => onOpenChange(false)}
               className="flex-1"
             >
-              Annulla
+              {t('editCompanyDialog.cancel')}
             </Button>
             <Button
               type="submit"
@@ -149,7 +151,7 @@ export default function EditCompanyDialog({ open, onOpenChange, company }) {
               {updateCompanyMutation.isPending && (
                 <Loader2 className="h-4 w-4 mr-2 animate-spin" />
               )}
-              Salva
+              {t('editCompanyDialog.save')}
             </Button>
           </div>
         </form>
