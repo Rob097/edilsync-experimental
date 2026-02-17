@@ -58,40 +58,14 @@ export default function Notifications() {
 
   const currentContext = user?.active_context || 'personal';
 
-  // Filter notifications based on context
-  const { data: events = [] } = useQuery({
-    queryKey: ['events'],
-    queryFn: () => base44.entities.Event.list(),
-  });
-
-  const { data: eventParticipants = [] } = useQuery({
-    queryKey: ['eventParticipants'],
-    queryFn: () => base44.entities.EventParticipant.list(),
-  });
-
+  // Filter notifications based on current context
   const notifications = allNotifications.filter(notif => {
-    // If no related event, show in all contexts
-    if (!notif.related_event_id) return true;
-
-    const relatedEvent = events.find(e => e.id === notif.related_event_id);
-    if (!relatedEvent) return true;
-
     if (currentContext === 'personal') {
-      // Show if event is personal or user is personally invited
-      return relatedEvent.owner_type === 'personal' ||
-             eventParticipants.some(p => 
-               p.event_id === relatedEvent.id && 
-               p.participant_type === 'user' && 
-               p.user_email === user?.email
-             );
+      // Show personal notifications or notifications without a specific company context
+      return notif.context_type === 'personal' || !notif.context_type;
     } else {
-      // Show if event belongs to current company or company is invited
-      return relatedEvent.owner_company_id === user?.active_company_id ||
-             eventParticipants.some(p => 
-               p.event_id === relatedEvent.id && 
-               p.participant_type === 'company' && 
-               p.company_id === user?.active_company_id
-             );
+      // Show company notifications matching the active company
+      return notif.context_type === 'company' && notif.context_company_id === user?.active_company_id;
     }
   });
 
