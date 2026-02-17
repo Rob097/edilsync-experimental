@@ -84,11 +84,10 @@ export default function ProjectDetail() {
       // Step 1: Accept the invitation
       await base44.entities.ProjectParticipant.update(participantId, { status: 'active' });
       
-      // Step 2: Sync user access (this updates project_ids on user entity)
-      const currentUser = await base44.auth.me();
-      await base44.functions.invoke('syncUserAccess', { user_email: currentUser.email });
+      // Step 2: Sync user access (updates project_ids on user entity)
+      await base44.functions.invoke('syncUserAccess', { user_email: user.email });
       
-      // Step 3: Add user to General channel (fire-and-forget, non-blocking)
+      // Step 3: Add to General channel
       const participant = participants.find(p => p.id === participantId);
       if (participant) {
         const channels = await base44.entities.Channel.filter({ 
@@ -108,11 +107,14 @@ export default function ProjectDetail() {
       }
     },
     onSuccess: () => {
-      queryClient.invalidateQueries(['projectParticipants', projectId]);
-      queryClient.invalidateQueries(['userProjectParticipations']);
-      queryClient.invalidateQueries(['channels', projectId]);
-      queryClient.invalidateQueries(['channelMembers', projectId]);
-      queryClient.invalidateQueries(['currentUser']);
+      // Stagger invalidations to avoid 429
+      queryClient.invalidateQueries({ queryKey: ['projectParticipants', projectId] });
+      setTimeout(() => {
+        queryClient.invalidateQueries({ queryKey: ['currentUser'] });
+      }, 500);
+      setTimeout(() => {
+        queryClient.invalidateQueries({ queryKey: ['userProjectParticipations'] });
+      }, 1000);
     },
   });
 
