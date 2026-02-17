@@ -1,6 +1,7 @@
 import React, { useState, useRef } from 'react';
 import { base44 } from '@/api/base44Client';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { useLanguage } from '@/components/i18n/useLanguage';
 import {
   Dialog,
   DialogContent,
@@ -15,17 +16,21 @@ import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Loader2, Upload, File, X } from "lucide-react";
 
-const categories = [
-  { value: 'project', label: 'Progetto' },
-  { value: 'contract', label: 'Contratto' },
-  { value: 'permit', label: 'Permesso' },
-  { value: 'drawing', label: 'Disegno tecnico' },
-  { value: 'photo', label: 'Foto' },
-  { value: 'report', label: 'Report' },
-  { value: 'other', label: 'Altro' },
-];
+const getCategoryLabel = (value, t) => {
+  const categoryMap = {
+    'project': t('uploadDocumentDialog.categoryProject'),
+    'contract': t('uploadDocumentDialog.categoryContract'),
+    'permit': t('uploadDocumentDialog.categoryPermit'),
+    'drawing': t('uploadDocumentDialog.categoryDrawing'),
+    'photo': t('uploadDocumentDialog.categoryPhoto'),
+    'report': t('uploadDocumentDialog.categoryReport'),
+    'other': t('uploadDocumentDialog.categoryOther'),
+  };
+  return categoryMap[value] || value;
+};
 
 export default function UploadDocumentDialog({ open, onOpenChange, projectId, document }) {
+  const { t } = useLanguage();
   const queryClient = useQueryClient();
   const fileInputRef = useRef(null);
   const isEditMode = !!document;
@@ -134,18 +139,18 @@ export default function UploadDocumentDialog({ open, onOpenChange, projectId, do
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
-          <DialogTitle>{isEditMode ? 'Modifica Documento' : 'Carica Documento'}</DialogTitle>
+          <DialogTitle>{isEditMode ? t('uploadDocumentDialog.editTitle') : t('uploadDocumentDialog.newTitle')}</DialogTitle>
           <DialogDescription>
             {isEditMode 
-              ? 'Modifica le informazioni del documento o sostituisci il file.' 
-              : 'Carica un file da associare al progetto.'}
+              ? t('uploadDocumentDialog.editDescription')
+              : t('uploadDocumentDialog.newDescription')}
           </DialogDescription>
         </DialogHeader>
 
         <form onSubmit={handleSubmit} className="space-y-6 mt-4 max-w-full overflow-hidden">
           {/* File Upload */}
           <div className="space-y-2">
-            <Label>File {!isEditMode && '*'}</Label>
+            <Label>{t('uploadDocumentDialog.file')} {!isEditMode && '*'}</Label>
             <input
               ref={fileInputRef}
               type="file"
@@ -182,57 +187,59 @@ export default function UploadDocumentDialog({ open, onOpenChange, projectId, do
               >
                 <Upload className="h-8 w-8 mx-auto text-gray-400 mb-2" />
                 <p className="text-sm text-gray-600">
-                  {isEditMode ? 'Clicca per sostituire il file' : 'Clicca per selezionare un file'}
+                  {isEditMode ? t('uploadDocumentDialog.clickToReplace') : t('uploadDocumentDialog.clickToSelect')}
                 </p>
                 <p className="text-xs text-gray-400 mt-1">
-                  PDF, DOC, XLS, JPG, PNG, DWG
+                  {t('uploadDocumentDialog.supportedFormats')}
                 </p>
               </div>
             )}
             {isEditMode && !file && (
               <p className="text-xs text-gray-500">
-                File attuale: {document.name}.{document.file_type}
+                {t('uploadDocumentDialog.currentFile')}: {document.name}.{document.file_type}
               </p>
             )}
           </div>
 
           {/* Name */}
           <div className="space-y-2">
-            <Label htmlFor="name">Nome documento *</Label>
+            <Label htmlFor="name">{t('uploadDocumentDialog.documentName')} *</Label>
             <Input
               id="name"
               value={name}
               onChange={(e) => setName(e.target.value)}
-              placeholder="Es. Planimetria piano terra"
+              placeholder={t('uploadDocumentDialog.documentNamePlaceholder')}
               required
             />
           </div>
 
           {/* Category */}
           <div className="space-y-2">
-            <Label>Categoria</Label>
+            <Label>{t('uploadDocumentDialog.category')}</Label>
             <Select value={category} onValueChange={setCategory}>
               <SelectTrigger>
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
-                {categories.map(cat => (
-                  <SelectItem key={cat.value} value={cat.value}>
-                    {cat.label}
-                  </SelectItem>
-                ))}
+                <SelectItem value="project">{t('uploadDocumentDialog.categoryProject')}</SelectItem>
+                <SelectItem value="contract">{t('uploadDocumentDialog.categoryContract')}</SelectItem>
+                <SelectItem value="permit">{t('uploadDocumentDialog.categoryPermit')}</SelectItem>
+                <SelectItem value="drawing">{t('uploadDocumentDialog.categoryDrawing')}</SelectItem>
+                <SelectItem value="photo">{t('uploadDocumentDialog.categoryPhoto')}</SelectItem>
+                <SelectItem value="report">{t('uploadDocumentDialog.categoryReport')}</SelectItem>
+                <SelectItem value="other">{t('uploadDocumentDialog.categoryOther')}</SelectItem>
               </SelectContent>
             </Select>
           </div>
 
           {/* Description */}
           <div className="space-y-2">
-            <Label htmlFor="description">Descrizione</Label>
+            <Label htmlFor="description">{t('uploadDocumentDialog.description')}</Label>
             <Textarea
               id="description"
               value={description}
               onChange={(e) => setDescription(e.target.value)}
-              placeholder="Descrizione opzionale..."
+              placeholder={t('uploadDocumentDialog.descriptionPlaceholder')}
               rows={2}
             />
           </div>
@@ -244,7 +251,7 @@ export default function UploadDocumentDialog({ open, onOpenChange, projectId, do
               onClick={() => onOpenChange(false)}
               className="flex-1"
             >
-              Annulla
+              {t('uploadDocumentDialog.cancel')}
             </Button>
             <Button
               type="submit"
@@ -254,7 +261,7 @@ export default function UploadDocumentDialog({ open, onOpenChange, projectId, do
               {isUploading && (
                 <Loader2 className="h-4 w-4 mr-2 animate-spin" />
               )}
-              {isEditMode ? 'Salva' : 'Carica'}
+              {isEditMode ? t('uploadDocumentDialog.save') : t('uploadDocumentDialog.upload')}
             </Button>
           </div>
         </form>
