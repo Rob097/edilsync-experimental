@@ -45,8 +45,10 @@ export default function ParticipantCard({ participant, companyName, isPending, c
       await base44.entities.ProjectParticipant.update(participant.id, { status: 'removed' });
     },
     onSuccess: () => {
-      queryClient.invalidateQueries(['projectParticipants', projectId]);
-      queryClient.invalidateQueries(['channelMembers', projectId]);
+      queryClient.invalidateQueries({ queryKey: ['projectParticipants', projectId] });
+      setTimeout(() => {
+        queryClient.invalidateQueries({ queryKey: ['channelMembers', projectId] });
+      }, 500);
     },
   });
 

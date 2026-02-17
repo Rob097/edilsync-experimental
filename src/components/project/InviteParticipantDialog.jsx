@@ -183,7 +183,10 @@ export default function InviteParticipantDialog({
       return participant;
     },
     onSuccess: () => {
-      queryClient.invalidateQueries(['projectParticipants', projectId]);
+      queryClient.invalidateQueries({ queryKey: ['projectParticipants', projectId] });
+      setTimeout(() => {
+        queryClient.invalidateQueries({ queryKey: ['channelMembers', projectId] });
+      }, 500);
       onOpenChange(false);
       resetForm();
     },
