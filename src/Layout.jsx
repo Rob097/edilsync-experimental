@@ -34,6 +34,7 @@ import FullPageLoader from '@/components/ui/FullPageLoader';
 import CookieBanner from '@/components/legal/CookieBanner';
 import Footer from '@/components/legal/Footer';
 import AssistantFloatingButton from '@/components/assistant/AssistantFloatingButton';
+import WhatsAppButton from '@/components/assistant/WhatsAppButton';
 import TourProvider from '@/components/tour/TourProvider';
 import TourOverlay from '@/components/tour/TourOverlay';
 
