@@ -248,7 +248,19 @@ const enTranslations = {
     "previous": "Previous",
     "more": "More",
     "noData": "No data available",
-    "selectLanguage": "Select Language"
+    "selectLanguage": "Select Language",
+    "newProject": "New Project",
+    "newCompany": "New Company",
+    "projects": "Projects",
+    "companies": "Companies",
+    "members": "Members",
+    "seeAll": "See all",
+    "all": "All",
+    "noResults": "No results",
+    "tryModifyingFilters": "Try modifying your search filters.",
+    "tryModifyingSearchTerms": "Try modifying your search terms.",
+    "searchProjects": "Search projects...",
+    "searchCompanies": "Search companies..."
   },
   "navigation": {
     "dashboard": "Dashboard",
@@ -275,37 +287,39 @@ const enTranslations = {
   },
   "dashboard": {
     "welcome": "Welcome",
-    "newProject": "New Project",
     "projectStats": "Project Statistics",
     "totalProjects": "Total Projects",
-    "inProgress": "In Progress",
-    "completed": "Completed",
-    "companies": "Companies",
-    "members": "Members",
     "recentProjects": "Recent Projects",
     "viewAll": "View All",
-    "noProjects": "No projects available"
+    "noProjects": "No projects",
+    "noPersonalProjects": "You don't have any personal projects yet. Create your first one.",
+    "noCompanyProjects": "This company has no projects yet. Create the first one.",
+    "greetingPrefix": "Hi,",
+    "workingAs": "You are operating as",
+    "yourCompanies": "Your Companies",
+    "noCompanies": "No companies",
+    "noCompaniesDescription": "You are not a member of any company. Create one or wait for an invitation."
   },
   "projects": {
     "title": "Projects",
-    "newProject": "New Project",
     "filter": "Filter",
-    "all": "All",
-    "planning": "Planning",
-    "inProgress": "In Progress",
-    "completed": "Completed",
-    "onHold": "On Hold",
     "participants": "Participants",
     "tasks": "Tasks",
-    "noProjects": "No projects found"
+    "noProjects": "No projects found",
+    "status": {
+      "planning": "Planning",
+      "in_progress": "In progress",
+      "completed": "Completed",
+      "on_hold": "On hold"
+    }
   },
   "companies": {
     "title": "Companies",
-    "newCompany": "New Company",
     "members": "Members",
     "admin": "Administrator",
     "member": "Member",
-    "noCompanies": "No companies available"
+    "noCompanies": "No companies available",
+    "manageCompanies": "Manage the companies you are part of"
   },
   "tasks": {
     "task": "Task",
@@ -332,10 +346,14 @@ const enTranslations = {
     "targetDate": "Target Date",
     "completionDate": "Completion Date"
   },
+  "calendar": {
+    "title": "Calendar",
+    "newEvent": "New Event",
+    "today": "Today"
+  },
   "events": {
     "event": "Event",
     "events": "Events",
-    "newEvent": "New Event",
     "calendar": "Calendar",
     "title": "Title",
     "startTime": "Start Time",
