@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { base44 } from '@/api/base44Client';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { useLanguage } from '@/components/i18n/useLanguage';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -11,6 +12,7 @@ import { toast } from "sonner";
 import NotificationPreferences from '@/components/settings/NotificationPreferences';
 
 export default function Settings() {
+  const { t } = useLanguage();
   const queryClient = useQueryClient();
   
   const [formData, setFormData] = useState({
@@ -40,7 +42,7 @@ export default function Settings() {
     onSuccess: () => {
       queryClient.invalidateQueries(['currentUser']);
       setHasChanges(false);
-      toast.success('Profilo aggiornato con successo');
+      toast.success(t('settings.profileUpdated'));
     },
   });
 
@@ -65,19 +67,19 @@ export default function Settings() {
   return (
     <div className="max-w-4xl mx-auto space-y-6">
       <div>
-        <h1 className="text-2xl font-bold text-gray-900">Impostazioni</h1>
-        <p className="text-gray-500 mt-1">Gestisci il tuo profilo e le tue preferenze</p>
+        <h1 className="text-2xl font-bold text-gray-900">{t('settings.title')}</h1>
+        <p className="text-gray-500 mt-1">{t('settings.description')}</p>
       </div>
 
       <Tabs defaultValue="profile" className="space-y-6">
         <TabsList className="grid w-full grid-cols-2 max-w-md">
           <TabsTrigger value="profile" className="flex items-center gap-2">
             <User className="h-4 w-4" />
-            Profilo
+            {t('settings.profile')}
           </TabsTrigger>
           <TabsTrigger value="notifications" className="flex items-center gap-2">
             <Bell className="h-4 w-4" />
-            Comunicazioni
+            {t('settings.communications')}
           </TabsTrigger>
         </TabsList>
 
@@ -99,7 +101,7 @@ export default function Settings() {
             <CardContent>
               <form onSubmit={handleSubmit} className="space-y-6">
                 <div className="space-y-2">
-                  <Label htmlFor="display_name">Nome completo</Label>
+                  <Label htmlFor="display_name">{t('settings.fullName')}</Label>
                   <Input
                     id="display_name"
                     value={formData.display_name}
@@ -109,18 +111,18 @@ export default function Settings() {
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor="email">Email</Label>
+                  <Label htmlFor="email">{t('settings.email')}</Label>
                   <Input
                     id="email"
                     value={user?.email || ''}
                     disabled
                     className="bg-gray-50"
                   />
-                  <p className="text-xs text-gray-500">L'email non può essere modificata</p>
+                  <p className="text-xs text-gray-500">{t('settings.emailCannotBeChanged')}</p>
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor="phone">Telefono</Label>
+                  <Label htmlFor="phone">{t('settings.phone')}</Label>
                   <Input
                     id="phone"
                     value={formData.phone}
@@ -139,7 +141,7 @@ export default function Settings() {
                   ) : (
                     <Check className="h-4 w-4 mr-2" />
                   )}
-                  Salva modifiche
+                  {t('settings.saveChanges')}
                 </Button>
               </form>
             </CardContent>
