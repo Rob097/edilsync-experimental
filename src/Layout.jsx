@@ -151,6 +151,7 @@ export default function Layout({ children, currentPageName }) {
                   <Link
                     key={item.page}
                     to={item.path}
+                    data-tour={item.page === 'Dashboard' ? 'nav-dashboard' : undefined}
                     className={`
                       flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-colors
                       ${isActive 
