@@ -3,8 +3,6 @@ import { Link, useNavigate } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
 import { base44 } from '@/api/base44Client';
 import { useQuery } from '@tanstack/react-query';
-import TourLauncher from '@/components/tour/TourLauncher';
-import { companyTour } from '@/components/tour/tours/companyTour';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Skeleton } from "@/components/ui/skeleton.jsx";
@@ -72,21 +70,8 @@ export default function Companies() {
     return allMembers.filter(m => m.company_id === companyId).length;
   };
 
-  // Start company tour if user has companies and tour not completed/dismissed  
-  const shouldStartCompanyTour = user && 
-    companies.length > 0 && 
-    !user.tour_state?.companies_completed && 
-    !user.tour_state?.companies_dismissed;
-
   return (
     <div className="space-y-6">
-      {/* Launch company tour */}
-      <TourLauncher 
-        tourId="companies" 
-        steps={companyTour.steps} 
-        trigger={shouldStartCompanyTour}
-        delay={1000}
-      />
 
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">

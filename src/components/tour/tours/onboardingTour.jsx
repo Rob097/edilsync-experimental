@@ -8,7 +8,7 @@ export const onboardingTour = {
       placement: 'center',
     },
     {
-      target: 'a[href*="Dashboard"]',
+      target: '[data-tour="nav-dashboard"]',
       title: 'Dashboard',
       content: 'Qui troverai una panoramica generale dei tuoi progetti, società e attività recenti. È il tuo punto di partenza.',
       placement: 'bottom',

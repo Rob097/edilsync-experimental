@@ -3,8 +3,6 @@ import { Link, useNavigate } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
 import { base44 } from '@/api/base44Client';
 import { useQuery } from '@tanstack/react-query';
-import TourLauncher from '@/components/tour/TourLauncher';
-import { projectTour } from '@/components/tour/tours/projectTour';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -127,21 +125,8 @@ export default function Projects() {
     return allParticipants.filter(p => p.project_id === projectId).length;
   };
 
-  // Start project tour if user has projects and tour not completed/dismissed
-  const shouldStartProjectTour = user && 
-    contextProjects.length > 0 && 
-    !user.tour_state?.projects_completed && 
-    !user.tour_state?.projects_dismissed;
-
   return (
     <div className="space-y-6">
-      {/* Launch project tour */}
-      <TourLauncher 
-        tourId="projects" 
-        steps={projectTour.steps} 
-        trigger={shouldStartProjectTour}
-        delay={1000}
-      />
 
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">

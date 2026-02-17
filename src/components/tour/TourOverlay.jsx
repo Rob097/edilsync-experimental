@@ -65,7 +65,7 @@ export default function TourOverlay() {
         ref={overlayRef}
         className="fixed inset-0 z-[9998] pointer-events-none"
         style={{
-          background: 'rgba(0, 0, 0, 0.6)',
+          background: 'rgba(0, 0, 0, 0.3)',
         }}
       >
         {/* Spotlight hole */}
@@ -77,7 +77,7 @@ export default function TourOverlay() {
               left: `${highlightRect.left}px`,
               width: `${highlightRect.width}px`,
               height: `${highlightRect.height}px`,
-              boxShadow: '0 0 0 9999px rgba(0, 0, 0, 0.6), 0 0 20px rgba(239, 97, 68, 0.5)',
+              boxShadow: '0 0 0 9999px rgba(0, 0, 0, 0.3), 0 0 20px rgba(239, 97, 68, 0.5)',
               border: '2px solid #ef6144',
             }}
           />
