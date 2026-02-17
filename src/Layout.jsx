@@ -175,6 +175,9 @@ export default function Layout({ children, currentPageName }) {
                 <MessagingNotifications userEmail={user?.email} />
               </div>
               
+              {/* WhatsApp Assistant */}
+              <WhatsAppButton />
+              
               {/* Notifications */}
               <Link to={createPageUrl('Notifications')} data-tour="notifications">
                 <Button variant="ghost" size="icon" className="relative">
