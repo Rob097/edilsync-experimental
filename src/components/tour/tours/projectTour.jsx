@@ -37,7 +37,7 @@ export const projectTour = {
       clickTab: 'tasks',
     },
     {
-      target: '[role="tabpanel"]',
+      target: '#section-tasks',
       title: 'Gestione Lavori ✅',
       content: 'Nella sezione Lavori puoi creare task, organizzarli in milestone, e monitorare il progresso. Ogni task ha un responsabile e una scadenza.',
       placement: 'bottom',
@@ -45,7 +45,7 @@ export const projectTour = {
       clickTab: 'team',
     },
     {
-      target: '[role="tabpanel"]',
+      target: '#section-participants',
       title: 'Team e Documenti 👥',
       content: 'Qui gestisci i partecipanti al progetto, carichi documenti, gestisci le variazioni e comunichi con il team.',
       placement: 'bottom',
