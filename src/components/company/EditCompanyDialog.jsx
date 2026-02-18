@@ -16,7 +16,8 @@ import { Label } from "@/components/ui/label";
 import { Loader2 } from "lucide-react";
 
 export default function EditCompanyDialog({ open, onOpenChange, company }) {
-  const { t } = useLanguage();
+  const { t, currentLanguage } = useLanguage();
+  const tr = (itText, enText) => currentLanguage === 'it' ? itText : enText;
   const queryClient = useQueryClient();
   
   const [formData, setFormData] = useState({
@@ -98,7 +99,7 @@ export default function EditCompanyDialog({ open, onOpenChange, company }) {
               id="address"
               value={formData.address}
               onChange={(e) => handleChange('address', e.target.value)}
-              placeholder="Via Roma 15, 20121 Milano"
+              placeholder={tr('Via Roma 15, 20121 Milano', '15 Rome Street, 20121 Milan')}
             />
           </div>
 
@@ -119,7 +120,7 @@ export default function EditCompanyDialog({ open, onOpenChange, company }) {
               type="email"
               value={formData.email}
               onChange={(e) => handleChange('email', e.target.value)}
-              placeholder="info@azienda.it"
+              placeholder={tr('info@azienda.it', 'info@company.com')}
             />
           </div>
 
@@ -129,7 +130,7 @@ export default function EditCompanyDialog({ open, onOpenChange, company }) {
               id="description"
               value={formData.description}
               onChange={(e) => handleChange('description', e.target.value)}
-              placeholder="Breve descrizione della società..."
+              placeholder={tr('Breve descrizione della società...', 'Short company description...')}
               rows={3}
             />
           </div>

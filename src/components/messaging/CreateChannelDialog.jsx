@@ -12,6 +12,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Checkbox } from "@/components/ui/checkbox";
+import { useLanguage } from '@/components/i18n/useLanguage';
 
 export default function CreateChannelDialog({ 
   open, 
@@ -21,6 +22,8 @@ export default function CreateChannelDialog({
   currentUserEmail,
   activeCompanyId
 }) {
+  const { currentLanguage } = useLanguage();
+  const tr = (it, en) => currentLanguage === 'it' ? it : en;
   const queryClient = useQueryClient();
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
@@ -53,7 +56,7 @@ export default function CreateChannelDialog({
       if (activeCompanyId) {
         const membership = companyMemberships.find(m => m.company_id === activeCompanyId);
         if (!membership || membership.role !== 'admin') {
-          throw new Error('Solo gli amministratori della società possono creare canali a nome della società');
+          throw new Error(tr('Solo gli amministratori della società possono creare canali a nome della società', 'Only company administrators can create channels on behalf of the company'));
         }
       }
 
@@ -108,38 +111,38 @@ export default function CreateChannelDialog({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-md">
         <DialogHeader>
-          <DialogTitle>Crea Nuovo Canale</DialogTitle>
+          <DialogTitle>{tr('Crea Nuovo Canale', 'Create New Channel')}</DialogTitle>
         </DialogHeader>
         <div className="space-y-4">
           <div>
-            <Label htmlFor="name">Nome Canale</Label>
+            <Label htmlFor="name">{tr('Nome Canale', 'Channel Name')}</Label>
             <Input
               id="name"
               value={name}
               onChange={(e) => setName(e.target.value)}
-              placeholder="es. Problemi e Richieste"
+              placeholder={tr('es. Problemi e Richieste', 'e.g. Issues and Requests')}
             />
           </div>
           
           <div>
-            <Label htmlFor="description">Descrizione (opzionale)</Label>
+            <Label htmlFor="description">{tr('Descrizione (opzionale)', 'Description (optional)')}</Label>
             <Textarea
               id="description"
               value={description}
               onChange={(e) => setDescription(e.target.value)}
-              placeholder="Descrivi lo scopo del canale..."
+              placeholder={tr('Descrivi lo scopo del canale...', 'Describe the purpose of the channel...')}
               rows={2}
             />
           </div>
 
           <div>
-            <Label>Partecipanti (minimo 2)</Label>
+            <Label>{tr('Partecipanti (minimo 2)', 'Participants (minimum 2)')}</Label>
             <div className="mt-2 space-y-2 max-h-48 overflow-y-auto border rounded-lg p-3">
               {participants.map(participant => {
                 let displayName;
                 if (participant.participant_type === 'company') {
                   const company = allCompanies.find(c => c.id === participant.company_id);
-                  displayName = company?.name || 'Società';
+                  displayName = company?.name || tr('Società', 'Company');
                 } else {
                   const user = allUsers.find(u => u.email === participant.user_email);
                   displayName = user?.display_name || participant.user_email;
@@ -160,14 +163,14 @@ export default function CreateChannelDialog({
 
           <div className="flex justify-end gap-2">
             <Button variant="outline" onClick={() => onOpenChange(false)}>
-              Annulla
+              {tr('Annulla', 'Cancel')}
             </Button>
             <Button
               onClick={handleSubmit}
               disabled={!name.trim() || selectedParticipants.length < 2 || createChannelMutation.isPending}
               className="bg-[#ef6144] hover:bg-[#d9553a]"
             >
-              Crea Canale
+              {tr('Crea Canale', 'Create Channel')}
             </Button>
           </div>
         </div>

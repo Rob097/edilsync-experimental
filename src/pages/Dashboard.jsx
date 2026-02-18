@@ -4,7 +4,7 @@ import { createPageUrl } from '@/utils';
 import { base44 } from '@/api/base44Client';
 import { useQuery } from '@tanstack/react-query';
 import TourLauncher from '@/components/tour/TourLauncher';
-import { onboardingTour } from '@/components/tour/tours/onboardingTour';
+import { getOnboardingTour } from '@/components/tour/tours/onboardingTour';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton.jsx";
@@ -24,7 +24,7 @@ import { useLanguage } from '@/components/i18n/useLanguage';
 
 export default function Dashboard() {
   const navigate = useNavigate();
-  const { t } = useLanguage();
+  const { t, currentLanguage } = useLanguage();
   
   const { data: user } = useQuery({
     queryKey: ['currentUser'],
@@ -138,7 +138,7 @@ export default function Dashboard() {
       {/* Launch onboarding tour */}
       <TourLauncher 
         tourId="onboarding" 
-        steps={onboardingTour.steps} 
+        steps={getOnboardingTour(currentLanguage).steps} 
         trigger={shouldStartOnboarding}
         delay={1500}
       />

@@ -8,6 +8,7 @@ import { Separator } from "@/components/ui/separator";
 import { Button } from "@/components/ui/button";
 import { Loader2, Bell, Mail, Check } from "lucide-react";
 import { toast } from "sonner";
+import { useLanguage } from '@/components/i18n/useLanguage';
 
 const DEFAULT_PREFERENCES = {
   project_invite: { notification: true, email: true },
@@ -24,33 +25,47 @@ const DEFAULT_PREFERENCES = {
   document_comment: { notification: true, email: false },
 };
 
-const NOTIFICATION_GROUPS = {
-  'Gestione Progetti': [
-    { key: 'project_invite', label: 'Invito a nuovo progetto' },
-    { key: 'task_assigned', label: 'Assegnazione task' },
-    { key: 'task_status_changed', label: 'Cambio stato task' },
-    { key: 'change_request_assigned', label: 'Assegnazione richiesta di modifica' },
-    { key: 'change_request_status_changed', label: 'Cambio stato richiesta di modifica' },
-    { key: 'milestone_status_changed', label: 'Cambio stato milestone' },
-  ],
-  'Gestione Società': [
-    { key: 'company_invite', label: 'Invito a nuova società' },
-  ],
-  'Calendario ed Eventi': [
-    { key: 'event_invite', label: 'Invito ad evento' },
-    { key: 'event_updated', label: 'Evento aggiornato' },
-    { key: 'event_cancelled', label: 'Evento cancellato' },
-  ],
-  'Comunicazioni': [
-    { key: 'message_mention', label: 'Menzione in un messaggio' },
-    { key: 'document_comment', label: 'Commento su documento' },
-  ],
-};
+const NOTIFICATION_GROUPS = [
+  {
+    group: { it: 'Gestione Progetti', en: 'Project Management' },
+    actions: [
+      { key: 'project_invite', label: { it: 'Invito a nuovo progetto', en: 'Invitation to a new project' } },
+      { key: 'task_assigned', label: { it: 'Assegnazione task', en: 'Task assignment' } },
+      { key: 'task_status_changed', label: { it: 'Cambio stato task', en: 'Task status change' } },
+      { key: 'change_request_assigned', label: { it: 'Assegnazione richiesta di modifica', en: 'Change request assignment' } },
+      { key: 'change_request_status_changed', label: { it: 'Cambio stato richiesta di modifica', en: 'Change request status change' } },
+      { key: 'milestone_status_changed', label: { it: 'Cambio stato milestone', en: 'Milestone status change' } },
+    ],
+  },
+  {
+    group: { it: 'Gestione Società', en: 'Company Management' },
+    actions: [
+      { key: 'company_invite', label: { it: 'Invito a nuova società', en: 'Invitation to a new company' } },
+    ],
+  },
+  {
+    group: { it: 'Calendario ed Eventi', en: 'Calendar and Events' },
+    actions: [
+      { key: 'event_invite', label: { it: 'Invito ad evento', en: 'Invitation to event' } },
+      { key: 'event_updated', label: { it: 'Evento aggiornato', en: 'Event updated' } },
+      { key: 'event_cancelled', label: { it: 'Evento cancellato', en: 'Event cancelled' } },
+    ],
+  },
+  {
+    group: { it: 'Comunicazioni', en: 'Communications' },
+    actions: [
+      { key: 'message_mention', label: { it: 'Menzione in un messaggio', en: 'Mention in a message' } },
+      { key: 'document_comment', label: { it: 'Commento su documento', en: 'Comment on a document' } },
+    ],
+  },
+];
 
 export default function NotificationPreferences({ userEmail }) {
+  const { currentLanguage, t } = useLanguage();
   const queryClient = useQueryClient();
   const [preferences, setPreferences] = useState(DEFAULT_PREFERENCES);
   const [hasChanges, setHasChanges] = useState(false);
+  const tr = (itText, enText) => (currentLanguage === 'it' ? itText : enText);
 
   const { data: userPrefs, isLoading } = useQuery({
     queryKey: ['notificationPreferences', userEmail],
@@ -83,7 +98,7 @@ export default function NotificationPreferences({ userEmail }) {
     onSuccess: () => {
       queryClient.invalidateQueries(['notificationPreferences', userEmail]);
       setHasChanges(false);
-      toast.success('Preferenze salvate con successo');
+      toast.success(tr('Preferenze salvate con successo', 'Preferences saved successfully'));
     },
   });
 
@@ -130,22 +145,22 @@ export default function NotificationPreferences({ userEmail }) {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Preferenze di Comunicazione</CardTitle>
+        <CardTitle>{tr('Preferenze di Comunicazione', 'Communication Preferences')}</CardTitle>
         <CardDescription>
-          Scegli come vuoi ricevere le notifiche per ogni tipo di azione
+          {tr('Scegli come vuoi ricevere le notifiche per ogni tipo di azione', 'Choose how you want to receive notifications for each action type')}
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-6">
         {/* Master Controls */}
         <div className="bg-gray-50 rounded-lg p-4">
           <div className="flex items-center justify-between mb-2">
-            <Label className="text-base font-semibold">Tutte le comunicazioni</Label>
+            <Label className="text-base font-semibold">{tr('Tutte le comunicazioni', 'All communications')}</Label>
           </div>
           <div className="grid grid-cols-2 gap-4">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
                 <Bell className="h-4 w-4 text-gray-500" />
-                <span className="text-sm text-gray-700">Notifiche</span>
+                <span className="text-sm text-gray-700">{t('settings.notifications')}</span>
               </div>
               <Switch
                 checked={areAllEnabled('notification')}
@@ -168,13 +183,13 @@ export default function NotificationPreferences({ userEmail }) {
         <Separator />
 
         {/* Action Groups */}
-        {Object.entries(NOTIFICATION_GROUPS).map(([groupName, actions]) => (
-          <div key={groupName} className="space-y-4">
-            <h3 className="font-semibold text-gray-900">{groupName}</h3>
+        {NOTIFICATION_GROUPS.map(({ group, actions }, groupIndex) => (
+          <div key={group.en} className="space-y-4">
+            <h3 className="font-semibold text-gray-900">{currentLanguage === 'it' ? group.it : group.en}</h3>
             <div className="space-y-3">
               {actions.map(({ key, label }) => (
                 <div key={key} className="flex items-center justify-between py-2">
-                  <Label className="text-sm text-gray-700 flex-1">{label}</Label>
+                  <Label className="text-sm text-gray-700 flex-1">{currentLanguage === 'it' ? label.it : label.en}</Label>
                   <div className="flex items-center gap-6">
                     <Switch
                       checked={preferences[key]?.notification ?? false}
@@ -188,7 +203,7 @@ export default function NotificationPreferences({ userEmail }) {
                 </div>
               ))}
             </div>
-            {groupName !== Object.keys(NOTIFICATION_GROUPS)[Object.keys(NOTIFICATION_GROUPS).length - 1] && (
+            {groupIndex !== NOTIFICATION_GROUPS.length - 1 && (
               <Separator />
             )}
           </div>
@@ -206,7 +221,7 @@ export default function NotificationPreferences({ userEmail }) {
             ) : (
               <Check className="h-4 w-4 mr-2" />
             )}
-            Salva preferenze
+            {tr('Salva preferenze', 'Save preferences')}
           </Button>
         </div>
       </CardContent>

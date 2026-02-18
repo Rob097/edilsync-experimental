@@ -22,7 +22,8 @@ export default function MessageInput({
   activeCompanyName,
   participants
 }) {
-  const { t } = useLanguage();
+  const { t, currentLanguage } = useLanguage();
+  const tr = (it, en) => currentLanguage === 'it' ? it : en;
   const queryClient = useQueryClient();
   const [message, setMessage] = useState('');
   const [showMentions, setShowMentions] = useState(false);
@@ -73,8 +74,11 @@ export default function MessageInput({
               base44.entities.Notification.create({
                 user_email: email,
                 type: 'message_mention',
-                title: 'Sei stato menzionato',
-                message: `${messageData.sender_name} ti ha menzionato in "${channel?.name}" nel progetto "${project?.name}"`,
+                title: tr('Sei stato menzionato', 'You were mentioned'),
+                message: tr(
+                  `${messageData.sender_name} ti ha menzionato in "${channel?.name}" nel progetto "${project?.name}"`,
+                  `${messageData.sender_name} mentioned you in "${channel?.name}" in project "${project?.name}"`
+                ),
                 related_event_id: msg.id,
                 is_read: false
               }).catch(err => console.error('Failed to send notification:', err));

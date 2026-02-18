@@ -1,14 +1,30 @@
+import { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
+
+const normalizeLanguage = (lng) => {
+  if (!lng || typeof lng !== 'string') return 'it';
+  const base = lng.toLowerCase().split('-')[0];
+  return base === 'en' ? 'en' : 'it';
+};
 
 export const useLanguage = () => {
   const { i18n, t } = useTranslation();
 
   const changeLanguage = (lng) => {
-    i18n.changeLanguage(lng);
-    localStorage.setItem('language', lng);
+    const normalized = normalizeLanguage(lng);
+    i18n.changeLanguage(normalized);
+    localStorage.setItem('language', normalized);
+    localStorage.setItem('i18nextLng', normalized);
   };
 
-  const currentLanguage = i18n.language || 'it';
+  const currentLanguage = normalizeLanguage(i18n.resolvedLanguage || i18n.language);
+
+  useEffect(() => {
+    const detected = localStorage.getItem('i18nextLng');
+    if (!detected) {
+      localStorage.setItem('i18nextLng', currentLanguage || 'it');
+    }
+  }, [currentLanguage]);
 
   const formatDate = (date, format = 'short') => {
     if (!date) return '';

@@ -17,6 +17,7 @@ import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Loader2, AlertTriangle, Plus, X } from "lucide-react";
 import { format } from 'date-fns';
 import ParticipantSelector from './ParticipantSelector';
+import { useLanguage } from '@/components/i18n/useLanguage';
 
 export default function EventDialog({ 
   open, 
@@ -27,6 +28,8 @@ export default function EventDialog({
   currentCompany,
   user 
 }) {
+  const { currentLanguage } = useLanguage();
+  const tr = (itText, enText) => currentLanguage === 'it' ? itText : enText;
   const queryClient = useQueryClient();
   
   const [formData, setFormData] = useState({
@@ -270,32 +273,32 @@ export default function EventDialog({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-lg max-w-[97%] max-h-[90vh] overflow-y-auto p-4 sm:p-6 rounded-lg">
         <DialogHeader>
-          <DialogTitle>{event ? 'Modifica Evento' : 'Nuovo Evento'}</DialogTitle>
+          <DialogTitle>{event ? tr('Modifica Evento', 'Edit Event') : tr('Nuovo Evento', 'New Event')}</DialogTitle>
           <DialogDescription>
-            {event ? 'Modifica i dettagli dell\'evento.' : 'Crea un nuovo evento nel calendario.'}
+            {event ? tr('Modifica i dettagli dell\'evento.', 'Edit event details.') : tr('Crea un nuovo evento nel calendario.', 'Create a new event in the calendar.')}
           </DialogDescription>
         </DialogHeader>
 
         <form onSubmit={handleSubmit} className="space-y-3 sm:space-y-4 mt-4">
           <div className="space-y-2">
-            <Label htmlFor="title">Titolo *</Label>
+            <Label htmlFor="title">{tr('Titolo', 'Title')} *</Label>
             <Input
               id="title"
               value={formData.title}
               onChange={(e) => handleChange('title', e.target.value)}
-              placeholder="Es. Riunione di cantiere"
+              placeholder={tr('Es. Riunione di cantiere', 'e.g. Site meeting')}
               required
             />
           </div>
 
           <div className="space-y-2">
-            <Label>Contesto</Label>
+            <Label>{tr('Contesto', 'Context')}</Label>
             <Select value={formData.owner_type} onValueChange={(v) => handleChange('owner_type', v)}>
               <SelectTrigger>
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="personal">Personale</SelectItem>
+                <SelectItem value="personal">{tr('Personale', 'Personal')}</SelectItem>
                 {currentCompany && (
                   <SelectItem value="company">{currentCompany.name}</SelectItem>
                 )}
@@ -305,7 +308,7 @@ export default function EventDialog({
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
             <div className="space-y-2">
-              <Label htmlFor="start_date">Data inizio *</Label>
+              <Label htmlFor="start_date">{tr('Data inizio', 'Start date')} *</Label>
               <Input
                 id="start_date"
                 type="date"
@@ -315,7 +318,7 @@ export default function EventDialog({
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="start_time">Ora inizio *</Label>
+              <Label htmlFor="start_time">{tr('Ora inizio', 'Start time')} *</Label>
               <Input
                 id="start_time"
                 type="time"
@@ -328,7 +331,7 @@ export default function EventDialog({
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
             <div className="space-y-2">
-              <Label htmlFor="end_date">Data fine *</Label>
+              <Label htmlFor="end_date">{tr('Data fine', 'End date')} *</Label>
               <Input
                 id="end_date"
                 type="date"
@@ -338,7 +341,7 @@ export default function EventDialog({
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="end_time">Ora fine *</Label>
+              <Label htmlFor="end_time">{tr('Ora fine', 'End time')} *</Label>
               <Input
                 id="end_time"
                 type="time"
@@ -350,22 +353,22 @@ export default function EventDialog({
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="location">Luogo</Label>
+            <Label htmlFor="location">{tr('Luogo', 'Location')}</Label>
             <Input
               id="location"
               value={formData.location}
               onChange={(e) => handleChange('location', e.target.value)}
-              placeholder="Es. Cantiere Via Roma 15"
+              placeholder={tr('Es. Cantiere Via Roma 15', 'e.g. Site at 15 Rome Street')}
             />
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="description">Descrizione</Label>
+            <Label htmlFor="description">{tr('Descrizione', 'Description')}</Label>
             <Textarea
               id="description"
               value={formData.description}
               onChange={(e) => handleChange('description', e.target.value)}
-              placeholder="Descrizione opzionale..."
+              placeholder={tr('Descrizione opzionale...', 'Optional description...')}
               rows={2}
             />
           </div>
@@ -382,8 +385,10 @@ export default function EventDialog({
             <Alert variant="destructive">
               <AlertTriangle className="h-4 w-4" />
               <AlertDescription>
-                Hai già un evento "{conflicts.creator.title}" in questo orario. 
-                Continuando, l'evento esistente verrà cancellato.
+                {tr(
+                  `Hai già un evento "${conflicts.creator.title}" in questo orario. Continuando, l'evento esistente verrà cancellato.`,
+                  `You already have an event "${conflicts.creator.title}" at this time. Continuing will delete the existing event.`
+                )}
               </AlertDescription>
             </Alert>
           )}
@@ -392,7 +397,7 @@ export default function EventDialog({
             <Alert>
               <AlertTriangle className="h-4 w-4" />
               <AlertDescription>
-                I seguenti partecipanti hanno conflitti:
+                {tr('I seguenti partecipanti hanno conflitti:', 'The following participants have conflicts:')}
                 <ul className="mt-1 list-disc list-inside">
                   {conflicts.participants.map((c, idx) => (
                     <li key={idx}>
@@ -400,7 +405,7 @@ export default function EventDialog({
                     </li>
                   ))}
                 </ul>
-                Gli inviti verranno comunque inviati con avviso di conflitto.
+                {tr('Gli inviti verranno comunque inviati con avviso di conflitto.', 'Invitations will still be sent with a conflict warning.')}
               </AlertDescription>
             </Alert>
           )}
@@ -412,7 +417,7 @@ export default function EventDialog({
               onClick={() => onOpenChange(false)}
               className="flex-1"
             >
-              Annulla
+              {tr('Annulla', 'Cancel')}
             </Button>
             <Button
               type="submit"
@@ -422,7 +427,7 @@ export default function EventDialog({
               {createEventMutation.isPending && (
                 <Loader2 className="h-4 w-4 mr-2 animate-spin" />
               )}
-              {showConflictWarning ? 'Conferma' : (event ? 'Salva' : 'Crea')}
+              {showConflictWarning ? tr('Conferma', 'Confirm') : (event ? tr('Salva', 'Save') : tr('Crea', 'Create'))}
             </Button>
           </div>
         </form>

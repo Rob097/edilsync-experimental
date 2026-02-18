@@ -2,11 +2,15 @@ import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { format } from 'date-fns';
-import { it } from 'date-fns/locale';
+import { it, enUS } from 'date-fns/locale';
 import { X, Plus, Clock, MapPin } from "lucide-react";
 import EmptyState from '@/components/ui/EmptyState';
+import { useLanguage } from '@/components/i18n/useLanguage';
 
 export default function CalendarDayView({ date, events, onEventClick, onClose, onCreateEvent }) {
+  const { currentLanguage } = useLanguage();
+  const tr = (itText, enText) => currentLanguage === 'it' ? itText : enText;
+  const dateLocale = currentLanguage === 'it' ? it : enUS;
   const sortedEvents = [...events].sort((a, b) => 
     new Date(a.start_datetime) - new Date(b.start_datetime)
   );
@@ -15,12 +19,12 @@ export default function CalendarDayView({ date, events, onEventClick, onClose, o
     <Card>
       <CardHeader className="flex flex-row items-center justify-between pb-4">
         <CardTitle className="text-lg font-semibold">
-          {format(date, "EEEE d MMMM yyyy", { locale: it })}
+          {format(date, "EEEE d MMMM yyyy", { locale: dateLocale })}
         </CardTitle>
         <div className="flex items-center gap-2">
           <Button variant="outline" size="sm" onClick={onCreateEvent}>
             <Plus className="h-4 w-4 mr-1" />
-            Nuovo
+            {tr('Nuovo', 'New')}
           </Button>
           <Button variant="ghost" size="icon" onClick={onClose}>
             <X className="h-4 w-4" />
@@ -64,9 +68,9 @@ export default function CalendarDayView({ date, events, onEventClick, onClose, o
         ) : (
           <EmptyState
             icon={Clock}
-            title="Nessun evento"
-            description="Non ci sono eventi programmati per questo giorno."
-            actionLabel="Crea evento"
+            title={tr('Nessun evento', 'No events')}
+            description={tr('Non ci sono eventi programmati per questo giorno.', 'There are no events scheduled for this day.')}
+            actionLabel={tr('Crea evento', 'Create event')}
             onAction={onCreateEvent}
           />
         )}

@@ -16,6 +16,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Building2, User, ChevronDown, Check } from "lucide-react";
+import { useLanguage } from '@/components/i18n/useLanguage';
 
 export default function ContextSwitcher({ 
   currentContext, 
@@ -23,8 +24,10 @@ export default function ContextSwitcher({
   companies, 
   onContextChange 
 }) {
+  const { t, currentLanguage } = useLanguage();
   const isPersonal = currentContext === 'personal';
   const [confirmDialog, setConfirmDialog] = useState(null);
+  const tr = (itText, enText) => (currentLanguage === 'it' ? itText : enText);
 
   const handleContextSelect = (context, company) => {
     // Don't show confirmation if selecting current context
@@ -43,12 +46,14 @@ export default function ContextSwitcher({
   };
 
   const getCurrentContextLabel = () => {
-    return isPersonal ? 'Privato' : currentCompany?.name || 'Società';
+    return isPersonal ? tr('Privato', 'Private') : currentCompany?.name || tr('Società', 'Company');
   };
 
   const getNewContextLabel = () => {
     if (!confirmDialog) return '';
-    return confirmDialog.context === 'personal' ? 'Privato' : confirmDialog.company?.name || 'Società';
+    return confirmDialog.context === 'personal'
+      ? tr('Privato', 'Private')
+      : confirmDialog.company?.name || tr('Società', 'Company');
   };
 
   return (
@@ -62,13 +67,13 @@ export default function ContextSwitcher({
             {isPersonal ? (
               <>
                 <User className="h-4 w-4 text-[#ef6144]" />
-                <span className="font-medium">Privato</span>
+                <span className="font-medium">{tr('Privato', 'Private')}</span>
               </>
             ) : (
               <>
                 <Building2 className="h-4 w-4 text-[#ef6144]" />
                 <span className="font-medium truncate max-w-[150px]">
-                  {currentCompany?.name || 'Società'}
+                  {currentCompany?.name || tr('Società', 'Company')}
                 </span>
               </>
             )}
@@ -82,7 +87,7 @@ export default function ContextSwitcher({
           >
             <div className="flex items-center gap-2">
               <User className="h-4 w-4" />
-              <span>Privato</span>
+              <span>{tr('Privato', 'Private')}</span>
             </div>
             {isPersonal && <Check className="h-4 w-4 text-[#ef6144]" />}
           </DropdownMenuItem>
@@ -110,18 +115,23 @@ export default function ContextSwitcher({
       <Dialog open={!!confirmDialog} onOpenChange={(open) => !open && setConfirmDialog(null)}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Cambiare contesto di lavoro?</DialogTitle>
+            <DialogTitle>{tr('Cambiare contesto di lavoro?', 'Switch work context?')}</DialogTitle>
             <DialogDescription>
-              Stai per passare dal contesto "<strong>{getCurrentContextLabel()}</strong>" a "<strong>{getNewContextLabel()}</strong>". 
-              Sarai reindirizzato alla home page.
+              {tr(
+                'Stai per passare dal contesto',
+                'You are about to switch from'
+              )}{' '}
+              "<strong>{getCurrentContextLabel()}</strong>"{' '}
+              {tr('a', 'to')}{' '}
+              "<strong>{getNewContextLabel()}</strong>". {tr('Sarai reindirizzato alla home page.', 'You will be redirected to the home page.')}
             </DialogDescription>
           </DialogHeader>
           <DialogFooter>
             <Button variant="outline" onClick={() => setConfirmDialog(null)}>
-              Annulla
+              {t('common.cancel')}
             </Button>
             <Button onClick={handleConfirm} className="bg-[#ef6144] hover:bg-[#d9553a]">
-              Conferma
+              {t('common.confirm')}
             </Button>
           </DialogFooter>
         </DialogContent>

@@ -4,13 +4,17 @@ import { createPageUrl } from '@/utils';
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Building2, Users, Briefcase } from "lucide-react";
-
-const roleLabels = {
-  admin: 'Amministratore',
-  member: 'Membro',
-};
+import { useLanguage } from '@/components/i18n/useLanguage';
 
 export default function CompanyCard({ company, userRole, memberCount }) {
+  const { t, currentLanguage } = useLanguage();
+  const tr = (itText, enText) => (currentLanguage === 'it' ? itText : enText);
+
+  const roleLabels = {
+    admin: t('companies.admin'),
+    member: t('companies.member'),
+  };
+
   return (
     <Link to={createPageUrl('CompanyDetail') + `?id=${company.id}`}>
       <Card className="hover:shadow-md transition-all duration-200 border-gray-200 hover:border-[#ef6144]/30 cursor-pointer">
@@ -29,13 +33,13 @@ export default function CompanyCard({ company, userRole, memberCount }) {
                 )}
               </div>
               {company.vat_number && (
-                <p className="text-sm text-gray-500 mb-2">P.IVA: {company.vat_number}</p>
+                <p className="text-sm text-gray-500 mb-2">{tr('P.IVA', 'VAT')}: {company.vat_number}</p>
               )}
               <div className="flex items-center gap-4 text-sm text-gray-500">
                 {memberCount > 0 && (
                   <div className="flex items-center gap-1">
                     <Users className="h-3.5 w-3.5" />
-                    <span>{memberCount} {memberCount === 1 ? 'membro' : 'membri'}</span>
+                    <span>{memberCount} {memberCount === 1 ? tr('membro', 'member') : tr('membri', 'members')}</span>
                   </div>
                 )}
               </div>

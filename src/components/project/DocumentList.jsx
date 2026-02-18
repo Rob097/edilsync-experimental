@@ -27,11 +27,12 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { format } from 'date-fns';
-import { it } from 'date-fns/locale';
+import { it, enUS } from 'date-fns/locale';
 import EmptyState from '@/components/ui/EmptyState';
 import UploadDocumentDialog from './UploadDocumentDialog';
 import DocumentPreviewDialog from './DocumentPreviewDialog';
 import { Eye } from "lucide-react";
+import { useLanguage } from '@/components/i18n/useLanguage';
 
 const categoryLabels = {
   project: 'Progetto',
@@ -62,6 +63,9 @@ const formatFileSize = (bytes) => {
 };
 
 export default function DocumentList({ projectId, canUpload, currentUserEmail, uploadDialogOpen: externalUploadDialog, onUploadDialogChange }) {
+  const { currentLanguage, t } = useLanguage();
+  const tr = (itText, enText) => currentLanguage === 'it' ? itText : enText;
+  const dateLocale = currentLanguage === 'it' ? it : enUS;
   const queryClient = useQueryClient();
   const [searchQuery, setSearchQuery] = useState('');
   const [filterCategory, setFilterCategory] = useState('all');
@@ -156,14 +160,14 @@ export default function DocumentList({ projectId, canUpload, currentUserEmail, u
               className="sm:w-auto"
             >
               <ArrowLeft className="h-4 w-4 mr-2" />
-              Indietro
+              {tr('Indietro', 'Back')}
             </Button>
           )}
           
           <div className="relative flex-1">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
             <Input
-              placeholder="Cerca documenti..."
+              placeholder={t('common.search')}
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               className="pl-10"
@@ -179,7 +183,7 @@ export default function DocumentList({ projectId, canUpload, currentUserEmail, u
                 setViewMode('grid');
                 setOpenFolder(null);
               }}
-              title="Vista a griglia"
+              title={tr('Vista a griglia', 'Grid view')}
             >
               <Grid3x3 className="h-4 w-4" />
             </Button>
@@ -190,7 +194,7 @@ export default function DocumentList({ projectId, canUpload, currentUserEmail, u
                 setViewMode('list');
                 setOpenFolder(null);
               }}
-              title="Vista a lista"
+              title={tr('Vista a lista', 'List view')}
             >
               <List className="h-4 w-4" />
             </Button>
@@ -205,7 +209,7 @@ export default function DocumentList({ projectId, canUpload, currentUserEmail, u
               className="bg-[#ef6144] hover:bg-[#d9553a]"
             >
               <Upload className="h-4 w-4 mr-2" />
-              Carica
+              {tr('Carica', 'Upload')}
             </Button>
           )}
         </div>
@@ -214,27 +218,27 @@ export default function DocumentList({ projectId, canUpload, currentUserEmail, u
         <div className="flex flex-wrap gap-2">
           <Select value={filterCategory} onValueChange={setFilterCategory}>
             <SelectTrigger className="w-36">
-              <SelectValue placeholder="Categoria" />
+              <SelectValue placeholder={t('documents.category')} />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="all">Tutte</SelectItem>
-              <SelectItem value="project">Progetto</SelectItem>
-              <SelectItem value="contract">Contratto</SelectItem>
-              <SelectItem value="permit">Permesso</SelectItem>
-              <SelectItem value="drawing">Disegno</SelectItem>
-              <SelectItem value="photo">Foto</SelectItem>
+              <SelectItem value="all">{tr('Tutte', 'All')}</SelectItem>
+              <SelectItem value="project">{tr('Progetto', 'Project')}</SelectItem>
+              <SelectItem value="contract">{tr('Contratto', 'Contract')}</SelectItem>
+              <SelectItem value="permit">{tr('Permesso', 'Permit')}</SelectItem>
+              <SelectItem value="drawing">{tr('Disegno', 'Drawing')}</SelectItem>
+              <SelectItem value="photo">{tr('Foto', 'Photo')}</SelectItem>
               <SelectItem value="report">Report</SelectItem>
-              <SelectItem value="other">Altro</SelectItem>
+              <SelectItem value="other">{tr('Altro', 'Other')}</SelectItem>
             </SelectContent>
           </Select>
           
           {uniqueFileTypes.length > 0 && (
             <Select value={filterType} onValueChange={setFilterType}>
               <SelectTrigger className="w-28">
-                <SelectValue placeholder="Tipo" />
+                <SelectValue placeholder={tr('Tipo', 'Type')} />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="all">Tutti</SelectItem>
+                <SelectItem value="all">{tr('Tutti', 'All')}</SelectItem>
                 {uniqueFileTypes.map(type => (
                   <SelectItem key={type} value={type}>{type.toUpperCase()}</SelectItem>
                 ))}
@@ -244,12 +248,12 @@ export default function DocumentList({ projectId, canUpload, currentUserEmail, u
           
           <Select value={sortBy} onValueChange={setSortBy}>
             <SelectTrigger className="w-36">
-              <SelectValue placeholder="Ordina" />
+              <SelectValue placeholder={tr('Ordina', 'Sort')} />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="date_desc">Più recenti</SelectItem>
-              <SelectItem value="date_asc">Meno recenti</SelectItem>
-              <SelectItem value="name_asc">Nome A-Z</SelectItem>
+              <SelectItem value="date_desc">{tr('Più recenti', 'Newest')}</SelectItem>
+              <SelectItem value="date_asc">{tr('Meno recenti', 'Oldest')}</SelectItem>
+              <SelectItem value="name_asc">{tr('Nome A-Z', 'Name A-Z')}</SelectItem>
             </SelectContent>
           </Select>
         </div>
@@ -273,7 +277,7 @@ export default function DocumentList({ projectId, canUpload, currentUserEmail, u
                   <div>
                     <p className="font-medium text-gray-900">{category.label}</p>
                     <p className="text-sm text-gray-500 mt-1">
-                      {category.count} {category.count === 1 ? 'file' : 'file'}
+                      {category.count} {tr('file', 'files')}
                     </p>
                   </div>
                 </div>
@@ -283,9 +287,9 @@ export default function DocumentList({ projectId, canUpload, currentUserEmail, u
         ) : (
           <EmptyState
             icon={Folder}
-            title="Nessun documento"
-            description="Carica il primo documento del progetto."
-            actionLabel={canUpload ? "Carica documento" : undefined}
+            title={tr('Nessun documento', 'No documents')}
+            description={tr('Carica il primo documento del progetto.', 'Upload the first project document.')}
+            actionLabel={canUpload ? tr('Carica documento', 'Upload document') : undefined}
             onAction={canUpload ? () => {
               setUploadDialogOpen(true);
               onUploadDialogChange?.(true);
@@ -301,7 +305,7 @@ export default function DocumentList({ projectId, canUpload, currentUserEmail, u
                 {categoryLabels[openFolder]}
               </h3>
               <p className="text-sm text-gray-500">
-                {folderDocuments.length} {folderDocuments.length === 1 ? 'documento' : 'documenti'}
+                {folderDocuments.length} {folderDocuments.length === 1 ? tr('documento', 'document') : tr('documenti', 'documents')}
               </p>
             </div>
             <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
@@ -350,7 +354,7 @@ export default function DocumentList({ projectId, canUpload, currentUserEmail, u
                           size="icon"
                           className="h-7 w-7"
                           asChild
-                          title="Scarica"
+                          title={tr('Scarica', 'Download')}
                         >
                           <a href={doc.file_url} target="_blank" rel="noopener noreferrer" download>
                             <Download className="h-3.5 w-3.5 text-gray-500" />
@@ -366,14 +370,14 @@ export default function DocumentList({ projectId, canUpload, currentUserEmail, u
                             <DropdownMenuContent align="end">
                               <DropdownMenuItem onClick={() => setEditingDocument(doc)}>
                                 <Pencil className="h-4 w-4 mr-2" />
-                                Modifica
+                                {tr('Modifica', 'Edit')}
                               </DropdownMenuItem>
                               <DropdownMenuItem
                                 onClick={() => deleteMutation.mutate(doc.id)}
                                 className="text-red-600"
                               >
                                 <Trash2 className="h-4 w-4 mr-2" />
-                                Elimina
+                                {tr('Elimina', 'Delete')}
                               </DropdownMenuItem>
                             </DropdownMenuContent>
                           </DropdownMenu>
@@ -388,9 +392,9 @@ export default function DocumentList({ projectId, canUpload, currentUserEmail, u
         ) : (
           <EmptyState
             icon={FileText}
-            title="Nessun documento in questa cartella"
-            description="Carica documenti in questa categoria."
-            actionLabel={canUpload ? "Carica documento" : undefined}
+            title={tr('Nessun documento in questa cartella', 'No documents in this folder')}
+            description={tr('Carica documenti in questa categoria.', 'Upload documents in this category.')}
+            actionLabel={canUpload ? tr('Carica documento', 'Upload document') : undefined}
             onAction={canUpload ? () => {
               setUploadDialogOpen(true);
               onUploadDialogChange?.(true);
@@ -422,7 +426,7 @@ export default function DocumentList({ projectId, canUpload, currentUserEmail, u
                         <span>{formatFileSize(doc.file_size)}</span>
                       )}
                       <span>•</span>
-                      <span>{format(new Date(doc.created_date), 'd MMM yyyy', { locale: it })}</span>
+                      <span>{format(new Date(doc.created_date), 'd MMM yyyy', { locale: dateLocale })}</span>
                     </div>
                     {doc.description && (
                       <p className="text-sm text-gray-500 truncate mt-0.5">{doc.description}</p>
@@ -435,7 +439,7 @@ export default function DocumentList({ projectId, canUpload, currentUserEmail, u
                     variant="ghost"
                     size="icon"
                     onClick={() => setPreviewDocument(doc)}
-                    title="Anteprima"
+                    title={tr('Anteprima', 'Preview')}
                   >
                     <Eye className="h-4 w-4 text-gray-500" />
                   </Button>
@@ -443,7 +447,7 @@ export default function DocumentList({ projectId, canUpload, currentUserEmail, u
                     variant="ghost"
                     size="icon"
                     asChild
-                    title="Scarica"
+                    title={tr('Scarica', 'Download')}
                   >
                     <a href={doc.file_url} target="_blank" rel="noopener noreferrer" download>
                       <Download className="h-4 w-4 text-gray-500" />
@@ -460,14 +464,14 @@ export default function DocumentList({ projectId, canUpload, currentUserEmail, u
                       <DropdownMenuContent align="end">
                         <DropdownMenuItem onClick={() => setEditingDocument(doc)}>
                           <Pencil className="h-4 w-4 mr-2" />
-                          Modifica
+                          {tr('Modifica', 'Edit')}
                         </DropdownMenuItem>
                         <DropdownMenuItem
                           onClick={() => deleteMutation.mutate(doc.id)}
                           className="text-red-600"
                         >
                           <Trash2 className="h-4 w-4 mr-2" />
-                          Elimina
+                          {tr('Elimina', 'Delete')}
                         </DropdownMenuItem>
                       </DropdownMenuContent>
                     </DropdownMenu>
@@ -479,13 +483,13 @@ export default function DocumentList({ projectId, canUpload, currentUserEmail, u
         ) : (
           <EmptyState
             icon={FileText}
-            title={searchQuery ? "Nessun risultato" : "Nessun documento"}
+            title={searchQuery ? t('common.noResults') : tr('Nessun documento', 'No documents')}
             description={
               searchQuery
-                ? "Prova a modificare i termini di ricerca."
-                : "Carica il primo documento del progetto."
+                ? t('common.tryModifyingSearchTerms')
+                : tr('Carica il primo documento del progetto.', 'Upload the first project document.')
             }
-            actionLabel={!searchQuery && canUpload ? "Carica documento" : undefined}
+            actionLabel={!searchQuery && canUpload ? tr('Carica documento', 'Upload document') : undefined}
             onAction={!searchQuery && canUpload ? () => {
               setUploadDialogOpen(true);
               onUploadDialogChange?.(true);

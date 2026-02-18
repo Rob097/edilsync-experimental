@@ -1,31 +1,33 @@
 import React from 'react';
 import { Button } from "@/components/ui/button";
 import { MessageSquare, Calendar, ListTodo, Users } from "lucide-react";
-
-const suggestions = [
-  {
-    icon: ListTodo,
-    text: "Quali sono i miei progetti in corso?",
-  },
-  {
-    icon: Calendar,
-    text: "Mostrami gli eventi di questa settimana",
-  },
-  {
-    icon: Users,
-    text: "Chi sono i partecipanti del progetto X?",
-  },
-  {
-    icon: MessageSquare,
-    text: "Ci sono nuove notifiche importanti?",
-  },
-];
+import { useLanguage } from '@/components/i18n/useLanguage';
 
 export default function SuggestedMessages({ onSelectMessage }) {
+  const { currentLanguage } = useLanguage();
+  const tr = (itText, enText) => currentLanguage === 'it' ? itText : enText;
+  const suggestions = [
+    {
+      icon: ListTodo,
+      text: tr('Quali sono i miei progetti in corso?', 'What are my ongoing projects?'),
+    },
+    {
+      icon: Calendar,
+      text: tr('Mostrami gli eventi di questa settimana', 'Show me this week\'s events'),
+    },
+    {
+      icon: Users,
+      text: tr('Chi sono i partecipanti del progetto X?', 'Who are the participants of project X?'),
+    },
+    {
+      icon: MessageSquare,
+      text: tr('Ci sono nuove notifiche importanti?', 'Are there any important new notifications?'),
+    },
+  ];
   return (
     <div className="space-y-2">
       <p className="text-xs font-medium text-gray-500 uppercase tracking-wide">
-        Suggerimenti
+        {tr('Suggerimenti', 'Suggestions')}
       </p>
       <div className="grid grid-cols-1 gap-2">
         {suggestions.map((suggestion, idx) => (

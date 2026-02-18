@@ -4,14 +4,17 @@ import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { User, Building2, Check } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { useLanguage } from '@/components/i18n/useLanguage';
 
 export default function AssigneeSelector({ 
   participants = [], 
   companies = [],
   value, 
   onChange,
-  label = "Assegnato a *"
+  label
 }) {
+  const { currentLanguage } = useLanguage();
+  const tr = (itText, enText) => currentLanguage === 'it' ? itText : enText;
   const [searchQuery, setSearchQuery] = useState('');
   const [isOpen, setIsOpen] = useState(false);
 
@@ -33,7 +36,7 @@ export default function AssigneeSelector({
         return {
           id: p.id,
           type: 'company',
-          label: company?.name || 'Società sconosciuta',
+          label: company?.name || tr('Società sconosciuta', 'Unknown company'),
           companyId: p.company_id,
         };
       });
@@ -59,7 +62,7 @@ export default function AssigneeSelector({
 
   return (
     <div className="space-y-2">
-      <Label>{label}</Label>
+      <Label>{label || tr('Assegnato a *', 'Assigned to *')}</Label>
       <div className="relative">
         <button
           type="button"
@@ -76,7 +79,7 @@ export default function AssigneeSelector({
               <span className="flex-1">{selectedOption.label}</span>
             </>
           ) : (
-            <span className="text-gray-400">Seleziona assegnatario...</span>
+            <span className="text-gray-400">{tr('Seleziona assegnatario...', 'Select assignee...')}</span>
           )}
         </button>
 
@@ -84,7 +87,7 @@ export default function AssigneeSelector({
           <div className="absolute z-50 w-full mt-1 bg-white border rounded-md shadow-lg">
             <div className="p-2 border-b">
               <Input
-                placeholder="Cerca..."
+                placeholder={tr('Cerca...', 'Search...')}
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 className="h-8"
@@ -96,7 +99,7 @@ export default function AssigneeSelector({
               <div className="p-1">
                 {filteredUsers.length > 0 && (
                   <div className="mb-2">
-                    <div className="px-2 py-1 text-xs font-medium text-gray-500">Utenti</div>
+                    <div className="px-2 py-1 text-xs font-medium text-gray-500">{tr('Utenti', 'Users')}</div>
                     {filteredUsers.map(user => (
                       <button
                         key={user.id}
@@ -117,7 +120,7 @@ export default function AssigneeSelector({
 
                 {filteredCompanies.length > 0 && (
                   <div>
-                    <div className="px-2 py-1 text-xs font-medium text-gray-500">Società</div>
+                    <div className="px-2 py-1 text-xs font-medium text-gray-500">{tr('Società', 'Companies')}</div>
                     {filteredCompanies.map(company => (
                       <button
                         key={company.id}
@@ -138,7 +141,7 @@ export default function AssigneeSelector({
 
                 {filteredUsers.length === 0 && filteredCompanies.length === 0 && (
                   <div className="px-2 py-4 text-sm text-gray-500 text-center">
-                    Nessun risultato
+                    {tr('Nessun risultato', 'No results')}
                   </div>
                 )}
               </div>

@@ -7,20 +7,23 @@ import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Plus, CheckCircle2, Clock, AlertCircle, Play, List, Grid3x3, Flag, X } from "lucide-react";
 import { format } from 'date-fns';
-import { it } from 'date-fns/locale';
+import { it, enUS } from 'date-fns/locale';
 import EmptyState from '@/components/ui/EmptyState';
 import TaskDialog from './TaskDialog';
 import TaskBoard from './TaskBoard';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-
-const statusConfig = {
-  not_started: { label: 'Non iniziato', color: 'bg-gray-100 text-gray-700', icon: Clock },
-  in_progress: { label: 'In corso', color: 'bg-blue-100 text-blue-700', icon: Play },
-  completed: { label: 'Completato', color: 'bg-green-100 text-green-700', icon: CheckCircle2 },
-  blocked: { label: 'Bloccato', color: 'bg-red-100 text-red-700', icon: AlertCircle },
-};
+import { useLanguage } from '@/components/i18n/useLanguage';
 
 export default function TaskList({ projectId, canEdit, filterMilestoneId }) {
+  const { currentLanguage } = useLanguage();
+  const tr = (itText, enText) => currentLanguage === 'it' ? itText : enText;
+  const dateLocale = currentLanguage === 'it' ? it : enUS;
+  const statusConfig = {
+    not_started: { label: tr('Non iniziato', 'Not started'), color: 'bg-gray-100 text-gray-700', icon: Clock },
+    in_progress: { label: tr('In corso', 'In progress'), color: 'bg-blue-100 text-blue-700', icon: Play },
+    completed: { label: tr('Completato', 'Completed'), color: 'bg-green-100 text-green-700', icon: CheckCircle2 },
+    blocked: { label: tr('Bloccato', 'Blocked'), color: 'bg-red-100 text-red-700', icon: AlertCircle },
+  };
   const queryClient = useQueryClient();
   const [dialogOpen, setDialogOpen] = useState(false);
   const [selectedTask, setSelectedTask] = useState(null);
@@ -71,14 +74,14 @@ export default function TaskList({ projectId, canEdit, filterMilestoneId }) {
       <Card>
         <CardHeader className="flex flex-row items-center justify-between pb-4">
           <div className="flex items-center gap-3 flex-1">
-            <CardTitle>Attività</CardTitle>
+            <CardTitle>{tr('Attività', 'Tasks')}</CardTitle>
             <div className="flex gap-1">
               <Button
                 variant={viewMode === 'list' ? 'default' : 'outline'}
                 size="icon"
                 onClick={() => setViewMode('list')}
                 className={viewMode === 'list' ? 'bg-[#ef6144] hover:bg-[#d9553a] h-8 w-8' : 'h-8 w-8'}
-                title="Vista lista"
+                title={tr('Vista lista', 'List view')}
               >
                 <List className="h-4 w-4" />
               </Button>
@@ -87,7 +90,7 @@ export default function TaskList({ projectId, canEdit, filterMilestoneId }) {
                 size="icon"
                 onClick={() => setViewMode('board')}
                 className={viewMode === 'board' ? 'bg-[#ef6144] hover:bg-[#d9553a] h-8 w-8' : 'h-8 w-8'}
-                title="Vista board"
+                title={tr('Vista board', 'Board view')}
               >
                 <Grid3x3 className="h-4 w-4" />
               </Button>
@@ -96,7 +99,7 @@ export default function TaskList({ projectId, canEdit, filterMilestoneId }) {
           {canEdit && (
             <Button onClick={handleCreate} size="sm" className="bg-[#ef6144] hover:bg-[#d9553a]">
               <Plus className="h-4 w-4 md:mr-1" />
-              <span className="hidden md:inline">Nuova Attività</span>
+              <span className="hidden md:inline">{tr('Nuova Attività', 'New Task')}</span>
             </Button>
           )}
         </CardHeader>
@@ -107,11 +110,11 @@ export default function TaskList({ projectId, canEdit, filterMilestoneId }) {
               <Flag className="h-4 w-4 text-gray-500" />
               <Select value={selectedMilestoneId} onValueChange={setSelectedMilestoneId}>
                 <SelectTrigger className="w-[250px]">
-                  <SelectValue placeholder="Filtra per milestone" />
+                  <SelectValue placeholder={tr('Filtra per milestone', 'Filter by milestone')} />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="all">Tutte le attività</SelectItem>
-                  <SelectItem value="none">Senza milestone</SelectItem>
+                  <SelectItem value="all">{tr('Tutte le attività', 'All tasks')}</SelectItem>
+                  <SelectItem value="none">{tr('Senza milestone', 'Without milestone')}</SelectItem>
                   {milestones.map(milestone => (
                     <SelectItem key={milestone.id} value={milestone.id}>
                       {milestone.title}
@@ -173,14 +176,14 @@ export default function TaskList({ projectId, canEdit, filterMilestoneId }) {
                             <span>• {task.room_area}</span>
                           )}
                           {task.due_date && (
-                            <span>• Scadenza: {format(new Date(task.due_date), 'dd MMM yyyy', { locale: it })}</span>
+                            <span>• {tr('Scadenza', 'Due')}: {format(new Date(task.due_date), 'dd MMM yyyy', { locale: dateLocale })}</span>
                           )}
                         </div>
                         {task.status === 'blocked' && task.blocked_reason && (
                           <div className="mt-2 p-2 rounded bg-red-50 border border-red-200">
                             <p className="text-sm text-red-700">
-                              <strong>Bloccato:</strong> {task.blocked_reason}
-                              {task.blocked_by_name && ` (da ${task.blocked_by_name})`}
+                              <strong>{tr('Bloccato:', 'Blocked:')}</strong> {task.blocked_reason}
+                              {task.blocked_by_name && ` (${tr('da', 'by')} ${task.blocked_by_name})`}
                             </p>
                           </div>
                         )}
@@ -193,9 +196,9 @@ export default function TaskList({ projectId, canEdit, filterMilestoneId }) {
           ) : (
             <EmptyState
               icon={CheckCircle2}
-              title="Nessuna attività"
-              description="Non ci sono attività per questo progetto."
-              actionLabel={canEdit ? "Crea attività" : undefined}
+              title={tr('Nessuna attività', 'No tasks')}
+              description={tr('Non ci sono attività per questo progetto.', 'There are no tasks for this project.')}
+              actionLabel={canEdit ? tr('Crea attività', 'Create task') : undefined}
               onAction={canEdit ? handleCreate : undefined}
             />
           )}

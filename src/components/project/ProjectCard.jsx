@@ -5,28 +5,35 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { MapPin, Calendar, Users } from "lucide-react";
 import { format } from 'date-fns';
-import { it } from 'date-fns/locale';
+import { it, enUS } from 'date-fns/locale';
+import { useLanguage } from '@/components/i18n/useLanguage';
 
 const statusConfig = {
-  planning: { label: 'Pianificazione', color: 'bg-blue-100 text-blue-700' },
-  in_progress: { label: 'In corso', color: 'bg-[#ef6144]/10 text-[#ef6144]' },
-  completed: { label: 'Completato', color: 'bg-green-100 text-green-700' },
-  on_hold: { label: 'In pausa', color: 'bg-yellow-100 text-yellow-700' }
-};
-
-const roleLabels = {
-  homeowner: 'Committente',
-  contractor: 'Contractor',
-  subcontractor: 'Subappaltatore',
-  architect: 'Architetto',
-  engineer: 'Ingegnere',
-  surveyor: 'Geometra',
-  designer: 'Designer',
-  consultant: 'Consulente'
+  planning: { color: 'bg-blue-100 text-blue-700' },
+  in_progress: { color: 'bg-[#ef6144]/10 text-[#ef6144]' },
+  completed: { color: 'bg-green-100 text-green-700' },
+  on_hold: { color: 'bg-yellow-100 text-yellow-700' }
 };
 
 export default function ProjectCard({ project, userRole, participantCount }) {
+  const { t, currentLanguage } = useLanguage();
+  const tr = (itText, enText) => (currentLanguage === 'it' ? itText : enText);
+  const dateLocale = currentLanguage === 'it' ? it : enUS;
   const status = statusConfig[project.status] || statusConfig.planning;
+  const statusLabel = project.status === 'on_hold'
+    ? tr('In pausa', 'On hold')
+    : t(`project.status.${project.status || 'planning'}`);
+
+  const roleLabels = {
+    homeowner: tr('Committente', 'Homeowner'),
+    contractor: tr('Contractor', 'Contractor'),
+    subcontractor: tr('Subappaltatore', 'Subcontractor'),
+    architect: tr('Architetto', 'Architect'),
+    engineer: tr('Ingegnere', 'Engineer'),
+    surveyor: tr('Geometra', 'Surveyor'),
+    designer: tr('Designer', 'Designer'),
+    consultant: tr('Consulente', 'Consultant')
+  };
 
   return (
     <Link to={createPageUrl('ProjectDetail') + `?id=${project.id}`}>
@@ -41,7 +48,7 @@ export default function ProjectCard({ project, userRole, participantCount }) {
               </div>
             </div>
             <Badge className={`${status.color} font-medium`}>
-              {status.label}
+              {statusLabel}
             </Badge>
           </div>
           
@@ -54,7 +61,7 @@ export default function ProjectCard({ project, userRole, participantCount }) {
             {project.start_date &&
             <div className="flex items-center gap-1">
                 <Calendar className="h-3.5 w-3.5" />
-                <span>{format(new Date(project.start_date), 'd MMM yyyy', { locale: it })}</span>
+                <span>{format(new Date(project.start_date), 'd MMM yyyy', { locale: dateLocale })}</span>
               </div>
             }
             {participantCount > 0 &&

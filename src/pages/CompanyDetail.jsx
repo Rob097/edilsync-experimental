@@ -5,7 +5,7 @@ import { base44 } from '@/api/base44Client';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useLanguage } from '@/components/i18n/useLanguage';
 import TourLauncher from '@/components/tour/TourLauncher';
-import { companyTour } from '@/components/tour/tours/companyTour';
+import { getCompanyTour } from '@/components/tour/tours/companyTour';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -26,7 +26,7 @@ import MemberCard from '@/components/company/MemberCard';
 import EditCompanyDialog from '@/components/company/EditCompanyDialog';
 
 export default function CompanyDetail() {
-  const { t } = useLanguage();
+  const { t, currentLanguage } = useLanguage();
   const navigate = useNavigate();
   const queryClient = useQueryClient();
   const urlParams = new URLSearchParams(window.location.search);
@@ -101,7 +101,7 @@ export default function CompanyDetail() {
       {/* Launch company tour */}
       <TourLauncher 
         tourId="companies" 
-        steps={companyTour.steps} 
+        steps={getCompanyTour(currentLanguage).steps} 
         trigger={shouldStartCompanyTour}
         delay={1000}
       />

@@ -7,18 +7,21 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { DollarSign, Clock, CheckCircle2, XCircle, AlertCircle } from "lucide-react";
 import { DragDropContext, Droppable, Draggable } from '@hello-pangea/dnd';
 import { format } from 'date-fns';
-import { it } from 'date-fns/locale';
+import { it, enUS } from 'date-fns/locale';
 import ChangeRequestDialog from './ChangeRequestDialog';
 import EmptyState from '@/components/ui/EmptyState';
-
-const columns = [
-  { id: 'pending', label: 'In Attesa', color: 'bg-yellow-100', icon: Clock },
-  { id: 'approved', label: 'Approvata', color: 'bg-green-100', icon: CheckCircle2 },
-  { id: 'clarification_needed', label: 'Chiarimenti', color: 'bg-blue-100', icon: AlertCircle },
-  { id: 'rejected', label: 'Rifiutata', color: 'bg-red-100', icon: XCircle },
-];
+import { useLanguage } from '@/components/i18n/useLanguage';
 
 export default function ChangeRequestBoard({ projectId, canCreateOrRespond, currentUserEmail }) {
+  const { currentLanguage } = useLanguage();
+  const tr = (itText, enText) => currentLanguage === 'it' ? itText : enText;
+  const dateLocale = currentLanguage === 'it' ? it : enUS;
+  const columns = [
+    { id: 'pending', label: tr('In Attesa', 'Pending'), color: 'bg-yellow-100', icon: Clock },
+    { id: 'approved', label: tr('Approvata', 'Approved'), color: 'bg-green-100', icon: CheckCircle2 },
+    { id: 'clarification_needed', label: tr('Chiarimenti', 'Clarification'), color: 'bg-blue-100', icon: AlertCircle },
+    { id: 'rejected', label: tr('Rifiutata', 'Rejected'), color: 'bg-red-100', icon: XCircle },
+  ];
   const queryClient = useQueryClient();
   const [dialogOpen, setDialogOpen] = useState(false);
   const [selectedRequest, setSelectedRequest] = useState(null);
@@ -74,8 +77,8 @@ export default function ChangeRequestBoard({ projectId, canCreateOrRespond, curr
     return (
       <EmptyState
         icon={DollarSign}
-        title="Nessuna richiesta di modifica"
-        description="Nessuna richiesta è stata ancora creata."
+        title={tr('Nessuna richiesta di modifica', 'No change requests')}
+        description={tr('Nessuna richiesta è stata ancora creata.', 'No requests have been created yet.')}
       />
     );
   }
@@ -150,12 +153,12 @@ export default function ChangeRequestBoard({ projectId, canCreateOrRespond, curr
                                 {request.time_impact_days && (
                                   <div className="flex items-center gap-1 text-xs text-gray-600">
                                     <Clock className="h-3 w-3" />
-                                    <span>+{request.time_impact_days} giorni</span>
+                                    <span>{`+${request.time_impact_days} ${tr('giorni', 'days')}`}</span>
                                   </div>
                                 )}
                                 
                                 <div className="text-xs text-gray-500 mt-2">
-                                  {format(new Date(request.created_date), 'dd MMM', { locale: it })}
+                                  {format(new Date(request.created_date), 'dd MMM', { locale: dateLocale })}
                                 </div>
                               </div>
                             </div>
@@ -166,7 +169,7 @@ export default function ChangeRequestBoard({ projectId, canCreateOrRespond, curr
                       
                       {columnRequests.length === 0 && (
                         <div className="flex items-center justify-center h-32 text-gray-400 text-sm">
-                          Nessuna richiesta
+                          {tr('Nessuna richiesta', 'No requests')}
                         </div>
                       )}
                     </div>

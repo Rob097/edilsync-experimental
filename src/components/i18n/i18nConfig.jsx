@@ -32,6 +32,7 @@ const itTranslations = {
     "projects": "Progetti",
     "companies": "Società",
     "members": "Membri",
+    "tasks": "Task",
     "seeAll": "Vedi tutti",
     "all": "Tutti",
     "noResults": "Nessun risultato",
@@ -89,6 +90,13 @@ const itTranslations = {
       "in_progress": "In corso",
       "completed": "Completati",
       "on_hold": "In Sospeso"
+    }
+  },
+  "project": {
+    "status": {
+      "planning": "Pianificazione",
+      "in_progress": "In corso",
+      "completed": "Completato"
     }
   },
   "companies": {
@@ -238,6 +246,7 @@ const itTranslations = {
       "changesExtras": "Modifiche & Extra",
       "milestones": "Milestones",
       "messaging": "Messaggistica",
+      "participants": "Partecipanti",
       "documents": "Documenti",
       "noParticipants": "Nessun partecipante",
       "inviteParticipants": "Invita contractor, progettisti e altri professionisti.",
@@ -551,6 +560,7 @@ const enTranslations = {
     "projects": "Projects",
     "companies": "Companies",
     "members": "Members",
+    "tasks": "Tasks",
     "seeAll": "See all",
     "all": "All",
     "noResults": "No results",
@@ -608,6 +618,13 @@ const enTranslations = {
       "in_progress": "In progress",
       "completed": "Completed",
       "on_hold": "On hold"
+    }
+  },
+  "project": {
+    "status": {
+      "planning": "Planning",
+      "in_progress": "In progress",
+      "completed": "Completed"
     }
   },
   "companies": {
@@ -757,6 +774,7 @@ const enTranslations = {
       "changesExtras": "Changes & Extras",
       "milestones": "Milestones",
       "messaging": "Messaging",
+      "participants": "Participants",
       "documents": "Documents",
       "noParticipants": "No participants",
       "inviteParticipants": "Invite contractors, designers and other professionals.",
@@ -1053,6 +1071,9 @@ export const initializeI18n = () => {
     .use(initReactI18next)
     .init({
       resources,
+      supportedLngs: ['it', 'en'],
+      nonExplicitSupportedLngs: true,
+      load: 'languageOnly',
       fallbackLng: 'it',
       ns: ['translation'],
       defaultNS: 'translation',

@@ -15,10 +15,14 @@ import {
   DollarSign
 } from "lucide-react";
 import { format, startOfDay, isToday, isYesterday } from 'date-fns';
-import { it } from 'date-fns/locale';
+import { it, enUS } from 'date-fns/locale';
 import EmptyState from '@/components/ui/EmptyState';
+import { useLanguage } from '@/components/i18n/useLanguage';
 
 export default function ActivityFeed({ projectId, onItemClick }) {
+  const { currentLanguage } = useLanguage();
+  const tr = (itText, enText) => currentLanguage === 'it' ? itText : enText;
+  const dateLocale = currentLanguage === 'it' ? it : enUS;
   const { data: tasks = [] } = useQuery({
     queryKey: ['tasks', projectId],
     queryFn: () => base44.entities.Task.filter({ project_id: projectId }),
@@ -63,7 +67,7 @@ export default function ActivityFeed({ projectId, onItemClick }) {
         icon: task.status === 'completed' ? CheckCircle2 : task.status === 'blocked' ? AlertCircle : Clock,
         color: task.status === 'completed' ? 'text-green-600' : task.status === 'blocked' ? 'text-red-600' : 'text-blue-600',
         title: task.title,
-        description: `Stato: ${task.status}`,
+        description: `${tr('Stato', 'Status')}: ${task.status}`,
         data: task,
       });
     });
@@ -75,8 +79,8 @@ export default function ActivityFeed({ projectId, onItemClick }) {
         date: cr.updated_date || cr.created_date,
         icon: DollarSign,
         color: cr.status === 'approved' ? 'text-green-600' : cr.status === 'rejected' ? 'text-red-600' : 'text-yellow-600',
-        title: `Richiesta Modifica: ${cr.title}`,
-        description: cr.cost_impact ? `€${cr.cost_impact}` : 'Nessun costo aggiuntivo',
+        title: `${tr('Richiesta Modifica', 'Change Request')}: ${cr.title}`,
+        description: cr.cost_impact ? `€${cr.cost_impact}` : tr('Nessun costo aggiuntivo', 'No additional cost'),
         data: cr,
       });
     });
@@ -102,7 +106,8 @@ export default function ActivityFeed({ projectId, onItemClick }) {
         icon: Image,
         color: 'text-purple-600',
         title: `Documento caricato: ${doc.name}`,
-        description: `da ${doc.uploaded_by_name}`,
+        title: `${tr('Documento caricato', 'Uploaded document')}: ${doc.name}`,
+        description: `${tr('da', 'by')} ${doc.uploaded_by_name}`,
         data: doc,
       });
     });
@@ -114,8 +119,8 @@ export default function ActivityFeed({ projectId, onItemClick }) {
         date: event.created_date,
         icon: Calendar,
         color: 'text-indigo-600',
-        title: `Appuntamento: ${event.title}`,
-        description: format(new Date(event.start_datetime), 'dd MMM, HH:mm', { locale: it }),
+        title: `${tr('Appuntamento', 'Appointment')}: ${event.title}`,
+        description: format(new Date(event.start_datetime), 'dd MMM, HH:mm', { locale: dateLocale }),
         data: event,
       });
     });
@@ -141,9 +146,9 @@ export default function ActivityFeed({ projectId, onItemClick }) {
   }, [activities]);
 
   const getDayLabel = (date) => {
-    if (isToday(date)) return 'Oggi';
-    if (isYesterday(date)) return 'Ieri';
-    return format(date, 'dd MMMM yyyy', { locale: it });
+    if (isToday(date)) return tr('Oggi', 'Today');
+    if (isYesterday(date)) return tr('Ieri', 'Yesterday');
+    return format(date, 'dd MMMM yyyy', { locale: dateLocale });
   };
 
   const isLoading = false;
@@ -165,7 +170,7 @@ export default function ActivityFeed({ projectId, onItemClick }) {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Attività Progetto</CardTitle>
+        <CardTitle>{tr('Attività Progetto', 'Project Activity')}</CardTitle>
       </CardHeader>
       <CardContent>
         {isLoading ? (
@@ -199,7 +204,7 @@ export default function ActivityFeed({ projectId, onItemClick }) {
                           <p className="font-medium text-sm">{activity.title}</p>
                           <p className="text-sm text-gray-500">{activity.description}</p>
                           <p className="text-xs text-gray-400 mt-1">
-                            {format(new Date(activity.date), 'HH:mm', { locale: it })}
+                            {format(new Date(activity.date), 'HH:mm', { locale: dateLocale })}
                           </p>
                         </div>
                       </div>
@@ -212,8 +217,8 @@ export default function ActivityFeed({ projectId, onItemClick }) {
         ) : (
           <EmptyState
             icon={FileText}
-            title="Nessuna attività"
-            description="Le attività del progetto appariranno qui."
+            title={tr('Nessuna attività', 'No activity')}
+            description={tr('Le attività del progetto appariranno qui.', 'Project activity will appear here.')}
           />
         )}
       </CardContent>

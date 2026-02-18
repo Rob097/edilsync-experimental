@@ -4,7 +4,7 @@ import { createPageUrl } from '@/utils';
 import { base44 } from '@/api/base44Client';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import TourLauncher from '@/components/tour/TourLauncher';
-import { projectTour } from '@/components/tour/tours/projectTour';
+import { getProjectTour } from '@/components/tour/tours/projectTour';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -39,7 +39,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { format } from 'date-fns';
-import { it } from 'date-fns/locale';
+import { it, enUS } from 'date-fns/locale';
 import { useLanguage } from '@/components/i18n/useLanguage';
 import InviteParticipantDialog from '@/components/project/InviteParticipantDialog';
 import ParticipantCard from '@/components/project/ParticipantCard';
@@ -60,14 +60,16 @@ import {
 } from "@/components/ui/dialog";
 
 const statusConfig = {
-  planning: { label: 'Pianificazione', color: 'bg-blue-100 text-blue-700' },
-  in_progress: { label: 'In corso', color: 'bg-[#ef6144]/10 text-[#ef6144]' },
-  completed: { label: 'Completato', color: 'bg-green-100 text-green-700' },
-  on_hold: { label: 'In pausa', color: 'bg-yellow-100 text-yellow-700' },
+  planning: { color: 'bg-blue-100 text-blue-700' },
+  in_progress: { color: 'bg-[#ef6144]/10 text-[#ef6144]' },
+  completed: { color: 'bg-green-100 text-green-700' },
+  on_hold: { color: 'bg-yellow-100 text-yellow-700' },
 };
 
 export default function ProjectDetail() {
-  const { t } = useLanguage();
+  const { t, currentLanguage } = useLanguage();
+  const tr = (itText, enText) => (currentLanguage === 'it' ? itText : enText);
+  const dateLocale = currentLanguage === 'it' ? it : enUS;
   const navigate = useNavigate();
   const queryClient = useQueryClient();
   const urlParams = new URLSearchParams(window.location.search);
@@ -282,6 +284,9 @@ export default function ProjectDetail() {
   }
 
   const status = statusConfig[project.status] || statusConfig.planning;
+  const statusLabel = project.status === 'on_hold'
+    ? tr('In pausa', 'On hold')
+    : t(`project.status.${project.status || 'planning'}`);
 
   // Show invite banner only if the context-specific participation is "invited"
   const isInvited = contextParticipation && contextParticipation.status === 'invited';
@@ -291,7 +296,7 @@ export default function ProjectDetail() {
       {/* Launch project tour */}
       <TourLauncher 
         tourId="projects" 
-        steps={projectTour.steps} 
+        steps={getProjectTour(currentLanguage).steps} 
         trigger={shouldStartProjectTour}
         delay={1000}
       />
@@ -345,7 +350,7 @@ export default function ProjectDetail() {
               <MapPin className="h-4 w-4 flex-shrink-0" />
               <span className="break-words">{project.address}</span>
             </div>
-            <Badge className={`${status.color} w-fit`}>{status.label}</Badge>
+            <Badge className={`${status.color} w-fit`}>{statusLabel}</Badge>
           </div>
         </div>
         {isActiveParticipant && project.owner_user_id === user?.id && (
@@ -384,7 +389,7 @@ export default function ProjectDetail() {
                 </div>
                 <div>
                    <p className="text-lg font-semibold">
-                     {format(new Date(project.start_date), 'd MMM yyyy', { locale: it })}
+                       {format(new Date(project.start_date), 'd MMM yyyy', { locale: dateLocale })}
                    </p>
                    <p className="text-sm text-gray-500">{t('projectDetail.startDate')}</p>
                  </div>
@@ -401,7 +406,7 @@ export default function ProjectDetail() {
                 </div>
                 <div>
                    <p className="text-lg font-semibold">
-                     {format(new Date(project.end_date), 'd MMM yyyy', { locale: it })}
+                       {format(new Date(project.end_date), 'd MMM yyyy', { locale: dateLocale })}
                    </p>
                    <p className="text-sm text-gray-500">{t('projectDetail.endDate')}</p>
                  </div>
@@ -432,7 +437,7 @@ export default function ProjectDetail() {
                   {blockedTasks.length === 1 
                     ? `1 ${t('projectDetail.blockedTasks')}` 
                     : `${blockedTasks.length} ${t('projectDetail.blockedTasks')}`}
-                  {blockedTasks[0]?.blocked_by_name && ` • In attesa di ${blockedTasks[0].blocked_by_name}`}
+                  {blockedTasks[0]?.blocked_by_name && ` • ${tr('In attesa di', 'Waiting for')} ${blockedTasks[0].blocked_by_name}`}
                 </p>
                 <Button
                   variant="link"

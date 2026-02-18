@@ -4,17 +4,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Building2, User, Clock, Trash2, Loader2 } from "lucide-react";
-
-const roleLabels = {
-  homeowner: 'Committente',
-  contractor: 'Contractor',
-  subcontractor: 'Subappaltatore',
-  architect: 'Architetto',
-  engineer: 'Ingegnere',
-  surveyor: 'Geometra',
-  designer: 'Designer',
-  consultant: 'Consulente',
-};
+import { useLanguage } from '@/components/i18n/useLanguage';
 
 const roleColors = {
   homeowner: 'bg-purple-100 text-purple-700',
@@ -28,10 +18,23 @@ const roleColors = {
 };
 
 export default function ParticipantCard({ participant, companyName, isPending, canRemove, projectId }) {
+  const { t, currentLanguage } = useLanguage();
+  const tr = (itText, enText) => (currentLanguage === 'it' ? itText : enText);
   const isCompany = participant.participant_type === 'company';
   const roleColor = roleColors[participant.project_role] || 'bg-gray-100 text-gray-700';
   const queryClient = useQueryClient();
   const [confirmRemove, setConfirmRemove] = useState(false);
+
+  const localizedRoleLabels = {
+    homeowner: tr('Committente', 'Homeowner'),
+    contractor: tr('Contractor', 'Contractor'),
+    subcontractor: tr('Subappaltatore', 'Subcontractor'),
+    architect: tr('Architetto', 'Architect'),
+    engineer: tr('Ingegnere', 'Engineer'),
+    surveyor: tr('Geometra', 'Surveyor'),
+    designer: tr('Designer', 'Designer'),
+    consultant: tr('Consulente', 'Consultant'),
+  };
 
   const removeMutation = useMutation({
     mutationFn: async () => {
@@ -81,11 +84,11 @@ export default function ParticipantCard({ participant, companyName, isPending, c
         {isPending && (
           <Badge variant="outline" className="text-gray-500">
             <Clock className="h-3 w-3 mr-1" />
-            In attesa
+            {tr('In attesa', 'Pending')}
           </Badge>
         )}
         <Badge className={roleColor}>
-          {roleLabels[participant.project_role] || participant.project_role}
+          {localizedRoleLabels[participant.project_role] || participant.project_role}
         </Badge>
         {canRemove && (
           confirmRemove ? (
@@ -96,14 +99,14 @@ export default function ParticipantCard({ participant, companyName, isPending, c
                 onClick={() => removeMutation.mutate()}
                 disabled={removeMutation.isPending}
               >
-                {removeMutation.isPending ? <Loader2 className="h-3 w-3 animate-spin" /> : 'Conferma'}
+                {removeMutation.isPending ? <Loader2 className="h-3 w-3 animate-spin" /> : t('common.confirm')}
               </Button>
               <Button
                 variant="ghost"
                 size="sm"
                 onClick={() => setConfirmRemove(false)}
               >
-                Annulla
+                {t('common.cancel')}
               </Button>
             </div>
           ) : (

@@ -6,18 +6,21 @@ import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Flag, CheckCircle2, Clock, AlertCircle, Play, ChevronLeft, ChevronRight } from "lucide-react";
 import { format, startOfYear, endOfYear, eachMonthOfInterval, differenceInDays, getMonth, getDaysInMonth, getDate, startOfMonth } from 'date-fns';
-import { it } from 'date-fns/locale';
+import { it, enUS } from 'date-fns/locale';
 import EmptyState from '@/components/ui/EmptyState';
 import MilestoneDialog from './MilestoneDialog';
-
-const statusConfig = {
-  pending: { color: 'bg-yellow-500', label: 'In Attesa', icon: Clock },
-  in_progress: { color: 'bg-blue-500', label: 'In Corso', icon: Play },
-  completed: { color: 'bg-green-500', label: 'Completata', icon: CheckCircle2 },
-  delayed: { color: 'bg-red-500', label: 'In Ritardo', icon: AlertCircle },
-};
+import { useLanguage } from '@/components/i18n/useLanguage';
 
 export default function MilestoneBoard({ projectId, project, canEdit, onMilestoneClick }) {
+  const { currentLanguage } = useLanguage();
+  const tr = (itText, enText) => currentLanguage === 'it' ? itText : enText;
+  const dateLocale = currentLanguage === 'it' ? it : enUS;
+  const statusConfig = {
+    pending: { color: 'bg-yellow-500', label: tr('In Attesa', 'Pending'), icon: Clock },
+    in_progress: { color: 'bg-blue-500', label: tr('In Corso', 'In Progress'), icon: Play },
+    completed: { color: 'bg-green-500', label: tr('Completata', 'Completed'), icon: CheckCircle2 },
+    delayed: { color: 'bg-red-500', label: tr('In Ritardo', 'Delayed'), icon: AlertCircle },
+  };
   const [dialogOpen, setDialogOpen] = useState(false);
   const [selectedMilestone, setSelectedMilestone] = useState(null);
   const [currentYear, setCurrentYear] = useState(new Date().getFullYear());
@@ -114,8 +117,8 @@ export default function MilestoneBoard({ projectId, project, canEdit, onMileston
     return (
       <EmptyState
         icon={Flag}
-        title="Nessuna milestone"
-        description="Crea la prima milestone per tracciare i progressi del progetto."
+        title={tr('Nessuna milestone', 'No milestones')}
+        description={tr('Crea la prima milestone per tracciare i progressi del progetto.', 'Create the first milestone to track project progress.')}
       />
     );
   }
@@ -151,7 +154,7 @@ export default function MilestoneBoard({ projectId, project, canEdit, onMileston
                 key={idx}
                 className="flex-1 min-w-[60px] md:min-w-[80px] p-2 text-center text-xs md:text-sm font-medium border-r last:border-r-0 border-b bg-gray-50"
               >
-                {format(month, 'MMM', { locale: it })}
+                {format(month, 'MMM', { locale: dateLocale })}
               </div>
             ))}
           </div>
@@ -205,7 +208,7 @@ export default function MilestoneBoard({ projectId, project, canEdit, onMileston
                           </span>
                         </div>
                         <div className="text-[9px] md:text-xs opacity-90">
-                          {format(milestone.startDate, 'dd MMM', { locale: it })} - {format(milestone.endDate, 'dd MMM', { locale: it })}
+                          {format(milestone.startDate, 'dd MMM', { locale: dateLocale })} - {format(milestone.endDate, 'dd MMM', { locale: dateLocale })}
                         </div>
                         {milestone.tasksCount > 0 && (
                           <div className="text-[9px] md:text-xs opacity-90 mt-0.5">
@@ -219,7 +222,7 @@ export default function MilestoneBoard({ projectId, project, canEdit, onMileston
               })
             ) : (
               <div className="flex items-center justify-center h-48 text-gray-500 text-sm absolute inset-0">
-                Nessuna milestone per {currentYear}
+                {tr('Nessuna milestone per', 'No milestones for')} {currentYear}
               </div>
             )}
           </div>

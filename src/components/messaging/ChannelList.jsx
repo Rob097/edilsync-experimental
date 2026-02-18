@@ -6,6 +6,7 @@ import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton.jsx";
 import { Hash, Building2, User, Plus, MessageCircle } from "lucide-react";
 import CreateChannelDialog from './CreateChannelDialog';
+import { useLanguage } from '@/components/i18n/useLanguage';
 
 export default function ChannelList({ 
   projectId, 
@@ -15,6 +16,8 @@ export default function ChannelList({
   onSelectChannel,
   participants
 }) {
+  const { currentLanguage } = useLanguage();
+  const tr = (it, en) => currentLanguage === 'it' ? it : en;
   const [createDialogOpen, setCreateDialogOpen] = useState(false);
 
   const { data: channels = [], isLoading: channelsLoading } = useQuery({
@@ -131,7 +134,7 @@ export default function ChannelList({
       {generalChannel && (
         <div>
           <h3 className="text-xs font-semibold text-gray-500 uppercase mb-2 px-3">
-            Canale Generale
+            {tr('Canale Generale', 'General Channel')}
           </h3>
           {renderChannel(generalChannel, <Hash className="h-4 w-4" />)}
         </div>
@@ -141,7 +144,7 @@ export default function ChannelList({
       {companyChannel && (
         <div>
           <h3 className="text-xs font-semibold text-gray-500 uppercase mb-2 px-3">
-            Canale Aziendale
+            {tr('Canale Aziendale', 'Company Channel')}
           </h3>
           {renderChannel(companyChannel, <Building2 className="h-4 w-4" />)}
         </div>
@@ -151,7 +154,7 @@ export default function ChannelList({
       {directChannels.length > 0 && (
         <div>
           <h3 className="text-xs font-semibold text-gray-500 uppercase mb-2 px-3">
-            Messaggi Diretti
+            {tr('Messaggi Diretti', 'Direct Messages')}
           </h3>
           <div className="space-y-1">
             {directChannels.map(channel => 
@@ -166,7 +169,7 @@ export default function ChannelList({
         <div>
           <div className="flex items-center justify-between mb-2 px-3">
             <h3 className="text-xs font-semibold text-gray-500 uppercase">
-              Canali
+              {tr('Canali', 'Channels')}
             </h3>
             <Button
               variant="ghost"
@@ -193,7 +196,7 @@ export default function ChannelList({
           onClick={() => setCreateDialogOpen(true)}
         >
           <Plus className="h-4 w-4 mr-2" />
-          Crea Canale
+          {tr('Crea Canale', 'Create Channel')}
         </Button>
       )}
 

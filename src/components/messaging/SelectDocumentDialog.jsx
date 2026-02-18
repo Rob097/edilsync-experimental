@@ -19,9 +19,8 @@ import {
   Image,
   FileText
 } from "lucide-react";
-import { format } from 'date-fns';
-import { it } from 'date-fns/locale';
 import EmptyState from '@/components/ui/EmptyState';
+import { useLanguage } from '@/components/i18n/useLanguage';
 
 const categoryLabels = {
   project: 'Progetto',
@@ -52,6 +51,8 @@ const getFileIcon = (fileType) => {
 };
 
 export default function SelectDocumentDialog({ projectId, open, onOpenChange, onSelectDocument }) {
+  const { currentLanguage, t } = useLanguage();
+  const tr = (it, en) => currentLanguage === 'it' ? it : en;
   const [searchQuery, setSearchQuery] = useState('');
   const [filterCategory, setFilterCategory] = useState('all');
   const [filterType, setFilterType] = useState('all');
@@ -81,7 +82,7 @@ export default function SelectDocumentDialog({ projectId, open, onOpenChange, on
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-3xl max-h-[80vh]">
         <DialogHeader>
-          <DialogTitle>Seleziona documento da linkare</DialogTitle>
+          <DialogTitle>{tr('Seleziona documento da linkare', 'Select document to link')}</DialogTitle>
         </DialogHeader>
 
         <div className="space-y-4">
@@ -91,7 +92,7 @@ export default function SelectDocumentDialog({ projectId, open, onOpenChange, on
               <div className="relative flex-1">
                 <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
                 <Input
-                  placeholder="Cerca documenti..."
+                  placeholder={t('common.search')}
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   className="pl-10"
@@ -120,27 +121,27 @@ export default function SelectDocumentDialog({ projectId, open, onOpenChange, on
             <div className="flex gap-2 flex-wrap">
               <Select value={filterCategory} onValueChange={setFilterCategory}>
                 <SelectTrigger className="w-36">
-                  <SelectValue placeholder="Categoria" />
+                  <SelectValue placeholder={t('documents.category')} />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="all">Tutte</SelectItem>
-                  <SelectItem value="project">Progetto</SelectItem>
-                  <SelectItem value="contract">Contratto</SelectItem>
-                  <SelectItem value="permit">Permesso</SelectItem>
-                  <SelectItem value="drawing">Disegno</SelectItem>
-                  <SelectItem value="photo">Foto</SelectItem>
+                  <SelectItem value="all">{tr('Tutte', 'All')}</SelectItem>
+                  <SelectItem value="project">{tr('Progetto', 'Project')}</SelectItem>
+                  <SelectItem value="contract">{tr('Contratto', 'Contract')}</SelectItem>
+                  <SelectItem value="permit">{tr('Permesso', 'Permit')}</SelectItem>
+                  <SelectItem value="drawing">{tr('Disegno', 'Drawing')}</SelectItem>
+                  <SelectItem value="photo">{tr('Foto', 'Photo')}</SelectItem>
                   <SelectItem value="report">Report</SelectItem>
-                  <SelectItem value="other">Altro</SelectItem>
+                  <SelectItem value="other">{tr('Altro', 'Other')}</SelectItem>
                 </SelectContent>
               </Select>
 
               {uniqueFileTypes.length > 0 && (
                 <Select value={filterType} onValueChange={setFilterType}>
                   <SelectTrigger className="w-28">
-                    <SelectValue placeholder="Tipo" />
+                    <SelectValue placeholder={tr('Tipo', 'Type')} />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="all">Tutti</SelectItem>
+                    <SelectItem value="all">{tr('Tutti', 'All')}</SelectItem>
                     {uniqueFileTypes.map(type => (
                       <SelectItem key={type} value={type}>{type.toUpperCase()}</SelectItem>
                     ))}
@@ -192,8 +193,8 @@ export default function SelectDocumentDialog({ projectId, open, onOpenChange, on
               ) : (
                 <EmptyState
                   icon={FileText}
-                  title="Nessun documento trovato"
-                  description="Prova a modificare i filtri di ricerca."
+                  title={tr('Nessun documento trovato', 'No documents found')}
+                  description={t('common.tryModifyingFilters')}
                 />
               )
             ) : (
@@ -230,8 +231,8 @@ export default function SelectDocumentDialog({ projectId, open, onOpenChange, on
               ) : (
                 <EmptyState
                   icon={FileText}
-                  title="Nessun documento trovato"
-                  description="Prova a modificare i filtri di ricerca."
+                  title={tr('Nessun documento trovato', 'No documents found')}
+                  description={t('common.tryModifyingFilters')}
                 />
               )
             )}

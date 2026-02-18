@@ -7,18 +7,21 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { Plus, Clock, AlertCircle, User, Calendar } from "lucide-react";
 import { DragDropContext, Droppable, Draggable } from '@hello-pangea/dnd';
 import { format } from 'date-fns';
-import { it } from 'date-fns/locale';
+import { it, enUS } from 'date-fns/locale';
 import TaskDialog from './TaskDialog';
 import EmptyState from '@/components/ui/EmptyState';
-
-const columns = [
-  { id: 'not_started', label: 'Da Iniziare', color: 'bg-gray-100' },
-  { id: 'in_progress', label: 'In Corso', color: 'bg-blue-100' },
-  { id: 'completed', label: 'Completato', color: 'bg-green-100' },
-  { id: 'blocked', label: 'Bloccato', color: 'bg-red-100' },
-];
+import { useLanguage } from '@/components/i18n/useLanguage';
 
 export default function TaskBoard({ projectId, canEdit, onTaskCreate, filteredTasks }) {
+  const { currentLanguage } = useLanguage();
+  const tr = (itText, enText) => currentLanguage === 'it' ? itText : enText;
+  const dateLocale = currentLanguage === 'it' ? it : enUS;
+  const columns = [
+    { id: 'not_started', label: tr('Da Iniziare', 'To Do'), color: 'bg-gray-100' },
+    { id: 'in_progress', label: tr('In Corso', 'In Progress'), color: 'bg-blue-100' },
+    { id: 'completed', label: tr('Completato', 'Completed'), color: 'bg-green-100' },
+    { id: 'blocked', label: tr('Bloccato', 'Blocked'), color: 'bg-red-100' },
+  ];
   const queryClient = useQueryClient();
   const [dialogOpen, setDialogOpen] = useState(false);
   const [selectedTask, setSelectedTask] = useState(null);
@@ -79,9 +82,9 @@ export default function TaskBoard({ projectId, canEdit, onTaskCreate, filteredTa
     return (
       <EmptyState
         icon={Clock}
-        title="Nessuna attività"
-        description="Crea la prima attività per iniziare a organizzare il lavoro."
-        actionLabel={canEdit ? "Crea attività" : undefined}
+        title={tr('Nessuna attività', 'No tasks')}
+        description={tr('Crea la prima attività per iniziare a organizzare il lavoro.', 'Create the first task to start organizing the work.')}
+        actionLabel={canEdit ? tr('Crea attività', 'Create task') : undefined}
         onAction={canEdit ? onTaskCreate || handleCreate : undefined}
       />
     );
@@ -159,7 +162,7 @@ export default function TaskBoard({ projectId, canEdit, onTaskCreate, filteredTa
                                 {task.due_date && (
                                   <div className="flex items-center gap-1 text-xs text-gray-600">
                                     <Calendar className="h-3 w-3" />
-                                    <span>{format(new Date(task.due_date), 'dd MMM', { locale: it })}</span>
+                                    <span>{format(new Date(task.due_date), 'dd MMM', { locale: dateLocale })}</span>
                                   </div>
                                 )}
                               </div>
@@ -179,7 +182,7 @@ export default function TaskBoard({ projectId, canEdit, onTaskCreate, filteredTa
                       
                       {columnTasks.length === 0 && (
                         <div className="flex items-center justify-center h-32 text-gray-400 text-sm">
-                          Nessuna attività
+                          {tr('Nessuna attività', 'No tasks')}
                         </div>
                       )}
                     </div>

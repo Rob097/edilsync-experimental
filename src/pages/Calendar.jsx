@@ -11,7 +11,7 @@ import {
   Calendar as CalendarIcon
 } from "lucide-react";
 import { format, startOfMonth, endOfMonth, eachDayOfInterval, isSameMonth, isSameDay, addMonths, subMonths, startOfWeek, endOfWeek } from 'date-fns';
-import { it } from 'date-fns/locale';
+import { it, enUS } from 'date-fns/locale';
 import { Skeleton } from "@/components/ui/skeleton.jsx";
 import ContextBadge from '@/components/context/ContextBadge';
 import CalendarDayView from '@/components/calendar/CalendarDayView';
@@ -20,7 +20,7 @@ import EventDetailDialog from '@/components/calendar/EventDetailDialog';
 import { useLanguage } from '@/components/i18n/useLanguage';
 
 export default function Calendar() {
-  const { t } = useLanguage();
+  const { t, currentLanguage } = useLanguage();
   const [currentDate, setCurrentDate] = useState(new Date());
   const [selectedDate, setSelectedDate] = useState(null);
   const [viewMode, setViewMode] = useState('month'); // month, week
@@ -149,7 +149,10 @@ export default function Calendar() {
     setEventDialogOpen(true);
   };
 
-  const weekDays = ['Lun', 'Mar', 'Mer', 'Gio', 'Ven', 'Sab', 'Dom'];
+  const weekDays = currentLanguage === 'it'
+    ? ['Lun', 'Mar', 'Mer', 'Gio', 'Ven', 'Sab', 'Dom']
+    : ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+  const dateLocale = currentLanguage === 'it' ? it : enUS;
 
   if (userLoading || eventsLoading || participantsLoading) {
     return (
@@ -190,7 +193,7 @@ export default function Calendar() {
             <ChevronLeft className="h-4 w-4" />
           </Button>
           <h2 className="text-base sm:text-lg font-semibold min-w-0 text-center capitalize">
-            {format(currentDate, 'MMMM yyyy', { locale: it })}
+            {format(currentDate, 'MMMM yyyy', { locale: dateLocale })}
           </h2>
           <Button variant="outline" size="icon" onClick={handleNextMonth}>
             <ChevronRight className="h-4 w-4" />
@@ -256,7 +259,7 @@ export default function Calendar() {
                     ))}
                     {dayEvents.length > 3 && (
                       <div className="text-xs text-gray-500">
-                        +{dayEvents.length - 3} altri
+                        +{dayEvents.length - 3} {currentLanguage === 'it' ? 'altri' : 'more'}
                       </div>
                     )}
                   </div>

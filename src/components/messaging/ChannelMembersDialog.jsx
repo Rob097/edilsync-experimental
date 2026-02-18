@@ -13,6 +13,7 @@ import { Badge } from "@/components/ui/badge";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Separator } from "@/components/ui/separator";
 import { Building2, User, Trash2, Plus, Loader2, Users } from "lucide-react";
+import { useLanguage } from '@/components/i18n/useLanguage';
 
 export default function ChannelMembersDialog({
   open,
@@ -21,6 +22,8 @@ export default function ChannelMembersDialog({
   projectId,
   canManage,
 }) {
+  const { currentLanguage } = useLanguage();
+  const tr = (it, en) => currentLanguage === 'it' ? it : en;
   const queryClient = useQueryClient();
   const [showAddForm, setShowAddForm] = useState(false);
   const [selectedToAdd, setSelectedToAdd] = useState([]);
@@ -66,10 +69,10 @@ export default function ChannelMembersDialog({
 
   const getDisplayName = (participant) => {
     if (participant.participant_type === 'company') {
-      return companies.find(c => c.id === participant.company_id)?.name || 'Società';
+      return companies.find(c => c.id === participant.company_id)?.name || tr('Società', 'Company');
     }
     const u = allUsers.find(u => u.email === participant.user_email);
-    return u?.full_name || participant.user_email || 'Utente';
+    return u?.full_name || participant.user_email || tr('Utente', 'User');
   };
 
   const getMemberParticipant = (member) => {
@@ -114,10 +117,10 @@ export default function ChannelMembersDialog({
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
             <Users className="h-5 w-5" />
-            Membri del canale
+            {tr('Membri del canale', 'Channel members')}
           </DialogTitle>
           <DialogDescription>
-            {channel?.name} • {currentMembers.length} membri
+            {channel?.name} • {currentMembers.length} {tr('membri', 'members')}
           </DialogDescription>
         </DialogHeader>
 
@@ -157,7 +160,7 @@ export default function ChannelMembersDialog({
             <Separator />
             {showAddForm ? (
               <div className="space-y-3">
-                <p className="text-sm font-medium text-gray-700">Aggiungi partecipanti</p>
+                <p className="text-sm font-medium text-gray-700">{tr('Aggiungi partecipanti', 'Add participants')}</p>
                 <div className="space-y-2 max-h-40 overflow-y-auto border rounded-lg p-3">
                   {availableToAdd.map(p => (
                     <div key={p.id} className="flex items-center gap-2">
@@ -175,7 +178,7 @@ export default function ChannelMembersDialog({
                 </div>
                 <div className="flex gap-2">
                   <Button variant="outline" size="sm" onClick={() => { setShowAddForm(false); setSelectedToAdd([]); }}>
-                    Annulla
+                    {tr('Annulla', 'Cancel')}
                   </Button>
                   <Button
                     size="sm"
@@ -184,7 +187,7 @@ export default function ChannelMembersDialog({
                     disabled={selectedToAdd.length === 0 || addMembersMutation.isPending}
                   >
                     {addMembersMutation.isPending && <Loader2 className="h-3 w-3 mr-1 animate-spin" />}
-                    Aggiungi
+                    {tr('Aggiungi', 'Add')}
                   </Button>
                 </div>
               </div>
@@ -195,7 +198,7 @@ export default function ChannelMembersDialog({
                 onClick={() => setShowAddForm(true)}
               >
                 <Plus className="h-4 w-4 mr-2" />
-                Aggiungi Membri
+                {tr('Aggiungi Membri', 'Add Members')}
               </Button>
             )}
           </>

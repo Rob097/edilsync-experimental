@@ -1,7 +1,10 @@
 import React from 'react';
 import { Building2, User } from "lucide-react";
+import { useLanguage } from '@/components/i18n/useLanguage';
 
 export default function ContextBadge({ context, companyName }) {
+  const { currentLanguage } = useLanguage();
+  const tr = (itText, enText) => (currentLanguage === 'it' ? itText : enText);
   const isPersonal = context === 'personal';
 
   return (
@@ -15,7 +18,7 @@ export default function ContextBadge({ context, companyName }) {
       {isPersonal ? (
         <>
           <User className="h-3 w-3" />
-          <span>Privato</span>
+          <span>{tr('Privato', 'Private')}</span>
         </>
       ) : (
         <>

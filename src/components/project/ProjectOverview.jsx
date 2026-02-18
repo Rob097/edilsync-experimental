@@ -14,9 +14,14 @@ import {
   Calendar
 } from "lucide-react";
 import { format } from 'date-fns';
-import { it } from 'date-fns/locale';
+import { it, enUS } from 'date-fns/locale';
+import { useLanguage } from '@/components/i18n/useLanguage';
 
 export default function ProjectOverview({ projectId, onNavigate }) {
+  const { t, currentLanguage } = useLanguage();
+  const tr = (itText, enText) => (currentLanguage === 'it' ? itText : enText);
+  const dateLocale = currentLanguage === 'it' ? it : enUS;
+
   const { data: tasks = [], isLoading: tasksLoading } = useQuery({
     queryKey: ['tasks', projectId],
     queryFn: () => base44.entities.Task.filter({ project_id: projectId }),
@@ -67,7 +72,7 @@ export default function ProjectOverview({ projectId, onNavigate }) {
     ...blockedTasks.map(t => ({
       type: 'task_blocked',
       title: t.title,
-      description: `Bloccato: ${t.blocked_reason || 'Motivo non specificato'}`,
+      description: `${tr('Bloccato', 'Blocked')}: ${t.blocked_reason || tr('Motivo non specificato', 'Unspecified reason')}`,
       icon: AlertCircle,
       color: 'text-red-600',
       bgColor: 'bg-red-50',
@@ -77,7 +82,7 @@ export default function ProjectOverview({ projectId, onNavigate }) {
     ...pendingChanges.map(cr => ({
       type: 'change_pending',
       title: cr.title,
-      description: `Richiesta modifica in attesa${cr.cost_impact ? ` • €${cr.cost_impact}` : ''}`,
+      description: `${tr('Richiesta modifica in attesa', 'Pending change request')}${cr.cost_impact ? ` • €${cr.cost_impact}` : ''}`,
       icon: DollarSign,
       color: 'text-yellow-600',
       bgColor: 'bg-yellow-50',
@@ -87,7 +92,7 @@ export default function ProjectOverview({ projectId, onNavigate }) {
     ...overdueTasks.map(t => ({
       type: 'task_overdue',
       title: t.title,
-      description: `Scadenza superata: ${format(new Date(t.due_date), 'dd MMM yyyy', { locale: it })}`,
+      description: `${tr('Scadenza superata', 'Overdue')}: ${format(new Date(t.due_date), 'dd MMM yyyy', { locale: dateLocale })}`,
       icon: Clock,
       color: 'text-orange-600',
       bgColor: 'bg-orange-50',
@@ -117,31 +122,31 @@ export default function ProjectOverview({ projectId, onNavigate }) {
         <Card className="hover:shadow-md transition-shadow cursor-pointer" onClick={() => onNavigate?.('lavori', 'tasks')}>
           <CardContent className="p-4">
             <div className="flex items-center justify-between mb-3">
-              <h3 className="font-semibold text-gray-700">Attività</h3>
+              <h3 className="font-semibold text-gray-700">{tr('Attività', 'Tasks')}</h3>
               <CheckCircle2 className="h-5 w-5 text-blue-600" />
             </div>
             <div className="space-y-2">
               <div className="flex items-center justify-between">
                 <span className="text-2xl font-bold">{taskStats.total}</span>
-                <span className="text-sm text-gray-500">Totali</span>
+                <span className="text-sm text-gray-500">{tr('Totali', 'Total')}</span>
               </div>
               <div className="flex gap-2 flex-wrap">
                 {taskStats.in_progress > 0 && (
                   <Badge className="bg-blue-100 text-blue-700 flex items-center gap-1">
                     <Play className="h-3 w-3" />
-                    {taskStats.in_progress} in corso
+                    {taskStats.in_progress} {t('project.status.in_progress')}
                   </Badge>
                 )}
                 {taskStats.blocked > 0 && (
                   <Badge className="bg-red-100 text-red-700 flex items-center gap-1">
                     <AlertCircle className="h-3 w-3" />
-                    {taskStats.blocked} bloccate
+                    {taskStats.blocked} {tr('bloccate', 'blocked')}
                   </Badge>
                 )}
                 {taskStats.completed > 0 && (
                   <Badge className="bg-green-100 text-green-700 flex items-center gap-1">
                     <CheckCircle2 className="h-3 w-3" />
-                    {taskStats.completed} completate
+                    {taskStats.completed} {tr('completate', 'completed')}
                   </Badge>
                 )}
               </div>
@@ -153,23 +158,23 @@ export default function ProjectOverview({ projectId, onNavigate }) {
         <Card className="hover:shadow-md transition-shadow cursor-pointer" onClick={() => onNavigate?.('lavori', 'changes')}>
           <CardContent className="p-4">
             <div className="flex items-center justify-between mb-3">
-              <h3 className="font-semibold text-gray-700">Modifiche & Extra</h3>
+              <h3 className="font-semibold text-gray-700">{t('projectDetail.sections.changesExtras')}</h3>
               <DollarSign className="h-5 w-5 text-yellow-600" />
             </div>
             <div className="space-y-2">
               <div className="flex items-center justify-between">
                 <span className="text-2xl font-bold">{changeStats.total}</span>
-                <span className="text-sm text-gray-500">Totali</span>
+                <span className="text-sm text-gray-500">{tr('Totali', 'Total')}</span>
               </div>
               <div className="flex gap-2 flex-wrap">
                 {changeStats.pending > 0 && (
                   <Badge className="bg-yellow-100 text-yellow-700">
-                    {changeStats.pending} in attesa
+                    {changeStats.pending} {tr('in attesa', 'pending')}
                   </Badge>
                 )}
                 {changeStats.approved > 0 && (
                   <Badge className="bg-green-100 text-green-700">
-                    {changeStats.approved} approvate
+                    {changeStats.approved} {tr('approvate', 'approved')}
                   </Badge>
                 )}
               </div>
@@ -181,7 +186,7 @@ export default function ProjectOverview({ projectId, onNavigate }) {
         <Card className="hover:shadow-md transition-shadow cursor-pointer" onClick={() => onNavigate?.('lavori', 'milestones')}>
           <CardContent className="p-4">
             <div className="flex items-center justify-between mb-3">
-              <h3 className="font-semibold text-gray-700">Prossime Milestone</h3>
+              <h3 className="font-semibold text-gray-700">{tr('Prossime Milestone', 'Upcoming Milestones')}</h3>
               <Flag className="h-5 w-5 text-purple-600" />
             </div>
             {upcomingMilestones.length > 0 ? (
@@ -191,13 +196,13 @@ export default function ProjectOverview({ projectId, onNavigate }) {
                     <p className="font-medium truncate">{milestone.title}</p>
                     <p className="text-xs text-gray-500 flex items-center gap-1">
                       <Calendar className="h-3 w-3" />
-                      {format(new Date(milestone.target_date), 'dd MMM yyyy', { locale: it })}
+                      {format(new Date(milestone.target_date), 'dd MMM yyyy', { locale: dateLocale })}
                     </p>
                   </div>
                 ))}
               </div>
             ) : (
-              <p className="text-sm text-gray-500">Nessuna milestone programmata</p>
+              <p className="text-sm text-gray-500">{tr('Nessuna milestone programmata', 'No milestones scheduled')}</p>
             )}
           </CardContent>
         </Card>
@@ -209,7 +214,7 @@ export default function ProjectOverview({ projectId, onNavigate }) {
           <CardContent className="p-4">
             <div className="flex items-center gap-2 mb-4">
               <AlertCircle className="h-5 w-5 text-red-600" />
-              <h3 className="font-semibold text-gray-900">Richiede Attenzione</h3>
+              <h3 className="font-semibold text-gray-900">{tr('Richiede Attenzione', 'Needs Attention')}</h3>
               <Badge className="bg-red-100 text-red-700">{needsAttention.length}</Badge>
             </div>
             <div className="space-y-2">
@@ -239,7 +244,7 @@ export default function ProjectOverview({ projectId, onNavigate }) {
               })}
               {needsAttention.length > 5 && (
                 <p className="text-xs text-gray-500 text-center pt-2">
-                  +{needsAttention.length - 5} altri elementi
+                  +{needsAttention.length - 5} {tr('altri elementi', 'more items')}
                 </p>
               )}
             </div>

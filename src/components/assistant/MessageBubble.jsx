@@ -4,8 +4,11 @@ import { Button } from "@/components/ui/button";
 import { Copy, Zap, CheckCircle2, AlertCircle, Loader2, ChevronRight, Clock } from 'lucide-react';
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
+import { useLanguage } from '@/components/i18n/useLanguage';
 
 const FunctionDisplay = ({ toolCall }) => {
+  const { currentLanguage } = useLanguage();
+  const tr = (itText, enText) => currentLanguage === 'it' ? itText : enText;
   const [expanded, setExpanded] = useState(false);
   const name = toolCall?.name || 'Function';
   const status = toolCall?.status || 'pending';
@@ -26,15 +29,15 @@ const FunctionDisplay = ({ toolCall }) => {
   );
   
   const statusConfig = {
-    pending: { icon: Clock, color: 'text-slate-400', text: 'In attesa' },
-    running: { icon: Loader2, color: 'text-slate-500', text: 'In esecuzione...', spin: true },
-    in_progress: { icon: Loader2, color: 'text-slate-500', text: 'In esecuzione...', spin: true },
+    pending: { icon: Clock, color: 'text-slate-400', text: tr('In attesa', 'Pending') },
+    running: { icon: Loader2, color: 'text-slate-500', text: tr('In esecuzione...', 'Running...'), spin: true },
+    in_progress: { icon: Loader2, color: 'text-slate-500', text: tr('In esecuzione...', 'Running...'), spin: true },
     completed: isError ? 
-      { icon: AlertCircle, color: 'text-red-500', text: 'Errore' } : 
-      { icon: CheckCircle2, color: 'text-green-600', text: 'Completato' },
-    success: { icon: CheckCircle2, color: 'text-green-600', text: 'Completato' },
-    failed: { icon: AlertCircle, color: 'text-red-500', text: 'Errore' },
-    error: { icon: AlertCircle, color: 'text-red-500', text: 'Errore' }
+      { icon: AlertCircle, color: 'text-red-500', text: tr('Errore', 'Error') } : 
+      { icon: CheckCircle2, color: 'text-green-600', text: tr('Completato', 'Completed') },
+    success: { icon: CheckCircle2, color: 'text-green-600', text: tr('Completato', 'Completed') },
+    failed: { icon: AlertCircle, color: 'text-red-500', text: tr('Errore', 'Error') },
+    error: { icon: AlertCircle, color: 'text-red-500', text: tr('Errore', 'Error') }
   }[status] || { icon: Zap, color: 'text-slate-500', text: '' };
   
   const Icon = statusConfig.icon;
@@ -67,7 +70,7 @@ const FunctionDisplay = ({ toolCall }) => {
         <div className="mt-1.5 ml-3 pl-3 border-l-2 border-slate-200 space-y-2">
           {toolCall.arguments_string && (
             <div>
-              <div className="text-xs text-slate-500 mb-1">Parametri:</div>
+              <div className="text-xs text-slate-500 mb-1">{tr('Parametri:', 'Parameters:')}</div>
               <pre className="bg-slate-50 rounded-md p-2 text-xs text-slate-600 whitespace-pre-wrap">
                 {(() => {
                   try {
@@ -81,7 +84,7 @@ const FunctionDisplay = ({ toolCall }) => {
           )}
           {parsedResults && (
             <div>
-              <div className="text-xs text-slate-500 mb-1">Risultato:</div>
+              <div className="text-xs text-slate-500 mb-1">{tr('Risultato:', 'Result:')}</div>
               <pre className="bg-slate-50 rounded-md p-2 text-xs text-slate-600 whitespace-pre-wrap max-h-48 overflow-auto">
                 {typeof parsedResults === 'object' ? 
                   JSON.stringify(parsedResults, null, 2) : parsedResults}
@@ -95,6 +98,8 @@ const FunctionDisplay = ({ toolCall }) => {
 };
 
 export default function MessageBubble({ message }) {
+  const { currentLanguage } = useLanguage();
+  const tr = (itText, enText) => currentLanguage === 'it' ? itText : enText;
   const isUser = message.role === 'user';
   
   return (
@@ -129,7 +134,7 @@ export default function MessageBubble({ message }) {
                           className="absolute top-2 right-2 h-6 w-6 opacity-0 group-hover/code:opacity-100 bg-slate-800 hover:bg-slate-700"
                           onClick={() => {
                             navigator.clipboard.writeText(String(children).replace(/\n$/, ''));
-                            toast.success('Codice copiato');
+                            toast.success(tr('Codice copiato', 'Code copied'));
                           }}
                         >
                           <Copy className="h-3 w-3 text-slate-400" />

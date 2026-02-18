@@ -4,25 +4,28 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { User, Clock, Shield, Trash2, Loader2 } from "lucide-react";
-
-const roleLabels = {
-  admin: 'Amministratore',
-  member: 'Membro',
-};
-
-const professionLabels = {
-  general: 'Generale',
-  architect: 'Architetto',
-  engineer: 'Ingegnere',
-  surveyor: 'Geometra',
-  designer: 'Designer',
-  accountant: 'Contabile',
-  other: 'Altro',
-};
+import { useLanguage } from '@/components/i18n/useLanguage';
 
 export default function MemberCard({ member, isCurrentUser, isPending, isAdmin, companyId, canRemoveSelf = true }) {
+  const { t, currentLanguage } = useLanguage();
+  const tr = (itText, enText) => (currentLanguage === 'it' ? itText : enText);
   const queryClient = useQueryClient();
   const [confirmRemove, setConfirmRemove] = useState(false);
+
+  const localizedRoleLabels = {
+    admin: t('companies.admin'),
+    member: t('companies.member'),
+  };
+
+  const localizedProfessionLabels = {
+    general: tr('Generale', 'General'),
+    architect: tr('Architetto', 'Architect'),
+    engineer: tr('Ingegnere', 'Engineer'),
+    surveyor: tr('Geometra', 'Surveyor'),
+    designer: tr('Designer', 'Designer'),
+    accountant: tr('Contabile', 'Accountant'),
+    other: tr('Altro', 'Other'),
+  };
 
   const removeMutation = useMutation({
     mutationFn: () => base44.entities.CompanyMember.delete(member.id),
@@ -47,12 +50,12 @@ export default function MemberCard({ member, isCurrentUser, isPending, isAdmin, 
           <div className="flex items-center gap-2 flex-wrap">
             <p className="font-medium text-gray-900 break-all">{member.user_email}</p>
             {isCurrentUser && (
-              <Badge variant="outline" className="text-xs">Tu</Badge>
+              <Badge variant="outline" className="text-xs">{tr('Tu', 'You')}</Badge>
             )}
           </div>
           {member.profession && member.profession !== 'general' && (
             <p className="text-sm text-gray-500">
-              {professionLabels[member.profession] || member.profession}
+              {localizedProfessionLabels[member.profession] || member.profession}
             </p>
           )}
         </div>
@@ -61,7 +64,7 @@ export default function MemberCard({ member, isCurrentUser, isPending, isAdmin, 
         {isPending && (
           <Badge variant="outline" className="text-gray-500">
             <Clock className="h-3 w-3 mr-1" />
-            In attesa
+            {tr('In attesa', 'Pending')}
           </Badge>
         )}
         <Badge 
@@ -72,7 +75,7 @@ export default function MemberCard({ member, isCurrentUser, isPending, isAdmin, 
           }
         >
           {member.role === 'admin' && <Shield className="h-3 w-3 mr-1" />}
-          {roleLabels[member.role] || member.role}
+          {localizedRoleLabels[member.role] || member.role}
         </Badge>
         {canRemove && (
           confirmRemove ? (
@@ -83,14 +86,14 @@ export default function MemberCard({ member, isCurrentUser, isPending, isAdmin, 
                 onClick={() => removeMutation.mutate()}
                 disabled={removeMutation.isPending}
               >
-                {removeMutation.isPending ? <Loader2 className="h-3 w-3 animate-spin" /> : 'Conferma'}
+                {removeMutation.isPending ? <Loader2 className="h-3 w-3 animate-spin" /> : t('common.confirm')}
               </Button>
               <Button
                 variant="ghost"
                 size="sm"
                 onClick={() => setConfirmRemove(false)}
               >
-                Annulla
+                {t('common.cancel')}
               </Button>
             </div>
           ) : (

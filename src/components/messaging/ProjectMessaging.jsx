@@ -10,6 +10,7 @@ import ChannelList from './ChannelList';
 import MessageList from './MessageList';
 import MessageInput from './MessageInput';
 import ChannelMembersDialog from './ChannelMembersDialog';
+import { useLanguage } from '@/components/i18n/useLanguage';
 
 export default function ProjectMessaging({ 
   projectId,
@@ -18,6 +19,8 @@ export default function ProjectMessaging({
   participants,
   onNavigate
 }) {
+  const { currentLanguage, t } = useLanguage();
+  const tr = (it, en) => currentLanguage === 'it' ? it : en;
   const queryClient = useQueryClient();
   const [selectedChannelId, setSelectedChannelId] = useState(null);
   const [initialized, setInitialized] = useState(false);
@@ -81,7 +84,7 @@ export default function ProjectMessaging({
       try {
         const generalChannel = await createChannelMutation.mutateAsync({
           project_id: projectId,
-          name: 'Generale',
+          name: t('messages.general'),
           type: 'general',
           created_by_email: currentUser.email,
         });
@@ -171,7 +174,7 @@ export default function ProjectMessaging({
                     variant="ghost" 
                     size="icon"
                     onClick={() => setMembersDialogOpen(true)}
-                    title="Membri del canale"
+                    title={tr('Membri del canale', 'Channel members')}
                   >
                     <Users className="h-5 w-5" />
                   </Button>
@@ -201,7 +204,7 @@ export default function ProjectMessaging({
             </>
           ) : (
             <div className="flex items-center justify-center h-full text-gray-500">
-              Seleziona un canale per iniziare
+              {tr('Seleziona un canale per iniziare', 'Select a channel to start')}
             </div>
           )}
         </Card>

@@ -7,10 +7,14 @@ import { Input } from "@/components/ui/input";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Send } from "lucide-react";
 import { format } from 'date-fns';
-import { it } from 'date-fns/locale';
+import { it, enUS } from 'date-fns/locale';
 import EmptyState from '@/components/ui/EmptyState';
+import { useLanguage } from '@/components/i18n/useLanguage';
 
 export default function ProjectChat({ projectId }) {
+  const { currentLanguage } = useLanguage();
+  const tr = (itText, enText) => currentLanguage === 'it' ? itText : enText;
+  const dateLocale = currentLanguage === 'it' ? it : enUS;
   const queryClient = useQueryClient();
   const [message, setMessage] = useState('');
   const messagesEndRef = useRef(null);
@@ -57,7 +61,7 @@ export default function ProjectChat({ projectId }) {
   return (
     <Card className="flex flex-col h-[600px]">
       <CardHeader className="pb-4">
-        <CardTitle>Messaggi Progetto</CardTitle>
+        <CardTitle>{tr('Messaggi Progetto', 'Project Messages')}</CardTitle>
       </CardHeader>
       <CardContent className="flex-1 flex flex-col min-h-0">
         <div className="flex-1 overflow-y-auto space-y-3 mb-4">
@@ -79,7 +83,7 @@ export default function ProjectChat({ projectId }) {
                       )}
                       <p className="text-sm">{msg.message}</p>
                       <p className={`text-xs mt-1 ${isMe ? 'text-white/70' : 'text-gray-500'}`}>
-                        {format(new Date(msg.created_date), 'HH:mm', { locale: it })}
+                        {format(new Date(msg.created_date), 'HH:mm', { locale: dateLocale })}
                       </p>
                     </div>
                   </div>
@@ -90,8 +94,8 @@ export default function ProjectChat({ projectId }) {
           ) : (
             <EmptyState
               icon={Send}
-              title="Nessun messaggio"
-              description="Inizia la conversazione inviando un messaggio."
+              title={tr('Nessun messaggio', 'No messages')}
+              description={tr('Inizia la conversazione inviando un messaggio.', 'Start the conversation by sending a message.')}
             />
           )}
         </div>
@@ -100,7 +104,7 @@ export default function ProjectChat({ projectId }) {
           <Input
             value={message}
             onChange={(e) => setMessage(e.target.value)}
-            placeholder="Scrivi un messaggio..."
+            placeholder={tr('Scrivi un messaggio...', 'Write a message...')}
             disabled={sendMutation.isPending}
           />
           <Button

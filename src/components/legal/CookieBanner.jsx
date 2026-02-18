@@ -3,10 +3,13 @@ import { Link } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
 import { Button } from "@/components/ui/button";
 import { Cookie } from "lucide-react";
+import { useLanguage } from '@/components/i18n/useLanguage';
 
 const COOKIE_CONSENT_KEY = 'edilsync_cookie_consent';
 
 export default function CookieBanner() {
+  const { currentLanguage } = useLanguage();
+  const tr = (itText, enText) => currentLanguage === 'it' ? itText : enText;
   const [visible, setVisible] = useState(false);
 
   useEffect(() => {
@@ -34,10 +37,9 @@ export default function CookieBanner() {
         <div className="flex items-start gap-3 flex-1">
           <Cookie className="h-5 w-5 text-[#ef6144] mt-0.5 flex-shrink-0" />
           <p className="text-sm text-gray-600">
-            Utilizziamo cookie tecnici necessari per il funzionamento del servizio e cookie analitici per migliorare la tua esperienza. 
-            Per maggiori informazioni consulta la nostra{' '}
+            {tr('Utilizziamo cookie tecnici necessari per il funzionamento del servizio e cookie analitici per migliorare la tua esperienza. Per maggiori informazioni consulta la nostra', 'We use technical cookies necessary for the service and analytics cookies to improve your experience. For more information, see our')}{' '}
             <Link to={createPageUrl('CookiePolicy')} className="text-[#ef6144] hover:underline font-medium">
-              Cookie Policy
+              {tr('Cookie Policy', 'Cookie Policy')}
             </Link>.
           </p>
         </div>
@@ -48,14 +50,14 @@ export default function CookieBanner() {
             onClick={handleReject}
             className="flex-1 sm:flex-none"
           >
-            Solo necessari
+            {tr('Solo necessari', 'Only necessary')}
           </Button>
           <Button
             size="sm"
             onClick={handleAccept}
             className="flex-1 sm:flex-none bg-[#ef6144] hover:bg-[#d9553a]"
           >
-            Accetta tutti
+            {tr('Accetta tutti', 'Accept all')}
           </Button>
         </div>
       </div>

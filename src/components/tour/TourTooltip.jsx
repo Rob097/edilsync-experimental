@@ -1,13 +1,16 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { useTour } from './TourProvider';
+import { useLanguage } from '@/components/i18n/useLanguage';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { X, ChevronLeft, ChevronRight } from 'lucide-react';
 
 export default function TourTooltip({ highlightRect }) {
   const { activeTour, currentStep, nextStep, prevStep, closeTour } = useTour();
+  const { currentLanguage } = useLanguage();
   const [position, setPosition] = useState({ top: 0, left: 0 });
   const tooltipRef = useRef(null);
+  const tr = (itText, enText) => (currentLanguage === 'it' ? itText : enText);
 
   useEffect(() => {
     if (!activeTour || !tooltipRef.current) return;
@@ -98,7 +101,7 @@ export default function TourTooltip({ highlightRect }) {
             <div className="flex-1">
               <CardTitle className="text-lg">{step.title}</CardTitle>
               <CardDescription className="text-xs text-gray-500 mt-1">
-                Passo {currentStep + 1} di {activeTour.steps.length}
+                {tr('Passo', 'Step')} {currentStep + 1} {tr('di', 'of')} {activeTour.steps.length}
               </CardDescription>
             </div>
             <Button
@@ -125,7 +128,7 @@ export default function TourTooltip({ highlightRect }) {
               className="gap-1"
             >
               <ChevronLeft className="h-4 w-4" />
-              Indietro
+              {tr('Indietro', 'Back')}
             </Button>
 
             <div className="flex gap-1">
@@ -146,7 +149,7 @@ export default function TourTooltip({ highlightRect }) {
               onClick={nextStep}
               className="bg-[#ef6144] hover:bg-[#ef6144]/90 gap-1"
             >
-              {isLastStep ? 'Completa' : 'Avanti'}
+              {isLastStep ? tr('Completa', 'Finish') : tr('Avanti', 'Next')}
               {!isLastStep && <ChevronRight className="h-4 w-4" />}
             </Button>
           </div>

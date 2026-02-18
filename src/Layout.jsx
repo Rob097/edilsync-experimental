@@ -52,7 +52,7 @@ export default function Layout({ children, currentPageName }) {
   const queryClient = useQueryClient();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [isChangingContext, setIsChangingContext] = useState(false);
-  const { t } = useLanguage();
+  const { t, currentLanguage } = useLanguage();
 
   const { data: user } = useQuery({
     queryKey: ['currentUser'],
@@ -140,7 +140,7 @@ export default function Layout({ children, currentPageName }) {
   return (
     <I18nextProvider i18n={i18next}>
       <TourProvider>
-        {isChangingContext && <FullPageLoader message="Cambio contesto in corso..." />}
+        {isChangingContext && <FullPageLoader message={currentLanguage === 'it' ? 'Cambio contesto in corso...' : 'Changing context...'} />}
         <TourOverlay />
         <div className="min-h-screen bg-gray-50 flex flex-col">
       {/* Header */}

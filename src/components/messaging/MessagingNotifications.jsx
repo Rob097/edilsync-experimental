@@ -11,12 +11,16 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { MessageSquare } from "lucide-react";
 import { formatDistanceToNow } from 'date-fns';
-import { it } from 'date-fns/locale';
+import { it, enUS } from 'date-fns/locale';
 import { useNavigate } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
+import { useLanguage } from '@/components/i18n/useLanguage';
 
 export default function MessagingNotifications({ userEmail }) {
   const navigate = useNavigate();
+  const { currentLanguage } = useLanguage();
+  const tr = (itText, enText) => currentLanguage === 'it' ? itText : enText;
+  const dateLocale = currentLanguage === 'it' ? it : enUS;
 
   const { data: channelMembers = [] } = useQuery({
     queryKey: ['allChannelMembers', userEmail],
@@ -129,12 +133,12 @@ export default function MessagingNotifications({ userEmail }) {
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="w-80">
         <div className="p-3 border-b">
-          <h3 className="font-semibold text-sm">Messaggi</h3>
+          <h3 className="font-semibold text-sm">{tr('Messaggi', 'Messages')}</h3>
         </div>
 
         {totalNotifications === 0 ? (
           <div className="p-4 text-center text-sm text-gray-500">
-            Nessun nuovo messaggio
+            {tr('Nessun nuovo messaggio', 'No new messages')}
           </div>
         ) : (
           <div className="max-h-96 overflow-y-auto">
@@ -146,12 +150,12 @@ export default function MessagingNotifications({ userEmail }) {
               >
                 <div className="flex items-center justify-between w-full mb-1">
                   <span className="text-xs font-medium text-[#ef6144]">
-                    Sei stato menzionato
+                    {tr('Sei stato menzionato', 'You were mentioned')}
                   </span>
                   <span className="text-xs text-gray-500">
                     {formatDistanceToNow(new Date(item.message.created_date), { 
                       addSuffix: true,
-                      locale: it 
+                      locale: dateLocale 
                     })}
                   </span>
                 </div>
@@ -172,12 +176,12 @@ export default function MessagingNotifications({ userEmail }) {
               >
                 <div className="flex items-center justify-between w-full mb-1">
                   <Badge variant="secondary" className="bg-[#ef6144] text-white">
-                    {item.unreadCount} {item.unreadCount === 1 ? 'nuovo' : 'nuovi'}
+                    {item.unreadCount} {item.unreadCount === 1 ? tr('nuovo', 'new') : tr('nuovi', 'new')}
                   </Badge>
                   <span className="text-xs text-gray-500">
                     {formatDistanceToNow(new Date(item.lastMessage.created_date), { 
                       addSuffix: true,
-                      locale: it 
+                      locale: dateLocale 
                     })}
                   </span>
                 </div>

@@ -12,7 +12,8 @@ import { toast } from "sonner";
 import NotificationPreferences from '@/components/settings/NotificationPreferences';
 
 export default function Settings() {
-  const { t } = useLanguage();
+  const { t, currentLanguage } = useLanguage();
+  const tr = (itText, enText) => (currentLanguage === 'it' ? itText : enText);
   const queryClient = useQueryClient();
   
   const [formData, setFormData] = useState({
@@ -89,11 +90,11 @@ export default function Settings() {
               <div className="flex items-center gap-3">
                 <div className="w-12 h-12 rounded-full bg-[#ef6144] flex items-center justify-center">
                   <span className="text-white font-semibold text-lg">
-                    {user?.full_name?.charAt(0)?.toUpperCase() || 'U'}
+                    {user?.full_name?.charAt(0)?.toUpperCase() || (currentLanguage === 'it' ? 'U' : 'U')}
                   </span>
                 </div>
                 <div>
-                  <CardTitle>{user?.full_name || 'Utente'}</CardTitle>
+                  <CardTitle>{user?.full_name || tr('Utente', 'User')}</CardTitle>
                   <CardDescription>{user?.email}</CardDescription>
                 </div>
               </div>
@@ -106,7 +107,7 @@ export default function Settings() {
                     id="display_name"
                     value={formData.display_name}
                     onChange={(e) => handleChange('display_name', e.target.value)}
-                    placeholder="Mario Rossi"
+                    placeholder={currentLanguage === 'it' ? 'Mario Rossi' : 'John Smith'}
                   />
                 </div>
 
