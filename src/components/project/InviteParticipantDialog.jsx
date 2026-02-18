@@ -51,11 +51,6 @@ export default function InviteParticipantDialog({
     queryFn: () => base44.auth.me(),
   });
 
-  const { data: userProfiles = [] } = useQuery({
-    queryKey: ['userPublicProfiles'],
-    queryFn: listUserPublicProfilesSafe,
-  });
-
   const { data: companyMemberships = [] } = useQuery({
     queryKey: ['userCompanyMemberships', user?.email],
     queryFn: () => base44.entities.CompanyMember.filter({ user_email: user?.email, status: 'active' }),
@@ -93,9 +88,11 @@ export default function InviteParticipantDialog({
         participantData.company_id = selectedCompanyId;
       } else {
         participantData.user_email = email;
-        const foundProfile = userProfiles.find((profile) => profile.user_email === email);
-        if (foundProfile?.user_id) {
-          participantData.user_id = foundProfile.user_id;
+        // Try to find user_id
+        const users = await base44.entities.User.list();
+        const foundUser = users.find(u => u.email === email);
+        if (foundUser) {
+          participantData.user_id = foundUser.id;
         }
       }
 
