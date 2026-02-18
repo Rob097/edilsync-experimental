@@ -28,3 +28,4 @@ dist-ssr
 *.sw?
 
 .env
+src/lib/app-params.js
