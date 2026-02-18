@@ -40,9 +40,9 @@ export default function CreateChannelDialog({
     enabled: !!user?.email,
   });
 
-  const { data: userProfiles = [] } = useQuery({
-    queryKey: ['userPublicProfiles'],
-    queryFn: () => base44.entities.UserPublicProfile.list(),
+  const { data: allUsers = [] } = useQuery({
+    queryKey: ['allUsers'],
+    queryFn: () => base44.entities.User.list(),
   });
 
   const { data: allCompanies = [] } = useQuery({
@@ -144,8 +144,8 @@ export default function CreateChannelDialog({
                   const company = allCompanies.find(c => c.id === participant.company_id);
                   displayName = company?.name || tr('Società', 'Company');
                 } else {
-                  const user = userProfiles.find(u => u.user_email === participant.user_email);
-                  displayName = user?.display_name || user?.full_name || participant.user_email;
+                  const user = allUsers.find(u => u.email === participant.user_email);
+                  displayName = user?.display_name || participant.user_email;
                 }
                 
                 return (

@@ -43,12 +43,6 @@ export default function ChangeRequestDialog({ open, onOpenChange, request, proje
     queryFn: () => base44.entities.Company.list(),
   });
 
-  const { data: userProfiles = [] } = useQuery({
-    queryKey: ['userPublicProfiles'],
-    queryFn: () => base44.entities.UserPublicProfile.list(),
-    staleTime: 5 * 60 * 1000,
-  });
-
   useEffect(() => {
     if (request) {
       setFormData({
@@ -82,14 +76,12 @@ export default function ChangeRequestDialog({ open, onOpenChange, request, proje
           throw new Error('Solo il committente del progetto può creare richieste di modifica');
         }
 
-        const currentUserProfile = userProfiles.find((profile) => profile.user_email === user?.email);
-
         return base44.entities.ChangeRequest.create({
           ...data,
           project_id: projectId,
           status: 'pending',
           requested_by_email: user?.email,
-          requested_by_name: currentUserProfile?.display_name || currentUserProfile?.full_name || user?.full_name,
+          requested_by_name: user?.full_name,
         });
       }
     },
@@ -120,7 +112,6 @@ export default function ChangeRequestDialog({ open, onOpenChange, request, proje
     const assignee = formData.assigned_participant_id 
       ? projectParticipants.find(p => p.id === formData.assigned_participant_id)
       : null;
-    const assigneeProfile = userProfiles.find((profile) => profile.user_email === assignee?.user_email);
     
     const data = {
       title: formData.title,
@@ -130,9 +121,7 @@ export default function ChangeRequestDialog({ open, onOpenChange, request, proje
       assigned_participant_id: formData.assigned_participant_id || null,
       assigned_participant_type: assignee?.participant_type || null,
       assigned_user_email: assignee?.participant_type === 'personal' ? assignee.user_email : null,
-      assigned_user_name: assignee?.participant_type === 'personal'
-        ? (assigneeProfile?.display_name || assigneeProfile?.full_name || assignee.user_email)
-        : null,
+      assigned_user_name: assignee?.participant_type === 'personal' ? assignee.user_email : null,
       assigned_company_id: assignee?.participant_type === 'company' ? assignee.company_id : null,
       assigned_company_name: assignee?.participant_type === 'company' ? companies.find(c => c.id === assignee.company_id)?.name : null,
     };

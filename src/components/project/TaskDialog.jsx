@@ -54,12 +54,6 @@ export default function TaskDialog({ open, onOpenChange, task, projectId }) {
     queryFn: () => base44.entities.Company.list(),
   });
 
-  const { data: userProfiles = [] } = useQuery({
-    queryKey: ['userPublicProfiles'],
-    queryFn: () => base44.entities.UserPublicProfile.list(),
-    staleTime: 5 * 60 * 1000,
-  });
-
   useEffect(() => {
     if (task) {
       setFormData({
@@ -129,7 +123,6 @@ export default function TaskDialog({ open, onOpenChange, task, projectId }) {
     
     // Find assignee details
     const assignee = participants.find(p => p.id === formData.assigned_participant_id);
-    const assigneeProfile = userProfiles.find((profile) => profile.user_email === assignee?.user_email);
     
     const data = {
       project_id: projectId,
@@ -139,9 +132,7 @@ export default function TaskDialog({ open, onOpenChange, task, projectId }) {
       assigned_participant_id: formData.assigned_participant_id,
       assigned_participant_type: assignee?.participant_type || 'personal',
       assigned_user_email: assignee?.participant_type === 'personal' ? assignee.user_email : null,
-      assigned_user_name: assignee?.participant_type === 'personal'
-        ? (assigneeProfile?.display_name || assigneeProfile?.full_name || assignee.user_email)
-        : null,
+      assigned_user_name: assignee?.participant_type === 'personal' ? assignee.user_email : null,
       assigned_company_id: assignee?.participant_type === 'company' ? assignee.company_id : null,
       assigned_company_name: assignee?.participant_type === 'company' ? companies.find(c => c.id === assignee.company_id)?.name : null,
       room_area: formData.room_area,

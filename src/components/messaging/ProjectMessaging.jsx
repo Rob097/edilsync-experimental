@@ -213,7 +213,7 @@ export default function ProjectMessaging({
               channelId={selectedChannelId}
               projectId={projectId}
               currentUserEmail={currentUser.email}
-              currentUserName={currentUser.display_name || currentUser.full_name}
+              currentUserName={currentUser.full_name}
               contextType={activeCompanyId ? 'company' : 'personal'}
               activeCompanyId={activeCompanyId}
               activeCompanyName={activeCompany?.name}

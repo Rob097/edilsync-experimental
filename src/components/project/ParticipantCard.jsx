@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { base44 } from '@/api/base44Client';
-import { useMutation, useQueryClient, useQuery } from '@tanstack/react-query';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Building2, User, Clock, Trash2, Loader2 } from "lucide-react";
@@ -24,16 +24,6 @@ export default function ParticipantCard({ participant, companyName, isPending, c
   const roleColor = roleColors[participant.project_role] || 'bg-gray-100 text-gray-700';
   const queryClient = useQueryClient();
   const [confirmRemove, setConfirmRemove] = useState(false);
-
-  const { data: userProfiles = [] } = useQuery({
-    queryKey: ['userPublicProfiles'],
-    queryFn: () => base44.entities.UserPublicProfile.list(),
-    staleTime: 5 * 60 * 1000,
-  });
-
-  const userProfile = userProfiles.find((user) => user.user_email === participant.user_email);
-  console.log('User profile', userProfile, participant);
-  const participantDisplayName = userProfile?.display_name || userProfile?.full_name || participant.user_email;
 
   const localizedRoleLabels = {
     homeowner: tr('Committente', 'Homeowner'),
@@ -83,10 +73,10 @@ export default function ParticipantCard({ participant, companyName, isPending, c
         </div>
         <div>
           <p className="font-medium text-gray-900">
-            {isCompany ? companyName : participantDisplayName}
+            {isCompany ? companyName : participant.user_email}
           </p>
           {isCompany && participant.user_email && (
-            <p className="text-sm text-gray-500">{participantDisplayName}</p>
+            <p className="text-sm text-gray-500">{participant.user_email}</p>
           )}
         </div>
       </div>

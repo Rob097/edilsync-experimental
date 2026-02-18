@@ -1,6 +1,4 @@
 import React, { useState, useMemo } from 'react';
-import { base44 } from '@/api/base44Client';
-import { useQuery } from '@tanstack/react-query';
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
@@ -20,25 +18,16 @@ export default function AssigneeSelector({
   const [searchQuery, setSearchQuery] = useState('');
   const [isOpen, setIsOpen] = useState(false);
 
-  const { data: userProfiles = [] } = useQuery({
-    queryKey: ['userPublicProfiles'],
-    queryFn: () => base44.entities.UserPublicProfile.list(),
-    staleTime: 5 * 60 * 1000,
-  });
-
   // Group and prepare options
   const options = useMemo(() => {
     const userParticipants = participants
       .filter(p => p.participant_type === 'personal' && p.user_email)
-      .map(p => {
-        const userProfile = userProfiles.find((user) => user.user_email === p.user_email);
-        return {
-          id: p.id,
-          type: 'user',
-          label: userProfile?.display_name || userProfile?.full_name || p.user_email,
-          email: p.user_email,
-        };
-      });
+      .map(p => ({
+        id: p.id,
+        type: 'user',
+        label: p.user_email,
+        email: p.user_email,
+      }));
 
     const companyParticipants = participants
       .filter(p => p.participant_type === 'company' && p.company_id)
@@ -53,7 +42,7 @@ export default function AssigneeSelector({
       });
 
     return { users: userParticipants, companies: companyParticipants };
-  }, [participants, companies, userProfiles]);
+  }, [participants, companies]);
 
   // Filter based on search
   const filteredUsers = options.users.filter(u => 

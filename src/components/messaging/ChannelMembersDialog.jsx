@@ -54,9 +54,9 @@ export default function ChannelMembersDialog({
     queryFn: () => base44.entities.Company.list(),
   });
 
-  const { data: userProfiles = [] } = useQuery({
-    queryKey: ['userPublicProfiles'],
-    queryFn: () => base44.entities.UserPublicProfile.list(),
+  const { data: allUsers = [] } = useQuery({
+    queryKey: ['allUsers'],
+    queryFn: () => base44.entities.User.list(),
   });
 
   const currentMembers = channelMembers.filter(m => m.channel_id === channelId);
@@ -71,8 +71,8 @@ export default function ChannelMembersDialog({
     if (participant.participant_type === 'company') {
       return companies.find(c => c.id === participant.company_id)?.name || tr('Società', 'Company');
     }
-    const u = userProfiles.find(u => u.user_email === participant.user_email);
-    return u?.display_name || u?.full_name || participant.user_email || tr('Utente', 'User');
+    const u = allUsers.find(u => u.email === participant.user_email);
+    return u?.full_name || participant.user_email || tr('Utente', 'User');
   };
 
   const getMemberParticipant = (member) => {

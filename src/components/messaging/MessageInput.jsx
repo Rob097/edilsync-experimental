@@ -56,9 +56,9 @@ export default function MessageInput({
     enabled: !!projectId && mentionType === 'document',
   });
 
-  const { data: userProfiles = [] } = useQuery({
-    queryKey: ['userPublicProfiles'],
-    queryFn: () => base44.entities.UserPublicProfile.list(),
+  const { data: allUsers = [] } = useQuery({
+    queryKey: ['allUsers'],
+    queryFn: () => base44.entities.User.list(),
     enabled: mentionType === 'user',
     staleTime: 5 * 60 * 1000,
   });
@@ -175,7 +175,7 @@ export default function MessageInput({
   const mentionableUsers = participants
     .filter((participant) => !!participant.user_email && participant.user_email !== currentUserEmail)
     .map((participant) => {
-      const user = userProfiles.find((u) => u.user_email === participant.user_email);
+      const user = allUsers.find((u) => u.email === participant.user_email);
       return {
         ...participant,
         display_name: user?.display_name || user?.full_name || participant.user_email,

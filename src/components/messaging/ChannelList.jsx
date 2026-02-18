@@ -41,12 +41,6 @@ export default function ChannelList({
     staleTime: 2 * 60 * 1000, // 2 minuti
   });
 
-  const { data: userProfiles = [] } = useQuery({
-    queryKey: ['userPublicProfiles'],
-    queryFn: () => base44.entities.UserPublicProfile.list(),
-    staleTime: 5 * 60 * 1000,
-  });
-
   const isLoading = channelsLoading;
 
   // Filter channels based on membership
@@ -88,11 +82,11 @@ export default function ChannelList({
       return participant?.user_email !== currentUserEmail;
     });
     const participant = participants.find(p => p.id === otherParticipantId);
-    if (!participant) return channel.name;
-    if (participant.company_id) return channel.name;
-
-    const userProfile = userProfiles.find((user) => user.user_email === participant.user_email);
-    return userProfile?.display_name || userProfile?.full_name || participant.user_email || channel.name;
+    if (participant?.company_id) {
+      const company = participants.find(p => p.company_id === participant.company_id);
+      return channel.name;
+    }
+    return participant?.user_email || channel.name;
   };
 
   const renderChannel = (channel, icon) => {

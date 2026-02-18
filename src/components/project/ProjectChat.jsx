@@ -45,7 +45,7 @@ export default function ProjectChat({ projectId }) {
     sendMutation.mutate({
       project_id: projectId,
       sender_email: user?.email,
-      sender_name: user?.display_name || user?.full_name,
+      sender_name: user?.full_name,
       message: message.trim(),
     });
   };

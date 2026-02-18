@@ -44,12 +44,6 @@ export default function EventDetailDialog({ open, onOpenChange, event, user, com
     queryFn: () => base44.entities.Company.list(),
   });
 
-  const { data: userProfiles = [] } = useQuery({
-    queryKey: ['userPublicProfiles'],
-    queryFn: () => base44.entities.UserPublicProfile.list(),
-    staleTime: 5 * 60 * 1000,
-  });
-
   const currentContext = user?.active_context || 'personal';
   const isCreator = event?.creator_email === user?.email;
   const companyIds = companyMemberships?.map(m => m.company_id) || [];
@@ -143,11 +137,6 @@ export default function EventDetailDialog({ open, onOpenChange, event, user, com
     return companies.find(c => c.id === companyId)?.name || 'Società';
   };
 
-  const getUserDisplayName = (userEmail) => {
-    const userProfile = userProfiles.find((profile) => profile.user_email === userEmail);
-    return userProfile?.display_name || userProfile?.full_name || userEmail;
-  };
-
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-md">
@@ -207,7 +196,7 @@ export default function EventDetailDialog({ open, onOpenChange, event, user, com
                           )}
                           <span className="text-sm">
                             {p.participant_type === 'user' 
-                              ? getUserDisplayName(p.user_email)
+                              ? p.user_email 
                               : getCompanyName(p.company_id)}
                           </span>
                           {p.has_conflict && (
