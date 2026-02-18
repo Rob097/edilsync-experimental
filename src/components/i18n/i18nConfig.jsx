@@ -72,7 +72,7 @@ const itTranslations = {
     "noProjects": "Nessun progetto",
     "noPersonalProjects": "Non hai ancora progetti personali. Crea il tuo primo cantiere.",
     "noCompanyProjects": "Questa società non ha ancora progetti. Crea il primo cantiere.",
-    "greetingPrefix": "Ciao,",
+    "greetingPrefix": "Hola,",
     "workingAs": "Stai operando come",
     "yourCompanies": "Le tue Società",
     "noCompanies": "Nessuna società",
