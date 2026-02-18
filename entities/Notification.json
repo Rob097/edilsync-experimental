@@ -1,0 +1,86 @@
+{
+  "name": "Notification",
+  "type": "object",
+  "properties": {
+    "user_email": {
+      "type": "string",
+      "description": "Recipient email"
+    },
+    "context_type": {
+      "type": "string",
+      "enum": [
+        "personal",
+        "company"
+      ],
+      "description": "Context type for this notification"
+    },
+    "context_company_id": {
+      "type": "string",
+      "description": "Company ID if notification is for company context"
+    },
+    "type": {
+      "type": "string",
+      "enum": [
+        "event_invite",
+        "event_cancelled",
+        "event_updated",
+        "conflict_resolved",
+        "participant_declined",
+        "message_mention",
+        "project_invite",
+        "company_invite",
+        "task_assigned",
+        "task_status_changed",
+        "change_request_assigned",
+        "change_request_status_changed",
+        "milestone_status_changed",
+        "document_comment"
+      ],
+      "description": "Notification type"
+    },
+    "title": {
+      "type": "string",
+      "description": "Notification title"
+    },
+    "message": {
+      "type": "string",
+      "description": "Notification message"
+    },
+    "related_event_id": {
+      "type": "string",
+      "description": "Related event or message ID"
+    },
+    "is_read": {
+      "type": "boolean",
+      "description": "Whether notification has been read"
+    }
+  },
+  "required": [
+    "user_email",
+    "context_type",
+    "type",
+    "title",
+    "message"
+  ],
+  "rls": {
+    "create": true,
+    "read": {
+      "$or": [
+        {
+          "user_email": "{{user.email}}"
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    },
+    "update": {
+      "user_email": "{{user.email}}"
+    },
+    "delete": {
+      "user_email": "{{user.email}}"
+    }
+  }
+}

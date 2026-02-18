@@ -1,0 +1,117 @@
+{
+  "name": "Channel",
+  "type": "object",
+  "properties": {
+    "project_id": {
+      "type": "string",
+      "description": "Reference to Project (null for company channels)"
+    },
+    "name": {
+      "type": "string",
+      "description": "Channel name"
+    },
+    "type": {
+      "type": "string",
+      "enum": [
+        "general",
+        "company",
+        "direct",
+        "custom"
+      ],
+      "description": "Channel type"
+    },
+    "description": {
+      "type": "string",
+      "description": "Channel description (for custom channels)"
+    },
+    "company_id": {
+      "type": "string",
+      "description": "Company ID for company channels"
+    },
+    "is_direct": {
+      "type": "boolean",
+      "default": false,
+      "description": "True for 1-1 chats"
+    },
+    "participant_ids": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Participant IDs for direct messages"
+    },
+    "created_by_email": {
+      "type": "string",
+      "description": "Creator email"
+    }
+  },
+  "required": [
+    "name",
+    "type"
+  ],
+  "rls": {
+    "create": {
+      "$or": [
+        {
+          "project_id": {
+            "$in": "{{user.data.project_ids}}"
+          }
+        },
+        {
+          "company_id": {
+            "$in": "{{user.data.company_ids}}"
+          }
+        },
+        {
+          "created_by": "{{user.email}}"
+        }
+      ]
+    },
+    "read": {
+      "$or": [
+        {
+          "project_id": {
+            "$in": "{{user.data.project_ids}}"
+          }
+        },
+        {
+          "company_id": {
+            "$in": "{{user.data.company_ids}}"
+          }
+        },
+        {
+          "created_by": "{{user.email}}"
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    },
+    "update": {
+      "$or": [
+        {
+          "created_by": "{{user.email}}"
+        },
+        {
+          "company_id": {
+            "$in": "{{user.data.company_ids}}"
+          }
+        }
+      ]
+    },
+    "delete": {
+      "$or": [
+        {
+          "created_by": "{{user.email}}"
+        },
+        {
+          "company_id": {
+            "$in": "{{user.data.company_ids}}"
+          }
+        }
+      ]
+    }
+  }
+}

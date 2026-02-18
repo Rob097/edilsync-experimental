@@ -1,0 +1,111 @@
+{
+  "name": "CompanyMember",
+  "type": "object",
+  "properties": {
+    "company_id": {
+      "type": "string",
+      "description": "Reference to Company"
+    },
+    "user_id": {
+      "type": "string",
+      "description": "Reference to User"
+    },
+    "user_email": {
+      "type": "string",
+      "description": "User email for lookup"
+    },
+    "role": {
+      "type": "string",
+      "enum": [
+        "admin",
+        "member"
+      ],
+      "description": "Role within the company"
+    },
+    "profession": {
+      "type": "string",
+      "enum": [
+        "general",
+        "architect",
+        "engineer",
+        "surveyor",
+        "designer",
+        "accountant",
+        "other"
+      ],
+      "description": "Professional role"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "active",
+        "invited",
+        "inactive"
+      ],
+      "description": "Membership status"
+    }
+  },
+  "required": [
+    "company_id",
+    "user_email",
+    "role"
+  ],
+  "rls": {
+    "create": {
+      "$or": [
+        {
+          "company_id": {
+            "$in": "{{user.data.admin_company_ids}}"
+          }
+        },
+        {
+          "created_by": "{{user.email}}"
+        }
+      ]
+    },
+    "read": {
+      "$or": [
+        {
+          "company_id": {
+            "$in": "{{user.data.company_ids}}"
+          }
+        },
+        {
+          "user_email": "{{user.email}}"
+        },
+        {
+          "created_by": "{{user.email}}"
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    },
+    "update": {
+      "$or": [
+        {
+          "company_id": {
+            "$in": "{{user.data.admin_company_ids}}"
+          }
+        },
+        {
+          "created_by": "{{user.email}}"
+        }
+      ]
+    },
+    "delete": {
+      "$or": [
+        {
+          "company_id": {
+            "$in": "{{user.data.admin_company_ids}}"
+          }
+        },
+        {
+          "created_by": "{{user.email}}"
+        }
+      ]
+    }
+  }
+}

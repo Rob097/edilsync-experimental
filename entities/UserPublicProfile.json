@@ -1,0 +1,45 @@
+{
+  "name": "UserPublicProfile",
+  "type": "object",
+  "properties": {
+    "user_id": {
+      "type": "string",
+      "description": "Reference to User id"
+    },
+    "user_email": {
+      "type": "string",
+      "description": "User email used for lookups"
+    },
+    "display_name": {
+      "type": "string",
+      "description": "Public display name shown in UI"
+    },
+    "full_name": {
+      "type": "string",
+      "description": "Optional full name"
+    }
+  },
+  "required": [
+    "user_id",
+    "user_email",
+    "display_name"
+  ],
+  "rls": {
+    "create": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "read": true,
+    "update": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "delete": {
+      "user_condition": {
+        "role": "admin"
+      }
+    }
+  }
+}

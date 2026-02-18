@@ -1,0 +1,83 @@
+{
+  "name": "ChannelMember",
+  "type": "object",
+  "properties": {
+    "channel_id": {
+      "type": "string",
+      "description": "Reference to Channel"
+    },
+    "project_id": {
+      "type": "string",
+      "description": "Reference to Project for easy querying (null for company channels)"
+    },
+    "participant_id": {
+      "type": "string",
+      "description": "Reference to ProjectParticipant or CompanyMember"
+    },
+    "user_email": {
+      "type": "string",
+      "description": "User email"
+    },
+    "company_id": {
+      "type": "string",
+      "description": "Company ID if participating as company"
+    },
+    "last_read_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Last time user read messages in this channel"
+    }
+  },
+  "required": [
+    "channel_id",
+    "participant_id"
+  ],
+  "rls": {
+    "create": true,
+    "read": {
+      "$or": [
+        {
+          "user_email": "{{user.email}}"
+        },
+        {
+          "company_id": {
+            "$in": "{{user.data.company_ids}}"
+          }
+        },
+        {
+          "project_id": {
+            "$in": "{{user.data.project_ids}}"
+          }
+        },
+        {
+          "created_by": "{{user.email}}"
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    },
+    "update": {
+      "$or": [
+        {
+          "user_email": "{{user.email}}"
+        },
+        {
+          "created_by": "{{user.email}}"
+        }
+      ]
+    },
+    "delete": {
+      "$or": [
+        {
+          "user_email": "{{user.email}}"
+        },
+        {
+          "created_by": "{{user.email}}"
+        }
+      ]
+    }
+  }
+}

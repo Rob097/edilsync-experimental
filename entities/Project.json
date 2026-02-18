@@ -1,0 +1,94 @@
+{
+  "name": "Project",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string",
+      "description": "Project name"
+    },
+    "address": {
+      "type": "string",
+      "description": "Construction site address"
+    },
+    "description": {
+      "type": "string",
+      "description": "Project description"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "planning",
+        "in_progress",
+        "completed",
+        "on_hold"
+      ],
+      "description": "Project status"
+    },
+    "start_date": {
+      "type": "string",
+      "format": "date",
+      "description": "Planned start date"
+    },
+    "end_date": {
+      "type": "string",
+      "format": "date",
+      "description": "Planned end date"
+    },
+    "owner_type": {
+      "type": "string",
+      "enum": [
+        "personal",
+        "company"
+      ],
+      "description": "Whether owned by person or company"
+    },
+    "owner_company_id": {
+      "type": "string",
+      "description": "Company ID if owner_type is company"
+    },
+    "owner_user_id": {
+      "type": "string",
+      "description": "User ID of the owner (creator)"
+    }
+  },
+  "required": [
+    "name",
+    "address",
+    "owner_type"
+  ],
+  "rls": {
+    "create": true,
+    "read": {
+      "$or": [
+        {
+          "id": {
+            "$in": "{{user.data.project_ids}}"
+          }
+        },
+        {
+          "created_by": "{{user.email}}"
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    },
+    "update": {
+      "$or": [
+        {
+          "id": {
+            "$in": "{{user.data.project_ids}}"
+          }
+        },
+        {
+          "created_by": "{{user.email}}"
+        }
+      ]
+    },
+    "delete": {
+      "created_by": "{{user.email}}"
+    }
+  }
+}

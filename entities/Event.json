@@ -1,0 +1,135 @@
+{
+  "name": "Event",
+  "type": "object",
+  "properties": {
+    "title": {
+      "type": "string",
+      "description": "Event title"
+    },
+    "description": {
+      "type": "string",
+      "description": "Optional description"
+    },
+    "location": {
+      "type": "string",
+      "description": "Optional location"
+    },
+    "start_datetime": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Start date and time"
+    },
+    "end_datetime": {
+      "type": "string",
+      "format": "date-time",
+      "description": "End date and time"
+    },
+    "owner_type": {
+      "type": "string",
+      "enum": [
+        "personal",
+        "company",
+        "project"
+      ],
+      "description": "Context type that owns this event"
+    },
+    "owner_user_id": {
+      "type": "string",
+      "description": "User ID if personal event"
+    },
+    "owner_company_id": {
+      "type": "string",
+      "description": "Company ID if company event"
+    },
+    "owner_project_id": {
+      "type": "string",
+      "description": "Project ID if project event"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "scheduled",
+        "pending_confirmation",
+        "cancelled"
+      ],
+      "description": "Event status"
+    },
+    "creator_email": {
+      "type": "string",
+      "description": "Email of event creator"
+    },
+    "creator_name": {
+      "type": "string",
+      "description": "Name of event creator"
+    }
+  },
+  "required": [
+    "title",
+    "start_datetime",
+    "end_datetime",
+    "owner_type",
+    "status"
+  ],
+  "rls": {
+    "create": true,
+    "read": {
+      "$or": [
+        {
+          "created_by": "{{user.email}}"
+        },
+        {
+          "creator_email": "{{user.email}}"
+        },
+        {
+          "owner_company_id": {
+            "$in": "{{user.data.company_ids}}"
+          }
+        },
+        {
+          "owner_project_id": {
+            "$in": "{{user.data.project_ids}}"
+          }
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    },
+    "update": {
+      "$or": [
+        {
+          "created_by": "{{user.email}}"
+        },
+        {
+          "owner_company_id": {
+            "$in": "{{user.data.company_ids}}"
+          }
+        },
+        {
+          "owner_project_id": {
+            "$in": "{{user.data.project_ids}}"
+          }
+        }
+      ]
+    },
+    "delete": {
+      "$or": [
+        {
+          "created_by": "{{user.email}}"
+        },
+        {
+          "owner_company_id": {
+            "$in": "{{user.data.company_ids}}"
+          }
+        },
+        {
+          "owner_project_id": {
+            "$in": "{{user.data.project_ids}}"
+          }
+        }
+      ]
+    }
+  }
+}

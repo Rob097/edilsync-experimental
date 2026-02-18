@@ -1,0 +1,93 @@
+{
+  "name": "ProjectDocument",
+  "type": "object",
+  "properties": {
+    "project_id": {
+      "type": "string",
+      "description": "Reference to Project"
+    },
+    "name": {
+      "type": "string",
+      "description": "Document name"
+    },
+    "description": {
+      "type": "string",
+      "description": "Optional description"
+    },
+    "file_url": {
+      "type": "string",
+      "description": "URL of the uploaded file"
+    },
+    "file_type": {
+      "type": "string",
+      "description": "File extension/type (pdf, jpg, dwg, etc.)"
+    },
+    "file_size": {
+      "type": "number",
+      "description": "File size in bytes"
+    },
+    "uploaded_by_email": {
+      "type": "string",
+      "description": "Email of the user who uploaded"
+    },
+    "uploaded_by_name": {
+      "type": "string",
+      "description": "Name of the user who uploaded"
+    },
+    "category": {
+      "type": "string",
+      "enum": [
+        "project",
+        "contract",
+        "permit",
+        "drawing",
+        "photo",
+        "report",
+        "other"
+      ],
+      "description": "Document category"
+    }
+  },
+  "required": [
+    "project_id",
+    "name",
+    "file_url"
+  ],
+  "rls": {
+    "create": {
+      "$or": [
+        {
+          "project_id": {
+            "$in": "{{user.data.project_ids}}"
+          }
+        },
+        {
+          "created_by": "{{user.email}}"
+        }
+      ]
+    },
+    "read": {
+      "$or": [
+        {
+          "project_id": {
+            "$in": "{{user.data.project_ids}}"
+          }
+        },
+        {
+          "created_by": "{{user.email}}"
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    },
+    "update": {
+      "created_by": "{{user.email}}"
+    },
+    "delete": {
+      "created_by": "{{user.email}}"
+    }
+  }
+}

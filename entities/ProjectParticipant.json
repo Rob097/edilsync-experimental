@@ -1,0 +1,114 @@
+{
+  "name": "ProjectParticipant",
+  "type": "object",
+  "properties": {
+    "project_id": {
+      "type": "string",
+      "description": "Reference to Project"
+    },
+    "participant_type": {
+      "type": "string",
+      "enum": [
+        "personal",
+        "company"
+      ],
+      "description": "Whether participant is person or company"
+    },
+    "user_id": {
+      "type": "string",
+      "description": "User ID if personal participant"
+    },
+    "user_email": {
+      "type": "string",
+      "description": "User email for display"
+    },
+    "company_id": {
+      "type": "string",
+      "description": "Company ID if company participant"
+    },
+    "project_role": {
+      "type": "string",
+      "enum": [
+        "homeowner",
+        "contractor",
+        "subcontractor",
+        "architect",
+        "engineer",
+        "surveyor",
+        "designer",
+        "consultant"
+      ],
+      "description": "Contextual role in this project"
+    },
+    "invited_by_company_id": {
+      "type": "string",
+      "description": "If subcontractor, which company invited them"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "active",
+        "invited",
+        "declined",
+        "removed"
+      ],
+      "description": "Participation status"
+    },
+    "can_invite": {
+      "type": "boolean",
+      "description": "Can this participant invite others"
+    }
+  },
+  "required": [
+    "project_id",
+    "participant_type",
+    "project_role"
+  ],
+  "rls": {
+    "create": {
+      "$or": [
+        {
+          "project_id": {
+            "$in": "{{user.data.project_ids}}"
+          }
+        },
+        {
+          "created_by": "{{user.email}}"
+        }
+      ]
+    },
+    "read": {
+      "$or": [
+        {
+          "project_id": {
+            "$in": "{{user.data.project_ids}}"
+          }
+        },
+        {
+          "user_email": "{{user.email}}"
+        },
+        {
+          "created_by": "{{user.email}}"
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    },
+    "update": {
+      "$or": [
+        {
+          "created_by": "{{user.email}}"
+        },
+        {
+          "user_email": "{{user.email}}"
+        }
+      ]
+    },
+    "delete": {
+      "created_by": "{{user.email}}"
+    }
+  }
+}

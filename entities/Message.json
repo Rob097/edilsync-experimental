@@ -1,0 +1,122 @@
+{
+  "name": "Message",
+  "type": "object",
+  "properties": {
+    "channel_id": {
+      "type": "string",
+      "description": "Reference to Channel"
+    },
+    "project_id": {
+      "type": "string",
+      "description": "Reference to Project (null for company channels)"
+    },
+    "company_id": {
+      "type": "string",
+      "description": "Company ID for company channel messages"
+    },
+    "content": {
+      "type": "string",
+      "description": "Message content"
+    },
+    "sender_email": {
+      "type": "string",
+      "description": "Sender email"
+    },
+    "sender_name": {
+      "type": "string",
+      "description": "Sender name"
+    },
+    "sender_context_type": {
+      "type": "string",
+      "enum": [
+        "personal",
+        "company"
+      ],
+      "description": "Context type when sending"
+    },
+    "sender_company_id": {
+      "type": "string",
+      "description": "Company ID if sent as company"
+    },
+    "sender_company_name": {
+      "type": "string",
+      "description": "Company name if sent as company"
+    },
+    "mentioned_user_emails": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Tagged user emails"
+    },
+    "mentioned_task_ids": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Tagged task IDs"
+    },
+    "mentioned_milestone_ids": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Tagged milestone IDs"
+    },
+    "mentioned_change_request_ids": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Tagged change request IDs"
+    },
+    "mentioned_document_ids": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Tagged document IDs"
+    }
+  },
+  "required": [
+    "channel_id",
+    "content",
+    "sender_email",
+    "sender_name",
+    "sender_context_type"
+  ],
+  "rls": {
+    "create": true,
+    "read": {
+      "$or": [
+        {
+          "project_id": {
+            "$in": "{{user.data.project_ids}}"
+          }
+        },
+        {
+          "company_id": {
+            "$in": "{{user.data.company_ids}}"
+          }
+        },
+        {
+          "created_by": "{{user.email}}"
+        },
+        {
+          "sender_email": "{{user.email}}"
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    },
+    "update": {
+      "created_by": "{{user.email}}"
+    },
+    "delete": {
+      "created_by": "{{user.email}}"
+    }
+  }
+}

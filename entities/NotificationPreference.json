@@ -1,0 +1,173 @@
+{
+  "name": "NotificationPreference",
+  "type": "object",
+  "properties": {
+    "user_email": {
+      "type": "string",
+      "description": "User email"
+    },
+    "preferences": {
+      "type": "object",
+      "description": "JSON object with notification preferences per action type",
+      "properties": {
+        "project_invite": {
+          "type": "object",
+          "properties": {
+            "notification": {
+              "type": "boolean"
+            },
+            "email": {
+              "type": "boolean"
+            }
+          }
+        },
+        "company_invite": {
+          "type": "object",
+          "properties": {
+            "notification": {
+              "type": "boolean"
+            },
+            "email": {
+              "type": "boolean"
+            }
+          }
+        },
+        "task_assigned": {
+          "type": "object",
+          "properties": {
+            "notification": {
+              "type": "boolean"
+            },
+            "email": {
+              "type": "boolean"
+            }
+          }
+        },
+        "task_status_changed": {
+          "type": "object",
+          "properties": {
+            "notification": {
+              "type": "boolean"
+            },
+            "email": {
+              "type": "boolean"
+            }
+          }
+        },
+        "change_request_assigned": {
+          "type": "object",
+          "properties": {
+            "notification": {
+              "type": "boolean"
+            },
+            "email": {
+              "type": "boolean"
+            }
+          }
+        },
+        "change_request_status_changed": {
+          "type": "object",
+          "properties": {
+            "notification": {
+              "type": "boolean"
+            },
+            "email": {
+              "type": "boolean"
+            }
+          }
+        },
+        "milestone_status_changed": {
+          "type": "object",
+          "properties": {
+            "notification": {
+              "type": "boolean"
+            },
+            "email": {
+              "type": "boolean"
+            }
+          }
+        },
+        "event_invite": {
+          "type": "object",
+          "properties": {
+            "notification": {
+              "type": "boolean"
+            },
+            "email": {
+              "type": "boolean"
+            }
+          }
+        },
+        "event_updated": {
+          "type": "object",
+          "properties": {
+            "notification": {
+              "type": "boolean"
+            },
+            "email": {
+              "type": "boolean"
+            }
+          }
+        },
+        "event_cancelled": {
+          "type": "object",
+          "properties": {
+            "notification": {
+              "type": "boolean"
+            },
+            "email": {
+              "type": "boolean"
+            }
+          }
+        },
+        "message_mention": {
+          "type": "object",
+          "properties": {
+            "notification": {
+              "type": "boolean"
+            },
+            "email": {
+              "type": "boolean"
+            }
+          }
+        },
+        "document_comment": {
+          "type": "object",
+          "properties": {
+            "notification": {
+              "type": "boolean"
+            },
+            "email": {
+              "type": "boolean"
+            }
+          }
+        }
+      }
+    }
+  },
+  "required": [
+    "user_email",
+    "preferences"
+  ],
+  "rls": {
+    "create": true,
+    "read": {
+      "$or": [
+        {
+          "user_email": "{{user.email}}"
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    },
+    "update": {
+      "user_email": "{{user.email}}"
+    },
+    "delete": {
+      "user_email": "{{user.email}}"
+    }
+  }
+}

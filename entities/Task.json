@@ -1,0 +1,143 @@
+{
+  "name": "Task",
+  "type": "object",
+  "properties": {
+    "project_id": {
+      "type": "string",
+      "description": "Reference to Project"
+    },
+    "milestone_id": {
+      "type": "string",
+      "description": "Optional reference to Milestone"
+    },
+    "title": {
+      "type": "string",
+      "description": "Task title"
+    },
+    "description": {
+      "type": "string",
+      "description": "Optional description"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "not_started",
+        "in_progress",
+        "completed",
+        "blocked"
+      ],
+      "default": "not_started",
+      "description": "Task status"
+    },
+    "assigned_participant_id": {
+      "type": "string",
+      "description": "Reference to ProjectParticipant (required assignee)"
+    },
+    "assigned_participant_type": {
+      "type": "string",
+      "enum": [
+        "personal",
+        "company"
+      ],
+      "description": "Type of assigned participant"
+    },
+    "assigned_user_email": {
+      "type": "string",
+      "description": "Email if assigned to personal participant"
+    },
+    "assigned_user_name": {
+      "type": "string",
+      "description": "Name if assigned to personal participant"
+    },
+    "assigned_company_id": {
+      "type": "string",
+      "description": "Company ID if assigned to company participant"
+    },
+    "assigned_company_name": {
+      "type": "string",
+      "description": "Company name if assigned to company participant"
+    },
+    "blocked_by_email": {
+      "type": "string",
+      "description": "Email of person causing block (if status is blocked)"
+    },
+    "blocked_by_name": {
+      "type": "string",
+      "description": "Name of person causing block"
+    },
+    "blocked_reason": {
+      "type": "string",
+      "description": "Reason for block"
+    },
+    "blocked_date": {
+      "type": "string",
+      "format": "date-time",
+      "description": "When task was blocked"
+    },
+    "room_area": {
+      "type": "string",
+      "description": "Room or area this task belongs to"
+    },
+    "due_date": {
+      "type": "string",
+      "format": "date",
+      "description": "Optional due date"
+    }
+  },
+  "required": [
+    "project_id",
+    "title",
+    "status",
+    "assigned_participant_id",
+    "assigned_participant_type"
+  ],
+  "rls": {
+    "create": {
+      "$or": [
+        {
+          "project_id": {
+            "$in": "{{user.data.project_ids}}"
+          }
+        },
+        {
+          "created_by": "{{user.email}}"
+        }
+      ]
+    },
+    "read": {
+      "$or": [
+        {
+          "project_id": {
+            "$in": "{{user.data.project_ids}}"
+          }
+        },
+        {
+          "created_by": "{{user.email}}"
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    },
+    "update": {
+      "$or": [
+        {
+          "created_by": "{{user.email}}"
+        },
+        {
+          "assigned_user_email": "{{user.email}}"
+        },
+        {
+          "assigned_company_id": {
+            "$in": "{{user.data.admin_company_ids}}"
+          }
+        }
+      ]
+    },
+    "delete": {
+      "created_by": "{{user.email}}"
+    }
+  }
+}

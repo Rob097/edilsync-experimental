@@ -1,0 +1,152 @@
+{
+  "name": "ChangeRequest",
+  "type": "object",
+  "properties": {
+    "project_id": {
+      "type": "string",
+      "description": "Reference to Project"
+    },
+    "title": {
+      "type": "string",
+      "description": "Change request title"
+    },
+    "description": {
+      "type": "string",
+      "description": "Detailed description"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "pending",
+        "approved",
+        "rejected",
+        "clarification_needed"
+      ],
+      "default": "pending",
+      "description": "Request status"
+    },
+    "assigned_participant_id": {
+      "type": "string",
+      "description": "Optional reference to ProjectParticipant assignee"
+    },
+    "assigned_participant_type": {
+      "type": "string",
+      "enum": [
+        "personal",
+        "company"
+      ],
+      "description": "Type of assigned participant"
+    },
+    "assigned_user_email": {
+      "type": "string",
+      "description": "Email if assigned to personal participant"
+    },
+    "assigned_user_name": {
+      "type": "string",
+      "description": "Name if assigned to personal participant"
+    },
+    "assigned_company_id": {
+      "type": "string",
+      "description": "Company ID if assigned to company participant"
+    },
+    "assigned_company_name": {
+      "type": "string",
+      "description": "Company name if assigned to company participant"
+    },
+    "cost_impact": {
+      "type": "number",
+      "description": "Additional cost in euros"
+    },
+    "time_impact_days": {
+      "type": "number",
+      "description": "Additional days needed"
+    },
+    "photo_urls": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Supporting photos"
+    },
+    "requested_by_email": {
+      "type": "string",
+      "description": "Email of requester"
+    },
+    "requested_by_name": {
+      "type": "string",
+      "description": "Name of requester"
+    },
+    "response_note": {
+      "type": "string",
+      "description": "Response from homeowner"
+    },
+    "responded_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "When response was given"
+    }
+  },
+  "required": [
+    "project_id",
+    "title",
+    "description",
+    "status"
+  ],
+  "rls": {
+    "create": {
+      "$or": [
+        {
+          "project_id": {
+            "$in": "{{user.data.project_ids}}"
+          }
+        },
+        {
+          "created_by": "{{user.email}}"
+        }
+      ]
+    },
+    "read": {
+      "$or": [
+        {
+          "project_id": {
+            "$in": "{{user.data.project_ids}}"
+          }
+        },
+        {
+          "created_by": "{{user.email}}"
+        },
+        {
+          "assigned_user_email": "{{user.email}}"
+        },
+        {
+          "assigned_company_id": {
+            "$in": "{{user.data.company_ids}}"
+          }
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    },
+    "update": {
+      "$or": [
+        {
+          "created_by": "{{user.email}}"
+        },
+        {
+          "assigned_user_email": "{{user.email}}"
+        },
+        {
+          "assigned_company_id": {
+            "$in": "{{user.data.admin_company_ids}}"
+          }
+        }
+      ]
+    },
+    "delete": {
+      "created_by": "{{user.email}}"
+    }
+  }
+}

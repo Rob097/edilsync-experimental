@@ -1,0 +1,69 @@
+{
+  "name": "DocumentComment",
+  "type": "object",
+  "properties": {
+    "document_id": {
+      "type": "string",
+      "description": "Reference to ProjectDocument"
+    },
+    "project_id": {
+      "type": "string",
+      "description": "Reference to Project for easy querying"
+    },
+    "comment": {
+      "type": "string",
+      "description": "Comment text"
+    },
+    "author_email": {
+      "type": "string",
+      "description": "Comment author email"
+    },
+    "author_name": {
+      "type": "string",
+      "description": "Comment author name"
+    }
+  },
+  "required": [
+    "document_id",
+    "project_id",
+    "comment",
+    "author_email"
+  ],
+  "rls": {
+    "create": {
+      "$or": [
+        {
+          "project_id": {
+            "$in": "{{user.data.project_ids}}"
+          }
+        },
+        {
+          "created_by": "{{user.email}}"
+        }
+      ]
+    },
+    "read": {
+      "$or": [
+        {
+          "project_id": {
+            "$in": "{{user.data.project_ids}}"
+          }
+        },
+        {
+          "created_by": "{{user.email}}"
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    },
+    "update": {
+      "created_by": "{{user.email}}"
+    },
+    "delete": {
+      "created_by": "{{user.email}}"
+    }
+  }
+}

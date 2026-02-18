@@ -1,0 +1,88 @@
+{
+  "name": "EventParticipant",
+  "type": "object",
+  "properties": {
+    "event_id": {
+      "type": "string",
+      "description": "Reference to Event"
+    },
+    "participant_type": {
+      "type": "string",
+      "enum": [
+        "user",
+        "company"
+      ],
+      "description": "Type of participant"
+    },
+    "user_id": {
+      "type": "string",
+      "description": "User ID if user participant"
+    },
+    "user_email": {
+      "type": "string",
+      "description": "User email"
+    },
+    "company_id": {
+      "type": "string",
+      "description": "Company ID if company participant"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "pending",
+        "accepted",
+        "declined"
+      ],
+      "description": "Invitation status"
+    },
+    "has_conflict": {
+      "type": "boolean",
+      "description": "Whether participant has a scheduling conflict"
+    },
+    "conflict_event_id": {
+      "type": "string",
+      "description": "ID of conflicting event if any"
+    }
+  },
+  "required": [
+    "event_id",
+    "participant_type",
+    "status"
+  ],
+  "rls": {
+    "create": true,
+    "read": {
+      "$or": [
+        {
+          "user_email": "{{user.email}}"
+        },
+        {
+          "company_id": {
+            "$in": "{{user.data.company_ids}}"
+          }
+        },
+        {
+          "created_by": "{{user.email}}"
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    },
+    "update": {
+      "$or": [
+        {
+          "user_email": "{{user.email}}"
+        },
+        {
+          "created_by": "{{user.email}}"
+        }
+      ]
+    },
+    "delete": {
+      "created_by": "{{user.email}}"
+    }
+  }
+}
