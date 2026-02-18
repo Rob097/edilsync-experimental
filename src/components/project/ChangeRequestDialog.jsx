@@ -14,7 +14,6 @@ import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Loader2, CheckCircle2, XCircle } from "lucide-react";
 import AssigneeSelector from './AssigneeSelector';
-import { listUserPublicProfiles, findProfileByEmail, getDisplayNameFromProfile } from '@/lib/userPublicProfiles';
 
 export default function ChangeRequestDialog({ open, onOpenChange, request, projectId, canRespond }) {
   const { t } = useLanguage();
@@ -44,9 +43,9 @@ export default function ChangeRequestDialog({ open, onOpenChange, request, proje
     queryFn: () => base44.entities.Company.list(),
   });
 
-  const { data: publicProfiles = [] } = useQuery({
+  const { data: userProfiles = [] } = useQuery({
     queryKey: ['userPublicProfiles'],
-    queryFn: listUserPublicProfiles,
+    queryFn: () => base44.entities.UserPublicProfile.list(),
     staleTime: 5 * 60 * 1000,
   });
 
@@ -83,14 +82,14 @@ export default function ChangeRequestDialog({ open, onOpenChange, request, proje
           throw new Error('Solo il committente del progetto può creare richieste di modifica');
         }
 
-        const currentUserProfile = findProfileByEmail(publicProfiles, user?.email);
+        const currentUserProfile = userProfiles.find((profile) => profile.user_email === user?.email);
 
         return base44.entities.ChangeRequest.create({
           ...data,
           project_id: projectId,
           status: 'pending',
           requested_by_email: user?.email,
-          requested_by_name: getDisplayNameFromProfile(currentUserProfile, user?.full_name || user?.email),
+          requested_by_name: currentUserProfile?.display_name || currentUserProfile?.full_name || user?.full_name,
         });
       }
     },
@@ -121,7 +120,7 @@ export default function ChangeRequestDialog({ open, onOpenChange, request, proje
     const assignee = formData.assigned_participant_id 
       ? projectParticipants.find(p => p.id === formData.assigned_participant_id)
       : null;
-    const assigneeProfile = findProfileByEmail(publicProfiles, assignee?.user_email);
+    const assigneeProfile = userProfiles.find((profile) => profile.user_email === assignee?.user_email);
     
     const data = {
       title: formData.title,
@@ -132,7 +131,7 @@ export default function ChangeRequestDialog({ open, onOpenChange, request, proje
       assigned_participant_type: assignee?.participant_type || null,
       assigned_user_email: assignee?.participant_type === 'personal' ? assignee.user_email : null,
       assigned_user_name: assignee?.participant_type === 'personal'
-        ? getDisplayNameFromProfile(assigneeProfile, assignee.user_email)
+        ? (assigneeProfile?.display_name || assigneeProfile?.full_name || assignee.user_email)
         : null,
       assigned_company_id: assignee?.participant_type === 'company' ? assignee.company_id : null,
       assigned_company_name: assignee?.participant_type === 'company' ? companies.find(c => c.id === assignee.company_id)?.name : null,

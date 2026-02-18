@@ -1,4 +1,5 @@
 import React, { useState, useMemo } from 'react';
+import { base44 } from '@/api/base44Client';
 import { useQuery } from '@tanstack/react-query';
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
@@ -6,7 +7,6 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { User, Building2, Check } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useLanguage } from '@/components/i18n/useLanguage';
-import { listUserPublicProfiles, findProfileByEmail, getDisplayNameFromProfile } from '@/lib/userPublicProfiles';
 
 export default function AssigneeSelector({ 
   participants = [], 
@@ -20,9 +20,9 @@ export default function AssigneeSelector({
   const [searchQuery, setSearchQuery] = useState('');
   const [isOpen, setIsOpen] = useState(false);
 
-  const { data: publicProfiles = [] } = useQuery({
+  const { data: userProfiles = [] } = useQuery({
     queryKey: ['userPublicProfiles'],
-    queryFn: listUserPublicProfiles,
+    queryFn: () => base44.entities.UserPublicProfile.list(),
     staleTime: 5 * 60 * 1000,
   });
 
@@ -31,11 +31,11 @@ export default function AssigneeSelector({
     const userParticipants = participants
       .filter(p => p.participant_type === 'personal' && p.user_email)
       .map(p => {
-        const userProfile = findProfileByEmail(publicProfiles, p.user_email);
+        const userProfile = userProfiles.find((user) => user.user_email === p.user_email);
         return {
           id: p.id,
           type: 'user',
-          label: getDisplayNameFromProfile(userProfile, p.user_email),
+          label: userProfile?.display_name || userProfile?.full_name || p.user_email,
           email: p.user_email,
         };
       });
@@ -53,7 +53,7 @@ export default function AssigneeSelector({
       });
 
     return { users: userParticipants, companies: companyParticipants };
-  }, [participants, companies, publicProfiles]);
+  }, [participants, companies, userProfiles]);
 
   // Filter based on search
   const filteredUsers = options.users.filter(u => 

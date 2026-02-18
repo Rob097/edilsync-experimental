@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
-import { useMutation, useQueryClient, useQuery } from '@tanstack/react-query';
-import { listUserPublicProfiles, findProfileByEmail, getDisplayNameFromProfile } from '@/lib/userPublicProfiles';
 import { base44 } from '@/api/base44Client';
+import { useMutation, useQueryClient, useQuery } from '@tanstack/react-query';
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Building2, User, Clock, Trash2, Loader2 } from "lucide-react";
@@ -26,14 +25,15 @@ export default function ParticipantCard({ participant, companyName, isPending, c
   const queryClient = useQueryClient();
   const [confirmRemove, setConfirmRemove] = useState(false);
 
-  const { data: publicProfiles = [] } = useQuery({
+  const { data: userProfiles = [] } = useQuery({
     queryKey: ['userPublicProfiles'],
-    queryFn: listUserPublicProfiles,
+    queryFn: () => base44.entities.UserPublicProfile.list(),
     staleTime: 5 * 60 * 1000,
   });
 
-  const userProfile = findProfileByEmail(publicProfiles, participant.user_email);
-  const participantDisplayName = getDisplayNameFromProfile(userProfile, participant.user_email);
+  const userProfile = userProfiles.find((user) => user.user_email === participant.user_email);
+  console.log('User profile', userProfile, participant);
+  const participantDisplayName = userProfile?.display_name || userProfile?.full_name || participant.user_email;
 
   const localizedRoleLabels = {
     homeowner: tr('Committente', 'Homeowner'),

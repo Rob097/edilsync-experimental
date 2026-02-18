@@ -13,7 +13,6 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Checkbox } from "@/components/ui/checkbox";
 import { useLanguage } from '@/components/i18n/useLanguage';
-import { listUserPublicProfiles, findProfileByEmail, getDisplayNameFromProfile } from '@/lib/userPublicProfiles';
 
 export default function CreateChannelDialog({ 
   open, 
@@ -41,9 +40,9 @@ export default function CreateChannelDialog({
     enabled: !!user?.email,
   });
 
-  const { data: publicProfiles = [] } = useQuery({
+  const { data: userProfiles = [] } = useQuery({
     queryKey: ['userPublicProfiles'],
-    queryFn: listUserPublicProfiles,
+    queryFn: () => base44.entities.UserPublicProfile.list(),
   });
 
   const { data: allCompanies = [] } = useQuery({
@@ -145,8 +144,8 @@ export default function CreateChannelDialog({
                   const company = allCompanies.find(c => c.id === participant.company_id);
                   displayName = company?.name || tr('Società', 'Company');
                 } else {
-                  const user = findProfileByEmail(publicProfiles, participant.user_email);
-                  displayName = getDisplayNameFromProfile(user, participant.user_email);
+                  const user = userProfiles.find(u => u.user_email === participant.user_email);
+                  displayName = user?.display_name || user?.full_name || participant.user_email;
                 }
                 
                 return (

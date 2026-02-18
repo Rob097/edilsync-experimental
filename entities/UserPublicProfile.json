@@ -4,25 +4,28 @@
   "properties": {
     "user_id": {
       "type": "string",
-      "description": "Reference to User id"
+      "description": "Reference to User"
     },
     "user_email": {
       "type": "string",
-      "description": "User email used for lookups"
+      "description": "User email for lookup"
     },
     "display_name": {
       "type": "string",
-      "description": "Public display name shown in UI"
+      "description": "Public display name"
     },
     "full_name": {
       "type": "string",
-      "description": "Optional full name"
+      "description": "Full name fallback"
+    },
+    "avatar_url": {
+      "type": "string",
+      "description": "Public avatar URL"
     }
   },
   "required": [
     "user_id",
-    "user_email",
-    "display_name"
+    "user_email"
   ],
   "rls": {
     "create": {

@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { base44 } from '@/api/base44Client';
 import { useQuery } from '@tanstack/react-query';
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -6,8 +7,6 @@ import { Skeleton } from "@/components/ui/skeleton.jsx";
 import { Hash, Building2, User, Plus, MessageCircle } from "lucide-react";
 import CreateChannelDialog from './CreateChannelDialog';
 import { useLanguage } from '@/components/i18n/useLanguage';
-import { base44 } from '@/api/base44Client';
-import { listUserPublicProfiles, findProfileByEmail, getDisplayNameFromProfile } from '@/lib/userPublicProfiles';
 
 export default function ChannelList({ 
   projectId, 
@@ -42,9 +41,9 @@ export default function ChannelList({
     staleTime: 2 * 60 * 1000, // 2 minuti
   });
 
-  const { data: publicProfiles = [] } = useQuery({
+  const { data: userProfiles = [] } = useQuery({
     queryKey: ['userPublicProfiles'],
-    queryFn: listUserPublicProfiles,
+    queryFn: () => base44.entities.UserPublicProfile.list(),
     staleTime: 5 * 60 * 1000,
   });
 
@@ -92,8 +91,8 @@ export default function ChannelList({
     if (!participant) return channel.name;
     if (participant.company_id) return channel.name;
 
-    const userProfile = findProfileByEmail(publicProfiles, participant.user_email);
-    return getDisplayNameFromProfile(userProfile, participant.user_email || channel.name);
+    const userProfile = userProfiles.find((user) => user.user_email === participant.user_email);
+    return userProfile?.display_name || userProfile?.full_name || participant.user_email || channel.name;
   };
 
   const renderChannel = (channel, icon) => {

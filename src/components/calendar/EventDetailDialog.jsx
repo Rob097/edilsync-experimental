@@ -23,7 +23,6 @@ import {
 } from "lucide-react";
 import { format } from 'date-fns';
 import { it } from 'date-fns/locale';
-import { listUserPublicProfiles, findProfileByEmail, getDisplayNameFromProfile } from '@/lib/userPublicProfiles';
 
 const statusLabels = {
   pending: { label: 'In attesa', color: 'bg-yellow-100 text-yellow-700' },
@@ -45,9 +44,9 @@ export default function EventDetailDialog({ open, onOpenChange, event, user, com
     queryFn: () => base44.entities.Company.list(),
   });
 
-  const { data: publicProfiles = [] } = useQuery({
+  const { data: userProfiles = [] } = useQuery({
     queryKey: ['userPublicProfiles'],
-    queryFn: listUserPublicProfiles,
+    queryFn: () => base44.entities.UserPublicProfile.list(),
     staleTime: 5 * 60 * 1000,
   });
 
@@ -145,8 +144,8 @@ export default function EventDetailDialog({ open, onOpenChange, event, user, com
   };
 
   const getUserDisplayName = (userEmail) => {
-    const userProfile = findProfileByEmail(publicProfiles, userEmail);
-    return getDisplayNameFromProfile(userProfile, userEmail);
+    const userProfile = userProfiles.find((profile) => profile.user_email === userEmail);
+    return userProfile?.display_name || userProfile?.full_name || userEmail;
   };
 
   return (

@@ -8,7 +8,6 @@ import { Badge } from "@/components/ui/badge";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Plus, X, User, Building2 } from "lucide-react";
 import { useLanguage } from '@/components/i18n/useLanguage';
-import { listUserPublicProfiles, getDisplayNameFromProfile } from '@/lib/userPublicProfiles';
 
 export default function ParticipantSelector({ participants, onChange }) {
   const { currentLanguage } = useLanguage();
@@ -18,9 +17,9 @@ export default function ParticipantSelector({ participants, onChange }) {
   const [selectedCompanyId, setSelectedCompanyId] = useState('');
   const [manualEmail, setManualEmail] = useState('');
 
-  const { data: publicProfiles = [] } = useQuery({
+  const { data: userProfiles = [] } = useQuery({
     queryKey: ['userPublicProfiles'],
-    queryFn: listUserPublicProfiles,
+    queryFn: () => base44.entities.UserPublicProfile.list(),
   });
 
   const { data: allCompanies = [] } = useQuery({
@@ -31,13 +30,13 @@ export default function ParticipantSelector({ participants, onChange }) {
   const handleAddParticipant = () => {
     if (participantType === 'user') {
       if (selectedUserId) {
-        const user = publicProfiles.find(u => u.user_id === selectedUserId);
+        const user = userProfiles.find(u => u.user_id === selectedUserId);
         if (user && !participants.some(p => p.type === 'user' && p.email === user.user_email)) {
           onChange([...participants, {
             type: 'user',
             user_id: user.user_id,
             email: user.user_email,
-            name: getDisplayNameFromProfile(user, user.user_email),
+            name: user.display_name || user.full_name || user.user_email,
           }]);
         }
         setSelectedUserId('');
@@ -93,9 +92,9 @@ export default function ParticipantSelector({ participants, onChange }) {
                 <SelectValue placeholder={tr('Seleziona utente...', 'Select user...')} />
               </SelectTrigger>
               <SelectContent>
-                {publicProfiles.map(user => (
-                  <SelectItem key={user.user_id} value={user.user_id}>
-                    {getDisplayNameFromProfile(user, user.user_email)}
+                {userProfiles.map(user => (
+                  <SelectItem key={user.id} value={user.user_id}>
+                    {user.display_name || user.full_name || user.user_email}
                   </SelectItem>
                 ))}
               </SelectContent>

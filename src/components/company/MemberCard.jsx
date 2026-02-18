@@ -1,11 +1,10 @@
 import React, { useState } from 'react';
+import { base44 } from '@/api/base44Client';
 import { useMutation, useQueryClient, useQuery } from '@tanstack/react-query';
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { User, Clock, Shield, Trash2, Loader2 } from "lucide-react";
 import { useLanguage } from '@/components/i18n/useLanguage';
-import { listUserPublicProfiles, findProfileByEmail, getDisplayNameFromProfile } from '@/lib/userPublicProfiles';
-import { base44 } from '@/api/base44Client';
 
 export default function MemberCard({ member, isCurrentUser, isPending, isAdmin, companyId, canRemoveSelf = true }) {
   const { t, currentLanguage } = useLanguage();
@@ -13,14 +12,14 @@ export default function MemberCard({ member, isCurrentUser, isPending, isAdmin, 
   const queryClient = useQueryClient();
   const [confirmRemove, setConfirmRemove] = useState(false);
 
-  const { data: publicProfiles = [] } = useQuery({
+  const { data: userProfiles = [] } = useQuery({
     queryKey: ['userPublicProfiles'],
-    queryFn: listUserPublicProfiles,
+    queryFn: () => base44.entities.UserPublicProfile.list(),
     staleTime: 5 * 60 * 1000,
   });
 
-  const userProfile = findProfileByEmail(publicProfiles, member.user_email);
-  const memberDisplayName = getDisplayNameFromProfile(userProfile, member.user_email);
+  const userProfile = userProfiles.find((user) => user.user_email === member.user_email);
+  const memberDisplayName = userProfile?.display_name || userProfile?.full_name || member.user_email;
 
   const localizedRoleLabels = {
     admin: t('companies.admin'),
