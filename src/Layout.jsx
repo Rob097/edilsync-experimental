@@ -156,7 +156,7 @@ export default function Layout({ children, currentPageName }) {
             </Link>
 
             {/* Desktop Nav */}
-            <nav className="hidden md:flex items-center gap-1">
+            <nav className="hidden lg:flex items-center gap-1">
               {navItems.map((item) => {
                 const isActive = currentPageName === item.page;
                 return (
@@ -199,7 +199,7 @@ export default function Layout({ children, currentPageName }) {
               </Link>
 
               {/* Desktop Context Switcher */}
-              <div className="hidden md:block" data-tour="context-switcher">
+              <div className="hidden lg:block" data-tour="context-switcher">
                 <ContextSwitcher
                   currentContext={currentContext}
                   currentCompany={currentCompany}
@@ -261,7 +261,7 @@ export default function Layout({ children, currentPageName }) {
               <Button
                 variant="ghost"
                 size="icon"
-                className="md:hidden"
+                className="lg:hidden"
                 onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
               >
                 {mobileMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
@@ -272,7 +272,7 @@ export default function Layout({ children, currentPageName }) {
 
         {/* Mobile Nav */}
         {mobileMenuOpen && (
-          <div className="md:hidden border-t border-gray-200 bg-white">
+          <div className="lg:hidden border-t border-gray-200 bg-white">
             <div className="px-4 py-3 border-b border-gray-200">
               <ContextSwitcher
                 currentContext={currentContext}

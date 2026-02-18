@@ -11,6 +11,7 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import SelectDocumentDialog from './SelectDocumentDialog';
+import { listUserPublicProfiles, findProfileByEmail, getDisplayNameFromProfile } from '@/lib/userPublicProfiles';
 
 export default function MessageInput({ 
   channelId, 
@@ -54,6 +55,13 @@ export default function MessageInput({
     queryKey: ['documents', projectId],
     queryFn: () => base44.entities.ProjectDocument.filter({ project_id: projectId }),
     enabled: !!projectId && mentionType === 'document',
+  });
+
+  const { data: publicProfiles = [] } = useQuery({
+    queryKey: ['userPublicProfiles'],
+    queryFn: listUserPublicProfiles,
+    enabled: mentionType === 'user',
+    staleTime: 5 * 60 * 1000,
   });
 
   const sendMessageMutation = useMutation({
@@ -136,7 +144,7 @@ export default function MessageInput({
   const insertMention = (type, item) => {
     let text, id;
     if (type === 'user') {
-      text = item.user_email;
+      text = item.display_name || item.full_name || item.user_email;
       id = item.user_email;
     } else if (type === 'task') {
       text = item.title;
@@ -165,6 +173,16 @@ export default function MessageInput({
     return [];
   };
 
+  const mentionableUsers = participants
+    .filter((participant) => !!participant.user_email && participant.user_email !== currentUserEmail)
+    .map((participant) => {
+      const user = findProfileByEmail(publicProfiles, participant.user_email);
+      return {
+        ...participant,
+        display_name: getDisplayNameFromProfile(user, participant.user_email),
+      };
+    });
+
   const insertDocument = (doc) => {
     const link = `#[${doc.name}](document:${doc.id}) `;
     setMessage(prev => prev + link);
@@ -192,15 +210,21 @@ export default function MessageInput({
           </PopoverTrigger>
           <PopoverContent className="w-64 p-2">
             <div className="space-y-1">
-              {participants.map(p => (
-                <button
-                  key={p.id}
-                  onClick={() => insertMention('user', p)}
-                  className="w-full text-left px-3 py-2 hover:bg-gray-100 rounded text-sm"
-                >
-                  {p.user_email}
-                </button>
-              ))}
+              {mentionableUsers.length > 0 ? (
+                mentionableUsers.map((userItem) => (
+                  <button
+                    key={userItem.id}
+                    onClick={() => insertMention('user', userItem)}
+                    className="w-full text-left px-3 py-2 hover:bg-gray-100 rounded text-sm"
+                  >
+                    {userItem.display_name}
+                  </button>
+                ))
+              ) : (
+                <p className="px-3 py-2 text-sm text-gray-500">
+                  {tr('Nessun utente presente', 'No users available')}
+                </p>
+              )}
             </div>
           </PopoverContent>
         </Popover>
@@ -223,15 +247,21 @@ export default function MessageInput({
           </PopoverTrigger>
           <PopoverContent className="w-64 p-2 max-h-64 overflow-y-auto">
             <div className="space-y-1">
-              {tasks.map(t => (
-                <button
-                  key={t.id}
-                  onClick={() => insertMention('task', t)}
-                  className="w-full text-left px-3 py-2 hover:bg-gray-100 rounded text-sm"
-                >
-                  {t.title}
-                </button>
-              ))}
+              {tasks.length > 0 ? (
+                tasks.map((task) => (
+                  <button
+                    key={task.id}
+                    onClick={() => insertMention('task', task)}
+                    className="w-full text-left px-3 py-2 hover:bg-gray-100 rounded text-sm"
+                  >
+                    {task.title}
+                  </button>
+                ))
+              ) : (
+                <p className="px-3 py-2 text-sm text-gray-500">
+                  {tr('Nessun attività presente', 'No task available')}
+                </p>
+              )}
             </div>
           </PopoverContent>
         </Popover>
@@ -254,15 +284,21 @@ export default function MessageInput({
           </PopoverTrigger>
           <PopoverContent className="w-64 p-2 max-h-64 overflow-y-auto">
             <div className="space-y-1">
-              {milestones.map(m => (
-                <button
-                  key={m.id}
-                  onClick={() => insertMention('milestone', m)}
-                  className="w-full text-left px-3 py-2 hover:bg-gray-100 rounded text-sm"
-                >
-                  {m.title}
-                </button>
-              ))}
+              {milestones.length > 0 ? (
+                milestones.map((milestone) => (
+                  <button
+                    key={milestone.id}
+                    onClick={() => insertMention('milestone', milestone)}
+                    className="w-full text-left px-3 py-2 hover:bg-gray-100 rounded text-sm"
+                  >
+                    {milestone.title}
+                  </button>
+                ))
+              ) : (
+                <p className="px-3 py-2 text-sm text-gray-500">
+                  {tr('Nessuna Milestone presente', 'No milestone available')}
+                </p>
+              )}
             </div>
           </PopoverContent>
         </Popover>
@@ -285,15 +321,21 @@ export default function MessageInput({
           </PopoverTrigger>
           <PopoverContent className="w-64 p-2 max-h-64 overflow-y-auto">
             <div className="space-y-1">
-              {changeRequests.map(cr => (
-                <button
-                  key={cr.id}
-                  onClick={() => insertMention('change_request', cr)}
-                  className="w-full text-left px-3 py-2 hover:bg-gray-100 rounded text-sm"
-                >
-                  {cr.title}
-                </button>
-              ))}
+              {changeRequests.length > 0 ? (
+                changeRequests.map((changeRequest) => (
+                  <button
+                    key={changeRequest.id}
+                    onClick={() => insertMention('change_request', changeRequest)}
+                    className="w-full text-left px-3 py-2 hover:bg-gray-100 rounded text-sm"
+                  >
+                    {changeRequest.title}
+                  </button>
+                ))
+              ) : (
+                <p className="px-3 py-2 text-sm text-gray-500">
+                  {tr('Nessuna richiesta presente', 'No request available')}
+                </p>
+              )}
             </div>
           </PopoverContent>
         </Popover>

@@ -15,6 +15,7 @@ import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Loader2 } from "lucide-react";
 import AssigneeSelector from './AssigneeSelector';
+import { listUserPublicProfiles, findProfileByEmail, getDisplayNameFromProfile } from '@/lib/userPublicProfiles';
 
 export default function TaskDialog({ open, onOpenChange, task, projectId }) {
   const { t } = useLanguage();
@@ -52,6 +53,12 @@ export default function TaskDialog({ open, onOpenChange, task, projectId }) {
   const { data: companies = [] } = useQuery({
     queryKey: ['companies'],
     queryFn: () => base44.entities.Company.list(),
+  });
+
+  const { data: publicProfiles = [] } = useQuery({
+    queryKey: ['userPublicProfiles'],
+    queryFn: listUserPublicProfiles,
+    staleTime: 5 * 60 * 1000,
   });
 
   useEffect(() => {
@@ -123,6 +130,7 @@ export default function TaskDialog({ open, onOpenChange, task, projectId }) {
     
     // Find assignee details
     const assignee = participants.find(p => p.id === formData.assigned_participant_id);
+    const assigneeProfile = findProfileByEmail(publicProfiles, assignee?.user_email);
     
     const data = {
       project_id: projectId,
@@ -132,7 +140,9 @@ export default function TaskDialog({ open, onOpenChange, task, projectId }) {
       assigned_participant_id: formData.assigned_participant_id,
       assigned_participant_type: assignee?.participant_type || 'personal',
       assigned_user_email: assignee?.participant_type === 'personal' ? assignee.user_email : null,
-      assigned_user_name: assignee?.participant_type === 'personal' ? assignee.user_email : null,
+      assigned_user_name: assignee?.participant_type === 'personal'
+        ? getDisplayNameFromProfile(assigneeProfile, assignee.user_email)
+        : null,
       assigned_company_id: assignee?.participant_type === 'company' ? assignee.company_id : null,
       assigned_company_name: assignee?.participant_type === 'company' ? companies.find(c => c.id === assignee.company_id)?.name : null,
       room_area: formData.room_area,

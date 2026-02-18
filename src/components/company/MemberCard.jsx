@@ -1,16 +1,26 @@
 import React, { useState } from 'react';
-import { base44 } from '@/api/base44Client';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { useMutation, useQueryClient, useQuery } from '@tanstack/react-query';
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { User, Clock, Shield, Trash2, Loader2 } from "lucide-react";
 import { useLanguage } from '@/components/i18n/useLanguage';
+import { listUserPublicProfiles, findProfileByEmail, getDisplayNameFromProfile } from '@/lib/userPublicProfiles';
+import { base44 } from '@/api/base44Client';
 
 export default function MemberCard({ member, isCurrentUser, isPending, isAdmin, companyId, canRemoveSelf = true }) {
   const { t, currentLanguage } = useLanguage();
   const tr = (itText, enText) => (currentLanguage === 'it' ? itText : enText);
   const queryClient = useQueryClient();
   const [confirmRemove, setConfirmRemove] = useState(false);
+
+  const { data: publicProfiles = [] } = useQuery({
+    queryKey: ['userPublicProfiles'],
+    queryFn: listUserPublicProfiles,
+    staleTime: 5 * 60 * 1000,
+  });
+
+  const userProfile = findProfileByEmail(publicProfiles, member.user_email);
+  const memberDisplayName = getDisplayNameFromProfile(userProfile, member.user_email);
 
   const localizedRoleLabels = {
     admin: t('companies.admin'),
@@ -48,7 +58,7 @@ export default function MemberCard({ member, isCurrentUser, isPending, isAdmin, 
         </div>
         <div className="min-w-0 flex-1">
           <div className="flex items-center gap-2 flex-wrap">
-            <p className="font-medium text-gray-900 break-all">{member.user_email}</p>
+            <p className="font-medium text-gray-900 break-all">{memberDisplayName}</p>
             {isCurrentUser && (
               <Badge variant="outline" className="text-xs">{tr('Tu', 'You')}</Badge>
             )}

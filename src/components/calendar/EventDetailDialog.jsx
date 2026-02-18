@@ -23,6 +23,7 @@ import {
 } from "lucide-react";
 import { format } from 'date-fns';
 import { it } from 'date-fns/locale';
+import { listUserPublicProfiles, findProfileByEmail, getDisplayNameFromProfile } from '@/lib/userPublicProfiles';
 
 const statusLabels = {
   pending: { label: 'In attesa', color: 'bg-yellow-100 text-yellow-700' },
@@ -42,6 +43,12 @@ export default function EventDetailDialog({ open, onOpenChange, event, user, com
   const { data: companies = [] } = useQuery({
     queryKey: ['participantCompanies'],
     queryFn: () => base44.entities.Company.list(),
+  });
+
+  const { data: publicProfiles = [] } = useQuery({
+    queryKey: ['userPublicProfiles'],
+    queryFn: listUserPublicProfiles,
+    staleTime: 5 * 60 * 1000,
   });
 
   const currentContext = user?.active_context || 'personal';
@@ -137,6 +144,11 @@ export default function EventDetailDialog({ open, onOpenChange, event, user, com
     return companies.find(c => c.id === companyId)?.name || 'Società';
   };
 
+  const getUserDisplayName = (userEmail) => {
+    const userProfile = findProfileByEmail(publicProfiles, userEmail);
+    return getDisplayNameFromProfile(userProfile, userEmail);
+  };
+
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-md">
@@ -196,7 +208,7 @@ export default function EventDetailDialog({ open, onOpenChange, event, user, com
                           )}
                           <span className="text-sm">
                             {p.participant_type === 'user' 
-                              ? p.user_email 
+                              ? getUserDisplayName(p.user_email)
                               : getCompanyName(p.company_id)}
                           </span>
                           {p.has_conflict && (

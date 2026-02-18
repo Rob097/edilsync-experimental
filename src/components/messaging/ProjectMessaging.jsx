@@ -3,7 +3,6 @@ import { base44 } from '@/api/base44Client';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { Card } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton.jsx";
-import { Sheet, SheetContent, SheetTrigger, SheetClose } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
 import { Menu, Users } from "lucide-react";
 import ChannelList from './ChannelList';
@@ -158,11 +157,35 @@ export default function ProjectMessaging({
         />
       </Card>
 
-      <Sheet open={sidebarOpen} onOpenChange={setSidebarOpen}>
-        <Card className="flex-1 flex flex-col overflow-hidden">
+      <div className="relative flex-1 min-w-0">
+        <Card className="flex-1 h-full flex flex-col overflow-hidden">
+          {/* Mobile top bar - always visible */}
+          <div className="border-b p-3 flex items-center justify-between md:hidden">
+            <div className="min-w-0">
+              <h3 className="font-semibold truncate">
+                {selectedChannel?.name || tr('Canali', 'Channels')}
+              </h3>
+            </div>
+            <div className="flex items-center gap-1 ml-2">
+              {selectedChannel && (
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  onClick={() => setMembersDialogOpen(true)}
+                  title={tr('Membri del canale', 'Channel members')}
+                >
+                  <Users className="h-5 w-5" />
+                </Button>
+              )}
+              <Button variant="ghost" size="icon" onClick={() => setSidebarOpen(true)}>
+                <Menu className="h-5 w-5" />
+              </Button>
+            </div>
+          </div>
+
           {selectedChannel ? (
             <>
-              <div className="border-b p-4 flex items-center justify-between">
+              <div className="hidden md:flex border-b p-4 items-center justify-between">
                 <div>
                   <h3 className="font-semibold">{selectedChannel.name}</h3>
                   {selectedChannel.description && (
@@ -178,11 +201,6 @@ export default function ProjectMessaging({
                   >
                     <Users className="h-5 w-5" />
                   </Button>
-                  <SheetTrigger asChild className="md:hidden">
-                    <Button variant="ghost" size="icon">
-                      <Menu className="h-5 w-5" />
-                    </Button>
-                  </SheetTrigger>
                 </div>
               </div>
             <MessageList
@@ -195,7 +213,7 @@ export default function ProjectMessaging({
               channelId={selectedChannelId}
               projectId={projectId}
               currentUserEmail={currentUser.email}
-              currentUserName={currentUser.full_name}
+              currentUserName={currentUser.display_name || currentUser.full_name}
               contextType={activeCompanyId ? 'company' : 'personal'}
               activeCompanyId={activeCompanyId}
               activeCompanyName={activeCompany?.name}
@@ -203,13 +221,18 @@ export default function ProjectMessaging({
             />
             </>
           ) : (
-            <div className="flex items-center justify-center h-full text-gray-500">
+            <div className="flex items-center justify-center h-full text-gray-500 px-4 text-center">
               {tr('Seleziona un canale per iniziare', 'Select a channel to start')}
             </div>
           )}
         </Card>
 
-        <SheetContent side="left" className="w-64 p-0">
+        {/* Mobile in-panel sidebar */}
+        <div
+          className={`absolute inset-y-0 left-0 z-20 w-64 bg-white border-r shadow-xl transform transition-transform duration-200 md:hidden ${
+            sidebarOpen ? 'translate-x-0' : '-translate-x-full'
+          }`}
+        >
           <div className="p-4 overflow-y-auto h-full">
             <ChannelList
               projectId={projectId}
@@ -223,8 +246,17 @@ export default function ProjectMessaging({
               participants={participants}
             />
           </div>
-        </SheetContent>
-      </Sheet>
+        </div>
+
+        {sidebarOpen && (
+          <button
+            type="button"
+            className="absolute inset-0 z-10 bg-black/20 md:hidden"
+            onClick={() => setSidebarOpen(false)}
+            aria-label={tr('Chiudi lista canali', 'Close channels list')}
+          />
+        )}
+      </div>
       <ChannelMembersDialog
         open={membersDialogOpen}
         onOpenChange={setMembersDialogOpen}

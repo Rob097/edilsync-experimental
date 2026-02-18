@@ -188,7 +188,7 @@ export default function SystemDashboard() {
 
     // Most active users (by tasks completed)
     const userActivity = allUsers.map(u => ({
-      name: u.full_name || u.email,
+      name: u.display_name || u.full_name || u.email,
       tasks: tasks.filter(t => t.created_by === u.email).length,
       projects: projects.filter(p => p.created_by === u.email).length,
     })).sort((a, b) => (b.tasks + b.projects) - (a.tasks + a.projects)).slice(0, 5);
