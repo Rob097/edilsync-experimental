@@ -1,5 +1,5 @@
 import React, { useState, useMemo } from 'react';
-import { base44 } from '@/api/base44Client';
+import { appClient } from '@/api/appClient';
 import { useQuery } from '@tanstack/react-query';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -30,13 +30,13 @@ export default function Calendar() {
 
   const { data: user, isLoading: userLoading } = useQuery({
     queryKey: ['currentUser'],
-    queryFn: () => base44.auth.me(),
+    queryFn: () => appClient.auth.me(),
     staleTime: 60 * 1000,
   });
 
   const { data: companyMemberships = [] } = useQuery({
     queryKey: ['userCompanies', user?.email],
-    queryFn: () => base44.entities.CompanyMember.filter({ user_email: user?.email, status: 'active' }),
+    queryFn: () => appClient.entities.CompanyMember.filter({ user_email: user?.email, status: 'active' }),
     enabled: !!user?.email,
     staleTime: 2 * 60 * 1000,
   });
@@ -46,7 +46,7 @@ export default function Calendar() {
     queryFn: async () => {
       if (companyMemberships.length === 0) return [];
       const companyIds = companyMemberships.map(m => m.company_id);
-      const allCompanies = await base44.entities.Company.list();
+      const allCompanies = await appClient.entities.Company.list();
       return allCompanies.filter(c => companyIds.includes(c.id));
     },
     enabled: companyMemberships.length > 0,
@@ -55,13 +55,13 @@ export default function Calendar() {
 
   const { data: events = [], isLoading: eventsLoading } = useQuery({
     queryKey: ['events'],
-    queryFn: () => base44.entities.Event.filter({ status: 'scheduled' }),
+    queryFn: () => appClient.entities.Event.filter({ status: 'scheduled' }),
     staleTime: 60 * 1000,
   });
 
   const { data: eventParticipants = [], isLoading: participantsLoading } = useQuery({
     queryKey: ['eventParticipants'],
-    queryFn: () => base44.entities.EventParticipant.list(),
+    queryFn: () => appClient.entities.EventParticipant.list(),
     enabled: events.length > 0,
     staleTime: 60 * 1000,
   });

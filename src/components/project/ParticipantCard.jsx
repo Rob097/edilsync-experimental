@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { base44 } from '@/api/base44Client';
+import { appClient } from '@/api/appClient';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -17,7 +17,7 @@ const roleColors = {
   consultant: 'bg-gray-100 text-gray-700',
 };
 
-export default function ParticipantCard({ participant, companyName, isPending, canRemove, projectId }) {
+export default function ParticipantCard({ participant, userDisplayName, companyName, isPending, canRemove, projectId }) {
   const { t, currentLanguage } = useLanguage();
   const tr = (itText, enText) => (currentLanguage === 'it' ? itText : enText);
   const isCompany = participant.participant_type === 'company';
@@ -36,16 +36,18 @@ export default function ParticipantCard({ participant, companyName, isPending, c
     consultant: tr('Consulente', 'Consultant'),
   };
 
+  const resolvedUserName = userDisplayName || participant.user_email;
+
   const removeMutation = useMutation({
     mutationFn: async () => {
       // Remove from all channels first
-      const channelMembers = await base44.entities.ChannelMember.filter({ project_id: projectId });
+      const channelMembers = await appClient.entities.ChannelMember.filter({ project_id: projectId });
       const memberEntries = channelMembers.filter(m => m.participant_id === participant.id);
       for (const m of memberEntries) {
-        await base44.entities.ChannelMember.delete(m.id);
+        await appClient.entities.ChannelMember.delete(m.id);
       }
       // Then remove/decline the participant
-      await base44.entities.ProjectParticipant.update(participant.id, { status: 'removed' });
+      await appClient.entities.ProjectParticipant.update(participant.id, { status: 'removed' });
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['projectParticipants', projectId] });
@@ -73,10 +75,10 @@ export default function ParticipantCard({ participant, companyName, isPending, c
         </div>
         <div>
           <p className="font-medium text-gray-900">
-            {isCompany ? companyName : participant.user_email}
+            {isCompany ? companyName : resolvedUserName}
           </p>
           {isCompany && participant.user_email && (
-            <p className="text-sm text-gray-500">{participant.user_email}</p>
+            <p className="text-sm text-gray-500">{resolvedUserName}</p>
           )}
         </div>
       </div>

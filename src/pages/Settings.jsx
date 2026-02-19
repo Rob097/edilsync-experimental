@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { base44 } from '@/api/base44Client';
+import { appClient } from '@/api/appClient';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useLanguage } from '@/components/i18n/useLanguage';
 import { Button } from "@/components/ui/button";
@@ -24,7 +24,7 @@ export default function Settings() {
 
   const { data: user, isLoading } = useQuery({
     queryKey: ['currentUser'],
-    queryFn: () => base44.auth.me(),
+    queryFn: () => appClient.auth.me(),
   });
 
   useEffect(() => {
@@ -38,7 +38,7 @@ export default function Settings() {
 
   const updateMutation = useMutation({
     mutationFn: async (data) => {
-      return base44.auth.updateMe(data);
+      return appClient.auth.updateMe(data);
     },
     onSuccess: () => {
       queryClient.invalidateQueries(['currentUser']);

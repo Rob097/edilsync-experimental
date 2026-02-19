@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { base44 } from '@/api/base44Client';
+import { appClient } from '@/api/appClient';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -30,7 +30,7 @@ export default function ChangeRequestList({ projectId, canCreate, canRespond, cr
 
   const { data: changeRequests = [], isLoading } = useQuery({
     queryKey: ['changeRequests', projectId],
-    queryFn: () => base44.entities.ChangeRequest.filter({ project_id: projectId }),
+    queryFn: () => appClient.entities.ChangeRequest.filter({ project_id: projectId }),
     enabled: !!projectId,
   });
 

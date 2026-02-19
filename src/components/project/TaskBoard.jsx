@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { base44 } from '@/api/base44Client';
+import { appClient } from '@/api/appClient';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -28,14 +28,14 @@ export default function TaskBoard({ projectId, canEdit, onTaskCreate, filteredTa
 
   const { data: allTasks = [], isLoading } = useQuery({
     queryKey: ['tasks', projectId],
-    queryFn: () => base44.entities.Task.filter({ project_id: projectId }),
+    queryFn: () => appClient.entities.Task.filter({ project_id: projectId }),
     enabled: !!projectId,
   });
 
   const tasks = filteredTasks || allTasks;
 
   const updateTaskMutation = useMutation({
-    mutationFn: ({ taskId, status }) => base44.entities.Task.update(taskId, { 
+    mutationFn: ({ taskId, status }) => appClient.entities.Task.update(taskId, { 
       status,
       blocked_date: status === 'blocked' ? new Date().toISOString() : null
     }),

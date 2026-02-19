@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { base44 } from '@/api/base44Client';
+import { appClient } from '@/api/appClient';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -30,13 +30,13 @@ export default function MilestoneList({ projectId, project, canEdit, onNavigateT
 
   const { data: milestones = [], isLoading } = useQuery({
     queryKey: ['milestones', projectId],
-    queryFn: () => base44.entities.Milestone.filter({ project_id: projectId }, 'order_index'),
+    queryFn: () => appClient.entities.Milestone.filter({ project_id: projectId }, 'order_index'),
     enabled: !!projectId,
   });
 
   const { data: tasks = [] } = useQuery({
     queryKey: ['tasks', projectId],
-    queryFn: () => base44.entities.Task.filter({ project_id: projectId }),
+    queryFn: () => appClient.entities.Task.filter({ project_id: projectId }),
     enabled: !!projectId,
   });
 

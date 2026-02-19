@@ -5,10 +5,12 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { User, Building2, Check } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useLanguage } from '@/components/i18n/useLanguage';
+import { getUserDisplayNameByEmail } from '@/lib/userDisplay';
 
 export default function AssigneeSelector({ 
   participants = [], 
   companies = [],
+  allUsers = [],
   value, 
   onChange,
   label
@@ -25,7 +27,7 @@ export default function AssigneeSelector({
       .map(p => ({
         id: p.id,
         type: 'user',
-        label: p.user_email,
+        label: getUserDisplayNameByEmail(p.user_email, allUsers),
         email: p.user_email,
       }));
 
@@ -42,7 +44,7 @@ export default function AssigneeSelector({
       });
 
     return { users: userParticipants, companies: companyParticipants };
-  }, [participants, companies]);
+  }, [participants, companies, allUsers]);
 
   // Filter based on search
   const filteredUsers = options.users.filter(u => 

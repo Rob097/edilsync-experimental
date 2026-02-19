@@ -1,5 +1,5 @@
 import React from 'react';
-import { base44 } from '@/api/base44Client';
+import { appClient } from '@/api/appClient';
 import { useQuery } from '@tanstack/react-query';
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -24,19 +24,19 @@ export default function ProjectOverview({ projectId, onNavigate }) {
 
   const { data: tasks = [], isLoading: tasksLoading } = useQuery({
     queryKey: ['tasks', projectId],
-    queryFn: () => base44.entities.Task.filter({ project_id: projectId }),
+    queryFn: () => appClient.entities.Task.filter({ project_id: projectId }),
     enabled: !!projectId,
   });
 
   const { data: changeRequests = [], isLoading: crLoading } = useQuery({
     queryKey: ['changeRequests', projectId],
-    queryFn: () => base44.entities.ChangeRequest.filter({ project_id: projectId }),
+    queryFn: () => appClient.entities.ChangeRequest.filter({ project_id: projectId }),
     enabled: !!projectId,
   });
 
   const { data: milestones = [], isLoading: milestonesLoading } = useQuery({
     queryKey: ['milestones', projectId],
-    queryFn: () => base44.entities.Milestone.filter({ project_id: projectId }),
+    queryFn: () => appClient.entities.Milestone.filter({ project_id: projectId }),
     enabled: !!projectId,
   });
 

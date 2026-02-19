@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { base44 } from '@/api/base44Client';
+import { appClient } from '@/api/appClient';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import {
   Dialog,
@@ -31,7 +31,7 @@ export default function ChannelMembersDialog({
   const { data: channel } = useQuery({
     queryKey: ['channel', channelId],
     queryFn: async () => {
-      const channels = await base44.entities.Channel.filter({ id: channelId });
+      const channels = await appClient.entities.Channel.filter({ id: channelId });
       return channels[0];
     },
     enabled: !!channelId,
@@ -39,24 +39,24 @@ export default function ChannelMembersDialog({
 
   const { data: channelMembers = [] } = useQuery({
     queryKey: ['channelMembers', projectId],
-    queryFn: () => base44.entities.ChannelMember.filter({ project_id: projectId }),
+    queryFn: () => appClient.entities.ChannelMember.filter({ project_id: projectId }),
     enabled: !!projectId,
   });
 
   const { data: participants = [] } = useQuery({
     queryKey: ['projectParticipants', projectId],
-    queryFn: () => base44.entities.ProjectParticipant.filter({ project_id: projectId }),
+    queryFn: () => appClient.entities.ProjectParticipant.filter({ project_id: projectId }),
     enabled: !!projectId,
   });
 
   const { data: companies = [] } = useQuery({
     queryKey: ['allCompanies'],
-    queryFn: () => base44.entities.Company.list(),
+    queryFn: () => appClient.entities.Company.list(),
   });
 
   const { data: allUsers = [] } = useQuery({
     queryKey: ['allUsers'],
-    queryFn: () => base44.entities.User.list(),
+    queryFn: () => appClient.entities.User.list(),
   });
 
   const currentMembers = channelMembers.filter(m => m.channel_id === channelId);
@@ -72,7 +72,7 @@ export default function ChannelMembersDialog({
       return companies.find(c => c.id === participant.company_id)?.name || tr('Società', 'Company');
     }
     const u = allUsers.find(u => u.email === participant.user_email);
-    return u?.full_name || participant.user_email || tr('Utente', 'User');
+    return u?.full_name || u?.display_name || participant.user_email || tr('Utente', 'User');
   };
 
   const getMemberParticipant = (member) => {
@@ -80,7 +80,7 @@ export default function ChannelMembersDialog({
   };
 
   const removeMemberMutation = useMutation({
-    mutationFn: (memberId) => base44.entities.ChannelMember.delete(memberId),
+    mutationFn: (memberId) => appClient.entities.ChannelMember.delete(memberId),
     onSuccess: () => {
       queryClient.invalidateQueries(['channelMembers', projectId]);
     },
@@ -91,7 +91,7 @@ export default function ChannelMembersDialog({
       for (const participantId of selectedToAdd) {
         const participant = activeParticipants.find(p => p.id === participantId);
         if (participant) {
-          await base44.entities.ChannelMember.create({
+          await appClient.entities.ChannelMember.create({
             channel_id: channelId,
             project_id: projectId,
             participant_id: participantId,

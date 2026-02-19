@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { base44 } from '@/api/base44Client';
+import { appClient } from '@/api/appClient';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Switch } from "@/components/ui/switch";
@@ -70,7 +70,7 @@ export default function NotificationPreferences({ userEmail }) {
   const { data: userPrefs, isLoading } = useQuery({
     queryKey: ['notificationPreferences', userEmail],
     queryFn: async () => {
-      const prefs = await base44.entities.NotificationPreference.filter({ user_email: userEmail });
+      const prefs = await appClient.entities.NotificationPreference.filter({ user_email: userEmail });
       return prefs[0] || null;
     },
     enabled: !!userEmail,
@@ -87,9 +87,9 @@ export default function NotificationPreferences({ userEmail }) {
   const saveMutation = useMutation({
     mutationFn: async () => {
       if (userPrefs) {
-        return base44.entities.NotificationPreference.update(userPrefs.id, { preferences });
+        return appClient.entities.NotificationPreference.update(userPrefs.id, { preferences });
       } else {
-        return base44.entities.NotificationPreference.create({
+        return appClient.entities.NotificationPreference.create({
           user_email: userEmail,
           preferences,
         });

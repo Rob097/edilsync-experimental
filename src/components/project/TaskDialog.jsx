@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { base44 } from '@/api/base44Client';
+import { appClient } from '@/api/appClient';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useLanguage } from '@/components/i18n/useLanguage';
 import {
@@ -15,6 +15,7 @@ import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Loader2 } from "lucide-react";
 import AssigneeSelector from './AssigneeSelector';
+import { getUserDisplayNameByEmail } from '@/lib/userDisplay';
 
 export default function TaskDialog({ open, onOpenChange, task, projectId }) {
   const { t } = useLanguage();
@@ -34,24 +35,30 @@ export default function TaskDialog({ open, onOpenChange, task, projectId }) {
 
   const { data: user } = useQuery({
     queryKey: ['currentUser'],
-    queryFn: () => base44.auth.me(),
+    queryFn: () => appClient.auth.me(),
   });
 
   const { data: participants = [] } = useQuery({
     queryKey: ['projectParticipants', projectId],
-    queryFn: () => base44.entities.ProjectParticipant.filter({ project_id: projectId, status: 'active' }),
+    queryFn: () => appClient.entities.ProjectParticipant.filter({ project_id: projectId, status: 'active' }),
     enabled: !!projectId,
   });
 
   const { data: milestones = [] } = useQuery({
     queryKey: ['milestones', projectId],
-    queryFn: () => base44.entities.Milestone.filter({ project_id: projectId }),
+    queryFn: () => appClient.entities.Milestone.filter({ project_id: projectId }),
     enabled: !!projectId,
   });
 
   const { data: companies = [] } = useQuery({
     queryKey: ['companies'],
-    queryFn: () => base44.entities.Company.list(),
+    queryFn: () => appClient.entities.Company.list(),
+  });
+
+  const { data: allUsers = [] } = useQuery({
+    queryKey: ['allUsers'],
+    queryFn: () => appClient.entities.User.list(),
+    enabled: !!user?.email,
   });
 
   useEffect(() => {
@@ -99,9 +106,9 @@ export default function TaskDialog({ open, onOpenChange, task, projectId }) {
   const saveMutation = useMutation({
     mutationFn: async (data) => {
       if (task) {
-        return base44.entities.Task.update(task.id, data);
+        return appClient.entities.Task.update(task.id, data);
       } else {
-        return base44.entities.Task.create(data);
+        return appClient.entities.Task.create(data);
       }
     },
     onSuccess: () => {
@@ -111,7 +118,7 @@ export default function TaskDialog({ open, onOpenChange, task, projectId }) {
   });
 
   const deleteMutation = useMutation({
-    mutationFn: () => base44.entities.Task.delete(task.id),
+    mutationFn: () => appClient.entities.Task.delete(task.id),
     onSuccess: () => {
       queryClient.invalidateQueries(['tasks']);
       onOpenChange(false);
@@ -123,6 +130,9 @@ export default function TaskDialog({ open, onOpenChange, task, projectId }) {
     
     // Find assignee details
     const assignee = participants.find(p => p.id === formData.assigned_participant_id);
+    const assignedUserName = assignee?.participant_type === 'personal'
+      ? getUserDisplayNameByEmail(assignee.user_email, allUsers)
+      : null;
     
     const data = {
       project_id: projectId,
@@ -132,7 +142,7 @@ export default function TaskDialog({ open, onOpenChange, task, projectId }) {
       assigned_participant_id: formData.assigned_participant_id,
       assigned_participant_type: assignee?.participant_type || 'personal',
       assigned_user_email: assignee?.participant_type === 'personal' ? assignee.user_email : null,
-      assigned_user_name: assignee?.participant_type === 'personal' ? assignee.user_email : null,
+      assigned_user_name: assignedUserName,
       assigned_company_id: assignee?.participant_type === 'company' ? assignee.company_id : null,
       assigned_company_name: assignee?.participant_type === 'company' ? companies.find(c => c.id === assignee.company_id)?.name : null,
       room_area: formData.room_area,
@@ -209,6 +219,7 @@ export default function TaskDialog({ open, onOpenChange, task, projectId }) {
           <AssigneeSelector
             participants={participants}
             companies={companies}
+            allUsers={allUsers}
             value={formData.assigned_participant_id}
             onChange={(option) => setFormData(prev => ({ ...prev, assigned_participant_id: option.id }))}
           />

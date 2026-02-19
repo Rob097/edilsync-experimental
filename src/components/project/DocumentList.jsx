@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { base44 } from '@/api/base44Client';
+import { appClient } from '@/api/appClient';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -79,12 +79,12 @@ export default function DocumentList({ projectId, canUpload, currentUserEmail, u
 
   const { data: documents = [], isLoading } = useQuery({
     queryKey: ['projectDocuments', projectId],
-    queryFn: () => base44.entities.ProjectDocument.filter({ project_id: projectId }),
+    queryFn: () => appClient.entities.ProjectDocument.filter({ project_id: projectId }),
     enabled: !!projectId,
   });
 
   const deleteMutation = useMutation({
-    mutationFn: (docId) => base44.entities.ProjectDocument.delete(docId),
+    mutationFn: (docId) => appClient.entities.ProjectDocument.delete(docId),
     onSuccess: () => {
       queryClient.invalidateQueries(['projectDocuments', projectId]);
     },

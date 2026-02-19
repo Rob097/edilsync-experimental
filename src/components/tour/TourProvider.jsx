@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import { base44 } from '@/api/base44Client';
+import { appClient } from '@/api/appClient';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 
 const TourContext = createContext();
@@ -20,11 +20,11 @@ export default function TourProvider({ children }) {
 
   const { data: user } = useQuery({
     queryKey: ['currentUser'],
-    queryFn: () => base44.auth.me(),
+    queryFn: () => appClient.auth.me(),
   });
 
   const updateTourState = useMutation({
-    mutationFn: (tourState) => base44.auth.updateMe({ tour_state: tourState }),
+    mutationFn: (tourState) => appClient.auth.updateMe({ tour_state: tourState }),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['currentUser'] });
     },

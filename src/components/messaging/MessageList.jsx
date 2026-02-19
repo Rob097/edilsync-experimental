@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { base44 } from '@/api/base44Client';
+import { appClient } from '@/api/appClient';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { Avatar } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
@@ -8,6 +8,7 @@ import { format } from 'date-fns';
 import { it } from 'date-fns/locale';
 import { User, Building2, Flag, CheckCircle2, DollarSign, FileText } from "lucide-react";
 import DocumentPreviewDialog from '@/components/project/DocumentPreviewDialog';
+import { getUserDisplayNameByEmail } from '@/lib/userDisplay';
 
 export default function MessageList({ 
   channelId, 
@@ -23,7 +24,7 @@ export default function MessageList({
   // Use project-level messages and filter by channel for instant display
   const { data: allMessages = [] } = useQuery({
     queryKey: ['messages', projectId],
-    queryFn: () => base44.entities.Message.filter({ project_id: projectId }),
+    queryFn: () => appClient.entities.Message.filter({ project_id: projectId }),
     enabled: !!projectId,
     staleTime: 5 * 60 * 1000, // 5 minuti
   });
@@ -34,7 +35,7 @@ export default function MessageList({
   const { data: channelMember } = useQuery({
     queryKey: ['channelMember', channelId, currentUserEmail],
     queryFn: async () => {
-      const members = await base44.entities.ChannelMember.filter({ 
+      const members = await appClient.entities.ChannelMember.filter({ 
         channel_id: channelId,
         user_email: currentUserEmail
       });
@@ -46,15 +47,22 @@ export default function MessageList({
 
   const { data: allDocuments = [] } = useQuery({
     queryKey: ['documents', projectId],
-    queryFn: () => base44.entities.ProjectDocument.filter({ project_id: projectId }),
+    queryFn: () => appClient.entities.ProjectDocument.filter({ project_id: projectId }),
     enabled: !!projectId,
     staleTime: 60 * 1000,
+  });
+
+  const { data: allUsers = [] } = useQuery({
+    queryKey: ['allUsers'],
+    queryFn: () => appClient.entities.User.list(),
+    enabled: !!projectId,
+    staleTime: 2 * 60 * 1000,
   });
 
   const lastUpdateRef = useRef(null);
 
   const updateReadMutation = useMutation({
-    mutationFn: () => base44.entities.ChannelMember.update(channelMember.id, {
+    mutationFn: () => appClient.entities.ChannelMember.update(channelMember.id, {
       last_read_at: new Date().toISOString()
     }),
   });
@@ -172,9 +180,10 @@ export default function MessageList({
       <div className="flex-1 overflow-y-auto p-4 space-y-3">
         {sortedMessages.map(message => {
           const isOwnMessage = message.sender_email === currentUserEmail;
+          const resolvedSenderName = message.sender_name || getUserDisplayNameByEmail(message.sender_email, allUsers);
           const senderDisplay = message.sender_context_type === 'company' && message.sender_company_name
-            ? `${message.sender_company_name} - ${message.sender_name}`
-            : message.sender_name;
+            ? `${message.sender_company_name} - ${resolvedSenderName}`
+            : resolvedSenderName;
 
           return (
             <div key={message.id} className={`flex gap-3 ${isOwnMessage ? 'flex-row-reverse' : ''}`}>

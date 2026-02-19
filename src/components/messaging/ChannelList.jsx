@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { base44 } from '@/api/base44Client';
+import { appClient } from '@/api/appClient';
 import { useQuery } from '@tanstack/react-query';
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -22,21 +22,21 @@ export default function ChannelList({
 
   const { data: channels = [], isLoading: channelsLoading } = useQuery({
     queryKey: ['channels', projectId],
-    queryFn: () => base44.entities.Channel.filter({ project_id: projectId }),
+    queryFn: () => appClient.entities.Channel.filter({ project_id: projectId }),
     enabled: !!projectId,
     staleTime: 2 * 60 * 1000, // 2 minuti
   });
 
   const { data: channelMembers = [], isLoading: membersLoading } = useQuery({
     queryKey: ['channelMembers', projectId],
-    queryFn: () => base44.entities.ChannelMember.filter({ project_id: projectId }),
+    queryFn: () => appClient.entities.ChannelMember.filter({ project_id: projectId }),
     enabled: !!projectId,
     staleTime: 2 * 60 * 1000, // 2 minuti
   });
 
   const { data: messages = [] } = useQuery({
     queryKey: ['messages', projectId],
-    queryFn: () => base44.entities.Message.filter({ project_id: projectId }),
+    queryFn: () => appClient.entities.Message.filter({ project_id: projectId }),
     enabled: !!projectId,
     staleTime: 2 * 60 * 1000, // 2 minuti
   });
@@ -86,7 +86,7 @@ export default function ChannelList({
       const company = participants.find(p => p.company_id === participant.company_id);
       return channel.name;
     }
-    return participant?.user_email || channel.name;
+    return participant?.user_display_name || participant?.full_name || participant?.display_name || participant?.user_email || channel.name;
   };
 
   const renderChannel = (channel, icon) => {

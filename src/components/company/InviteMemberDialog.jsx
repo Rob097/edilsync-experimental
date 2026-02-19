@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { base44 } from '@/api/base44Client';
+import { appClient } from '@/api/appClient';
 import { useMutation, useQueryClient, useQuery } from '@tanstack/react-query';
 import { useLanguage } from '@/components/i18n/useLanguage';
 import {
@@ -36,7 +36,7 @@ export default function InviteMemberDialog({ open, onOpenChange, companyId }) {
   const { data: company } = useQuery({
     queryKey: ['company', companyId],
     queryFn: async () => {
-      const companies = await base44.entities.Company.filter({ id: companyId });
+      const companies = await appClient.entities.Company.filter({ id: companyId });
       return companies[0];
     },
     enabled: !!companyId,
@@ -44,7 +44,7 @@ export default function InviteMemberDialog({ open, onOpenChange, companyId }) {
 
   const inviteMutation = useMutation({
     mutationFn: async () => {
-      const member = await base44.entities.CompanyMember.create({
+      const member = await appClient.entities.CompanyMember.create({
         company_id: companyId,
         user_email: email,
         role: role,
@@ -53,7 +53,7 @@ export default function InviteMemberDialog({ open, onOpenChange, companyId }) {
       });
 
       // Find General channel for this company
-      const channels = await base44.entities.Channel.filter({ 
+      const channels = await appClient.entities.Channel.filter({ 
         company_id: companyId, 
         type: 'company',
         name: 'General'
@@ -62,7 +62,7 @@ export default function InviteMemberDialog({ open, onOpenChange, companyId }) {
       if (channels.length > 0) {
         const generalChannel = channels[0];
         // Add member to General channel
-        await base44.entities.ChannelMember.create({
+        await appClient.entities.ChannelMember.create({
           channel_id: generalChannel.id,
           project_id: null,
           participant_id: member.id,
@@ -73,7 +73,7 @@ export default function InviteMemberDialog({ open, onOpenChange, companyId }) {
       }
 
       // Send notification/email via backend function
-      await base44.functions.invoke('sendNotificationOrEmail', {
+      await appClient.functions.invoke('sendNotificationOrEmail', {
         action_type: 'company_invite',
         recipient_email: email,
         context_type: 'company',

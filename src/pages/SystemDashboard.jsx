@@ -1,5 +1,5 @@
 import React, { useMemo } from 'react';
-import { base44 } from '@/api/base44Client';
+import { appClient } from '@/api/appClient';
 import { useQuery } from '@tanstack/react-query';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -28,73 +28,73 @@ export default function SystemDashboard() {
   // Auth check
   const { data: user, isLoading: userLoading } = useQuery({
     queryKey: ['currentUser'],
-    queryFn: () => base44.auth.me(),
+    queryFn: () => appClient.auth.me(),
   });
 
   // Fetch all data
   const { data: allUsers = [], isLoading: usersLoading } = useQuery({
     queryKey: ['allUsers'],
-    queryFn: () => base44.entities.User.list(),
+    queryFn: () => appClient.entities.User.list(),
     enabled: user?.role === 'admin',
   });
 
   const { data: companies = [], isLoading: companiesLoading } = useQuery({
     queryKey: ['allCompanies'],
-    queryFn: () => base44.entities.Company.list(),
+    queryFn: () => appClient.entities.Company.list(),
     enabled: user?.role === 'admin',
   });
 
   const { data: companyMembers = [], isLoading: companyMembersLoading } = useQuery({
     queryKey: ['allCompanyMembers'],
-    queryFn: () => base44.entities.CompanyMember.list(),
+    queryFn: () => appClient.entities.CompanyMember.list(),
     enabled: user?.role === 'admin',
   });
 
   const { data: projects = [], isLoading: projectsLoading } = useQuery({
     queryKey: ['allProjects'],
-    queryFn: () => base44.entities.Project.list(),
+    queryFn: () => appClient.entities.Project.list(),
     enabled: user?.role === 'admin',
   });
 
   const { data: tasks = [], isLoading: tasksLoading } = useQuery({
     queryKey: ['allTasks'],
-    queryFn: () => base44.entities.Task.list(),
+    queryFn: () => appClient.entities.Task.list(),
     enabled: user?.role === 'admin',
   });
 
   const { data: milestones = [], isLoading: milestonesLoading } = useQuery({
     queryKey: ['allMilestones'],
-    queryFn: () => base44.entities.Milestone.list(),
+    queryFn: () => appClient.entities.Milestone.list(),
     enabled: user?.role === 'admin',
   });
 
   const { data: changeRequests = [], isLoading: changeRequestsLoading } = useQuery({
     queryKey: ['allChangeRequests'],
-    queryFn: () => base44.entities.ChangeRequest.list(),
+    queryFn: () => appClient.entities.ChangeRequest.list(),
     enabled: user?.role === 'admin',
   });
 
   const { data: messages = [], isLoading: messagesLoading } = useQuery({
     queryKey: ['allMessages'],
-    queryFn: () => base44.entities.Message.list(),
+    queryFn: () => appClient.entities.Message.list(),
     enabled: user?.role === 'admin',
   });
 
   const { data: documents = [], isLoading: documentsLoading } = useQuery({
     queryKey: ['allDocuments'],
-    queryFn: () => base44.entities.ProjectDocument.list(),
+    queryFn: () => appClient.entities.ProjectDocument.list(),
     enabled: user?.role === 'admin',
   });
 
   const { data: events = [], isLoading: eventsLoading } = useQuery({
     queryKey: ['allEvents'],
-    queryFn: () => base44.entities.Event.list(),
+    queryFn: () => appClient.entities.Event.list(),
     enabled: user?.role === 'admin',
   });
 
   const { data: notifications = [], isLoading: notificationsLoading } = useQuery({
     queryKey: ['allNotifications'],
-    queryFn: () => base44.entities.Notification.list(),
+    queryFn: () => appClient.entities.Notification.list(),
     enabled: user?.role === 'admin',
   });
 

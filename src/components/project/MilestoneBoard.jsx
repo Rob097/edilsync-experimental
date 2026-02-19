@@ -1,5 +1,5 @@
 import React, { useState, useMemo } from 'react';
-import { base44 } from '@/api/base44Client';
+import { appClient } from '@/api/appClient';
 import { useQuery } from '@tanstack/react-query';
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -27,13 +27,13 @@ export default function MilestoneBoard({ projectId, project, canEdit, onMileston
 
   const { data: milestones = [], isLoading } = useQuery({
     queryKey: ['milestones', projectId],
-    queryFn: () => base44.entities.Milestone.filter({ project_id: projectId }),
+    queryFn: () => appClient.entities.Milestone.filter({ project_id: projectId }),
     enabled: !!projectId,
   });
 
   const { data: tasks = [] } = useQuery({
     queryKey: ['tasks', projectId],
-    queryFn: () => base44.entities.Task.filter({ project_id: projectId }),
+    queryFn: () => appClient.entities.Task.filter({ project_id: projectId }),
     enabled: !!projectId,
   });
 

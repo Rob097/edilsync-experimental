@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { base44 } from '@/api/base44Client';
+import { appClient } from '@/api/appClient';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import {
   Dialog,
@@ -48,12 +48,12 @@ export default function EventDialog({
 
   const { data: allEvents = [] } = useQuery({
     queryKey: ['allEvents'],
-    queryFn: () => base44.entities.Event.filter({ status: 'scheduled' }),
+    queryFn: () => appClient.entities.Event.filter({ status: 'scheduled' }),
   });
 
   const { data: allParticipants = [] } = useQuery({
     queryKey: ['allEventParticipants'],
-    queryFn: () => base44.entities.EventParticipant.list(),
+    queryFn: () => appClient.entities.EventParticipant.list(),
   });
 
   useEffect(() => {
@@ -148,13 +148,13 @@ export default function EventDialog({
 
       // Cancel creator's conflicting event if confirmed
       if (cancelConflicting && conflicts.creator) {
-        await base44.entities.Event.update(conflicts.creator.id, { status: 'cancelled' });
+        await appClient.entities.Event.update(conflicts.creator.id, { status: 'cancelled' });
         
         // Notify participants of cancelled event
         const cancelledParticipants = allParticipants.filter(p => p.event_id === conflicts.creator.id);
         for (const p of cancelledParticipants) {
           if (p.user_email) {
-            await base44.entities.Notification.create({
+            await appClient.entities.Notification.create({
               user_email: p.user_email,
               type: 'event_cancelled',
               title: 'Evento cancellato',
@@ -182,8 +182,8 @@ export default function EventDialog({
       };
 
       const newEvent = event 
-        ? await base44.entities.Event.update(event.id, eventData)
-        : await base44.entities.Event.create(eventData);
+        ? await appClient.entities.Event.update(event.id, eventData)
+        : await appClient.entities.Event.create(eventData);
 
       const eventId = event ? event.id : newEvent.id;
 
@@ -192,7 +192,7 @@ export default function EventDialog({
         const existingParticipants = allParticipants.filter(p => p.event_id === event.id);
         for (const p of existingParticipants) {
           if (p.user_email) {
-            await base44.entities.Notification.create({
+            await appClient.entities.Notification.create({
               user_email: p.user_email,
               type: 'event_updated',
               title: 'Evento modificato',
@@ -212,7 +212,7 @@ export default function EventDialog({
             (p.type === 'company' && c.participant.company_id === p.company_id)
           );
 
-          await base44.entities.EventParticipant.create({
+          await appClient.entities.EventParticipant.create({
             event_id: eventId,
             participant_type: p.type,
             user_id: p.type === 'user' ? p.user_id : null,
@@ -225,7 +225,7 @@ export default function EventDialog({
 
           // Send notification
           if (p.type === 'user' && p.email) {
-            await base44.entities.Notification.create({
+            await appClient.entities.Notification.create({
               user_email: p.email,
               type: 'event_invite',
               title: 'Nuovo invito evento',

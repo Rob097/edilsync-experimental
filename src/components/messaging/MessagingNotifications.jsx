@@ -1,5 +1,5 @@
 import React from 'react';
-import { base44 } from '@/api/base44Client';
+import { appClient } from '@/api/appClient';
 import { useQuery } from '@tanstack/react-query';
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -24,7 +24,7 @@ export default function MessagingNotifications({ userEmail }) {
 
   const { data: channelMembers = [] } = useQuery({
     queryKey: ['allChannelMembers', userEmail],
-    queryFn: () => base44.entities.ChannelMember.filter({ user_email: userEmail }),
+    queryFn: () => appClient.entities.ChannelMember.filter({ user_email: userEmail }),
     enabled: !!userEmail,
     staleTime: 30 * 1000,
   });
@@ -35,7 +35,7 @@ export default function MessagingNotifications({ userEmail }) {
     queryKey: ['userChannels', channelIds],
     queryFn: async () => {
       if (channelIds.length === 0) return [];
-      const allChannels = await base44.entities.Channel.list();
+      const allChannels = await appClient.entities.Channel.list();
       return allChannels.filter(c => channelIds.includes(c.id));
     },
     enabled: channelIds.length > 0,
@@ -48,7 +48,7 @@ export default function MessagingNotifications({ userEmail }) {
     queryKey: ['recentMessages', projectIds],
     queryFn: async () => {
       if (projectIds.length === 0) return [];
-      const allMessages = await base44.entities.Message.list('-created_date', 50);
+      const allMessages = await appClient.entities.Message.list('-created_date', 50);
       return allMessages.filter(m => projectIds.includes(m.project_id));
     },
     enabled: projectIds.length > 0,
@@ -60,7 +60,7 @@ export default function MessagingNotifications({ userEmail }) {
     queryKey: ['messagingProjects', projectIds],
     queryFn: async () => {
       if (projectIds.length === 0) return [];
-      const allProjects = await base44.entities.Project.list();
+      const allProjects = await appClient.entities.Project.list();
       return allProjects.filter(p => projectIds.includes(p.id));
     },
     enabled: projectIds.length > 0,

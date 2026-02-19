@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { base44 } from '@/api/base44Client';
+import { appClient } from '@/api/appClient';
 import { useMutation, useQueryClient, useQuery } from '@tanstack/react-query';
 import { useLanguage } from '@/components/i18n/useLanguage';
 import {
@@ -23,18 +23,18 @@ export default function MilestoneDialog({ open, onOpenChange, projectId, milesto
 
   const { data: user } = useQuery({
     queryKey: ['currentUser'],
-    queryFn: () => base44.auth.me(),
+    queryFn: () => appClient.auth.me(),
   });
 
   const { data: companyMemberships = [] } = useQuery({
     queryKey: ['userCompanyMemberships', user?.email],
-    queryFn: () => base44.entities.CompanyMember.filter({ user_email: user?.email, status: 'active' }),
+    queryFn: () => appClient.entities.CompanyMember.filter({ user_email: user?.email, status: 'active' }),
     enabled: !!user?.email,
   });
 
   const { data: projectParticipants = [] } = useQuery({
     queryKey: ['projectParticipants', projectId],
-    queryFn: () => base44.entities.ProjectParticipant.filter({ project_id: projectId }),
+    queryFn: () => appClient.entities.ProjectParticipant.filter({ project_id: projectId }),
     enabled: !!projectId,
   });
   
@@ -51,7 +51,7 @@ export default function MilestoneDialog({ open, onOpenChange, projectId, milesto
 
   const { data: tasks = [] } = useQuery({
     queryKey: ['tasks', projectId],
-    queryFn: () => base44.entities.Task.filter({ project_id: projectId }),
+    queryFn: () => appClient.entities.Task.filter({ project_id: projectId }),
     enabled: !!projectId && !!milestone,
   });
 
@@ -83,6 +83,14 @@ export default function MilestoneDialog({ open, onOpenChange, projectId, milesto
 
   const saveMutation = useMutation({
     mutationFn: async (data) => {
+      const normalizedData = {
+        ...data,
+        description: data.description || null,
+        start_date: data.start_date || null,
+        target_date: data.target_date || null,
+        completion_date: data.completion_date || null,
+      };
+
       // Security check: If user is participating as company, must be admin
       const userParticipation = projectParticipants.find(p => p.user_email === user?.email);
       if (userParticipation?.participant_type === 'company' && userParticipation?.company_id) {
@@ -93,10 +101,10 @@ export default function MilestoneDialog({ open, onOpenChange, projectId, milesto
       }
 
       if (milestone) {
-        return await base44.entities.Milestone.update(milestone.id, data);
+        return await appClient.entities.Milestone.update(milestone.id, normalizedData);
       } else {
-        return await base44.entities.Milestone.create({
-          ...data,
+        return await appClient.entities.Milestone.create({
+          ...normalizedData,
           project_id: projectId,
           order_index: nextOrderIndex,
         });
@@ -113,15 +121,15 @@ export default function MilestoneDialog({ open, onOpenChange, projectId, milesto
       if (deleteLinkedTasks) {
         // Elimina tutte le attività collegate
         const linkedTasks = milestoneTasks;
-        await Promise.all(linkedTasks.map(task => base44.entities.Task.delete(task.id)));
+        await Promise.all(linkedTasks.map(task => appClient.entities.Task.delete(task.id)));
       } else {
         // Rimuovi solo il collegamento
         const linkedTasks = milestoneTasks;
         await Promise.all(linkedTasks.map(task => 
-          base44.entities.Task.update(task.id, { milestone_id: null })
+          appClient.entities.Task.update(task.id, { milestone_id: null })
         ));
       }
-      await base44.entities.Milestone.delete(milestone.id);
+      await appClient.entities.Milestone.delete(milestone.id);
     },
     onSuccess: () => {
       queryClient.invalidateQueries(['milestones']);

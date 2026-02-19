@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
-import { base44 } from '@/api/base44Client';
+import { appClient } from '@/api/appClient';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useLanguage } from '@/components/i18n/useLanguage';
 import { Button } from "@/components/ui/button";
@@ -27,16 +27,16 @@ export default function NewCompany() {
 
   const { data: user } = useQuery({
     queryKey: ['currentUser'],
-    queryFn: () => base44.auth.me(),
+    queryFn: () => appClient.auth.me(),
   });
 
   const createCompanyMutation = useMutation({
     mutationFn: async (data) => {
       // Create company
-      const company = await base44.entities.Company.create(data);
+      const company = await appClient.entities.Company.create(data);
 
       // Add current user as admin
-      const companyMember = await base44.entities.CompanyMember.create({
+      const companyMember = await appClient.entities.CompanyMember.create({
         company_id: company.id,
         user_id: user?.id,
         user_email: user?.email,
@@ -46,7 +46,7 @@ export default function NewCompany() {
       });
 
       // Create General channel for company
-      const channel = await base44.entities.Channel.create({
+      const channel = await appClient.entities.Channel.create({
         project_id: null,
         company_id: company.id,
         name: 'General',
@@ -56,7 +56,7 @@ export default function NewCompany() {
       });
 
       // Add current user as channel member
-      await base44.entities.ChannelMember.create({
+      await appClient.entities.ChannelMember.create({
         channel_id: channel.id,
         project_id: null,
         participant_id: companyMember.id,
@@ -68,7 +68,7 @@ export default function NewCompany() {
       // Immediately update user access arrays (so RLS works without waiting for automation)
       const currentCompanyIds = user?.company_ids || [];
       const currentAdminIds = user?.admin_company_ids || [];
-      await base44.auth.updateMe({
+      await appClient.auth.updateMe({
         company_ids: [...new Set([...currentCompanyIds, company.id])],
         admin_company_ids: [...new Set([...currentAdminIds, company.id])],
       });

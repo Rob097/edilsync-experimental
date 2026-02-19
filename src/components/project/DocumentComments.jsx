@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { base44 } from '@/api/base44Client';
+import { appClient } from '@/api/appClient';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
@@ -9,6 +9,7 @@ import { MessageSquare, Send } from "lucide-react";
 import { format } from 'date-fns';
 import { it, enUS } from 'date-fns/locale';
 import { useLanguage } from '@/components/i18n/useLanguage';
+import { getUserDisplayNameByEmail } from '@/lib/userDisplay';
 
 export default function DocumentComments({ documentId, projectId }) {
   const { currentLanguage } = useLanguage();
@@ -19,17 +20,23 @@ export default function DocumentComments({ documentId, projectId }) {
 
   const { data: user } = useQuery({
     queryKey: ['currentUser'],
-    queryFn: () => base44.auth.me(),
+    queryFn: () => appClient.auth.me(),
   });
 
   const { data: comments = [], isLoading } = useQuery({
     queryKey: ['documentComments', documentId],
-    queryFn: () => base44.entities.DocumentComment.filter({ document_id: documentId }),
+    queryFn: () => appClient.entities.DocumentComment.filter({ document_id: documentId }),
     enabled: !!documentId,
   });
 
+  const { data: allUsers = [] } = useQuery({
+    queryKey: ['allUsers'],
+    queryFn: () => appClient.entities.User.list(),
+    enabled: !!user?.email,
+  });
+
   const createCommentMutation = useMutation({
-    mutationFn: (data) => base44.entities.DocumentComment.create(data),
+    mutationFn: (data) => appClient.entities.DocumentComment.create(data),
     onSuccess: () => {
       queryClient.invalidateQueries(['documentComments', documentId]);
       setCommentText('');
@@ -72,16 +79,18 @@ export default function DocumentComments({ documentId, projectId }) {
         </div>
       ) : sortedComments.length > 0 ? (
         <div className="space-y-3 max-h-64 overflow-y-auto">
-          {sortedComments.map(comment => (
+          {sortedComments.map(comment => {
+            const authorName = comment.author_name || getUserDisplayNameByEmail(comment.author_email, allUsers);
+            return (
             <div key={comment.id} className="flex gap-3">
               <Avatar className="h-8 w-8 flex-shrink-0">
                 <AvatarFallback className="bg-gray-200 text-gray-700 text-xs">
-                  {getInitials(comment.author_name)}
+                  {getInitials(authorName)}
                 </AvatarFallback>
               </Avatar>
               <div className="flex-1 min-w-0">
                 <div className="flex items-baseline gap-2 mb-1">
-                  <p className="font-medium text-sm">{comment.author_name}</p>
+                  <p className="font-medium text-sm">{authorName}</p>
                   <span className="text-xs text-gray-500">
                     {format(new Date(comment.created_date), 'dd MMM, HH:mm', { locale: dateLocale })}
                   </span>
@@ -91,7 +100,8 @@ export default function DocumentComments({ documentId, projectId }) {
                 </p>
               </div>
             </div>
-          ))}
+            );
+          })}
         </div>
       ) : (
         <p className="text-sm text-gray-500 text-center py-4">

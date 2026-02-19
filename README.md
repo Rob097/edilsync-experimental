@@ -1,39 +1,73 @@
-**Welcome to your Base44 project** 
+# EdilSync Experimental
 
-**About**
+Applicazione React + Vite con backend completo su Supabase (Postgres, RLS, Auth, Storage, Edge Functions).
 
-View and Edit  your app on [Base44.com](http://Base44.com) 
+## Stack
 
-This project contains everything you need to run your app locally.
+- Frontend: React, Vite, TanStack Query, Tailwind
+- Backend: Supabase Postgres + RLS
+- Auth: Supabase Auth
+- Storage: bucket `project-files`
+- Edge Functions:
+  - `syncUserAccess`
+  - `sendNotificationOrEmail`
 
-**Edit the code in your local development environment**
+## Requisiti
 
-Any change pushed to the repo will also be reflected in the Base44 Builder.
+- Node.js 20+
+- npm
 
-**Prerequisites:** 
+## Configurazione ambiente
 
-1. Clone the repository using the project's Git URL 
-2. Navigate to the project directory
-3. Install dependencies: `npm install`
-4. Create an `.env.local` file and set the right environment variables
+Creare `.env.local` (oppure `.env`) con:
 
+```bash
+VITE_SUPABASE_URL=https://<project-ref>.supabase.co
+VITE_SUPABASE_ANON_KEY=<supabase-anon-or-publishable-key>
+VITE_SUPABASE_AUTH_PROVIDER=google
 ```
-VITE_BASE44_APP_ID=your_app_id
-VITE_BASE44_APP_BASE_URL=your_backend_url
 
-e.g.
-VITE_BASE44_APP_ID=cbef744a8545c389ef439ea6
-VITE_BASE44_APP_BASE_URL=https://my-to-do-list-81bfaad7.base44.app
+## Avvio locale
+
+```bash
+npm install
+npm run dev
 ```
 
-Run the app: `npm run dev`
+Build produzione:
 
-**Publish your changes**
+```bash
+npm run build
+npm run preview
+```
 
-Open [Base44.com](http://Base44.com) and click on Publish.
+## Migrazioni database
 
-**Docs & Support**
+Le migrazioni sono in `supabase/migrations` e includono:
 
-Documentation: [https://docs.base44.com/Integrations/Using-GitHub](https://docs.base44.com/Integrations/Using-GitHub)
+- schema applicativo
+- policy RLS
+- trigger di audit
+- trigger di sincronizzazione accessi utente
 
-Support: [https://app.base44.com/support](https://app.base44.com/support)
+## Edge Functions
+
+### `syncUserAccess`
+
+Sincronizza i campi di accesso utente (`company_ids`, `admin_company_ids`, `project_ids`) in base a membership e partecipazioni.
+
+### `sendNotificationOrEmail`
+
+Gestisce notifiche in-app e invio email.
+
+Variabili supportate:
+
+- `RESEND_API_KEY`
+- `RESEND_FROM_EMAIL`
+- `EMAIL_WEBHOOK_URL` (fallback se Resend non è configurato)
+
+## Note operative
+
+- Le automazioni di accesso sono gestite via trigger DB su `company_members` e `project_participants`.
+- In caso di OAuth, ricordarsi di configurare in Supabase `Site URL` e `Redirect URLs` del dominio frontend.
+- L’assistente `edilsync_assistant` è in modalità placeholder e può essere esteso con logica dedicata.

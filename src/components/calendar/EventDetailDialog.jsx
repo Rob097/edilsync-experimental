@@ -1,5 +1,5 @@
 import React from 'react';
-import { base44 } from '@/api/base44Client';
+import { appClient } from '@/api/appClient';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import {
   Dialog,
@@ -23,6 +23,7 @@ import {
 } from "lucide-react";
 import { format } from 'date-fns';
 import { it } from 'date-fns/locale';
+import { getUserDisplayNameByEmail } from '@/lib/userDisplay';
 
 const statusLabels = {
   pending: { label: 'In attesa', color: 'bg-yellow-100 text-yellow-700' },
@@ -35,13 +36,19 @@ export default function EventDetailDialog({ open, onOpenChange, event, user, com
 
   const { data: participants = [] } = useQuery({
     queryKey: ['eventParticipants', event?.id],
-    queryFn: () => base44.entities.EventParticipant.filter({ event_id: event?.id }),
+    queryFn: () => appClient.entities.EventParticipant.filter({ event_id: event?.id }),
     enabled: !!event?.id,
   });
 
   const { data: companies = [] } = useQuery({
     queryKey: ['participantCompanies'],
-    queryFn: () => base44.entities.Company.list(),
+    queryFn: () => appClient.entities.Company.list(),
+  });
+
+  const { data: allUsers = [] } = useQuery({
+    queryKey: ['allUsers'],
+    queryFn: () => appClient.entities.User.list(),
+    enabled: !!user?.email,
   });
 
   const currentContext = user?.active_context || 'personal';
@@ -61,14 +68,14 @@ export default function EventDetailDialog({ open, onOpenChange, event, user, com
 
   const respondMutation = useMutation({
     mutationFn: async (status) => {
-      await base44.entities.EventParticipant.update(userParticipation.id, { status });
+      await appClient.entities.EventParticipant.update(userParticipation.id, { status });
 
       if (status === 'accepted' && userParticipation.conflict_event_id) {
         // Cancel conflicting event for this user
-        await base44.entities.Event.update(userParticipation.conflict_event_id, { status: 'cancelled' });
+        await appClient.entities.Event.update(userParticipation.conflict_event_id, { status: 'cancelled' });
         
         // Notify about conflict resolution
-        await base44.entities.Notification.create({
+        await appClient.entities.Notification.create({
           user_email: event.creator_email,
           type: 'conflict_resolved',
           title: 'Conflitto risolto',
@@ -79,7 +86,7 @@ export default function EventDetailDialog({ open, onOpenChange, event, user, com
       }
 
       if (status === 'declined') {
-        await base44.entities.Notification.create({
+        await appClient.entities.Notification.create({
           user_email: event.creator_email,
           type: 'participant_declined',
           title: 'Invito rifiutato',
@@ -98,12 +105,12 @@ export default function EventDetailDialog({ open, onOpenChange, event, user, com
 
   const cancelEventMutation = useMutation({
     mutationFn: async () => {
-      await base44.entities.Event.update(event.id, { status: 'cancelled' });
+      await appClient.entities.Event.update(event.id, { status: 'cancelled' });
       
       // Notify all participants
       for (const p of participants) {
         if (p.user_email) {
-          await base44.entities.Notification.create({
+          await appClient.entities.Notification.create({
             user_email: p.user_email,
             type: 'event_cancelled',
             title: 'Evento cancellato',
@@ -123,7 +130,7 @@ export default function EventDetailDialog({ open, onOpenChange, event, user, com
 
   const removeMyself = useMutation({
     mutationFn: async () => {
-      await base44.entities.EventParticipant.delete(userParticipation.id);
+      await appClient.entities.EventParticipant.delete(userParticipation.id);
     },
     onSuccess: () => {
       queryClient.invalidateQueries(['eventParticipants']);
@@ -196,7 +203,7 @@ export default function EventDetailDialog({ open, onOpenChange, event, user, com
                           )}
                           <span className="text-sm">
                             {p.participant_type === 'user' 
-                              ? p.user_email 
+                              ? getUserDisplayNameByEmail(p.user_email, allUsers)
                               : getCompanyName(p.company_id)}
                           </span>
                           {p.has_conflict && (

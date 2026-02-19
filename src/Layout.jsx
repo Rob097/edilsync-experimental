@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
-import { base44 } from '@/api/base44Client';
+import { appClient } from '@/api/appClient';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { I18nextProvider } from 'react-i18next';
 import { initializeI18n } from '@/components/i18n/i18nConfig';
@@ -56,13 +56,13 @@ export default function Layout({ children, currentPageName }) {
 
   const { data: user } = useQuery({
     queryKey: ['currentUser'],
-    queryFn: () => base44.auth.me(),
+    queryFn: () => appClient.auth.me(),
     staleTime: 60 * 1000, // 1 minuto
   });
 
   const { data: companyMemberships = [] } = useQuery({
     queryKey: ['userCompanies', user?.email],
-    queryFn: () => base44.entities.CompanyMember.filter({ user_email: user?.email, status: 'active' }),
+    queryFn: () => appClient.entities.CompanyMember.filter({ user_email: user?.email, status: 'active' }),
     enabled: !!user?.email,
     staleTime: 2 * 60 * 1000, // 2 minuti
   });
@@ -72,7 +72,7 @@ export default function Layout({ children, currentPageName }) {
     queryFn: async () => {
       if (companyMemberships.length === 0) return [];
       const companyIds = companyMemberships.map(m => m.company_id);
-      const allCompanies = await base44.entities.Company.list();
+      const allCompanies = await appClient.entities.Company.list();
       return allCompanies.filter(c => companyIds.includes(c.id));
     },
     enabled: companyMemberships.length > 0,
@@ -96,7 +96,7 @@ export default function Layout({ children, currentPageName }) {
         filter.context_company_id = user.active_company_id;
       }
       
-      return base44.entities.Notification.filter(filter);
+      return appClient.entities.Notification.filter(filter);
     },
     enabled: !!user?.email,
     staleTime: 30 * 1000, // 30 secondi
@@ -119,7 +119,7 @@ export default function Layout({ children, currentPageName }) {
   const handleContextChange = async (context, company) => {
     setIsChangingContext(true);
     try {
-      await base44.auth.updateMe({
+      await appClient.auth.updateMe({
         active_context: context,
         active_company_id: company?.id || null,
       });
@@ -248,7 +248,7 @@ export default function Layout({ children, currentPageName }) {
                   )}
                   <DropdownMenuSeparator />
                   <DropdownMenuItem 
-                    onClick={() => base44.auth.logout()}
+                    onClick={() => appClient.auth.logout()}
                     className="text-red-600 cursor-pointer"
                   >
                     <LogOut className="h-4 w-4 mr-2" />

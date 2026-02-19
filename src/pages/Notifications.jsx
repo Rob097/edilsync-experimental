@@ -1,5 +1,5 @@
 import React from 'react';
-import { base44 } from '@/api/base44Client';
+import { appClient } from '@/api/appClient';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
@@ -43,18 +43,18 @@ export default function Notifications() {
 
   const { data: user } = useQuery({
     queryKey: ['currentUser'],
-    queryFn: () => base44.auth.me(),
+    queryFn: () => appClient.auth.me(),
   });
 
   const { data: companyMemberships = [] } = useQuery({
     queryKey: ['userCompanies', user?.email],
-    queryFn: () => base44.entities.CompanyMember.filter({ user_email: user?.email, status: 'active' }),
+    queryFn: () => appClient.entities.CompanyMember.filter({ user_email: user?.email, status: 'active' }),
     enabled: !!user?.email,
   });
 
   const { data: allNotifications = [], isLoading } = useQuery({
     queryKey: ['allNotifications', user?.email],
-    queryFn: () => base44.entities.Notification.filter({ user_email: user?.email }),
+    queryFn: () => appClient.entities.Notification.filter({ user_email: user?.email }),
     enabled: !!user?.email,
   });
 
@@ -72,7 +72,7 @@ export default function Notifications() {
   });
 
   const markAsReadMutation = useMutation({
-    mutationFn: (id) => base44.entities.Notification.update(id, { is_read: true }),
+    mutationFn: (id) => appClient.entities.Notification.update(id, { is_read: true }),
     onSuccess: () => {
       queryClient.invalidateQueries(['notifications']);
       queryClient.invalidateQueries(['allNotifications']);
@@ -83,7 +83,7 @@ export default function Notifications() {
     mutationFn: async () => {
       const unread = notifications.filter(n => !n.is_read);
       for (const n of unread) {
-        await base44.entities.Notification.update(n.id, { is_read: true });
+        await appClient.entities.Notification.update(n.id, { is_read: true });
       }
     },
     onSuccess: () => {

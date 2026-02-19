@@ -1,7 +1,5 @@
 import React, { createContext, useState, useContext, useEffect } from 'react';
-import { base44 } from '@/api/base44Client';
-import { appParams } from '@/lib/app-params';
-import { createAxiosClient } from '@base44/sdk/dist/utils/axios-client';
+import { appClient } from '@/api/appClient';
 
 const AuthContext = createContext();
 
@@ -15,67 +13,32 @@ export const AuthProvider = ({ children }) => {
 
   useEffect(() => {
     checkAppState();
+
+    const unsubscribe = appClient.auth.onAuthStateChange((session) => {
+      if (session?.user) {
+        checkUserAuth();
+      } else {
+        setUser(null);
+        setIsAuthenticated(false);
+        setAuthError({
+          type: 'auth_required',
+          message: 'Authentication required'
+        });
+      }
+    });
+
+    return () => {
+      unsubscribe();
+    };
   }, []);
 
   const checkAppState = async () => {
     try {
-      setIsLoadingPublicSettings(true);
       setAuthError(null);
-      
-      // First, check app public settings (with token if available)
-      // This will tell us if auth is required, user not registered, etc.
-      const appClient = createAxiosClient({
-        baseURL: `/api/apps/public`,
-        headers: {
-          'X-App-Id': appParams.appId
-        },
-        token: appParams.token, // Include token if available
-        interceptResponses: true
-      });
-      
-      try {
-        const publicSettings = await appClient.get(`/prod/public-settings/by-id/${appParams.appId}`);
-        setAppPublicSettings(publicSettings);
-        
-        // If we got the app public settings successfully, check if user is authenticated
-        if (appParams.token) {
-          await checkUserAuth();
-        } else {
-          setIsLoadingAuth(false);
-          setIsAuthenticated(false);
-        }
-        setIsLoadingPublicSettings(false);
-      } catch (appError) {
-        console.error('App state check failed:', appError);
-        
-        // Handle app-level errors
-        if (appError.status === 403 && appError.data?.extra_data?.reason) {
-          const reason = appError.data.extra_data.reason;
-          if (reason === 'auth_required') {
-            setAuthError({
-              type: 'auth_required',
-              message: 'Authentication required'
-            });
-          } else if (reason === 'user_not_registered') {
-            setAuthError({
-              type: 'user_not_registered',
-              message: 'User not registered for this app'
-            });
-          } else {
-            setAuthError({
-              type: reason,
-              message: appError.message
-            });
-          }
-        } else {
-          setAuthError({
-            type: 'unknown',
-            message: appError.message || 'Failed to load app'
-          });
-        }
-        setIsLoadingPublicSettings(false);
-        setIsLoadingAuth(false);
-      }
+      setIsLoadingPublicSettings(true);
+      setAppPublicSettings({ provider: 'supabase' });
+      await checkUserAuth();
+      setIsLoadingPublicSettings(false);
     } catch (error) {
       console.error('Unexpected error:', error);
       setAuthError({
@@ -89,43 +52,85 @@ export const AuthProvider = ({ children }) => {
 
   const checkUserAuth = async () => {
     try {
-      // Now check if the user is authenticated
       setIsLoadingAuth(true);
-      const currentUser = await base44.auth.me();
+      const currentUser = await appClient.auth.me();
       setUser(currentUser);
       setIsAuthenticated(true);
+      setAuthError(null);
       setIsLoadingAuth(false);
     } catch (error) {
       console.error('User auth check failed:', error);
       setIsLoadingAuth(false);
       setIsAuthenticated(false);
-      
-      // If user auth fails, it might be an expired token
-      if (error.status === 401 || error.status === 403) {
-        setAuthError({
-          type: 'auth_required',
-          message: 'Authentication required'
-        });
+      setAuthError({
+        type: 'auth_required',
+        message: 'Authentication required'
+      });
+    }
+  };
+
+  const signInWithPassword = async ({ email, password }) => {
+    setIsLoadingAuth(true);
+    try {
+      const currentUser = await appClient.auth.signInWithPassword({ email, password });
+      setUser(currentUser);
+      setIsAuthenticated(true);
+      setAuthError(null);
+      return currentUser;
+    } catch (error) {
+      setAuthError({
+        type: 'auth_required',
+        message: error?.message || 'Authentication required'
+      });
+      throw error;
+    } finally {
+      setIsLoadingAuth(false);
+    }
+  };
+
+  const signUpWithPassword = async ({ email, password }) => {
+    setIsLoadingAuth(true);
+    try {
+      const response = await appClient.auth.signUpWithPassword({ email, password });
+
+      if (!response?.requiresEmailConfirmation) {
+        const currentUser = await appClient.auth.me();
+        setUser(currentUser);
+        setIsAuthenticated(true);
       }
+
+      setAuthError(null);
+      return response;
+    } catch (error) {
+      setAuthError({
+        type: 'auth_required',
+        message: error?.message || 'Authentication required'
+      });
+      throw error;
+    } finally {
+      setIsLoadingAuth(false);
     }
   };
 
   const logout = (shouldRedirect = true) => {
     setUser(null);
     setIsAuthenticated(false);
-    
+
     if (shouldRedirect) {
-      // Use the SDK's logout method which handles token cleanup and redirect
-      base44.auth.logout(window.location.href);
+      appClient.auth.logout(window.location.href);
     } else {
-      // Just remove the token without redirect
-      base44.auth.logout();
+      appClient.auth.logout();
     }
   };
 
   const navigateToLogin = () => {
-    // Use the SDK's redirectToLogin method
-    base44.auth.redirectToLogin(window.location.href);
+    appClient.auth.redirectToLogin(window.location.href).catch((error) => {
+      console.error('Login redirect failed:', error);
+      setAuthError({
+        type: 'auth_required',
+        message: 'Authentication required'
+      });
+    });
   };
 
   return (
@@ -138,7 +143,9 @@ export const AuthProvider = ({ children }) => {
       appPublicSettings,
       logout,
       navigateToLogin,
-      checkAppState
+      checkAppState,
+      signInWithPassword,
+      signUpWithPassword
     }}>
       {children}
     </AuthContext.Provider>

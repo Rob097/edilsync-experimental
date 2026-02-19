@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
-import { base44 } from '@/api/base44Client';
+import { appClient } from '@/api/appClient';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import TourLauncher from '@/components/tour/TourLauncher';
 import { getProjectTour } from '@/components/tour/tours/projectTour';
@@ -58,6 +58,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import { getUserDisplayNameByEmail } from '@/lib/userDisplay';
 
 const statusConfig = {
   planning: { color: 'bg-blue-100 text-blue-700' },
@@ -88,20 +89,17 @@ export default function ProjectDetail() {
   const acceptInviteMutation = useMutation({
     mutationFn: async (participantId) => {
       // Step 1: Accept the invitation
-      await base44.entities.ProjectParticipant.update(participantId, { status: 'active' });
-      
-      // Step 2: Sync user access (updates project_ids on user entity)
-      await base44.functions.invoke('syncUserAccess', { user_email: user.email });
-      
-      // Step 3: Add to General channel
+      await appClient.entities.ProjectParticipant.update(participantId, { status: 'active' });
+
+      // Step 2: Add to General channel
       const participant = participants.find(p => p.id === participantId);
       if (participant) {
-        const channels = await base44.entities.Channel.filter({ 
+        const channels = await appClient.entities.Channel.filter({ 
           project_id: projectId, 
           type: 'general'
         });
         if (channels.length > 0) {
-          await base44.entities.ChannelMember.create({
+          await appClient.entities.ChannelMember.create({
             channel_id: channels[0].id,
             project_id: projectId,
             participant_id: participant.id,
@@ -125,7 +123,7 @@ export default function ProjectDetail() {
   });
 
   const declineInviteMutation = useMutation({
-    mutationFn: (participantId) => base44.entities.ProjectParticipant.update(participantId, { status: 'declined' }),
+    mutationFn: (participantId) => appClient.entities.ProjectParticipant.update(participantId, { status: 'declined' }),
     onSuccess: () => {
       queryClient.invalidateQueries(['projectParticipants', projectId]);
       queryClient.invalidateQueries(['userProjectParticipations']);
@@ -135,14 +133,14 @@ export default function ProjectDetail() {
 
   const { data: user, isLoading: userLoading } = useQuery({
     queryKey: ['currentUser'],
-    queryFn: () => base44.auth.me(),
+    queryFn: () => appClient.auth.me(),
     staleTime: 60 * 1000,
   });
 
   const { data: project, isLoading: projectLoading } = useQuery({
     queryKey: ['project', projectId],
     queryFn: async () => {
-      const projects = await base44.entities.Project.filter({ id: projectId });
+      const projects = await appClient.entities.Project.filter({ id: projectId });
       return projects[0];
     },
     enabled: !!projectId,
@@ -151,10 +149,17 @@ export default function ProjectDetail() {
 
   const { data: participants = [], isLoading: participantsLoading } = useQuery({
     queryKey: ['projectParticipants', projectId],
-    queryFn: () => base44.entities.ProjectParticipant.filter({ project_id: projectId }),
+    queryFn: () => appClient.entities.ProjectParticipant.filter({ project_id: projectId }),
     enabled: !!projectId && !!project,
     staleTime: 2 * 60 * 1000,
     refetchOnWindowFocus: false,
+  });
+
+  const { data: allUsers = [] } = useQuery({
+    queryKey: ['allUsers'],
+    queryFn: () => appClient.entities.User.list(),
+    enabled: !!user?.email,
+    staleTime: 2 * 60 * 1000,
   });
 
   const { data: companies = [] } = useQuery({
@@ -162,7 +167,7 @@ export default function ProjectDetail() {
     queryFn: async () => {
       const companyIds = participants.filter(p => p.company_id).map(p => p.company_id);
       if (companyIds.length === 0) return [];
-      const allCompanies = await base44.entities.Company.list();
+      const allCompanies = await appClient.entities.Company.list();
       return allCompanies.filter(c => companyIds.includes(c.id));
     },
     enabled: participants.length > 0,
@@ -171,7 +176,7 @@ export default function ProjectDetail() {
 
   const { data: companyMemberships = [] } = useQuery({
     queryKey: ['userCompanies', user?.email],
-    queryFn: () => base44.entities.CompanyMember.filter({ user_email: user?.email, status: 'active' }),
+    queryFn: () => appClient.entities.CompanyMember.filter({ user_email: user?.email, status: 'active' }),
     enabled: !!user?.email,
     staleTime: 2 * 60 * 1000,
   });
@@ -216,13 +221,21 @@ export default function ProjectDetail() {
     return company?.name || 'Società';
   };
 
-  const activeParticipants = participants.filter(p => p.status === 'active');
-  const invitedParticipants = participants.filter(p => p.status === 'invited');
+  const participantsWithNames = participants.map((participant) => {
+    if (participant.participant_type !== 'personal') return participant;
+    return {
+      ...participant,
+      user_display_name: getUserDisplayNameByEmail(participant.user_email, allUsers),
+    };
+  });
+
+  const activeParticipants = participantsWithNames.filter(p => p.status === 'active');
+  const invitedParticipants = participantsWithNames.filter(p => p.status === 'invited');
 
   // Get blocked tasks
   const { data: allTasks = [] } = useQuery({
     queryKey: ['tasks', projectId],
-    queryFn: () => base44.entities.Task.filter({ project_id: projectId }),
+    queryFn: () => appClient.entities.Task.filter({ project_id: projectId }),
     enabled: !!projectId && !!project,
     staleTime: 2 * 60 * 1000,
     refetchOnWindowFocus: false,
@@ -770,6 +783,7 @@ export default function ProjectDetail() {
                       <ParticipantCard
                         key={participant.id}
                         participant={participant}
+                        userDisplayName={participant.user_display_name}
                         companyName={participant.company_id ? getCompanyName(participant.company_id) : null}
                         canRemove={canRemoveParticipants && participant.id !== userParticipation?.id && participant.project_role !== 'homeowner'}
                         projectId={projectId}
@@ -792,6 +806,7 @@ export default function ProjectDetail() {
                         <ParticipantCard
                           key={participant.id}
                           participant={participant}
+                          userDisplayName={participant.user_display_name}
                           companyName={participant.company_id ? getCompanyName(participant.company_id) : null}
                           isPending
                           canRemove={canRemoveParticipants}

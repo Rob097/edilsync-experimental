@@ -1,5 +1,5 @@
 import React, { useState, useRef } from 'react';
-import { base44 } from '@/api/base44Client';
+import { appClient } from '@/api/appClient';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useLanguage } from '@/components/i18n/useLanguage';
 import {
@@ -54,7 +54,7 @@ export default function UploadDocumentDialog({ open, onOpenChange, projectId, do
 
   const { data: user } = useQuery({
     queryKey: ['currentUser'],
-    queryFn: () => base44.auth.me(),
+    queryFn: () => appClient.auth.me(),
   });
 
   const uploadMutation = useMutation({
@@ -69,13 +69,13 @@ export default function UploadDocumentDialog({ open, onOpenChange, projectId, do
 
         // If new file is selected, upload it
         if (file) {
-          const uploadResult = await base44.integrations.Core.UploadFile({ file });
+          const uploadResult = await appClient.integrations.Core.UploadFile({ file });
           file_url = uploadResult.file_url;
           file_type = file.name.split('.').pop()?.toLowerCase() || '';
           file_size = file.size;
         }
 
-        return base44.entities.ProjectDocument.update(document.id, {
+        return appClient.entities.ProjectDocument.update(document.id, {
           name,
           description: description || null,
           file_url,
@@ -85,10 +85,10 @@ export default function UploadDocumentDialog({ open, onOpenChange, projectId, do
         });
       } else {
         // Create mode
-        const { file_url } = await base44.integrations.Core.UploadFile({ file });
+        const { file_url } = await appClient.integrations.Core.UploadFile({ file });
         const fileType = file.name.split('.').pop()?.toLowerCase() || '';
         
-        return base44.entities.ProjectDocument.create({
+        return appClient.entities.ProjectDocument.create({
           project_id: projectId,
           name: name || file.name,
           description: description || null,

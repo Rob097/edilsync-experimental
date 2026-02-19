@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { base44 } from '@/api/base44Client';
+import { appClient } from '@/api/appClient';
 import { useQuery } from '@tanstack/react-query';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -19,12 +19,12 @@ export default function ParticipantSelector({ participants, onChange }) {
 
   const { data: allUsers = [] } = useQuery({
     queryKey: ['allUsers'],
-    queryFn: () => base44.entities.User.list(),
+    queryFn: () => appClient.entities.User.list(),
   });
 
   const { data: allCompanies = [] } = useQuery({
     queryKey: ['allCompanies'],
-    queryFn: () => base44.entities.Company.list(),
+    queryFn: () => appClient.entities.Company.list(),
   });
 
   const handleAddParticipant = () => {

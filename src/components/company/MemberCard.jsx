@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
-import { base44 } from '@/api/base44Client';
+import { appClient } from '@/api/appClient';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { User, Clock, Shield, Trash2, Loader2 } from "lucide-react";
 import { useLanguage } from '@/components/i18n/useLanguage';
 
-export default function MemberCard({ member, isCurrentUser, isPending, isAdmin, companyId, canRemoveSelf = true }) {
+export default function MemberCard({ member, displayName, isCurrentUser, isPending, isAdmin, companyId, canRemoveSelf = true }) {
   const { t, currentLanguage } = useLanguage();
   const tr = (itText, enText) => (currentLanguage === 'it' ? itText : enText);
   const queryClient = useQueryClient();
@@ -27,8 +27,10 @@ export default function MemberCard({ member, isCurrentUser, isPending, isAdmin, 
     other: tr('Altro', 'Other'),
   };
 
+  const resolvedDisplayName = displayName || member.user_email;
+
   const removeMutation = useMutation({
-    mutationFn: () => base44.entities.CompanyMember.delete(member.id),
+    mutationFn: () => appClient.entities.CompanyMember.delete(member.id),
     onSuccess: () => {
       queryClient.invalidateQueries(['companyMembers', companyId]);
     },
@@ -48,11 +50,14 @@ export default function MemberCard({ member, isCurrentUser, isPending, isAdmin, 
         </div>
         <div className="min-w-0 flex-1">
           <div className="flex items-center gap-2 flex-wrap">
-            <p className="font-medium text-gray-900 break-all">{member.user_email}</p>
+            <p className="font-medium text-gray-900 break-all">{resolvedDisplayName}</p>
             {isCurrentUser && (
               <Badge variant="outline" className="text-xs">{tr('Tu', 'You')}</Badge>
             )}
           </div>
+          {resolvedDisplayName !== member.user_email && (
+            <p className="text-sm text-gray-500 break-all">{member.user_email}</p>
+          )}
           {member.profession && member.profession !== 'general' && (
             <p className="text-sm text-gray-500">
               {localizedProfessionLabels[member.profession] || member.profession}

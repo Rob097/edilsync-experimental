@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
-import { base44 } from '@/api/base44Client';
+import { appClient } from '@/api/appClient';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useLanguage } from '@/components/i18n/useLanguage';
 import TourLauncher from '@/components/tour/TourLauncher';
@@ -24,6 +24,7 @@ import EmptyState from '@/components/ui/EmptyState';
 import InviteMemberDialog from '@/components/company/InviteMemberDialog';
 import MemberCard from '@/components/company/MemberCard';
 import EditCompanyDialog from '@/components/company/EditCompanyDialog';
+import { getUserDisplayNameByEmail } from '@/lib/userDisplay';
 
 export default function CompanyDetail() {
   const { t, currentLanguage } = useLanguage();
@@ -37,14 +38,14 @@ export default function CompanyDetail() {
 
   const { data: user, isLoading: userLoading } = useQuery({
     queryKey: ['currentUser'],
-    queryFn: () => base44.auth.me(),
+    queryFn: () => appClient.auth.me(),
     staleTime: 60 * 1000, // 1 minuto
   });
 
   const { data: company, isLoading: companyLoading } = useQuery({
     queryKey: ['company', companyId],
     queryFn: async () => {
-      const companies = await base44.entities.Company.filter({ id: companyId });
+      const companies = await appClient.entities.Company.filter({ id: companyId });
       return companies[0];
     },
     enabled: !!companyId,
@@ -53,9 +54,16 @@ export default function CompanyDetail() {
 
   const { data: members = [], isLoading: membersLoading } = useQuery({
     queryKey: ['companyMembers', companyId],
-    queryFn: () => base44.entities.CompanyMember.filter({ company_id: companyId }),
+    queryFn: () => appClient.entities.CompanyMember.filter({ company_id: companyId }),
     enabled: !!companyId && !!company,
     staleTime: 2 * 60 * 1000, // 2 minuti
+  });
+
+  const { data: allUsers = [] } = useQuery({
+    queryKey: ['allUsers'],
+    queryFn: () => appClient.entities.User.list(),
+    enabled: !!user?.email,
+    staleTime: 2 * 60 * 1000,
   });
 
   // Check if current user is admin
@@ -226,6 +234,7 @@ export default function CompanyDetail() {
               <MemberCard
               key={member.id}
               member={member}
+              displayName={getUserDisplayNameByEmail(member.user_email, allUsers)}
               isCurrentUser={member.user_email === user?.email}
               isAdmin={isAdmin}
               companyId={companyId}
@@ -249,6 +258,7 @@ export default function CompanyDetail() {
                 <MemberCard
                   key={member.id}
                   member={member}
+                  displayName={getUserDisplayNameByEmail(member.user_email, allUsers)}
                   isPending
                   isAdmin={isAdmin}
                   companyId={companyId}

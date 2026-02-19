@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { base44 } from '@/api/base44Client';
+import { appClient } from '@/api/appClient';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { Card } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton.jsx";
@@ -28,21 +28,21 @@ export default function ProjectMessaging({
 
   const { data: channels = [], isLoading: channelsLoading } = useQuery({
     queryKey: ['channels', projectId],
-    queryFn: () => base44.entities.Channel.filter({ project_id: projectId }),
+    queryFn: () => appClient.entities.Channel.filter({ project_id: projectId }),
     enabled: !!projectId,
     staleTime: 2 * 60 * 1000, // 2 minuti
   });
 
   const { data: channelMembers = [], isLoading: membersLoading } = useQuery({
     queryKey: ['channelMembers', projectId],
-    queryFn: () => base44.entities.ChannelMember.filter({ project_id: projectId }),
+    queryFn: () => appClient.entities.ChannelMember.filter({ project_id: projectId }),
     enabled: !!projectId,
     staleTime: 2 * 60 * 1000, // 2 minuti
   });
 
   const { data: companies = [] } = useQuery({
     queryKey: ['companies'],
-    queryFn: () => base44.entities.Company.list(),
+    queryFn: () => appClient.entities.Company.list(),
     staleTime: 5 * 60 * 1000, // 5 minuti
   });
 
@@ -50,7 +50,7 @@ export default function ProjectMessaging({
 
   const createChannelMutation = useMutation({
     mutationFn: async (channelData) => {
-      return await base44.entities.Channel.create(channelData);
+      return await appClient.entities.Channel.create(channelData);
     },
     onSuccess: () => {
       queryClient.invalidateQueries(['channels', projectId]);
@@ -59,7 +59,7 @@ export default function ProjectMessaging({
 
   const createMemberMutation = useMutation({
     mutationFn: async (memberData) => {
-      return await base44.entities.ChannelMember.create(memberData);
+      return await appClient.entities.ChannelMember.create(memberData);
     },
     onSuccess: () => {
       queryClient.invalidateQueries(['channelMembers', projectId]);

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { base44 } from '@/api/base44Client';
+import { appClient } from '@/api/appClient';
 import { useMutation, useQueryClient, useQuery } from '@tanstack/react-query';
 import {
   Dialog,
@@ -31,23 +31,23 @@ export default function CreateChannelDialog({
 
   const { data: user } = useQuery({
     queryKey: ['currentUser'],
-    queryFn: () => base44.auth.me(),
+    queryFn: () => appClient.auth.me(),
   });
 
   const { data: companyMemberships = [] } = useQuery({
     queryKey: ['userCompanyMemberships', user?.email],
-    queryFn: () => base44.entities.CompanyMember.filter({ user_email: user?.email, status: 'active' }),
+    queryFn: () => appClient.entities.CompanyMember.filter({ user_email: user?.email, status: 'active' }),
     enabled: !!user?.email,
   });
 
   const { data: allUsers = [] } = useQuery({
     queryKey: ['allUsers'],
-    queryFn: () => base44.entities.User.list(),
+    queryFn: () => appClient.entities.User.list(),
   });
 
   const { data: allCompanies = [] } = useQuery({
     queryKey: ['allCompanies'],
-    queryFn: () => base44.entities.Company.list(),
+    queryFn: () => appClient.entities.Company.list(),
   });
 
   const createChannelMutation = useMutation({
@@ -60,12 +60,12 @@ export default function CreateChannelDialog({
         }
       }
 
-      const channel = await base44.entities.Channel.create(channelData);
+      const channel = await appClient.entities.Channel.create(channelData);
       
       // Add members
       for (const participantId of selectedParticipants) {
         const participant = participants.find(p => p.id === participantId);
-        await base44.entities.ChannelMember.create({
+        await appClient.entities.ChannelMember.create({
           channel_id: channel.id,
           project_id: projectId,
           participant_id: participantId,
@@ -145,7 +145,7 @@ export default function CreateChannelDialog({
                   displayName = company?.name || tr('Società', 'Company');
                 } else {
                   const user = allUsers.find(u => u.email === participant.user_email);
-                  displayName = user?.display_name || participant.user_email;
+                  displayName = user?.full_name || user?.display_name || participant.user_email;
                 }
                 
                 return (

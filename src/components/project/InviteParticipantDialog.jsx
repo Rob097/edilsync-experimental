@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { base44 } from '@/api/base44Client';
+import { appClient } from '@/api/appClient';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useLanguage } from '@/components/i18n/useLanguage';
 import {
@@ -42,24 +42,24 @@ export default function InviteParticipantDialog({
 
   const { data: allCompanies = [] } = useQuery({
     queryKey: ['allCompanies'],
-    queryFn: () => base44.entities.Company.list(),
+    queryFn: () => appClient.entities.Company.list(),
   });
 
   const { data: user } = useQuery({
     queryKey: ['currentUser'],
-    queryFn: () => base44.auth.me(),
+    queryFn: () => appClient.auth.me(),
   });
 
   const { data: companyMemberships = [] } = useQuery({
     queryKey: ['userCompanyMemberships', user?.email],
-    queryFn: () => base44.entities.CompanyMember.filter({ user_email: user?.email, status: 'active' }),
+    queryFn: () => appClient.entities.CompanyMember.filter({ user_email: user?.email, status: 'active' }),
     enabled: !!user?.email,
   });
 
   const { data: project } = useQuery({
     queryKey: ['project', projectId],
     queryFn: async () => {
-      const projects = await base44.entities.Project.filter({ id: projectId });
+      const projects = await appClient.entities.Project.filter({ id: projectId });
       return projects[0];
     },
     enabled: !!projectId,
@@ -88,7 +88,7 @@ export default function InviteParticipantDialog({
       } else {
         participantData.user_email = email;
         // Try to find user_id
-        const users = await base44.entities.User.list();
+        const users = await appClient.entities.User.list();
         const foundUser = users.find(u => u.email === email);
         if (foundUser) {
           participantData.user_id = foundUser.id;
@@ -100,10 +100,10 @@ export default function InviteParticipantDialog({
         participantData.invited_by_company_id = currentUserParticipation.company_id;
       }
 
-      const participant = await base44.entities.ProjectParticipant.create(participantData);
+      const participant = await appClient.entities.ProjectParticipant.create(participantData);
 
       // Find General channel for this project
-      const channels = await base44.entities.Channel.filter({ 
+      const channels = await appClient.entities.Channel.filter({ 
         project_id: projectId, 
         type: 'general',
         name: 'General'
@@ -112,7 +112,7 @@ export default function InviteParticipantDialog({
       if (channels.length > 0) {
         const generalChannel = channels[0];
         // Add participant to General channel
-        await base44.entities.ChannelMember.create({
+        await appClient.entities.ChannelMember.create({
           channel_id: generalChannel.id,
           project_id: projectId,
           participant_id: participant.id,
@@ -124,7 +124,7 @@ export default function InviteParticipantDialog({
 
       // Send notification/email via backend function
       if (participantType === 'company') {
-        const companyMembers = await base44.entities.CompanyMember.filter({ 
+        const companyMembers = await appClient.entities.CompanyMember.filter({ 
           company_id: selectedCompanyId, 
           status: 'active',
           role: 'admin'
@@ -134,7 +134,7 @@ export default function InviteParticipantDialog({
         
         // Send notifications to company admins only
         for (const member of companyMembers) {
-          await base44.functions.invoke('sendNotificationOrEmail', {
+          await appClient.functions.invoke('sendNotificationOrEmail', {
             action_type: 'project_invite',
             recipient_email: member.user_email,
             context_type: 'company',
@@ -151,7 +151,7 @@ export default function InviteParticipantDialog({
         
         // Send email only to company email address if exists
         if (company?.email) {
-          await base44.functions.invoke('sendNotificationOrEmail', {
+          await appClient.functions.invoke('sendNotificationOrEmail', {
             action_type: 'project_invite',
             recipient_email: company.email,
             context_type: 'company',
@@ -165,7 +165,7 @@ export default function InviteParticipantDialog({
           });
         }
       } else {
-        await base44.functions.invoke('sendNotificationOrEmail', {
+        await appClient.functions.invoke('sendNotificationOrEmail', {
           action_type: 'project_invite',
           recipient_email: email,
           context_type: 'personal',

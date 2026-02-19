@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { base44 } from '@/api/base44Client';
+import { appClient } from '@/api/appClient';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet";
@@ -30,14 +30,14 @@ export default function AssistantFloatingButton({ className }) {
 
   const { data: user } = useQuery({
     queryKey: ['currentUser'],
-    queryFn: () => base44.auth.me(),
+    queryFn: () => appClient.auth.me(),
   });
 
   // Fetch all user conversations filtered by active context
   const { data: conversations = [], refetch: refetchConversations } = useQuery({
     queryKey: ['assistantConversations', user?.active_context, user?.active_company_id],
     queryFn: async () => {
-      const allConversations = await base44.agents.listConversations({ agent_name: "edilsync_assistant" });
+      const allConversations = await appClient.agents.listConversations({ agent_name: "edilsync_assistant" });
       // Filter conversations by active context
       const currentContext = user?.active_context || 'personal';
       const currentCompanyId = user?.active_company_id || null;
@@ -91,7 +91,7 @@ export default function AssistantFloatingButton({ className }) {
         
         if (lastConvId && activeConversations.find(c => c.id === lastConvId)) {
           // Load last conversation
-          const conv = await base44.agents.getConversation(lastConvId);
+          const conv = await appClient.agents.getConversation(lastConvId);
           setConversationId(conv.id);
           setMessages(conv.messages || []);
         } else if (activeConversations.length > 0) {
@@ -99,13 +99,13 @@ export default function AssistantFloatingButton({ className }) {
           const latestConv = activeConversations.sort((a, b) => 
             new Date(b.created_date) - new Date(a.created_date)
           )[0];
-          const conv = await base44.agents.getConversation(latestConv.id);
+          const conv = await appClient.agents.getConversation(latestConv.id);
           setConversationId(conv.id);
           setMessages(conv.messages || []);
           localStorage.setItem('assistant_conversation_id', conv.id);
         } else {
           // Create new conversation with context info
-          const conv = await base44.agents.createConversation({
+          const conv = await appClient.agents.createConversation({
             agent_name: "edilsync_assistant",
             metadata: {
               name: `Chat ${format(new Date(), 'dd/MM/yyyy HH:mm', { locale: dateLocale })}`,
@@ -133,7 +133,7 @@ export default function AssistantFloatingButton({ className }) {
   useEffect(() => {
     if (!conversationId) return;
 
-    const unsubscribe = base44.agents.subscribeToConversation(conversationId, (data) => {
+    const unsubscribe = appClient.agents.subscribeToConversation(conversationId, (data) => {
       setMessages(data.messages);
       setIsLoading(data.messages[data.messages.length - 1]?.role === 'user');
     });
@@ -188,7 +188,7 @@ export default function AssistantFloatingButton({ className }) {
 
     try {
       const conversation = { id: conversationId, messages };
-      await base44.agents.addMessage(conversation, {
+      await appClient.agents.addMessage(conversation, {
         role: 'user',
         content: textToSend,
       });
@@ -224,7 +224,7 @@ export default function AssistantFloatingButton({ className }) {
 
   const handleNewConversation = async () => {
     try {
-      const conv = await base44.agents.createConversation({
+      const conv = await appClient.agents.createConversation({
         agent_name: "edilsync_assistant",
         metadata: {
           name: `Chat ${format(new Date(), 'dd/MM/yyyy HH:mm', { locale: dateLocale })}`,
@@ -246,7 +246,7 @@ export default function AssistantFloatingButton({ className }) {
 
   const handleLoadConversation = async (convId) => {
     try {
-      const conv = await base44.agents.getConversation(convId);
+      const conv = await appClient.agents.getConversation(convId);
       setConversationId(conv.id);
       setMessages(conv.messages || []);
       localStorage.setItem('assistant_conversation_id', conv.id);
@@ -301,7 +301,7 @@ export default function AssistantFloatingButton({ className }) {
               </div>
               <div className="flex gap-2">
                 <a 
-                  href={base44.agents.getWhatsAppConnectURL('edilsync_assistant')} 
+                  href={appClient.agents.getWhatsAppConnectURL('edilsync_assistant')} 
                   target="_blank" 
                   rel="noopener noreferrer"
                   className="inline-block"

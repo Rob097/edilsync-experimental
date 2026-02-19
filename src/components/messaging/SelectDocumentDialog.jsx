@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { base44 } from '@/api/base44Client';
+import { appClient } from '@/api/appClient';
 import { useQuery } from '@tanstack/react-query';
 import {
   Dialog,
@@ -60,7 +60,7 @@ export default function SelectDocumentDialog({ projectId, open, onOpenChange, on
 
   const { data: documents = [], isLoading } = useQuery({
     queryKey: ['projectDocuments', projectId],
-    queryFn: () => base44.entities.ProjectDocument.filter({ project_id: projectId }),
+    queryFn: () => appClient.entities.ProjectDocument.filter({ project_id: projectId }),
     enabled: !!projectId && open,
   });
 

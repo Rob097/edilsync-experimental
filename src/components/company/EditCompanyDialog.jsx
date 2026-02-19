@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { base44 } from '@/api/base44Client';
+import { appClient } from '@/api/appClient';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useLanguage } from '@/components/i18n/useLanguage';
 import {
@@ -44,7 +44,7 @@ export default function EditCompanyDialog({ open, onOpenChange, company }) {
 
   const updateCompanyMutation = useMutation({
     mutationFn: async (data) => {
-      return await base44.entities.Company.update(company.id, data);
+      return await appClient.entities.Company.update(company.id, data);
     },
     onSuccess: () => {
       queryClient.invalidateQueries(['company']);

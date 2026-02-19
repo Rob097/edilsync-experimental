@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
-import { base44 } from '@/api/base44Client';
+import { appClient } from '@/api/appClient';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useLanguage } from '@/components/i18n/useLanguage';
 import { Button } from "@/components/ui/button";
@@ -32,12 +32,12 @@ export default function NewProject() {
 
   const { data: user } = useQuery({
     queryKey: ['currentUser'],
-    queryFn: () => base44.auth.me(),
+    queryFn: () => appClient.auth.me(),
   });
 
   const { data: companyMemberships = [] } = useQuery({
     queryKey: ['userCompanies', user?.email],
-    queryFn: () => base44.entities.CompanyMember.filter({ user_email: user?.email, status: 'active' }),
+    queryFn: () => appClient.entities.CompanyMember.filter({ user_email: user?.email, status: 'active' }),
     enabled: !!user?.email,
   });
 
@@ -46,7 +46,7 @@ export default function NewProject() {
     queryFn: async () => {
       if (companyMemberships.length === 0) return [];
       const companyIds = companyMemberships.map(m => m.company_id);
-      const allCompanies = await base44.entities.Company.list();
+      const allCompanies = await appClient.entities.Company.list();
       return allCompanies.filter(c => companyIds.includes(c.id));
     },
     enabled: companyMemberships.length > 0,
@@ -71,7 +71,7 @@ export default function NewProject() {
       const { my_role, homeowner_email, ...projectData } = data;
       
       // Create project
-      const project = await base44.entities.Project.create({
+      const project = await appClient.entities.Project.create({
         ...projectData,
         owner_type: currentContext,
         owner_company_id: currentContext === 'company' ? user?.active_company_id : null,
@@ -79,7 +79,7 @@ export default function NewProject() {
       });
 
       // Create participant for project creator (homeowner or contractor)
-      const creatorParticipant = await base44.entities.ProjectParticipant.create({
+      const creatorParticipant = await appClient.entities.ProjectParticipant.create({
         project_id: project.id,
         participant_type: currentContext,
         user_id: currentContext === 'personal' ? user?.id : null,
@@ -91,7 +91,7 @@ export default function NewProject() {
       });
 
       // Create General channel for project
-      const channel = await base44.entities.Channel.create({
+      const channel = await appClient.entities.Channel.create({
         project_id: project.id,
         name: 'General',
         type: 'general',
@@ -100,7 +100,7 @@ export default function NewProject() {
       });
 
       // Add creator as channel member
-      await base44.entities.ChannelMember.create({
+      await appClient.entities.ChannelMember.create({
         channel_id: channel.id,
         project_id: project.id,
         participant_id: creatorParticipant.id,
@@ -111,13 +111,13 @@ export default function NewProject() {
 
       // Immediately update user access arrays (so RLS works without waiting for automation)
       const currentProjectIds = user?.project_ids || [];
-      await base44.auth.updateMe({
+      await appClient.auth.updateMe({
         project_ids: [...new Set([...currentProjectIds, project.id])],
       });
 
       // If contractor, invite homeowner
       if (my_role === 'contractor' && homeowner_email) {
-        await base44.entities.ProjectParticipant.create({
+        await appClient.entities.ProjectParticipant.create({
           project_id: project.id,
           participant_type: 'personal',
           user_id: null,

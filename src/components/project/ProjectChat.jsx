@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { base44 } from '@/api/base44Client';
+import { appClient } from '@/api/appClient';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -10,6 +10,7 @@ import { format } from 'date-fns';
 import { it, enUS } from 'date-fns/locale';
 import EmptyState from '@/components/ui/EmptyState';
 import { useLanguage } from '@/components/i18n/useLanguage';
+import { getUserDisplayNameByEmail } from '@/lib/userDisplay';
 
 export default function ProjectChat({ projectId }) {
   const { currentLanguage } = useLanguage();
@@ -21,17 +22,23 @@ export default function ProjectChat({ projectId }) {
 
   const { data: user } = useQuery({
     queryKey: ['currentUser'],
-    queryFn: () => base44.auth.me(),
+    queryFn: () => appClient.auth.me(),
   });
 
   const { data: messages = [], isLoading } = useQuery({
     queryKey: ['projectMessages', projectId],
-    queryFn: () => base44.entities.ProjectMessage.filter({ project_id: projectId }),
+    queryFn: () => appClient.entities.ProjectMessage.filter({ project_id: projectId }),
+    enabled: !!projectId,
+  });
+
+  const { data: allUsers = [] } = useQuery({
+    queryKey: ['allUsers'],
+    queryFn: () => appClient.entities.User.list(),
     enabled: !!projectId,
   });
 
   const sendMutation = useMutation({
-    mutationFn: (data) => base44.entities.ProjectMessage.create(data),
+    mutationFn: (data) => appClient.entities.ProjectMessage.create(data),
     onSuccess: () => {
       queryClient.invalidateQueries(['projectMessages']);
       setMessage('');
@@ -45,7 +52,7 @@ export default function ProjectChat({ projectId }) {
     sendMutation.mutate({
       project_id: projectId,
       sender_email: user?.email,
-      sender_name: user?.full_name,
+      sender_name: user?.full_name || user?.display_name || user?.email,
       message: message.trim(),
     });
   };
@@ -73,13 +80,14 @@ export default function ProjectChat({ projectId }) {
             <>
               {sortedMessages.map(msg => {
                 const isMe = msg.sender_email === user?.email;
+                const senderName = msg.sender_name || getUserDisplayNameByEmail(msg.sender_email, allUsers);
                 return (
                   <div key={msg.id} className={`flex ${isMe ? 'justify-end' : 'justify-start'}`}>
                     <div className={`max-w-[70%] rounded-lg p-3 ${
                       isMe ? 'bg-[#ef6144] text-white' : 'bg-gray-100 text-gray-900'
                     }`}>
                       {!isMe && (
-                        <p className="text-xs font-medium mb-1 opacity-75">{msg.sender_name}</p>
+                        <p className="text-xs font-medium mb-1 opacity-75">{senderName}</p>
                       )}
                       <p className="text-sm">{msg.message}</p>
                       <p className={`text-xs mt-1 ${isMe ? 'text-white/70' : 'text-gray-500'}`}>

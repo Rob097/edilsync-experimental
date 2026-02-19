@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { base44 } from '@/api/base44Client';
+import { appClient } from '@/api/appClient';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -28,12 +28,12 @@ export default function ChangeRequestBoard({ projectId, canCreateOrRespond, curr
 
   const { data: changeRequests = [], isLoading } = useQuery({
     queryKey: ['changeRequests', projectId],
-    queryFn: () => base44.entities.ChangeRequest.filter({ project_id: projectId }),
+    queryFn: () => appClient.entities.ChangeRequest.filter({ project_id: projectId }),
     enabled: !!projectId,
   });
 
   const updateRequestMutation = useMutation({
-    mutationFn: ({ requestId, status }) => base44.entities.ChangeRequest.update(requestId, { status }),
+    mutationFn: ({ requestId, status }) => appClient.entities.ChangeRequest.update(requestId, { status }),
     onSuccess: () => {
       queryClient.invalidateQueries(['changeRequests', projectId]);
     },

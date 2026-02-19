@@ -1,5 +1,5 @@
 import React, { useMemo } from 'react';
-import { base44 } from '@/api/base44Client';
+import { appClient } from '@/api/appClient';
 import { useQuery } from '@tanstack/react-query';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -18,6 +18,7 @@ import { format, startOfDay, isToday, isYesterday } from 'date-fns';
 import { it, enUS } from 'date-fns/locale';
 import EmptyState from '@/components/ui/EmptyState';
 import { useLanguage } from '@/components/i18n/useLanguage';
+import { getUserDisplayNameByEmail } from '@/lib/userDisplay';
 
 export default function ActivityFeed({ projectId, onItemClick }) {
   const { currentLanguage } = useLanguage();
@@ -25,19 +26,19 @@ export default function ActivityFeed({ projectId, onItemClick }) {
   const dateLocale = currentLanguage === 'it' ? it : enUS;
   const { data: tasks = [] } = useQuery({
     queryKey: ['tasks', projectId],
-    queryFn: () => base44.entities.Task.filter({ project_id: projectId }),
+    queryFn: () => appClient.entities.Task.filter({ project_id: projectId }),
     enabled: !!projectId,
   });
 
   const { data: changeRequests = [] } = useQuery({
     queryKey: ['changeRequests', projectId],
-    queryFn: () => base44.entities.ChangeRequest.filter({ project_id: projectId }),
+    queryFn: () => appClient.entities.ChangeRequest.filter({ project_id: projectId }),
     enabled: !!projectId,
   });
 
   const { data: messages = [] } = useQuery({
     queryKey: ['projectMessages', projectId],
-    queryFn: () => base44.entities.Message.filter({ project_id: projectId }),
+    queryFn: () => appClient.entities.Message.filter({ project_id: projectId }),
     enabled: !!projectId,
     staleTime: 2 * 60 * 1000,
     refetchOnWindowFocus: false,
@@ -45,13 +46,19 @@ export default function ActivityFeed({ projectId, onItemClick }) {
 
   const { data: documents = [] } = useQuery({
     queryKey: ['projectDocuments', projectId],
-    queryFn: () => base44.entities.ProjectDocument.filter({ project_id: projectId }),
+    queryFn: () => appClient.entities.ProjectDocument.filter({ project_id: projectId }),
     enabled: !!projectId,
   });
 
   const { data: events = [] } = useQuery({
     queryKey: ['projectEvents', projectId],
-    queryFn: () => base44.entities.Event.filter({ owner_project_id: projectId, status: 'scheduled' }),
+    queryFn: () => appClient.entities.Event.filter({ owner_project_id: projectId, status: 'scheduled' }),
+    enabled: !!projectId,
+  });
+
+  const { data: allUsers = [] } = useQuery({
+    queryKey: ['allUsers'],
+    queryFn: () => appClient.entities.User.list(),
     enabled: !!projectId,
   });
 
@@ -86,19 +93,21 @@ export default function ActivityFeed({ projectId, onItemClick }) {
     });
 
     messages.forEach(msg => {
+      const senderName = msg.sender_name || getUserDisplayNameByEmail(msg.sender_email, allUsers);
       items.push({
         id: `msg-${msg.id}`,
         type: 'message',
         date: msg.created_date,
         icon: MessageSquare,
         color: 'text-gray-600',
-        title: `${msg.sender_name}: ${msg.content.substring(0, 50)}${msg.content.length > 50 ? '...' : ''}`,
+        title: `${senderName}: ${msg.content.substring(0, 50)}${msg.content.length > 50 ? '...' : ''}`,
         description: format(new Date(msg.created_date), 'HH:mm'),
         data: msg,
       });
     });
 
     documents.forEach(doc => {
+      const uploaderName = doc.uploaded_by_name || getUserDisplayNameByEmail(doc.uploaded_by_email, allUsers);
       items.push({
         id: `doc-${doc.id}`,
         type: 'document',
@@ -107,7 +116,7 @@ export default function ActivityFeed({ projectId, onItemClick }) {
         color: 'text-purple-600',
         title: `Documento caricato: ${doc.name}`,
         title: `${tr('Documento caricato', 'Uploaded document')}: ${doc.name}`,
-        description: `${tr('da', 'by')} ${doc.uploaded_by_name}`,
+        description: `${tr('da', 'by')} ${uploaderName}`,
         data: doc,
       });
     });
@@ -126,7 +135,7 @@ export default function ActivityFeed({ projectId, onItemClick }) {
     });
 
     return items.sort((a, b) => new Date(b.date) - new Date(a.date));
-  }, [tasks, changeRequests, messages, documents, events]);
+  }, [tasks, changeRequests, messages, documents, events, allUsers]);
 
   // Group activities by day
   const groupedActivities = useMemo(() => {

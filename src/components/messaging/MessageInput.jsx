@@ -1,5 +1,5 @@
 import React, { useState, useRef } from 'react';
-import { base44 } from '@/api/base44Client';
+import { appClient } from '@/api/appClient';
 import { useMutation, useQueryClient, useQuery } from '@tanstack/react-query';
 import { useLanguage } from '@/components/i18n/useLanguage';
 import { Button } from "@/components/ui/button";
@@ -34,52 +34,54 @@ export default function MessageInput({
 
   const { data: tasks = [] } = useQuery({
     queryKey: ['tasks', projectId],
-    queryFn: () => base44.entities.Task.filter({ project_id: projectId }),
+    queryFn: () => appClient.entities.Task.filter({ project_id: projectId }),
     enabled: !!projectId && mentionType === 'task',
   });
 
   const { data: milestones = [] } = useQuery({
     queryKey: ['milestones', projectId],
-    queryFn: () => base44.entities.Milestone.filter({ project_id: projectId }),
+    queryFn: () => appClient.entities.Milestone.filter({ project_id: projectId }),
     enabled: !!projectId && mentionType === 'milestone',
   });
 
   const { data: changeRequests = [] } = useQuery({
     queryKey: ['changeRequests', projectId],
-    queryFn: () => base44.entities.ChangeRequest.filter({ project_id: projectId }),
+    queryFn: () => appClient.entities.ChangeRequest.filter({ project_id: projectId }),
     enabled: !!projectId && mentionType === 'change_request',
   });
 
   const { data: documents = [] } = useQuery({
     queryKey: ['documents', projectId],
-    queryFn: () => base44.entities.ProjectDocument.filter({ project_id: projectId }),
+    queryFn: () => appClient.entities.ProjectDocument.filter({ project_id: projectId }),
     enabled: !!projectId && mentionType === 'document',
   });
 
   const { data: allUsers = [] } = useQuery({
     queryKey: ['allUsers'],
-    queryFn: () => base44.entities.User.list(),
+    queryFn: () => appClient.entities.User.list(),
     enabled: mentionType === 'user',
     staleTime: 5 * 60 * 1000,
   });
 
   const sendMessageMutation = useMutation({
     mutationFn: async (messageData) => {
-      const msg = await base44.entities.Message.create(messageData);
+      const msg = await appClient.entities.Message.create(messageData);
       
       // Create notifications for mentioned users (in background, don't wait)
       if (messageData.mentioned_user_emails?.length > 0) {
         Promise.all([
-          base44.entities.Channel.filter({ id: channelId }),
-          base44.entities.Project.filter({ id: projectId })
+          appClient.entities.Channel.filter({ id: channelId }),
+          appClient.entities.Project.filter({ id: projectId })
         ]).then(([channels, projects]) => {
           const channel = channels[0];
           const project = projects[0];
           
           messageData.mentioned_user_emails.forEach(email => {
             if (email !== currentUserEmail) {
-              base44.entities.Notification.create({
+              appClient.entities.Notification.create({
                 user_email: email,
+                context_type: contextType || 'personal',
+                context_company_id: contextType === 'company' ? activeCompanyId : null,
                 type: 'message_mention',
                 title: tr('Sei stato menzionato', 'You were mentioned'),
                 message: tr(
@@ -129,8 +131,8 @@ export default function MessageInput({
       project_id: projectId,
       content: message,
       sender_email: currentUserEmail,
-      sender_name: currentUserName,
-      sender_context_type: contextType,
+      sender_name: currentUserName || currentUserEmail || 'Utente',
+      sender_context_type: contextType || 'personal',
       sender_company_id: contextType === 'company' ? activeCompanyId : null,
       sender_company_name: contextType === 'company' ? activeCompanyName : null,
       mentioned_user_emails: mentionedUsers,
@@ -143,7 +145,7 @@ export default function MessageInput({
   const insertMention = (type, item) => {
     let text, id;
     if (type === 'user') {
-      text = item.display_name || item.full_name || item.user_email;
+      text = item.full_name || item.display_name || item.user_email;
       id = item.user_email;
     } else if (type === 'task') {
       text = item.title;
@@ -178,7 +180,7 @@ export default function MessageInput({
       const user = allUsers.find((u) => u.email === participant.user_email);
       return {
         ...participant,
-        display_name: user?.display_name || user?.full_name || participant.user_email,
+          display_name: user?.full_name || user?.display_name || participant.user_email,
       };
     });
 

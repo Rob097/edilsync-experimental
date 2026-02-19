@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
-import { base44 } from '@/api/base44Client';
+import { appClient } from '@/api/appClient';
 import { useQuery } from '@tanstack/react-query';
 import TourLauncher from '@/components/tour/TourLauncher';
 import { getOnboardingTour } from '@/components/tour/tours/onboardingTour';
@@ -28,13 +28,13 @@ export default function Dashboard() {
   
   const { data: user } = useQuery({
     queryKey: ['currentUser'],
-    queryFn: () => base44.auth.me(),
+    queryFn: () => appClient.auth.me(),
     staleTime: 60 * 1000, // 1 minuto
   });
 
   const { data: companyMemberships = [] } = useQuery({
     queryKey: ['userCompanies', user?.email],
-    queryFn: () => base44.entities.CompanyMember.filter({ user_email: user?.email, status: 'active' }),
+    queryFn: () => appClient.entities.CompanyMember.filter({ user_email: user?.email, status: 'active' }),
     enabled: !!user?.email,
     staleTime: 2 * 60 * 1000, // 2 minuti
   });
@@ -44,7 +44,7 @@ export default function Dashboard() {
     queryFn: async () => {
       if (companyMemberships.length === 0) return [];
       const companyIds = companyMemberships.map(m => m.company_id);
-      const allCompanies = await base44.entities.Company.list();
+      const allCompanies = await appClient.entities.Company.list();
       return allCompanies.filter(c => companyIds.includes(c.id));
     },
     enabled: companyMemberships.length > 0,
@@ -54,7 +54,7 @@ export default function Dashboard() {
   const { data: projectParticipations = [] } = useQuery({
     queryKey: ['userProjectParticipations', user?.id, companyMemberships],
     queryFn: async () => {
-      const allParticipations = await base44.entities.ProjectParticipant.list();
+      const allParticipations = await appClient.entities.ProjectParticipant.list();
       const companyIds = companyMemberships.map(m => m.company_id);
       
       return allParticipations.filter(p => 
@@ -74,7 +74,7 @@ export default function Dashboard() {
     queryFn: async () => {
       if (projectParticipations.length === 0) return [];
       const projectIds = [...new Set(projectParticipations.map(p => p.project_id))];
-      const allProjects = await base44.entities.Project.list('-created_date');
+      const allProjects = await appClient.entities.Project.list('-created_date');
       return allProjects.filter(p => projectIds.includes(p.id));
     },
     enabled: projectParticipations.length > 0,
@@ -125,7 +125,7 @@ export default function Dashboard() {
 
   const { data: currentCompanyMembers = [] } = useQuery({
     queryKey: ['currentCompanyMembers', user?.active_company_id],
-    queryFn: () => base44.entities.CompanyMember.filter({ 
+    queryFn: () => appClient.entities.CompanyMember.filter({ 
       company_id: user?.active_company_id, 
       status: 'active' 
     }),

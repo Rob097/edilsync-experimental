@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { base44 } from '@/api/base44Client';
+import { appClient } from '@/api/appClient';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useLanguage } from '@/components/i18n/useLanguage';
 import {
@@ -14,6 +14,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Loader2, CheckCircle2, XCircle } from "lucide-react";
 import AssigneeSelector from './AssigneeSelector';
+import { getUserDisplayNameByEmail } from '@/lib/userDisplay';
 
 export default function ChangeRequestDialog({ open, onOpenChange, request, projectId, canRespond }) {
   const { t } = useLanguage();
@@ -29,18 +30,24 @@ export default function ChangeRequestDialog({ open, onOpenChange, request, proje
 
   const { data: user } = useQuery({
     queryKey: ['currentUser'],
-    queryFn: () => base44.auth.me(),
+    queryFn: () => appClient.auth.me(),
   });
 
   const { data: projectParticipants = [] } = useQuery({
     queryKey: ['projectParticipants', projectId],
-    queryFn: () => base44.entities.ProjectParticipant.filter({ project_id: projectId, status: 'active' }),
+    queryFn: () => appClient.entities.ProjectParticipant.filter({ project_id: projectId, status: 'active' }),
     enabled: !!projectId,
   });
 
   const { data: companies = [] } = useQuery({
     queryKey: ['companies'],
-    queryFn: () => base44.entities.Company.list(),
+    queryFn: () => appClient.entities.Company.list(),
+  });
+
+  const { data: allUsers = [] } = useQuery({
+    queryKey: ['allUsers'],
+    queryFn: () => appClient.entities.User.list(),
+    enabled: !!user?.email,
   });
 
   useEffect(() => {
@@ -68,7 +75,7 @@ export default function ChangeRequestDialog({ open, onOpenChange, request, proje
   const saveMutation = useMutation({
     mutationFn: async (data) => {
       if (request) {
-        return base44.entities.ChangeRequest.update(request.id, data);
+        return appClient.entities.ChangeRequest.update(request.id, data);
       } else {
         // Security check: Only homeowner can create change request
         const userParticipation = projectParticipants.find(p => p.user_email === user?.email);
@@ -76,7 +83,7 @@ export default function ChangeRequestDialog({ open, onOpenChange, request, proje
           throw new Error('Solo il committente del progetto può creare richieste di modifica');
         }
 
-        return base44.entities.ChangeRequest.create({
+        return appClient.entities.ChangeRequest.create({
           ...data,
           project_id: projectId,
           status: 'pending',
@@ -93,7 +100,7 @@ export default function ChangeRequestDialog({ open, onOpenChange, request, proje
 
   const respondMutation = useMutation({
     mutationFn: async ({ status, note }) => {
-      return base44.entities.ChangeRequest.update(request.id, {
+      return appClient.entities.ChangeRequest.update(request.id, {
         status,
         response_note: note,
         responded_at: new Date().toISOString(),
@@ -112,6 +119,9 @@ export default function ChangeRequestDialog({ open, onOpenChange, request, proje
     const assignee = formData.assigned_participant_id 
       ? projectParticipants.find(p => p.id === formData.assigned_participant_id)
       : null;
+    const assignedUserName = assignee?.participant_type === 'personal'
+      ? getUserDisplayNameByEmail(assignee.user_email, allUsers)
+      : null;
     
     const data = {
       title: formData.title,
@@ -121,7 +131,7 @@ export default function ChangeRequestDialog({ open, onOpenChange, request, proje
       assigned_participant_id: formData.assigned_participant_id || null,
       assigned_participant_type: assignee?.participant_type || null,
       assigned_user_email: assignee?.participant_type === 'personal' ? assignee.user_email : null,
-      assigned_user_name: assignee?.participant_type === 'personal' ? assignee.user_email : null,
+      assigned_user_name: assignedUserName,
       assigned_company_id: assignee?.participant_type === 'company' ? assignee.company_id : null,
       assigned_company_name: assignee?.participant_type === 'company' ? companies.find(c => c.id === assignee.company_id)?.name : null,
     };
@@ -203,6 +213,7 @@ export default function ChangeRequestDialog({ open, onOpenChange, request, proje
              <AssigneeSelector
                participants={projectParticipants}
                companies={companies}
+               allUsers={allUsers}
                value={formData.assigned_participant_id}
                onChange={(option) => setFormData(prev => ({ ...prev, assigned_participant_id: option?.id || '' }))}
                label={t('changeRequestDialog.assignTo')}

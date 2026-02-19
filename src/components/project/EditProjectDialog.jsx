@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { base44 } from '@/api/base44Client';
+import { appClient } from '@/api/appClient';
 import { useMutation, useQueryClient, useQuery } from '@tanstack/react-query';
 import { useLanguage } from '@/components/i18n/useLanguage';
 import {
@@ -22,18 +22,18 @@ export default function EditProjectDialog({ open, onOpenChange, project }) {
 
   const { data: user } = useQuery({
     queryKey: ['currentUser'],
-    queryFn: () => base44.auth.me(),
+    queryFn: () => appClient.auth.me(),
   });
 
   const { data: companyMemberships = [] } = useQuery({
     queryKey: ['userCompanyMemberships', user?.email],
-    queryFn: () => base44.entities.CompanyMember.filter({ user_email: user?.email, status: 'active' }),
+    queryFn: () => appClient.entities.CompanyMember.filter({ user_email: user?.email, status: 'active' }),
     enabled: !!user?.email,
   });
 
   const { data: projectParticipants = [] } = useQuery({
     queryKey: ['projectParticipants', project?.id],
-    queryFn: () => base44.entities.ProjectParticipant.filter({ project_id: project.id }),
+    queryFn: () => appClient.entities.ProjectParticipant.filter({ project_id: project.id }),
     enabled: !!project?.id,
   });
   
@@ -70,7 +70,7 @@ export default function EditProjectDialog({ open, onOpenChange, project }) {
         }
       }
       
-      return await base44.entities.Project.update(project.id, data);
+      return await appClient.entities.Project.update(project.id, data);
     },
     onSuccess: () => {
       queryClient.invalidateQueries(['project']);
