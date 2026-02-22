@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import React, { useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
 import { appClient } from '@/api/appClient';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
@@ -29,9 +29,6 @@ import {
   Menu,
   X,
   LogOut,
-  User,
-  ChevronDown,
-  Check,
   Calendar,
   Bell,
   HardHat,
@@ -46,12 +43,22 @@ import AssistantFloatingButton from '@/components/assistant/AssistantFloatingBut
 import LanguageSelector from '@/components/language/LanguageSelector';
 import TourProvider from '@/components/tour/TourProvider';
 import TourOverlay from '@/components/tour/TourOverlay';
+import { setEssentialMode } from '@/essential/essential-mode';
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 
 export default function Layout({ children, currentPageName }) {
-  const location = useLocation();
+  const navigate = useNavigate();
   const queryClient = useQueryClient();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [isChangingContext, setIsChangingContext] = useState(false);
+  const [switchDialogOpen, setSwitchDialogOpen] = useState(false);
   const { t, currentLanguage } = useLanguage();
 
   const { data: user } = useQuery({
@@ -130,6 +137,14 @@ export default function Layout({ children, currentPageName }) {
       console.error('Failed to change context:', error);
       setIsChangingContext(false);
     }
+  };
+
+  const switchToEssentialMode = () => setSwitchDialogOpen(true);
+
+  const confirmSwitchToEssentialMode = () => {
+    setEssentialMode(true);
+    setSwitchDialogOpen(false);
+    navigate('/essenziale');
   };
 
   const getInitials = (name) => {
@@ -231,6 +246,10 @@ export default function Layout({ children, currentPageName }) {
                       {t('navigation.settings')}
                     </Link>
                   </DropdownMenuItem>
+                  <DropdownMenuItem onClick={switchToEssentialMode} className="cursor-pointer">
+                    <Sparkles className="h-4 w-4 mr-2" />
+                    Modalità Essenziale
+                  </DropdownMenuItem>
                   <DropdownMenuSeparator />
                   <div className="px-2 py-2">
                     <LanguageSelector />
@@ -315,6 +334,25 @@ export default function Layout({ children, currentPageName }) {
       <Footer />
       <CookieBanner />
       <AssistantFloatingButton />
+
+      <Dialog open={switchDialogOpen} onOpenChange={setSwitchDialogOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Passare alla modalità Essenziale?</DialogTitle>
+            <DialogDescription>
+              Passerai a un'interfaccia semplificata pensata per operazioni rapide in cantiere.
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setSwitchDialogOpen(false)}>
+              Annulla
+            </Button>
+            <Button className="bg-[#ef6144] hover:bg-[#d9553a]" onClick={confirmSwitchToEssentialMode}>
+              Conferma
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
       </TourProvider>
     </I18nextProvider>
