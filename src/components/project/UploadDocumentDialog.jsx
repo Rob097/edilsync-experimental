@@ -119,7 +119,7 @@ export default function UploadDocumentDialog({ open, onOpenChange, projectId, do
   };
 
   const handleFileChange = (e) => {
-    const selectedFile = e.target.files?.[0];
+    const selectedFile = e.currentTarget.files?.[0];
     if (selectedFile) {
       setFile(selectedFile);
       if (!name) {
@@ -156,7 +156,7 @@ export default function UploadDocumentDialog({ open, onOpenChange, projectId, do
               type="file"
               onChange={handleFileChange}
               className="hidden"
-              accept=".pdf,.doc,.docx,.xls,.xlsx,.jpg,.jpeg,.png,.gif,.dwg,.dxf,.zip,.rar"
+              accept="image/*,.heic,.heif,.webp,.pdf,.doc,.docx,.xls,.xlsx,.txt,.csv,.dwg,.dxf,.zip,.rar"
             />
             
             {file ? (

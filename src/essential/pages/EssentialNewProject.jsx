@@ -23,6 +23,7 @@ export default function EssentialNewProject() {
     status: 'planning',
     start_date: '',
     end_date: '',
+    my_role: 'homeowner',
     homeowner_email: '',
   });
 
@@ -34,7 +35,7 @@ export default function EssentialNewProject() {
 
   const createProjectMutation = useMutation({
     mutationFn: async (payload) => {
-      const myRole = currentContext === 'company' ? 'contractor' : 'homeowner';
+      const myRole = currentContext === 'company' ? payload.my_role : 'homeowner';
       const project = await appClient.entities.Project.create({
         name: payload.name,
         address: payload.address,
@@ -80,7 +81,7 @@ export default function EssentialNewProject() {
         project_ids: [...new Set([...currentProjectIds, project.id])],
       });
 
-      if (currentContext === 'company' && payload.homeowner_email) {
+      if (currentContext === 'company' && payload.my_role === 'contractor' && payload.homeowner_email) {
         await appClient.entities.ProjectParticipant.create({
           project_id: project.id,
           participant_type: 'personal',
@@ -134,6 +135,28 @@ export default function EssentialNewProject() {
             <Textarea id="description" rows={3} value={formData.description} onChange={(event) => setFormData((prev) => ({ ...prev, description: event.target.value }))} />
           </div>
 
+          {currentContext === 'company' ? (
+            <div className="space-y-2">
+              <Label>Ruolo della società nel progetto</Label>
+              <Select
+                value={formData.my_role}
+                onValueChange={(value) => setFormData((prev) => ({
+                  ...prev,
+                  my_role: value,
+                  homeowner_email: value === 'contractor' ? prev.homeowner_email : '',
+                }))}
+              >
+                <SelectTrigger>
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="homeowner">Committente</SelectItem>
+                  <SelectItem value="contractor">Contractor</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+          ) : null}
+
           <div className="space-y-2">
             <Label>Stato iniziale</Label>
             <Select value={formData.status} onValueChange={(value) => setFormData((prev) => ({ ...prev, status: value }))}>
@@ -159,9 +182,9 @@ export default function EssentialNewProject() {
             </div>
           </div>
 
-          {currentContext === 'company' ? (
+          {currentContext === 'company' && formData.my_role === 'contractor' ? (
             <div className="space-y-2">
-              <Label htmlFor="homeowner_email">Email proprietario (opzionale)</Label>
+              <Label htmlFor="homeowner_email">Email del committente</Label>
               <Input
                 id="homeowner_email"
                 type="email"
@@ -179,7 +202,7 @@ export default function EssentialNewProject() {
             <Button
               className="bg-[#ef6144] hover:bg-[#d9553a] text-white"
               onClick={() => createProjectMutation.mutate(formData)}
-              disabled={createProjectMutation.isPending || !formData.name.trim() || !formData.address.trim()}
+              disabled={createProjectMutation.isPending || !formData.name.trim() || !formData.address.trim() || (currentContext === 'company' && formData.my_role === 'contractor' && !formData.homeowner_email.trim())}
             >
               {createProjectMutation.isPending ? <Loader2 className="h-4 w-4 mr-2 animate-spin" /> : null}
               Crea progetto

@@ -7,7 +7,7 @@ import { useEssentialData } from '@/essential/useEssentialData';
 
 function ProjectTile({ project }) {
   return (
-    <Link to={`/essenziale/progetti/${project.id}`}>
+    <Link to={`/essenziale/progetti/${project.id}`} className="block">
       <Card className="border-[#ef6144]/20 shadow-sm">
         <CardContent className="p-5">
           <div className="flex items-start justify-between gap-3">

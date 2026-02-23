@@ -4,8 +4,10 @@ import { appClient } from '@/api/appClient';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { Badge } from '@/components/ui/badge';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Loader2 } from 'lucide-react';
+import { Loader2, User, Building2 } from 'lucide-react';
+import { getUserDisplayNameByEmail } from '@/lib/userDisplay';
 
 const statusLabel = {
   not_started: 'Non iniziata',
@@ -21,6 +23,34 @@ export default function EssentialTasksSection({ projectId, participants, userPar
   const [assignedId, setAssignedId] = useState(userParticipation?.id || '');
 
   const activeParticipants = useMemo(() => participants.filter((entry) => entry.status === 'active'), [participants]);
+
+  const { data: allUsers = [] } = useQuery({
+    queryKey: ['allUsers'],
+    queryFn: () => appClient.entities.User.list(),
+    enabled: activeParticipants.some((participant) => participant.participant_type === 'personal' && !!participant.user_email),
+    staleTime: 2 * 60 * 1000,
+  });
+
+  const { data: companies = [] } = useQuery({
+    queryKey: ['companies'],
+    queryFn: () => appClient.entities.Company.list(),
+    enabled: activeParticipants.some((participant) => participant.participant_type === 'company' && !!participant.company_id),
+    staleTime: 5 * 60 * 1000,
+  });
+
+  const selectedAssignee = useMemo(
+    () => activeParticipants.find((participant) => participant.id === assignedId) || null,
+    [activeParticipants, assignedId],
+  );
+
+  const getAssigneeName = (participant) => {
+    if (!participant) return '';
+    if (participant.participant_type === 'company') {
+      const company = companies.find((entry) => entry.id === participant.company_id);
+      return participant.company_name || company?.name || 'Società';
+    }
+    return participant.user_display_name || getUserDisplayNameByEmail(participant.user_email, allUsers) || participant.user_email || 'Utente';
+  };
 
   const { data: tasks = [] } = useQuery({
     queryKey: ['essentialTasks', projectId],
@@ -78,14 +108,35 @@ export default function EssentialTasksSection({ projectId, participants, userPar
                 <SelectContent>
                   {activeParticipants.map((participant) => (
                     <SelectItem key={participant.id} value={participant.id}>
-                      {participant.participant_type === 'company'
-                        ? participant.company_name || participant.company_id
-                        : participant.user_display_name || participant.user_email}
+                      <div className="flex items-center gap-2">
+                        {participant.participant_type === 'company' ? (
+                          <Building2 className="h-4 w-4 text-gray-500" />
+                        ) : (
+                          <User className="h-4 w-4 text-gray-500" />
+                        )}
+                        <span>{getAssigneeName(participant)}</span>
+                        <Badge variant="outline" className="text-[10px] px-1.5 py-0 h-5">
+                          {participant.participant_type === 'company' ? 'Società' : 'Utente'}
+                        </Badge>
+                      </div>
                     </SelectItem>
                   ))}
                 </SelectContent>
               </Select>
             </div>
+            {selectedAssignee ? (
+              <div className="flex items-center gap-2 text-sm text-gray-600">
+                {selectedAssignee.participant_type === 'company' ? (
+                  <Building2 className="h-4 w-4 text-gray-500" />
+                ) : (
+                  <User className="h-4 w-4 text-gray-500" />
+                )}
+                <span>{getAssigneeName(selectedAssignee)}</span>
+                <Badge variant="outline" className="text-[10px] px-1.5 py-0 h-5">
+                  {selectedAssignee.participant_type === 'company' ? 'Società' : 'Utente'}
+                </Badge>
+              </div>
+            ) : null}
             <Button
               className="w-full bg-[#ef6144] hover:bg-[#d9553a] text-white"
               onClick={() => createTaskMutation.mutate()}

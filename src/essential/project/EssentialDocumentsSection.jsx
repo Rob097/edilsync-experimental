@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { appClient } from '@/api/appClient';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -21,7 +21,16 @@ export default function EssentialDocumentsSection({ projectId, currentUser, canU
   const queryClient = useQueryClient();
   const [name, setName] = useState('');
   const [category, setCategory] = useState('photo');
+  const [categoryFilter, setCategoryFilter] = useState('all');
   const [selectedFile, setSelectedFile] = useState(null);
+
+  const handleFileChange = (event) => {
+    const file = event.currentTarget.files?.[0] || null;
+    setSelectedFile(file);
+    if (file && !name.trim()) {
+      setName(file.name.replace(/\.[^/.]+$/, ''));
+    }
+  };
 
   const { data: documents = [] } = useQuery({
     queryKey: ['essentialDocuments', projectId],
@@ -29,6 +38,11 @@ export default function EssentialDocumentsSection({ projectId, currentUser, canU
     enabled: !!projectId,
     staleTime: 30 * 1000,
   });
+
+  const filteredDocuments = useMemo(() => {
+    if (categoryFilter === 'all') return documents;
+    return documents.filter((document) => (document.category || 'other') === categoryFilter);
+  }, [documents, categoryFilter]);
 
   const uploadMutation = useMutation({
     mutationFn: async () => {
@@ -76,7 +90,15 @@ export default function EssentialDocumentsSection({ projectId, currentUser, canU
                 <SelectItem value="other">Altro</SelectItem>
               </SelectContent>
             </Select>
-            <Input type="file" onChange={(event) => setSelectedFile(event.target.files?.[0] || null)} />
+            <input
+              type="file"
+              accept="image/*,.heic,.heif,.webp,.pdf,.doc,.docx,.xls,.xlsx,.txt,.csv,.zip,.rar"
+              onChange={handleFileChange}
+              className="block h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-base shadow-sm transition-colors file:mr-3 file:rounded-md file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 md:text-sm"
+            />
+            {selectedFile ? (
+              <p className="text-sm text-gray-600 truncate">File selezionato: {selectedFile.name}</p>
+            ) : null}
             <Button className="w-full bg-[#ef6144] hover:bg-[#d9553a] text-white" onClick={() => uploadMutation.mutate()} disabled={uploadMutation.isPending || !selectedFile}>
               {uploadMutation.isPending ? <Loader2 className="h-4 w-4 mr-2 animate-spin" /> : null}
               Carica
@@ -85,7 +107,30 @@ export default function EssentialDocumentsSection({ projectId, currentUser, canU
         </Card>
       ) : null}
 
-      {documents.map((document) => (
+      <Card className="border-[#ef6144]/20 shadow-sm">
+        <CardContent className="p-4">
+          <div className="flex items-center justify-between gap-3">
+            <p className="text-sm font-medium text-gray-700">Filtra documenti</p>
+            <Select value={categoryFilter} onValueChange={setCategoryFilter}>
+              <SelectTrigger className="w-[200px]">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">Tutti</SelectItem>
+                <SelectItem value="photo">Foto</SelectItem>
+                <SelectItem value="project">Progetto</SelectItem>
+                <SelectItem value="contract">Contratto</SelectItem>
+                <SelectItem value="permit">Permesso</SelectItem>
+                <SelectItem value="drawing">Disegno</SelectItem>
+                <SelectItem value="report">Report</SelectItem>
+                <SelectItem value="other">Altro</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+        </CardContent>
+      </Card>
+
+      {filteredDocuments.map((document) => (
         <Card key={document.id} className="border-[#ef6144]/20 shadow-sm">
           <CardContent className="p-4">
             <div className="flex items-center justify-between gap-3">
@@ -101,9 +146,11 @@ export default function EssentialDocumentsSection({ projectId, currentUser, canU
         </Card>
       ))}
 
-      {documents.length === 0 ? (
+      {filteredDocuments.length === 0 ? (
         <Card className="border-[#ef6144]/20 shadow-sm">
-          <CardContent className="p-6 text-center text-gray-600">Nessun documento presente.</CardContent>
+          <CardContent className="p-6 text-center text-gray-600">
+            {documents.length === 0 ? 'Nessun documento presente.' : 'Nessun documento per il filtro selezionato.'}
+          </CardContent>
         </Card>
       ) : null}
     </div>

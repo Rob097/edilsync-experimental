@@ -11,6 +11,7 @@ import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { ArrowLeft, ChevronRight, Menu, Settings, Briefcase, Building2, Calendar, House, RefreshCw, User } from 'lucide-react';
 import EssentialQuickActions from './EssentialQuickActions';
+import LanguageSelector from '@/components/language/LanguageSelector';
 
 if (!i18next.isInitialized) {
   initializeI18n();
@@ -64,7 +65,7 @@ export default function EssentialLayout() {
   const isHomePath = location.pathname === '/essenziale' || location.pathname === '/essenziale/';
   const isProjectPath = pathSegments[1] === 'progetti' && !!pathSegments[2];
   const currentProjectId = isProjectPath ? pathSegments[2] : null;
-  const showBackButton = !isHomePath;
+  const showBackButton = !isHomePath && !menuOpen;
 
   const handleBack = () => {
     if (pathSegments.length > 3) {
@@ -124,9 +125,19 @@ export default function EssentialLayout() {
               </button>
             ) : <div className="w-28" />}
 
-            <button type="button" onClick={() => setMenuOpen(true)} className="flex items-center gap-2 text-lg font-semibold text-[#ef6144]">
+            <button
+              type="button"
+              onClick={() => {
+                setMenuOpen((prev) => {
+                  const next = !prev;
+                  if (!next) setShowContextList(false);
+                  return next;
+                });
+              }}
+              className="flex items-center gap-2 text-lg font-semibold text-[#ef6144]"
+            >
               <Menu className="h-5 w-5" />
-              <span>Apri il menu</span>
+              <span>{menuOpen ? 'Chiudi Menù' : 'Apri Menù'}</span>
             </button>
 
             <div className="w-28" />
@@ -173,15 +184,12 @@ export default function EssentialLayout() {
           <Outlet />
         </main>
 
-        <Dialog open={menuOpen} onOpenChange={(open) => {
-          setMenuOpen(open);
-          if (!open) setShowContextList(false);
-        }}>
-          <DialogContent className="h-screen w-screen max-w-none rounded-none p-0 m-0">
-            <div className="h-full bg-gray-50 p-5 overflow-y-auto">
-              <DialogHeader className="mb-4">
-                <DialogTitle className="text-2xl">Menu</DialogTitle>
-              </DialogHeader>
+        {menuOpen ? (
+          <div className="fixed inset-x-0 top-16 bottom-0 z-50 bg-gray-50 border-t border-[#ef6144]/20">
+            <div className="h-full overflow-y-auto p-5">
+              <div className="mb-4">
+                <h2 className="text-2xl font-semibold text-gray-900">Menu</h2>
+              </div>
 
               {!showContextList ? (
                 <div className="space-y-5">
@@ -191,6 +199,11 @@ export default function EssentialLayout() {
                   <MenuItem icon={Calendar} label="Calendario" to="/essenziale/calendario" onSelect={() => { setMenuOpen(false); setShowContextList(false); }} />
                   <MenuItem icon={Settings} label="Impostazioni" to="/Settings" onSelect={() => { setMenuOpen(false); setShowContextList(false); }} />
                   <MenuItem icon={RefreshCw} label="Cambia contesto" onClick={() => setShowContextList(true)} />
+
+                  <div className="rounded-2xl border border-[#ef6144]/20 bg-white p-4 shadow-sm">
+                    <p className="text-sm font-medium text-gray-700 mb-2">Lingua</p>
+                    <LanguageSelector />
+                  </div>
 
                   <div className="pt-4 border-t border-[#ef6144]/20">
                     <Button
@@ -234,8 +247,8 @@ export default function EssentialLayout() {
                 </div>
               )}
             </div>
-          </DialogContent>
-        </Dialog>
+          </div>
+        ) : null}
       </div>
 
       <Dialog open={switchDialogOpen} onOpenChange={setSwitchDialogOpen}>

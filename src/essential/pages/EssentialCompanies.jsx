@@ -7,7 +7,7 @@ import { useEssentialData } from '@/essential/useEssentialData';
 
 function CompanyTile({ company }) {
   return (
-    <Link to={`/essenziale/societa/${company.id}`}>
+    <Link to={`/essenziale/societa/${company.id}`} className="block">
       <Card className="border-[#ef6144]/20 shadow-sm">
         <CardContent className="p-5 flex items-center justify-between gap-3">
           <div>

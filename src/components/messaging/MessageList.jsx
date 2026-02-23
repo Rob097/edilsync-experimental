@@ -17,7 +17,7 @@ export default function MessageList({
   onNavigate
 }) {
   const queryClient = useQueryClient();
-  const messagesEndRef = useRef(null);
+  const messagesContainerRef = useRef(null);
   const [selectedDocument, setSelectedDocument] = useState(null);
   const [previewOpen, setPreviewOpen] = useState(false);
 
@@ -154,9 +154,14 @@ export default function MessageList({
   };
 
   useEffect(() => {
-    setTimeout(() => {
-      messagesEndRef.current?.scrollIntoView({ behavior: 'auto' });
-    }, 0);
+    const container = messagesContainerRef.current;
+    if (!container) return;
+
+    const frame = requestAnimationFrame(() => {
+      container.scrollTop = container.scrollHeight;
+    });
+
+    return () => cancelAnimationFrame(frame);
   }, [sortedMessages]);
 
   if (isLoading) {
@@ -177,7 +182,7 @@ export default function MessageList({
 
   return (
     <>
-      <div className="flex-1 overflow-y-auto p-4 space-y-3">
+      <div ref={messagesContainerRef} className="flex-1 overflow-y-auto p-4 space-y-3">
         {sortedMessages.map(message => {
           const isOwnMessage = message.sender_email === currentUserEmail;
           const resolvedSenderName = message.sender_name || getUserDisplayNameByEmail(message.sender_email, allUsers);
@@ -225,7 +230,6 @@ export default function MessageList({
             </div>
           );
         })}
-        <div ref={messagesEndRef} />
       </div>
 
       <DocumentPreviewDialog

@@ -161,8 +161,18 @@ export default function MilestoneBoard({ projectId, project, canEdit, onMileston
 
           {/* Milestones rows */}
           <div className="min-h-[200px] md:min-h-[300px] relative" style={{ width: 'max-content', minWidth: '100%' }}>
+            <div className="absolute inset-0 flex pointer-events-none" aria-hidden="true">
+              {months.map((month, monthIdx) => (
+                <div
+                  key={monthIdx}
+                  className="flex-1 min-w-[60px] md:min-w-[80px] border-r last:border-r-0"
+                />
+              ))}
+            </div>
+
             {milestonesInYear.length > 0 ? (
-              milestonesInYear.map((milestone, milestoneIdx) => {
+              <div className="relative z-10 min-h-full">
+              {milestonesInYear.map((milestone, milestoneIdx) => {
                 const Icon = statusConfig[milestone.status]?.icon || Flag;
                 const startMonth = milestone.startMonth;
                 const endMonth = milestone.endMonth;
@@ -179,17 +189,9 @@ export default function MilestoneBoard({ projectId, project, canEdit, onMileston
                 return (
                   <div
                     key={milestone.id}
-                    className="flex relative"
+                    className="relative"
                     style={{ minHeight: '90px' }}
                   >
-                    {/* Month cells for borders */}
-                    {months.map((month, monthIdx) => (
-                      <div
-                        key={monthIdx}
-                        className="flex-1 min-w-[60px] md:min-w-[80px] border-r last:border-r-0"
-                      />
-                    ))}
-                    
                     {/* Milestone bar */}
                     <div
                       className="absolute top-2 bottom-2 cursor-pointer"
@@ -220,6 +222,8 @@ export default function MilestoneBoard({ projectId, project, canEdit, onMileston
                   </div>
                 );
               })
+              }
+              </div>
             ) : (
               <div className="flex items-center justify-center h-48 text-gray-500 text-sm absolute inset-0">
                 {tr('Nessuna milestone per', 'No milestones for')} {currentYear}
