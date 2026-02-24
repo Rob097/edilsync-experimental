@@ -85,6 +85,7 @@ export default function EssentialQuickActions({ projects = [], currentProjectId 
         onClick={() => setActionsOpen(true)}
         className="fixed bottom-6 right-5 h-14 w-14 rounded-full bg-[#ef6144] hover:bg-[#d9553a] text-white shadow-lg z-50"
         title={tr('Operazioni rapide', 'Quick actions')}
+        data-tour="essential-quick-actions"
       >
         <Zap className="h-6 w-6" />
       </Button>

@@ -31,26 +31,28 @@ export default function EssentialCompanies() {
   if (currentContext === 'company' && currentCompany) {
     return (
       <div className="space-y-5">
-        <Button className="w-full bg-[#ef6144] hover:bg-[#d9553a] text-white" onClick={() => navigate(`/essenziale/societa/${currentCompany.id}`)}>
+        <Button data-tour="essential-companies-open-current" className="w-full bg-[#ef6144] hover:bg-[#d9553a] text-white" onClick={() => navigate(`/essenziale/societa/${currentCompany.id}`)}>
           {tr('Apri società corrente', 'Open current company')}
         </Button>
-        <div className="border-t border-[#ef6144]/20" />
+        <div className="border-t border-[#ef6144]/20" data-tour="essential-companies-list" />
       </div>
     );
   }
 
   return (
     <div className="space-y-5">
-      <Button className="w-full bg-[#ef6144] hover:bg-[#d9553a] text-white" onClick={() => navigate('/essenziale/societa/nuova')}>
+      <Button data-tour="essential-companies-primary-action" className="w-full bg-[#ef6144] hover:bg-[#d9553a] text-white" onClick={() => navigate('/essenziale/societa/nuova')}>
         <Plus className="h-4 w-4 mr-2" />
         {tr('Crea nuova società', 'Create new company')}
       </Button>
 
       <div className="border-t border-[#ef6144]/20" />
 
-      {companies.map((company) => (
-        <CompanyTile key={company.id} company={company} tr={tr} />
-      ))}
+      <div data-tour="essential-companies-list" className="space-y-5">
+        {companies.map((company) => (
+          <CompanyTile key={company.id} company={company} tr={tr} />
+        ))}
+      </div>
 
       {companies.length === 0 ? (
         <Card className="border-[#ef6144]/20 shadow-sm">

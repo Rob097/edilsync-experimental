@@ -5,7 +5,7 @@ import { useTour } from './TourProvider';
  * Component to automatically launch tours based on triggers
  * Use this in pages where tours should start
  */
-export default function TourLauncher({ tourId, steps, trigger = true, delay = 500 }) {
+export default function TourLauncher({ tourId, steps, trigger = true, delay = 500, afterCompleteRoute = null }) {
   const { startTour } = useTour();
   const hasStartedRef = useRef(false);
 
@@ -13,14 +13,16 @@ export default function TourLauncher({ tourId, steps, trigger = true, delay = 50
     if (!trigger || !tourId || !steps || hasStartedRef.current) return;
 
     const timer = setTimeout(() => {
-      const success = startTour(tourId, steps);
+      const success = startTour(tourId, steps, {
+        afterCompleteRoute,
+      });
       if (success) {
         hasStartedRef.current = true;
       }
     }, delay);
 
     return () => clearTimeout(timer);
-  }, [tourId, trigger]);
+  }, [tourId, trigger, afterCompleteRoute]);
 
   return null;
 }

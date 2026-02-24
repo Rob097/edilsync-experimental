@@ -10,27 +10,38 @@ export const AuthProvider = ({ children }) => {
   const [isLoadingPublicSettings, setIsLoadingPublicSettings] = useState(true);
   const [authError, setAuthError] = useState(null);
   const [appPublicSettings, setAppPublicSettings] = useState(null); // Contains only { id, public_settings }
+  const [hasCompletedInitialAuthCheck, setHasCompletedInitialAuthCheck] = useState(false);
 
   useEffect(() => {
     checkAppState();
+  }, []);
 
-    const unsubscribe = appClient.auth.onAuthStateChange((session) => {
-      if (session?.user) {
-        checkUserAuth();
-      } else {
+  useEffect(() => {
+    const unsubscribe = appClient.auth.onAuthStateChange((event, session) => {
+      if (event === 'TOKEN_REFRESHED') {
+        return;
+      }
+
+      if (event === 'SIGNED_OUT' || !session?.user) {
         setUser(null);
         setIsAuthenticated(false);
         setAuthError({
           type: 'auth_required',
           message: 'Authentication required'
         });
+        return;
+      }
+
+      if (event === 'SIGNED_IN' || event === 'USER_UPDATED' || event === 'INITIAL_SESSION') {
+        const shouldRunSilent = hasCompletedInitialAuthCheck || isAuthenticated;
+        checkUserAuth({ silent: shouldRunSilent });
       }
     });
 
     return () => {
       unsubscribe();
     };
-  }, []);
+  }, [hasCompletedInitialAuthCheck, isAuthenticated]);
 
   const checkAppState = async () => {
     try {
@@ -50,22 +61,34 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-  const checkUserAuth = async () => {
+  const checkUserAuth = async ({ silent = false } = {}) => {
     try {
-      setIsLoadingAuth(true);
+      if (!silent) {
+        setIsLoadingAuth(true);
+      }
       const currentUser = await appClient.auth.me();
       setUser(currentUser);
       setIsAuthenticated(true);
       setAuthError(null);
-      setIsLoadingAuth(false);
+      if (!silent) {
+        setIsLoadingAuth(false);
+      }
+      if (!hasCompletedInitialAuthCheck) {
+        setHasCompletedInitialAuthCheck(true);
+      }
     } catch (error) {
       console.error('User auth check failed:', error);
-      setIsLoadingAuth(false);
+      if (!silent) {
+        setIsLoadingAuth(false);
+      }
       setIsAuthenticated(false);
       setAuthError({
         type: 'auth_required',
         message: 'Authentication required'
       });
+      if (!hasCompletedInitialAuthCheck) {
+        setHasCompletedInitialAuthCheck(true);
+      }
     }
   };
 

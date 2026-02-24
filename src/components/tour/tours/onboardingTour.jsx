@@ -66,6 +66,13 @@ export const getOnboardingTour = (language = 'it') => {
           padding: 12,
         },
         {
+          target: '[data-tour="user-menu-trigger"]',
+          title: 'Modalità Essenziale',
+          content: 'Apri questo menu e usa “Modalità Essenziale” per passare a un\'interfaccia più semplice e veloce, ideale quando sei in cantiere.',
+          placement: 'left',
+          padding: 8,
+        },
+        {
           target: null,
           title: 'Tutto Pronto! 🚀',
           content: 'Ora sei pronto per iniziare. Crea il tuo primo progetto o società, oppure esplora liberamente l\'app. Buon lavoro!',
@@ -139,6 +146,13 @@ export const getOnboardingTour = (language = 'it') => {
         content: 'Your personal assistant is always available to help you with any question or operation in the app.',
         placement: 'left',
         padding: 12,
+      },
+      {
+        target: '[data-tour="user-menu-trigger"]',
+        title: 'Essential Mode',
+        content: 'Open this menu and use “Essential Mode” to switch to a simpler, faster interface designed for on-site work.',
+        placement: 'left',
+        padding: 8,
       },
       {
         target: null,

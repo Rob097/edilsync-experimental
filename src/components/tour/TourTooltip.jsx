@@ -1,4 +1,5 @@
 import React, { useEffect, useState, useRef } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useTour } from './TourProvider';
 import { useLanguage } from '@/components/i18n/useLanguage';
 import { Button } from '@/components/ui/button';
@@ -7,6 +8,7 @@ import { X, ChevronLeft, ChevronRight } from 'lucide-react';
 
 export default function TourTooltip({ highlightRect }) {
   const { activeTour, currentStep, nextStep, prevStep, closeTour } = useTour();
+  const navigate = useNavigate();
   const { currentLanguage } = useLanguage();
   const [position, setPosition] = useState({ top: 0, left: 0 });
   const tooltipRef = useRef(null);
@@ -84,6 +86,17 @@ export default function TourTooltip({ highlightRect }) {
   const isFirstStep = currentStep === 0;
   const isLastStep = currentStep === activeTour.steps.length - 1;
 
+  const handleNext = () => {
+    const routeAfterComplete = isLastStep ? activeTour?.afterCompleteRoute : null;
+    nextStep();
+
+    if (routeAfterComplete) {
+      setTimeout(() => {
+        navigate(routeAfterComplete);
+      }, 0);
+    }
+  };
+
   return (
     <div
       ref={tooltipRef}
@@ -146,7 +159,7 @@ export default function TourTooltip({ highlightRect }) {
 
             <Button
               size="sm"
-              onClick={nextStep}
+              onClick={handleNext}
               className="bg-[#ef6144] hover:bg-[#ef6144]/90 gap-1"
             >
               {isLastStep ? tr('Completa', 'Finish') : tr('Avanti', 'Next')}

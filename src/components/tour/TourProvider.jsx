@@ -37,9 +37,11 @@ export default function TourProvider({ children }) {
     projects_dismissed: false,
     companies_completed: false,
     companies_dismissed: false,
+    essential_onboarding_completed: false,
+    essential_onboarding_dismissed: false,
   };
 
-  const startTour = (tourId, steps) => {
+  const startTour = (tourId, steps, options = {}) => {
     // Check if tour is already completed or dismissed
     const completedKey = `${tourId}_completed`;
     const dismissedKey = `${tourId}_dismissed`;
@@ -48,7 +50,7 @@ export default function TourProvider({ children }) {
       return false;
     }
 
-    setActiveTour({ id: tourId, steps });
+    setActiveTour({ id: tourId, steps, ...options });
     setCurrentStep(0);
     setIsVisible(true);
     return true;

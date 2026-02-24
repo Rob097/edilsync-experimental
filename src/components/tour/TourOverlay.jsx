@@ -1,9 +1,11 @@
 import React, { useEffect, useState, useRef } from 'react';
+import { useLocation } from 'react-router-dom';
 import { useTour } from './TourProvider';
 import TourTooltip from './TourTooltip';
 
 export default function TourOverlay() {
   const { activeTour, currentStep, isVisible } = useTour();
+  const location = useLocation();
   const [highlightRect, setHighlightRect] = useState(null);
   const overlayRef = useRef(null);
 
@@ -13,7 +15,9 @@ export default function TourOverlay() {
       return;
     }
 
-    const updateHighlight = () => {
+    const retryTimeouts = [];
+
+    const updateHighlight = (allowRetry = false, attempt = 0) => {
       const step = activeTour.steps[currentStep];
       if (!step.target) {
         setHighlightRect(null);
@@ -39,22 +43,32 @@ export default function TourOverlay() {
           inline: 'center'
         });
       } else {
+        if (allowRetry && attempt < 6) {
+          const timeoutId = setTimeout(() => {
+            updateHighlight(true, attempt + 1);
+          }, 120);
+          retryTimeouts.push(timeoutId);
+          return;
+        }
+
         setHighlightRect(null);
       }
     };
 
     // Initial update
-    updateHighlight();
+    updateHighlight(true, 0);
 
     // Update on window resize or scroll
-    window.addEventListener('resize', updateHighlight);
-    window.addEventListener('scroll', updateHighlight, true);
+    const handleWindowChange = () => updateHighlight(false, 0);
+    window.addEventListener('resize', handleWindowChange);
+    window.addEventListener('scroll', handleWindowChange, true);
 
     return () => {
-      window.removeEventListener('resize', updateHighlight);
-      window.removeEventListener('scroll', updateHighlight, true);
+      retryTimeouts.forEach((timeoutId) => clearTimeout(timeoutId));
+      window.removeEventListener('resize', handleWindowChange);
+      window.removeEventListener('scroll', handleWindowChange, true);
     };
-  }, [isVisible, activeTour, currentStep]);
+  }, [isVisible, activeTour, currentStep, location.pathname]);
 
   if (!isVisible || !activeTour) return null;
 

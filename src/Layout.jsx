@@ -226,7 +226,7 @@ export default function Layout({ children, currentPageName }) {
               {/* User menu */}
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                  <Button variant="ghost" className="relative h-9 w-9 rounded-full">
+                  <Button variant="ghost" className="relative h-9 w-9 rounded-full" data-tour="user-menu-trigger">
                     <Avatar className="h-9 w-9">
                       <AvatarFallback className="bg-[#ef6144] text-white text-sm">
                         {getInitials(user?.display_name || user?.full_name)}
@@ -246,7 +246,7 @@ export default function Layout({ children, currentPageName }) {
                       {t('navigation.settings')}
                     </Link>
                   </DropdownMenuItem>
-                  <DropdownMenuItem onClick={switchToEssentialMode} className="cursor-pointer">
+                  <DropdownMenuItem onClick={switchToEssentialMode} className="cursor-pointer" data-tour="essential-mode-switch">
                     <Sparkles className="h-4 w-4 mr-2" />
                     {t('essentialMode.switchMenuItem')}
                   </DropdownMenuItem>

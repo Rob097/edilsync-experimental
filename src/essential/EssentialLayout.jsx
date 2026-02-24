@@ -13,6 +13,9 @@ import { ArrowLeft, ChevronRight, Menu, Settings, Briefcase, Building2, Calendar
 import EssentialQuickActions from './EssentialQuickActions';
 import LanguageSelector from '@/components/language/LanguageSelector';
 import { useLanguage } from '@/components/i18n/useLanguage';
+import TourLauncher from '@/components/tour/TourLauncher';
+import { getEssentialOnboardingTour } from '@/components/tour/tours/essentialOnboardingTour';
+import { useTour } from '@/components/tour/TourProvider';
 
 if (!i18next.isInitialized) {
   initializeI18n();
@@ -43,6 +46,7 @@ function MenuItem({ icon: Icon, to, label, onClick, onSelect }) {
 }
 
 export default function EssentialLayout() {
+  const { activeTour, currentStep } = useTour();
   const { currentLanguage } = useLanguage();
   const tr = (itText, enText) => (currentLanguage === 'it' ? itText : enText);
   const location = useLocation();
@@ -54,10 +58,13 @@ export default function EssentialLayout() {
   const [switchDialogOpen, setSwitchDialogOpen] = useState(false);
 
   const {
+    user,
     projects,
+    contextProjects,
     companies,
     currentContext,
     currentCompany,
+    isLoading: isEssentialDataLoading,
   } = useEssentialData();
 
   useEffect(() => {
@@ -69,6 +76,28 @@ export default function EssentialLayout() {
   const isProjectPath = pathSegments[1] === 'progetti' && !!pathSegments[2];
   const currentProjectId = isProjectPath ? pathSegments[2] : null;
   const showBackButton = !isHomePath && !menuOpen;
+  const shouldStartEssentialOnboarding = user
+    && !isEssentialDataLoading
+    && isHomePath
+    && !user.tour_state?.essential_onboarding_completed
+    && !user.tour_state?.essential_onboarding_dismissed;
+  const hasProjectsInContext = contextProjects.length > 0;
+  const hasCompaniesInContext = currentContext === 'company' ? !!currentCompany : companies.length > 0;
+  const essentialOnboardingSteps = getEssentialOnboardingTour(currentLanguage, {
+    hasProjectsInContext,
+    hasCompaniesInContext,
+    isCompanyContext: currentContext === 'company',
+  }).steps;
+
+  useEffect(() => {
+    if (!activeTour || activeTour.id !== 'essential_onboarding') return;
+
+    const step = activeTour.steps[currentStep];
+    const route = step?.route;
+    if (!route || location.pathname === route) return;
+
+    navigate(route);
+  }, [activeTour, currentStep, navigate, location.pathname]);
 
   const handleBack = () => {
     if (pathSegments.length > 3) {
@@ -138,6 +167,7 @@ export default function EssentialLayout() {
                 });
               }}
               className="flex items-center gap-2 text-lg font-semibold text-[#ef6144]"
+              data-tour="essential-menu-toggle"
             >
               <Menu className="h-5 w-5" />
               <span>{menuOpen ? tr('Chiudi Menù', 'Close menu') : tr('Apri Menù', 'Open menu')}</span>
@@ -148,7 +178,15 @@ export default function EssentialLayout() {
         </header>
 
         <main className="max-w-4xl mx-auto w-full px-4 py-6 flex-1 space-y-4">
-          <div className="rounded-2xl border border-[#ef6144]/20 bg-white px-4 py-4 shadow-sm space-y-3">
+          <TourLauncher
+            tourId="essential_onboarding"
+            steps={essentialOnboardingSteps}
+            trigger={shouldStartEssentialOnboarding}
+            delay={1200}
+            afterCompleteRoute="/essenziale"
+          />
+
+          <div className="rounded-2xl border border-[#ef6144]/20 bg-white px-4 py-4 shadow-sm space-y-3" data-tour="essential-context-card">
             <div className="flex items-center gap-3">
             <div className="h-9 w-9 rounded-lg bg-[#ef6144]/10 flex items-center justify-center">
               {currentContext === 'company' ? <Building2 className="h-5 w-5 text-[#ef6144]" /> : <User className="h-5 w-5 text-[#ef6144]" />}
@@ -215,6 +253,7 @@ export default function EssentialLayout() {
                       variant="outline"
                       className="w-full border-[#ef6144]/30 text-[#ef6144] hover:bg-[#ef6144]/10"
                       onClick={askSwitchToNormalMode}
+                      data-tour="essential-switch-normal"
                     >
                       {tr('Passa a modalità Normale', 'Switch to Normal mode')}
                     </Button>

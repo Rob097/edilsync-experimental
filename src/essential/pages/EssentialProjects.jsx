@@ -35,19 +35,21 @@ export default function EssentialProjects() {
 
   return (
     <div className="space-y-5">
-      <Button className="w-full bg-[#ef6144] hover:bg-[#d9553a] text-white" onClick={() => navigate('/essenziale/progetti/nuovo')}>
+      <Button data-tour="essential-projects-primary-action" className="w-full bg-[#ef6144] hover:bg-[#d9553a] text-white" onClick={() => navigate('/essenziale/progetti/nuovo')}>
         <Plus className="h-4 w-4 mr-2" />
         {tr('Crea nuovo progetto', 'Create new project')}
       </Button>
 
       <div className="border-t border-[#ef6144]/20" />
 
-      {contextProjects.map((project) => (
-        <ProjectTile key={project.id} project={project} tr={tr} />
-      ))}
+      <div data-tour="essential-projects-list" className="space-y-5">
+        {contextProjects.map((project) => (
+          <ProjectTile key={project.id} project={project} tr={tr} />
+        ))}
+      </div>
 
       {contextProjects.length === 0 ? (
-        <Card className="border-[#ef6144]/20 shadow-sm">
+        <Card className="border-[#ef6144]/20 shadow-sm" data-tour="essential-projects-empty">
           <CardContent className="p-6 text-center text-gray-600">
             {tr('Nessun progetto disponibile in questo contesto.', 'No projects available in this context.')}
           </CardContent>
