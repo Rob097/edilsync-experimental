@@ -12,14 +12,7 @@ import EssentialMilestonesSection from '@/essential/project/EssentialMilestonesS
 import EssentialDocumentsSection from '@/essential/project/EssentialDocumentsSection';
 import EssentialChangeRequestsSection from '@/essential/project/EssentialChangeRequestsSection';
 import ProjectMessaging from '@/components/messaging/ProjectMessaging';
-
-const SECTION_CONFIG = [
-  { key: 'messaggi', label: 'Messaggi', icon: MessageSquare },
-  { key: 'attivita', label: 'Attività', icon: CheckCircle2 },
-  { key: 'milestone', label: 'Milestone', icon: Flag },
-  { key: 'documenti', label: 'Documenti', icon: FileText },
-  { key: 'richieste', label: 'Richieste', icon: ReceiptText },
-];
+import { useLanguage } from '@/components/i18n/useLanguage';
 
 function SectionTile({ label, icon: Icon, onOpen }) {
   return (
@@ -46,6 +39,16 @@ function SectionTile({ label, icon: Icon, onOpen }) {
 export default function EssentialProjectExplorer() {
   const navigate = useNavigate();
   const { projectId, section } = useParams();
+  const { currentLanguage } = useLanguage();
+  const tr = (itText, enText) => (currentLanguage === 'it' ? itText : enText);
+
+  const SECTION_CONFIG = [
+    { key: 'messaggi', label: tr('Messaggi', 'Messages'), icon: MessageSquare },
+    { key: 'attivita', label: tr('Attività', 'Tasks'), icon: CheckCircle2 },
+    { key: 'milestone', label: tr('Milestone', 'Milestones'), icon: Flag },
+    { key: 'documenti', label: tr('Documenti', 'Documents'), icon: FileText },
+    { key: 'richieste', label: tr('Richieste', 'Requests'), icon: ReceiptText },
+  ];
 
   const [editProjectDialogOpen, setEditProjectDialogOpen] = useState(false);
 
@@ -97,7 +100,7 @@ export default function EssentialProjectExplorer() {
   if (!project) {
     return (
       <Card>
-        <CardContent className="p-6 text-center text-gray-600">Progetto non trovato.</CardContent>
+        <CardContent className="p-6 text-center text-gray-600">{tr('Progetto non trovato.', 'Project not found.')}</CardContent>
       </Card>
     );
   }
@@ -111,18 +114,18 @@ export default function EssentialProjectExplorer() {
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="grid grid-cols-1 gap-3">
-              <Card><CardContent className="p-4"><p className="text-sm text-gray-500">Indirizzo</p><p className="text-lg font-medium">{project.address}</p></CardContent></Card>
-              {project.status ? <Card><CardContent className="p-4"><p className="text-sm text-gray-500">Stato</p><p className="text-lg font-medium">{project.status}</p></CardContent></Card> : null}
+              <Card><CardContent className="p-4"><p className="text-sm text-gray-500">{tr('Indirizzo', 'Address')}</p><p className="text-lg font-medium">{project.address}</p></CardContent></Card>
+              {project.status ? <Card><CardContent className="p-4"><p className="text-sm text-gray-500">{tr('Stato', 'Status')}</p><p className="text-lg font-medium">{project.status}</p></CardContent></Card> : null}
             </div>
 
-            <Button className="w-full bg-[#ef6144] hover:bg-[#d9553a] text-white" onClick={() => setEditProjectDialogOpen(true)}>Modifica informazioni progetto</Button>
-            <Button variant="outline" className="w-full border-[#ef6144]/30 text-[#ef6144] hover:bg-[#ef6144]/10" onClick={() => navigate('/essenziale/progetti')}>Torna ai progetti</Button>
+            <Button className="w-full bg-[#ef6144] hover:bg-[#d9553a] text-white" onClick={() => setEditProjectDialogOpen(true)}>{tr('Modifica informazioni progetto', 'Edit project info')}</Button>
+            <Button variant="outline" className="w-full border-[#ef6144]/30 text-[#ef6144] hover:bg-[#ef6144]/10" onClick={() => navigate('/essenziale/progetti')}>{tr('Torna ai progetti', 'Back to projects')}</Button>
           </CardContent>
         </Card>
 
         <Card className="border-[#ef6144]/20 shadow-sm">
           <CardHeader>
-            <CardTitle className="text-xl">Sezioni progetto</CardTitle>
+            <CardTitle className="text-xl">{tr('Sezioni progetto', 'Project sections')}</CardTitle>
           </CardHeader>
         </Card>
 
@@ -148,7 +151,7 @@ export default function EssentialProjectExplorer() {
   if (!isActiveParticipant) {
     return (
       <Card>
-        <CardContent className="p-6 text-center text-gray-600">Nel contesto attuale non sei partecipante attivo del progetto.</CardContent>
+        <CardContent className="p-6 text-center text-gray-600">{tr('Nel contesto attuale non sei partecipante attivo del progetto.', 'In the current context you are not an active project participant.')}</CardContent>
       </Card>
     );
   }
@@ -158,7 +161,7 @@ export default function EssentialProjectExplorer() {
       <Card className="border-[#ef6144]/20 shadow-sm">
         <CardContent className="p-4 flex items-center justify-between gap-3">
           <div>
-            <p className="text-sm text-gray-500">Progetto</p>
+            <p className="text-sm text-gray-500">{tr('Progetto', 'Project')}</p>
             <p className="text-lg font-semibold">{project.name}</p>
           </div>
         </CardContent>

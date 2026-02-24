@@ -8,6 +8,7 @@ import { Badge } from '@/components/ui/badge';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Loader2, User, Building2 } from 'lucide-react';
 import { getUserDisplayNameByEmail } from '@/lib/userDisplay';
+import { useLanguage } from '@/components/i18n/useLanguage';
 
 const statusLabel = {
   not_started: 'Non iniziata',
@@ -17,6 +18,8 @@ const statusLabel = {
 };
 
 export default function EssentialTasksSection({ projectId, participants, userParticipation, canEdit }) {
+  const { currentLanguage } = useLanguage();
+  const tr = (itText, enText) => (currentLanguage === 'it' ? itText : enText);
   const queryClient = useQueryClient();
   const [title, setTitle] = useState('');
   const [dueDate, setDueDate] = useState('');
@@ -47,9 +50,16 @@ export default function EssentialTasksSection({ projectId, participants, userPar
     if (!participant) return '';
     if (participant.participant_type === 'company') {
       const company = companies.find((entry) => entry.id === participant.company_id);
-      return participant.company_name || company?.name || 'Società';
+      return participant.company_name || company?.name || tr('Società', 'Company');
     }
-    return participant.user_display_name || getUserDisplayNameByEmail(participant.user_email, allUsers) || participant.user_email || 'Utente';
+    return participant.user_display_name || getUserDisplayNameByEmail(participant.user_email, allUsers) || participant.user_email || tr('Utente', 'User');
+  };
+
+  const statusLabel = {
+    not_started: tr('Non iniziata', 'Not started'),
+    in_progress: tr('In corso', 'In progress'),
+    completed: tr('Completata', 'Completed'),
+    blocked: tr('Bloccata', 'Blocked'),
   };
 
   const { data: tasks = [] } = useQuery({
@@ -95,15 +105,15 @@ export default function EssentialTasksSection({ projectId, participants, userPar
       {canEdit ? (
         <Card className="border-[#ef6144]/20 shadow-sm">
           <CardHeader>
-            <CardTitle className="text-xl">Nuova attività</CardTitle>
+            <CardTitle className="text-xl">{tr('Nuova attività', 'New task')}</CardTitle>
           </CardHeader>
           <CardContent className="space-y-3">
-            <Input value={title} onChange={(event) => setTitle(event.target.value)} placeholder="Titolo attività" />
+            <Input value={title} onChange={(event) => setTitle(event.target.value)} placeholder={tr('Titolo attività', 'Task title')} />
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
               <Input type="date" value={dueDate} onChange={(event) => setDueDate(event.target.value)} />
               <Select value={assignedId} onValueChange={setAssignedId}>
                 <SelectTrigger>
-                  <SelectValue placeholder="Assegna a" />
+                  <SelectValue placeholder={tr('Assegna a', 'Assign to')} />
                 </SelectTrigger>
                 <SelectContent>
                   {activeParticipants.map((participant) => (
@@ -116,7 +126,7 @@ export default function EssentialTasksSection({ projectId, participants, userPar
                         )}
                         <span>{getAssigneeName(participant)}</span>
                         <Badge variant="outline" className="text-[10px] px-1.5 py-0 h-5">
-                          {participant.participant_type === 'company' ? 'Società' : 'Utente'}
+                          {participant.participant_type === 'company' ? tr('Società', 'Company') : tr('Utente', 'User')}
                         </Badge>
                       </div>
                     </SelectItem>
@@ -133,7 +143,7 @@ export default function EssentialTasksSection({ projectId, participants, userPar
                 )}
                 <span>{getAssigneeName(selectedAssignee)}</span>
                 <Badge variant="outline" className="text-[10px] px-1.5 py-0 h-5">
-                  {selectedAssignee.participant_type === 'company' ? 'Società' : 'Utente'}
+                  {selectedAssignee.participant_type === 'company' ? tr('Società', 'Company') : tr('Utente', 'User')}
                 </Badge>
               </div>
             ) : null}
@@ -143,7 +153,7 @@ export default function EssentialTasksSection({ projectId, participants, userPar
               disabled={createTaskMutation.isPending || !title.trim() || !assignedId}
             >
               {createTaskMutation.isPending ? <Loader2 className="h-4 w-4 mr-2 animate-spin" /> : null}
-              Aggiungi attività
+              {tr('Aggiungi attività', 'Add task')}
             </Button>
           </CardContent>
         </Card>
@@ -156,16 +166,16 @@ export default function EssentialTasksSection({ projectId, participants, userPar
               <p className="font-semibold text-gray-900">{task.title}</p>
               <p className="text-xs px-2 py-1 rounded bg-gray-100 text-gray-700">{statusLabel[task.status] || task.status}</p>
             </div>
-            {task.due_date ? <p className="text-sm text-gray-600">Scadenza: {task.due_date}</p> : null}
+            {task.due_date ? <p className="text-sm text-gray-600">{tr('Scadenza', 'Due date')}: {task.due_date}</p> : null}
             <Select value={task.status} onValueChange={(value) => updateTaskMutation.mutate({ taskId: task.id, status: value })}>
               <SelectTrigger>
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="not_started">Non iniziata</SelectItem>
-                <SelectItem value="in_progress">In corso</SelectItem>
-                <SelectItem value="completed">Completata</SelectItem>
-                <SelectItem value="blocked">Bloccata</SelectItem>
+                <SelectItem value="not_started">{tr('Non iniziata', 'Not started')}</SelectItem>
+                <SelectItem value="in_progress">{tr('In corso', 'In progress')}</SelectItem>
+                <SelectItem value="completed">{tr('Completata', 'Completed')}</SelectItem>
+                <SelectItem value="blocked">{tr('Bloccata', 'Blocked')}</SelectItem>
               </SelectContent>
             </Select>
           </CardContent>
@@ -174,7 +184,7 @@ export default function EssentialTasksSection({ projectId, participants, userPar
 
       {tasks.length === 0 ? (
         <Card className="border-[#ef6144]/20 shadow-sm">
-          <CardContent className="p-6 text-center text-gray-600">Nessuna attività presente.</CardContent>
+          <CardContent className="p-6 text-center text-gray-600">{tr('Nessuna attività presente.', 'No tasks available.')}</CardContent>
         </Card>
       ) : null}
     </div>

@@ -5,8 +5,11 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Loader2, Send } from 'lucide-react';
+import { useLanguage } from '@/components/i18n/useLanguage';
 
 export default function EssentialMessagesSection({ projectId, currentUser, currentContext, activeCompanyId, activeCompanyName }) {
+  const { currentLanguage } = useLanguage();
+  const tr = (itText, enText) => (currentLanguage === 'it' ? itText : enText);
   const queryClient = useQueryClient();
   const [content, setContent] = useState('');
 
@@ -51,14 +54,14 @@ export default function EssentialMessagesSection({ projectId, currentUser, curre
     <div className="space-y-5">
       <Card className="border-[#ef6144]/20 shadow-sm">
         <CardHeader>
-          <CardTitle className="text-xl">Messaggi</CardTitle>
+          <CardTitle className="text-xl">{tr('Messaggi', 'Messages')}</CardTitle>
         </CardHeader>
         <CardContent className="space-y-3">
           <div className="grid grid-cols-[1fr_auto] gap-2">
             <Input
               value={content}
               onChange={(event) => setContent(event.target.value)}
-              placeholder="Scrivi un messaggio semplice"
+              placeholder={tr('Scrivi un messaggio semplice', 'Write a simple message')}
             />
             <Button
               className="bg-[#ef6144] hover:bg-[#d9553a] text-white"
@@ -85,13 +88,13 @@ export default function EssentialMessagesSection({ projectId, currentUser, curre
 
       {!selectedChannel ? (
         <Card className="border-[#ef6144]/20 shadow-sm">
-          <CardContent className="p-6 text-center text-gray-600">Canale non disponibile.</CardContent>
+          <CardContent className="p-6 text-center text-gray-600">{tr('Canale non disponibile.', 'Channel not available.')}</CardContent>
         </Card>
       ) : null}
 
       {selectedChannel && messages.length === 0 ? (
         <Card className="border-[#ef6144]/20 shadow-sm">
-          <CardContent className="p-6 text-center text-gray-600">Nessun messaggio in questo canale.</CardContent>
+          <CardContent className="p-6 text-center text-gray-600">{tr('Nessun messaggio in questo canale.', 'No messages in this channel.')}</CardContent>
         </Card>
       ) : null}
     </div>

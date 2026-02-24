@@ -3,43 +3,46 @@ import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { MessageSquare, CheckCircle2, Camera, FileEdit, Zap } from 'lucide-react';
-
-const QUICK_ACTIONS = [
-  {
-    key: 'message',
-    label: 'Nuovo messaggio',
-    description: 'Apri la chat del progetto',
-    section: 'messaggi',
-    icon: MessageSquare,
-  },
-  {
-    key: 'task',
-    label: 'Aggiungi attività',
-    description: 'Inserisci una nuova attività',
-    section: 'attivita',
-    icon: CheckCircle2,
-  },
-  {
-    key: 'photo',
-    label: 'Carica foto',
-    description: 'Apri documenti e carica una foto',
-    section: 'documenti',
-    icon: Camera,
-  },
-  {
-    key: 'change',
-    label: 'Nuova richiesta',
-    description: 'Aggiungi una richiesta di modifica',
-    section: 'richieste',
-    icon: FileEdit,
-  },
-];
+import { useLanguage } from '@/components/i18n/useLanguage';
 
 export default function EssentialQuickActions({ projects = [], currentProjectId = null }) {
+  const { currentLanguage } = useLanguage();
+  const tr = (itText, enText) => (currentLanguage === 'it' ? itText : enText);
   const navigate = useNavigate();
   const [actionsOpen, setActionsOpen] = useState(false);
   const [projectSelectOpen, setProjectSelectOpen] = useState(false);
   const [pendingAction, setPendingAction] = useState(null);
+
+  const QUICK_ACTIONS = [
+    {
+      key: 'message',
+      label: tr('Nuovo messaggio', 'New message'),
+      description: tr('Apri la chat del progetto', 'Open project chat'),
+      section: 'messaggi',
+      icon: MessageSquare,
+    },
+    {
+      key: 'task',
+      label: tr('Aggiungi attività', 'Add task'),
+      description: tr('Inserisci una nuova attività', 'Create a new task'),
+      section: 'attivita',
+      icon: CheckCircle2,
+    },
+    {
+      key: 'photo',
+      label: tr('Carica foto', 'Upload photo'),
+      description: tr('Apri documenti e carica una foto', 'Open documents and upload a photo'),
+      section: 'documenti',
+      icon: Camera,
+    },
+    {
+      key: 'change',
+      label: tr('Nuova richiesta', 'New request'),
+      description: tr('Aggiungi una richiesta di modifica', 'Create a change request'),
+      section: 'richieste',
+      icon: FileEdit,
+    },
+  ];
 
   const projectMap = useMemo(
     () => Object.fromEntries(projects.map((project) => [project.id, project])),
@@ -81,7 +84,7 @@ export default function EssentialQuickActions({ projects = [], currentProjectId 
       <Button
         onClick={() => setActionsOpen(true)}
         className="fixed bottom-6 right-5 h-14 w-14 rounded-full bg-[#ef6144] hover:bg-[#d9553a] text-white shadow-lg z-50"
-        title="Operazioni rapide"
+        title={tr('Operazioni rapide', 'Quick actions')}
       >
         <Zap className="h-6 w-6" />
       </Button>
@@ -89,7 +92,7 @@ export default function EssentialQuickActions({ projects = [], currentProjectId 
       <Dialog open={actionsOpen} onOpenChange={setActionsOpen}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Operazioni rapide</DialogTitle>
+            <DialogTitle>{tr('Operazioni rapide', 'Quick actions')}</DialogTitle>
           </DialogHeader>
           <div className="space-y-3">
             {QUICK_ACTIONS.map((action) => {
@@ -128,7 +131,7 @@ export default function EssentialQuickActions({ projects = [], currentProjectId 
       >
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Seleziona progetto</DialogTitle>
+            <DialogTitle>{tr('Seleziona progetto', 'Select project')}</DialogTitle>
           </DialogHeader>
           <div className="space-y-3 max-h-[50vh] overflow-auto">
             {projects.map((project) => (

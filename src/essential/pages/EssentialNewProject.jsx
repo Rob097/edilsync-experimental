@@ -10,10 +10,13 @@ import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Loader2 } from 'lucide-react';
+import { useLanguage } from '@/components/i18n/useLanguage';
 
 export default function EssentialNewProject() {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
+  const { currentLanguage } = useLanguage();
+  const tr = (itText, enText) => (currentLanguage === 'it' ? itText : enText);
   const { user, currentContext, companyMemberships } = useEssentialData();
 
   const [formData, setFormData] = useState({
@@ -63,7 +66,7 @@ export default function EssentialNewProject() {
         project_id: project.id,
         name: 'General',
         type: 'general',
-        description: 'Canale generale per comunicazioni all\'interno del progetto',
+        description: tr('Canale generale per comunicazioni all\'interno del progetto', 'General channel for project communications'),
         created_by_email: user?.email,
       });
 
@@ -107,7 +110,7 @@ export default function EssentialNewProject() {
     return (
       <Card>
         <CardContent className="p-6 text-center text-gray-600">
-          In contesto società solo un admin può creare nuovi progetti.
+          {tr('In contesto società solo un admin può creare nuovi progetti.', 'In company context only an admin can create new projects.')}
         </CardContent>
       </Card>
     );
@@ -117,27 +120,27 @@ export default function EssentialNewProject() {
     <div className="space-y-5">
       <Card className="border-[#ef6144]/20 shadow-sm">
         <CardHeader>
-          <CardTitle className="text-xl">Nuovo progetto</CardTitle>
+          <CardTitle className="text-xl">{tr('Nuovo progetto', 'New project')}</CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="space-y-2">
-            <Label htmlFor="name">Nome progetto</Label>
+            <Label htmlFor="name">{tr('Nome progetto', 'Project name')}</Label>
             <Input id="name" value={formData.name} onChange={(event) => setFormData((prev) => ({ ...prev, name: event.target.value }))} />
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="address">Indirizzo cantiere</Label>
+            <Label htmlFor="address">{tr('Indirizzo cantiere', 'Site address')}</Label>
             <Input id="address" value={formData.address} onChange={(event) => setFormData((prev) => ({ ...prev, address: event.target.value }))} />
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="description">Descrizione (opzionale)</Label>
+            <Label htmlFor="description">{tr('Descrizione (opzionale)', 'Description (optional)')}</Label>
             <Textarea id="description" rows={3} value={formData.description} onChange={(event) => setFormData((prev) => ({ ...prev, description: event.target.value }))} />
           </div>
 
           {currentContext === 'company' ? (
             <div className="space-y-2">
-              <Label>Ruolo della società nel progetto</Label>
+              <Label>{tr('Ruolo della società nel progetto', 'Company role in project')}</Label>
               <Select
                 value={formData.my_role}
                 onValueChange={(value) => setFormData((prev) => ({
@@ -150,7 +153,7 @@ export default function EssentialNewProject() {
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="homeowner">Committente</SelectItem>
+                  <SelectItem value="homeowner">{tr('Committente', 'Client')}</SelectItem>
                   <SelectItem value="contractor">Contractor</SelectItem>
                 </SelectContent>
               </Select>
@@ -158,46 +161,46 @@ export default function EssentialNewProject() {
           ) : null}
 
           <div className="space-y-2">
-            <Label>Stato iniziale</Label>
+            <Label>{tr('Stato iniziale', 'Initial status')}</Label>
             <Select value={formData.status} onValueChange={(value) => setFormData((prev) => ({ ...prev, status: value }))}>
               <SelectTrigger>
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="planning">Pianificazione</SelectItem>
-                <SelectItem value="in_progress">In corso</SelectItem>
-                <SelectItem value="on_hold">In sospeso</SelectItem>
+                <SelectItem value="planning">{tr('Pianificazione', 'Planning')}</SelectItem>
+                <SelectItem value="in_progress">{tr('In corso', 'In progress')}</SelectItem>
+                <SelectItem value="on_hold">{tr('In sospeso', 'On hold')}</SelectItem>
               </SelectContent>
             </Select>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <div className="space-y-2">
-              <Label htmlFor="start_date">Data inizio</Label>
+              <Label htmlFor="start_date">{tr('Data inizio', 'Start date')}</Label>
               <Input id="start_date" type="date" value={formData.start_date} onChange={(event) => setFormData((prev) => ({ ...prev, start_date: event.target.value }))} />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="end_date">Data fine</Label>
+              <Label htmlFor="end_date">{tr('Data fine', 'End date')}</Label>
               <Input id="end_date" type="date" value={formData.end_date} onChange={(event) => setFormData((prev) => ({ ...prev, end_date: event.target.value }))} />
             </div>
           </div>
 
           {currentContext === 'company' && formData.my_role === 'contractor' ? (
             <div className="space-y-2">
-              <Label htmlFor="homeowner_email">Email del committente</Label>
+              <Label htmlFor="homeowner_email">{tr('Email del committente', 'Client email')}</Label>
               <Input
                 id="homeowner_email"
                 type="email"
                 value={formData.homeowner_email}
                 onChange={(event) => setFormData((prev) => ({ ...prev, homeowner_email: event.target.value }))}
-                placeholder="nome@email.com"
+                placeholder={tr('nome@email.com', 'name@email.com')}
               />
             </div>
           ) : null}
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2">
             <Button variant="outline" onClick={() => navigate('/essenziale/progetti')}>
-              Annulla
+              {tr('Annulla', 'Cancel')}
             </Button>
             <Button
               className="bg-[#ef6144] hover:bg-[#d9553a] text-white"
@@ -205,7 +208,7 @@ export default function EssentialNewProject() {
               disabled={createProjectMutation.isPending || !formData.name.trim() || !formData.address.trim() || (currentContext === 'company' && formData.my_role === 'contractor' && !formData.homeowner_email.trim())}
             >
               {createProjectMutation.isPending ? <Loader2 className="h-4 w-4 mr-2 animate-spin" /> : null}
-              Crea progetto
+              {tr('Crea progetto', 'Create project')}
             </Button>
           </div>
         </CardContent>

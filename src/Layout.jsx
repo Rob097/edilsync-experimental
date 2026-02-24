@@ -248,7 +248,7 @@ export default function Layout({ children, currentPageName }) {
                   </DropdownMenuItem>
                   <DropdownMenuItem onClick={switchToEssentialMode} className="cursor-pointer">
                     <Sparkles className="h-4 w-4 mr-2" />
-                    Modalità Essenziale
+                    {t('essentialMode.switchMenuItem')}
                   </DropdownMenuItem>
                   <DropdownMenuSeparator />
                   <div className="px-2 py-2">
@@ -338,17 +338,17 @@ export default function Layout({ children, currentPageName }) {
       <Dialog open={switchDialogOpen} onOpenChange={setSwitchDialogOpen}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Passare alla modalità Essenziale?</DialogTitle>
+            <DialogTitle>{t('essentialMode.switchDialogTitle')}</DialogTitle>
             <DialogDescription>
-              Passerai a un'interfaccia semplificata pensata per operazioni rapide in cantiere.
+              {t('essentialMode.switchDialogDescription')}
             </DialogDescription>
           </DialogHeader>
           <DialogFooter>
             <Button variant="outline" onClick={() => setSwitchDialogOpen(false)}>
-              Annulla
+              {t('common.cancel')}
             </Button>
             <Button className="bg-[#ef6144] hover:bg-[#d9553a]" onClick={confirmSwitchToEssentialMode}>
-              Conferma
+              {t('essentialMode.switchDialogConfirm')}
             </Button>
           </DialogFooter>
         </DialogContent>

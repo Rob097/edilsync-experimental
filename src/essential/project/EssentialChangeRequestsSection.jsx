@@ -7,15 +7,11 @@ import { Textarea } from '@/components/ui/textarea';
 import { Button } from '@/components/ui/button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Loader2 } from 'lucide-react';
-
-const statusLabel = {
-  pending: 'In attesa',
-  approved: 'Approvata',
-  rejected: 'Rifiutata',
-  clarification_needed: 'Chiarimenti richiesti',
-};
+import { useLanguage } from '@/components/i18n/useLanguage';
 
 export default function EssentialChangeRequestsSection({ projectId, currentUser, canCreate, canRespond }) {
+  const { currentLanguage } = useLanguage();
+  const tr = (itText, enText) => (currentLanguage === 'it' ? itText : enText);
   const queryClient = useQueryClient();
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
@@ -53,30 +49,37 @@ export default function EssentialChangeRequestsSection({ projectId, currentUser,
     mutationFn: async ({ requestId, status }) => appClient.entities.ChangeRequest.update(requestId, {
       status,
       responded_at: new Date().toISOString(),
-      response_note: status === 'approved' ? 'Approvata' : status === 'rejected' ? 'Rifiutata' : 'Richiesti chiarimenti',
+      response_note: status === 'approved' ? tr('Approvata', 'Approved') : status === 'rejected' ? tr('Rifiutata', 'Rejected') : tr('Richiesti chiarimenti', 'Clarification requested'),
     }),
     onSuccess: async () => {
       await queryClient.invalidateQueries({ queryKey: ['essentialChangeRequests', projectId] });
     },
   });
 
+  const statusLabel = {
+    pending: tr('In attesa', 'Pending'),
+    approved: tr('Approvata', 'Approved'),
+    rejected: tr('Rifiutata', 'Rejected'),
+    clarification_needed: tr('Chiarimenti richiesti', 'Clarification needed'),
+  };
+
   return (
     <div className="space-y-5">
       {canCreate ? (
         <Card className="border-[#ef6144]/20 shadow-sm">
           <CardHeader>
-            <CardTitle className="text-xl">Nuova richiesta</CardTitle>
+            <CardTitle className="text-xl">{tr('Nuova richiesta', 'New request')}</CardTitle>
           </CardHeader>
           <CardContent className="space-y-3">
-            <Input value={title} onChange={(event) => setTitle(event.target.value)} placeholder="Titolo" />
-            <Textarea value={description} onChange={(event) => setDescription(event.target.value)} rows={3} placeholder="Descrizione" />
+            <Input value={title} onChange={(event) => setTitle(event.target.value)} placeholder={tr('Titolo', 'Title')} />
+            <Textarea value={description} onChange={(event) => setDescription(event.target.value)} rows={3} placeholder={tr('Descrizione', 'Description')} />
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-              <Input type="number" value={costImpact} onChange={(event) => setCostImpact(event.target.value)} placeholder="Costo extra (€)" />
-              <Input type="number" value={timeImpactDays} onChange={(event) => setTimeImpactDays(event.target.value)} placeholder="Giorni extra" />
+              <Input type="number" value={costImpact} onChange={(event) => setCostImpact(event.target.value)} placeholder={tr('Costo extra (€)', 'Extra cost (€)')} />
+              <Input type="number" value={timeImpactDays} onChange={(event) => setTimeImpactDays(event.target.value)} placeholder={tr('Giorni extra', 'Extra days')} />
             </div>
             <Button className="w-full bg-[#ef6144] hover:bg-[#d9553a] text-white" onClick={() => createRequestMutation.mutate()} disabled={createRequestMutation.isPending || !title.trim() || !description.trim()}>
               {createRequestMutation.isPending ? <Loader2 className="h-4 w-4 mr-2 animate-spin" /> : null}
-              Aggiungi richiesta
+              {tr('Aggiungi richiesta', 'Add request')}
             </Button>
           </CardContent>
         </Card>
@@ -90,17 +93,17 @@ export default function EssentialChangeRequestsSection({ projectId, currentUser,
               <p className="text-xs px-2 py-1 rounded bg-gray-100 text-gray-700">{statusLabel[request.status] || request.status}</p>
             </div>
             <p className="text-sm text-gray-700">{request.description}</p>
-            <p className="text-sm text-gray-600">Costo: €{request.cost_impact || 0} · Giorni: {request.time_impact_days || 0}</p>
+            <p className="text-sm text-gray-600">{tr('Costo', 'Cost')}: €{request.cost_impact || 0} · {tr('Giorni', 'Days')}: {request.time_impact_days || 0}</p>
             {canRespond ? (
               <Select value={request.status} onValueChange={(value) => updateRequestMutation.mutate({ requestId: request.id, status: value })}>
                 <SelectTrigger>
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="pending">In attesa</SelectItem>
-                  <SelectItem value="approved">Approvata</SelectItem>
-                  <SelectItem value="rejected">Rifiutata</SelectItem>
-                  <SelectItem value="clarification_needed">Chiarimenti richiesti</SelectItem>
+                  <SelectItem value="pending">{tr('In attesa', 'Pending')}</SelectItem>
+                  <SelectItem value="approved">{tr('Approvata', 'Approved')}</SelectItem>
+                  <SelectItem value="rejected">{tr('Rifiutata', 'Rejected')}</SelectItem>
+                  <SelectItem value="clarification_needed">{tr('Chiarimenti richiesti', 'Clarification needed')}</SelectItem>
                 </SelectContent>
               </Select>
             ) : null}
@@ -110,7 +113,7 @@ export default function EssentialChangeRequestsSection({ projectId, currentUser,
 
       {requests.length === 0 ? (
         <Card className="border-[#ef6144]/20 shadow-sm">
-          <CardContent className="p-6 text-center text-gray-600">Nessuna richiesta presente.</CardContent>
+          <CardContent className="p-6 text-center text-gray-600">{tr('Nessuna richiesta presente.', 'No requests available.')}</CardContent>
         </Card>
       ) : null}
     </div>

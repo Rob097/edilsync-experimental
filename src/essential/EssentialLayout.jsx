@@ -12,6 +12,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/u
 import { ArrowLeft, ChevronRight, Menu, Settings, Briefcase, Building2, Calendar, House, RefreshCw, User } from 'lucide-react';
 import EssentialQuickActions from './EssentialQuickActions';
 import LanguageSelector from '@/components/language/LanguageSelector';
+import { useLanguage } from '@/components/i18n/useLanguage';
 
 if (!i18next.isInitialized) {
   initializeI18n();
@@ -42,6 +43,8 @@ function MenuItem({ icon: Icon, to, label, onClick, onSelect }) {
 }
 
 export default function EssentialLayout() {
+  const { currentLanguage } = useLanguage();
+  const tr = (itText, enText) => (currentLanguage === 'it' ? itText : enText);
   const location = useLocation();
   const navigate = useNavigate();
   const queryClient = useQueryClient();
@@ -121,7 +124,7 @@ export default function EssentialLayout() {
             {showBackButton ? (
               <button type="button" onClick={handleBack} className="flex items-center gap-2 text-gray-800 font-medium">
                 <ArrowLeft className="h-5 w-5" />
-                <span>Torna indietro</span>
+                <span>{tr('Torna indietro', 'Go back')}</span>
               </button>
             ) : <div className="w-28" />}
 
@@ -137,7 +140,7 @@ export default function EssentialLayout() {
               className="flex items-center gap-2 text-lg font-semibold text-[#ef6144]"
             >
               <Menu className="h-5 w-5" />
-              <span>{menuOpen ? 'Chiudi Menù' : 'Apri Menù'}</span>
+              <span>{menuOpen ? tr('Chiudi Menù', 'Close menu') : tr('Apri Menù', 'Open menu')}</span>
             </button>
 
             <div className="w-28" />
@@ -151,9 +154,11 @@ export default function EssentialLayout() {
               {currentContext === 'company' ? <Building2 className="h-5 w-5 text-[#ef6144]" /> : <User className="h-5 w-5 text-[#ef6144]" />}
             </div>
             <div>
-              <p className="text-xs text-gray-500">Contesto di lavoro attivo</p>
+              <p className="text-xs text-gray-500">{tr('Contesto di lavoro attivo', 'Active work context')}</p>
               <p className="font-semibold text-gray-900">
-                {currentContext === 'company' ? `Società: ${currentCompany?.name || 'Società'}` : 'Privato'}
+                {currentContext === 'company'
+                  ? `${tr('Società', 'Company')}: ${currentCompany?.name || tr('Società', 'Company')}`
+                  : tr('Privato', 'Personal')}
               </p>
             </div>
           </div>
@@ -165,7 +170,7 @@ export default function EssentialLayout() {
                 disabled={isChangingContext || currentContext === 'personal'}
                 onClick={() => handleContextChange('personal', null)}
               >
-                Privato
+                {tr('Privato', 'Personal')}
               </Button>
               {companies.map((company) => (
                 <Button
@@ -188,20 +193,20 @@ export default function EssentialLayout() {
           <div className="fixed inset-x-0 top-16 bottom-0 z-50 bg-gray-50 border-t border-[#ef6144]/20">
             <div className="h-full overflow-y-auto p-5">
               <div className="mb-4">
-                <h2 className="text-2xl font-semibold text-gray-900">Menu</h2>
+                <h2 className="text-2xl font-semibold text-gray-900">{tr('Menu', 'Menu')}</h2>
               </div>
 
               {!showContextList ? (
                 <div className="space-y-5">
-                  <MenuItem icon={House} label="HomePage" to="/essenziale" onSelect={() => { setMenuOpen(false); setShowContextList(false); }} />
-                  <MenuItem icon={Briefcase} label="Progetti" to="/essenziale/progetti" onSelect={() => { setMenuOpen(false); setShowContextList(false); }} />
-                  <MenuItem icon={Building2} label="Società" to="/essenziale/societa" onSelect={() => { setMenuOpen(false); setShowContextList(false); }} />
-                  <MenuItem icon={Calendar} label="Calendario" to="/essenziale/calendario" onSelect={() => { setMenuOpen(false); setShowContextList(false); }} />
-                  <MenuItem icon={Settings} label="Impostazioni" to="/Settings" onSelect={() => { setMenuOpen(false); setShowContextList(false); }} />
-                  <MenuItem icon={RefreshCw} label="Cambia contesto" onClick={() => setShowContextList(true)} />
+                  <MenuItem icon={House} label={tr('Home', 'Home')} to="/essenziale" onSelect={() => { setMenuOpen(false); setShowContextList(false); }} />
+                  <MenuItem icon={Briefcase} label={tr('Progetti', 'Projects')} to="/essenziale/progetti" onSelect={() => { setMenuOpen(false); setShowContextList(false); }} />
+                  <MenuItem icon={Building2} label={tr('Società', 'Companies')} to="/essenziale/societa" onSelect={() => { setMenuOpen(false); setShowContextList(false); }} />
+                  <MenuItem icon={Calendar} label={tr('Calendario', 'Calendar')} to="/essenziale/calendario" onSelect={() => { setMenuOpen(false); setShowContextList(false); }} />
+                  <MenuItem icon={Settings} label={tr('Impostazioni', 'Settings')} to="/Settings" onSelect={() => { setMenuOpen(false); setShowContextList(false); }} />
+                  <MenuItem icon={RefreshCw} label={tr('Cambia contesto', 'Change context')} onClick={() => setShowContextList(true)} />
 
                   <div className="rounded-2xl border border-[#ef6144]/20 bg-white p-4 shadow-sm">
-                    <p className="text-sm font-medium text-gray-700 mb-2">Lingua</p>
+                    <p className="text-sm font-medium text-gray-700 mb-2">{tr('Lingua', 'Language')}</p>
                     <LanguageSelector />
                   </div>
 
@@ -211,7 +216,7 @@ export default function EssentialLayout() {
                       className="w-full border-[#ef6144]/30 text-[#ef6144] hover:bg-[#ef6144]/10"
                       onClick={askSwitchToNormalMode}
                     >
-                      Passa a modalità Normale
+                      {tr('Passa a modalità Normale', 'Switch to Normal mode')}
                     </Button>
                   </div>
                 </div>
@@ -219,7 +224,7 @@ export default function EssentialLayout() {
                 <div className="space-y-4">
                   <button type="button" onClick={() => setShowContextList(false)} className="flex items-center gap-2 text-gray-700 font-medium">
                     <ArrowLeft className="h-4 w-4" />
-                    Torna al menu
+                    {tr('Torna al menu', 'Back to menu')}
                   </button>
 
                   <button
@@ -228,8 +233,8 @@ export default function EssentialLayout() {
                     disabled={isChangingContext}
                     onClick={() => handleContextChange('personal', null)}
                   >
-                    <div className="font-semibold">Privato</div>
-                    <div className="text-sm text-gray-500">Usa il contesto personale</div>
+                    <div className="font-semibold">{tr('Privato', 'Personal')}</div>
+                    <div className="text-sm text-gray-500">{tr('Usa il contesto personale', 'Use personal context')}</div>
                   </button>
 
                   {companies.map((company) => (
@@ -241,7 +246,7 @@ export default function EssentialLayout() {
                       onClick={() => handleContextChange('company', company)}
                     >
                       <div className="font-semibold">{company.name}</div>
-                      <div className="text-sm text-gray-500">Usa il contesto società</div>
+                      <div className="text-sm text-gray-500">{tr('Usa il contesto società', 'Use company context')}</div>
                     </button>
                   ))}
                 </div>
@@ -254,17 +259,17 @@ export default function EssentialLayout() {
       <Dialog open={switchDialogOpen} onOpenChange={setSwitchDialogOpen}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Passare alla modalità Normale?</DialogTitle>
+            <DialogTitle>{tr('Passare alla modalità Normale?', 'Switch to Normal mode?')}</DialogTitle>
           </DialogHeader>
           <div className="text-sm text-gray-600">
-            Tornerai all'interfaccia completa della modalità Normale.
+            {tr('Tornerai all\'interfaccia completa della modalità Normale.', 'You will return to the full Normal mode interface.')}
           </div>
           <div className="flex justify-end gap-2 pt-2">
             <Button variant="outline" onClick={() => setSwitchDialogOpen(false)}>
-              Annulla
+              {tr('Annulla', 'Cancel')}
             </Button>
             <Button className="bg-[#ef6144] hover:bg-[#d9553a]" onClick={confirmSwitchToNormalMode}>
-              Conferma
+              {tr('Conferma', 'Confirm')}
             </Button>
           </div>
         </DialogContent>

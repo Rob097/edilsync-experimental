@@ -4,8 +4,9 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Plus, MapPin, ArrowRight } from 'lucide-react';
 import { useEssentialData } from '@/essential/useEssentialData';
+import { useLanguage } from '@/components/i18n/useLanguage';
 
-function ProjectTile({ project }) {
+function ProjectTile({ project, tr }) {
   return (
     <Link to={`/essenziale/progetti/${project.id}`} className="block">
       <Card className="border-[#ef6144]/20 shadow-sm">
@@ -28,25 +29,27 @@ function ProjectTile({ project }) {
 
 export default function EssentialProjects() {
   const navigate = useNavigate();
+  const { currentLanguage } = useLanguage();
+  const tr = (itText, enText) => (currentLanguage === 'it' ? itText : enText);
   const { contextProjects } = useEssentialData();
 
   return (
     <div className="space-y-5">
       <Button className="w-full bg-[#ef6144] hover:bg-[#d9553a] text-white" onClick={() => navigate('/essenziale/progetti/nuovo')}>
         <Plus className="h-4 w-4 mr-2" />
-        Crea nuovo progetto
+        {tr('Crea nuovo progetto', 'Create new project')}
       </Button>
 
       <div className="border-t border-[#ef6144]/20" />
 
       {contextProjects.map((project) => (
-        <ProjectTile key={project.id} project={project} />
+        <ProjectTile key={project.id} project={project} tr={tr} />
       ))}
 
       {contextProjects.length === 0 ? (
         <Card className="border-[#ef6144]/20 shadow-sm">
           <CardContent className="p-6 text-center text-gray-600">
-            Nessun progetto disponibile in questo contesto.
+            {tr('Nessun progetto disponibile in questo contesto.', 'No projects available in this context.')}
           </CardContent>
         </Card>
       ) : null}

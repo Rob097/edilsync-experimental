@@ -30,7 +30,8 @@ const getCategoryLabel = (value, t) => {
 };
 
 export default function UploadDocumentDialog({ open, onOpenChange, projectId, document }) {
-  const { t } = useLanguage();
+  const { t, currentLanguage } = useLanguage();
+  const tr = (itText, enText) => (currentLanguage === 'it' ? itText : enText);
   const queryClient = useQueryClient();
   const fileInputRef = useRef(null);
   const isEditMode = !!document;
@@ -40,6 +41,7 @@ export default function UploadDocumentDialog({ open, onOpenChange, projectId, do
   const [description, setDescription] = useState('');
   const [category, setCategory] = useState('other');
   const [isUploading, setIsUploading] = useState(false);
+  const [dragActive, setDragActive] = useState(false);
 
   // Initialize form with document data when editing
   React.useEffect(() => {
@@ -120,11 +122,23 @@ export default function UploadDocumentDialog({ open, onOpenChange, projectId, do
 
   const handleFileChange = (e) => {
     const selectedFile = e.currentTarget.files?.[0];
+    setDragActive(false);
     if (selectedFile) {
       setFile(selectedFile);
       if (!name) {
         setName(selectedFile.name.replace(/\.[^/.]+$/, ''));
       }
+    }
+  };
+
+  const handleDrop = (event) => {
+    event.preventDefault();
+    setDragActive(false);
+    const droppedFile = event.dataTransfer.files?.[0];
+    if (!droppedFile) return;
+    setFile(droppedFile);
+    if (!name) {
+      setName(droppedFile.name.replace(/\.[^/.]+$/, ''));
     }
   };
 
@@ -183,11 +197,21 @@ export default function UploadDocumentDialog({ open, onOpenChange, projectId, do
             ) : (
               <div
                 onClick={() => fileInputRef.current?.click()}
-                className="border-2 border-dashed rounded-lg p-8 text-center cursor-pointer hover:border-[#ef6144] hover:bg-[#ef6144]/5 transition-colors"
+                onDragOver={(event) => {
+                  event.preventDefault();
+                  setDragActive(true);
+                }}
+                onDragLeave={() => setDragActive(false)}
+                onDrop={handleDrop}
+                className={`border-2 border-dashed rounded-lg p-8 text-center cursor-pointer transition-colors ${dragActive ? 'border-[#ef6144] bg-[#ef6144]/5' : 'hover:border-[#ef6144] hover:bg-[#ef6144]/5'}`}
               >
                 <Upload className="h-8 w-8 mx-auto text-gray-400 mb-2" />
                 <p className="text-sm text-gray-600">
-                  {isEditMode ? t('uploadDocumentDialog.clickToReplace') : t('uploadDocumentDialog.clickToSelect')}
+                  {dragActive
+                    ? tr('Rilascia qui il file', 'Drop file here')
+                    : isEditMode
+                      ? t('uploadDocumentDialog.clickToReplace')
+                      : t('uploadDocumentDialog.clickToSelect')}
                 </p>
                 <p className="text-xs text-gray-400 mt-1">
                   {t('uploadDocumentDialog.supportedFormats')}

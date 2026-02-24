@@ -50,6 +50,12 @@ const itTranslations = {
     "logout": "Esci",
     "systemDashboard": "Dashboard di Sistema"
   },
+  "essentialMode": {
+    "switchMenuItem": "Modalità Essenziale",
+    "switchDialogTitle": "Passare alla modalità Essenziale?",
+    "switchDialogDescription": "Passerai a un'interfaccia semplificata pensata per operazioni rapide in cantiere.",
+    "switchDialogConfirm": "Conferma"
+  },
   "header": {
     "notifications": "Notifiche",
     "messaging": "Messaggi",
@@ -577,6 +583,12 @@ const enTranslations = {
     "settings": "Settings",
     "logout": "Logout",
     "systemDashboard": "System Dashboard"
+  },
+  "essentialMode": {
+    "switchMenuItem": "Essential Mode",
+    "switchDialogTitle": "Switch to Essential mode?",
+    "switchDialogDescription": "You will switch to a simplified interface designed for quick on-site operations.",
+    "switchDialogConfirm": "Confirm"
   },
   "header": {
     "notifications": "Notifications",

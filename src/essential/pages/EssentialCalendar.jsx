@@ -11,6 +11,7 @@ import { useLanguage } from '@/components/i18n/useLanguage';
 
 export default function EssentialCalendar() {
   const { currentLanguage } = useLanguage();
+  const tr = (itText, enText) => (currentLanguage === 'it' ? itText : enText);
   const dateLocale = currentLanguage === 'it' ? it : enUS;
   const [filter, setFilter] = useState('upcoming');
   const [eventDialogOpen, setEventDialogOpen] = useState(false);
@@ -59,7 +60,7 @@ export default function EssentialCalendar() {
     <div className="space-y-5">
       <Card className="border-[#ef6144]/20 shadow-sm">
         <CardHeader>
-          <CardTitle className="text-xl">Calendario</CardTitle>
+          <CardTitle className="text-xl">{tr('Calendario', 'Calendar')}</CardTitle>
         </CardHeader>
         <CardContent>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
@@ -68,12 +69,12 @@ export default function EssentialCalendar() {
               setEventDialogOpen(true);
             }}>
               <Plus className="h-4 w-4 mr-2" />
-              Crea nuovo evento
+              {tr('Crea nuovo evento', 'Create new event')}
             </Button>
             <div className="grid grid-cols-3 gap-2">
-              <Button className={filter === 'today' ? 'bg-[#ef6144] hover:bg-[#d9553a] text-white' : 'border-[#ef6144]/30 text-[#ef6144] hover:bg-[#ef6144]/10'} variant={filter === 'today' ? 'default' : 'outline'} onClick={() => setFilter('today')}>Oggi</Button>
-              <Button className={filter === 'upcoming' ? 'bg-[#ef6144] hover:bg-[#d9553a] text-white' : 'border-[#ef6144]/30 text-[#ef6144] hover:bg-[#ef6144]/10'} variant={filter === 'upcoming' ? 'default' : 'outline'} onClick={() => setFilter('upcoming')}>Prossimi</Button>
-              <Button className={filter === 'past' ? 'bg-[#ef6144] hover:bg-[#d9553a] text-white' : 'border-[#ef6144]/30 text-[#ef6144] hover:bg-[#ef6144]/10'} variant={filter === 'past' ? 'default' : 'outline'} onClick={() => setFilter('past')}>Passati</Button>
+              <Button className={filter === 'today' ? 'bg-[#ef6144] hover:bg-[#d9553a] text-white' : 'border-[#ef6144]/30 text-[#ef6144] hover:bg-[#ef6144]/10'} variant={filter === 'today' ? 'default' : 'outline'} onClick={() => setFilter('today')}>{tr('Oggi', 'Today')}</Button>
+              <Button className={filter === 'upcoming' ? 'bg-[#ef6144] hover:bg-[#d9553a] text-white' : 'border-[#ef6144]/30 text-[#ef6144] hover:bg-[#ef6144]/10'} variant={filter === 'upcoming' ? 'default' : 'outline'} onClick={() => setFilter('upcoming')}>{tr('Prossimi', 'Upcoming')}</Button>
+              <Button className={filter === 'past' ? 'bg-[#ef6144] hover:bg-[#d9553a] text-white' : 'border-[#ef6144]/30 text-[#ef6144] hover:bg-[#ef6144]/10'} variant={filter === 'past' ? 'default' : 'outline'} onClick={() => setFilter('past')}>{tr('Passati', 'Past')}</Button>
             </div>
           </div>
         </CardContent>
@@ -118,7 +119,7 @@ export default function EssentialCalendar() {
       {groupedEvents.length === 0 ? (
         <Card className="border-[#ef6144]/20 shadow-sm">
           <CardContent className="p-6 text-center text-gray-600">
-            Nessun evento disponibile per questo filtro.
+            {tr('Nessun evento disponibile per questo filtro.', 'No events available for this filter.')}
           </CardContent>
         </Card>
       ) : null}

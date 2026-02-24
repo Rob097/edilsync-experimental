@@ -6,15 +6,11 @@ import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Loader2 } from 'lucide-react';
-
-const statusLabel = {
-  pending: 'In attesa',
-  in_progress: 'In corso',
-  completed: 'Completata',
-  delayed: 'In ritardo',
-};
+import { useLanguage } from '@/components/i18n/useLanguage';
 
 export default function EssentialMilestonesSection({ projectId, canEdit }) {
+  const { currentLanguage } = useLanguage();
+  const tr = (itText, enText) => (currentLanguage === 'it' ? itText : enText);
   const queryClient = useQueryClient();
   const [title, setTitle] = useState('');
   const [targetDate, setTargetDate] = useState('');
@@ -54,19 +50,26 @@ export default function EssentialMilestonesSection({ projectId, canEdit }) {
     },
   });
 
+  const statusLabel = {
+    pending: tr('In attesa', 'Pending'),
+    in_progress: tr('In corso', 'In progress'),
+    completed: tr('Completata', 'Completed'),
+    delayed: tr('In ritardo', 'Delayed'),
+  };
+
   return (
     <div className="space-y-5">
       {canEdit ? (
         <Card className="border-[#ef6144]/20 shadow-sm">
           <CardHeader>
-            <CardTitle className="text-xl">Nuova milestone</CardTitle>
+            <CardTitle className="text-xl">{tr('Nuova milestone', 'New milestone')}</CardTitle>
           </CardHeader>
           <CardContent className="space-y-3">
-            <Input value={title} onChange={(event) => setTitle(event.target.value)} placeholder="Titolo milestone" />
+            <Input value={title} onChange={(event) => setTitle(event.target.value)} placeholder={tr('Titolo milestone', 'Milestone title')} />
             <Input type="date" value={targetDate} onChange={(event) => setTargetDate(event.target.value)} />
             <Button className="w-full bg-[#ef6144] hover:bg-[#d9553a] text-white" onClick={() => createMilestoneMutation.mutate()} disabled={createMilestoneMutation.isPending || !title.trim()}>
               {createMilestoneMutation.isPending ? <Loader2 className="h-4 w-4 mr-2 animate-spin" /> : null}
-              Aggiungi milestone
+              {tr('Aggiungi milestone', 'Add milestone')}
             </Button>
           </CardContent>
         </Card>
@@ -79,17 +82,17 @@ export default function EssentialMilestonesSection({ projectId, canEdit }) {
               <p className="font-semibold text-gray-900">{milestone.title}</p>
               <p className="text-xs px-2 py-1 rounded bg-gray-100 text-gray-700">{statusLabel[milestone.status] || milestone.status}</p>
             </div>
-            {milestone.target_date ? <p className="text-sm text-gray-600">Data obiettivo: {milestone.target_date}</p> : null}
+            {milestone.target_date ? <p className="text-sm text-gray-600">{tr('Data obiettivo', 'Target date')}: {milestone.target_date}</p> : null}
             {canEdit ? (
               <Select value={milestone.status} onValueChange={(value) => updateMilestoneMutation.mutate({ milestoneId: milestone.id, status: value })}>
                 <SelectTrigger>
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="pending">In attesa</SelectItem>
-                  <SelectItem value="in_progress">In corso</SelectItem>
-                  <SelectItem value="completed">Completata</SelectItem>
-                  <SelectItem value="delayed">In ritardo</SelectItem>
+                  <SelectItem value="pending">{tr('In attesa', 'Pending')}</SelectItem>
+                  <SelectItem value="in_progress">{tr('In corso', 'In progress')}</SelectItem>
+                  <SelectItem value="completed">{tr('Completata', 'Completed')}</SelectItem>
+                  <SelectItem value="delayed">{tr('In ritardo', 'Delayed')}</SelectItem>
                 </SelectContent>
               </Select>
             ) : null}
@@ -99,7 +102,7 @@ export default function EssentialMilestonesSection({ projectId, canEdit }) {
 
       {milestones.length === 0 ? (
         <Card className="border-[#ef6144]/20 shadow-sm">
-          <CardContent className="p-6 text-center text-gray-600">Nessuna milestone presente.</CardContent>
+          <CardContent className="p-6 text-center text-gray-600">{tr('Nessuna milestone presente.', 'No milestones available.')}</CardContent>
         </Card>
       ) : null}
     </div>

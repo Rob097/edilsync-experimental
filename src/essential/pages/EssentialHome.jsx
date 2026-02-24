@@ -26,7 +26,7 @@ function BigTile({ icon: Icon, title, value, subtitle, onClick }) {
           </div>
         </div>
         <Button variant="outline" className="w-full mt-4 border-[#ef6144]/30 text-[#ef6144] hover:bg-[#ef6144]/10" onClick={onClick}>
-          {subtitle || 'Apri'}
+          {subtitle || 'Open'}
           <ArrowRight className="h-4 w-4 ml-2" />
         </Button>
       </CardContent>
@@ -37,6 +37,7 @@ function BigTile({ icon: Icon, title, value, subtitle, onClick }) {
 export default function EssentialHome() {
   const navigate = useNavigate();
   const { currentLanguage } = useLanguage();
+  const tr = (itText, enText) => (currentLanguage === 'it' ? itText : enText);
   const dateLocale = currentLanguage === 'it' ? it : enUS;
   const [unreadNotificationsOpen, setUnreadNotificationsOpen] = useState(false);
   const [unreadMessagesOpen, setUnreadMessagesOpen] = useState(false);
@@ -128,11 +129,11 @@ export default function EssentialHome() {
   ]).size;
 
   const contextLabel = currentContext === 'company'
-    ? `come ${currentCompany?.name || 'Società'}`
-    : 'come privato';
+    ? `${tr('come', 'as')} ${currentCompany?.name || tr('Società', 'Company')}`
+    : tr('come privato', 'as personal');
 
-  const eventWord = todayEvents.length === 1 ? 'evento' : 'eventi';
-  const projectWord = projectsInSummary === 1 ? 'progetto' : 'progetti';
+  const eventWord = todayEvents.length === 1 ? tr('evento', 'event') : tr('eventi', 'events');
+  const projectWord = projectsInSummary === 1 ? tr('progetto', 'project') : tr('progetti', 'projects');
 
   const projectNameById = Object.fromEntries(contextProjects.map((project) => [project.id, project.name]));
 
@@ -142,16 +143,16 @@ export default function EssentialHome() {
       type: 'event',
       sortTime: new Date(event.start_datetime),
       detailTime: format(new Date(event.start_datetime), 'HH:mm', { locale: dateLocale }),
-      label: `${event.title} nel progetto ${projectNameById[event.project_id] || 'sconosciuto'} ${contextLabel}`,
+      label: `${event.title} ${tr('nel progetto', 'in project')} ${projectNameById[event.project_id] || tr('sconosciuto', 'unknown')} ${contextLabel}`,
     })),
     ...todayTasks.map((task) => ({
       id: `task-${task.id}`,
       type: 'task',
       sortTime: task.due_date ? new Date(`${task.due_date}T23:59:59`) : new Date(`${todayKey}T23:59:59`),
       detailTime: task.due_date
-        ? `entro ${format(new Date(`${task.due_date}T00:00:00`), 'dd/MM', { locale: dateLocale })}`
-        : 'in corso',
-      label: `${task.title} nel progetto ${projectNameById[task.project_id] || 'sconosciuto'} ${contextLabel}`,
+        ? `${tr('entro', 'by')} ${format(new Date(`${task.due_date}T00:00:00`), 'dd/MM', { locale: dateLocale })}`
+        : tr('in corso', 'in progress'),
+      label: `${task.title} ${tr('nel progetto', 'in project')} ${projectNameById[task.project_id] || tr('sconosciuto', 'unknown')} ${contextLabel}`,
     })),
   ]
     .sort((first, second) => first.sortTime - second.sortTime)
@@ -161,7 +162,7 @@ export default function EssentialHome() {
     <div className="space-y-5">
       <Card className="border-[#ef6144]/20 shadow-sm">
         <CardHeader>
-          <CardTitle className="text-xl">HomePage</CardTitle>
+          <CardTitle className="text-xl">{tr('Home', 'Home')}</CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
@@ -172,7 +173,7 @@ export default function EssentialHome() {
             >
               <div className="flex items-center gap-2 text-gray-700">
                 <Bell className="h-4 w-4 text-[#ef6144]" />
-                <span className="text-sm font-medium">Notifiche non lette</span>
+                <span className="text-sm font-medium">{tr('Notifiche non lette', 'Unread notifications')}</span>
               </div>
               <p className="text-3xl font-bold text-gray-900 mt-2">{unreadNotificationsCount}</p>
             </button>
@@ -184,33 +185,33 @@ export default function EssentialHome() {
             >
               <div className="flex items-center gap-2 text-gray-700">
                 <MessageSquare className="h-4 w-4 text-[#ef6144]" />
-                <span className="text-sm font-medium">Messaggi non letti</span>
+                <span className="text-sm font-medium">{tr('Messaggi non letti', 'Unread messages')}</span>
               </div>
               <p className="text-3xl font-bold text-gray-900 mt-2">{unreadMessagesCount}</p>
             </button>
           </div>
 
           {(unreadNotificationsCount > 0 || unreadMessagesCount > 0) ? (
-            <p className="text-sm text-gray-600">Hai aggiornamenti da controllare adesso.</p>
+            <p className="text-sm text-gray-600">{tr('Hai aggiornamenti da controllare adesso.', 'You have updates to check now.')}</p>
           ) : (
-            <p className="text-sm text-gray-600">Sei aggiornato: non ci sono nuove notifiche o messaggi non letti.</p>
+            <p className="text-sm text-gray-600">{tr('Sei aggiornato: non ci sono nuove notifiche o messaggi non letti.', 'You are up to date: there are no new unread notifications or messages.')}</p>
           )}
 
           <div className="border-t border-[#ef6144]/20" />
 
           <p className="text-gray-700 font-medium">
             {todayEvents.length > 0
-              ? `Oggi hai ${todayEvents.length} ${eventWord} in ${projectsInSummary} ${projectWord}.`
+              ? tr(`Oggi hai ${todayEvents.length} ${eventWord} in ${projectsInSummary} ${projectWord}.`, `Today you have ${todayEvents.length} ${eventWord} in ${projectsInSummary} ${projectWord}.`)
               : todayTasks.length > 0
-                ? `Oggi non hai eventi, ma hai ${todayTasks.length} attività da seguire.`
-                : 'Oggi non hai eventi o attività urgenti.'}
+                ? tr(`Oggi non hai eventi, ma hai ${todayTasks.length} attività da seguire.`, `Today you have no events, but you have ${todayTasks.length} tasks to follow.`)
+                : tr('Oggi non hai eventi o attività urgenti.', 'Today you have no urgent events or tasks.')}
           </p>
           {summaryRows.length > 0 ? (
             <ul className="space-y-2">
               {summaryRows.map((row) => (
                 <li key={row.id} className="text-sm text-gray-600 flex items-start gap-2">
                   <span className={`inline-flex items-center rounded-full px-2 py-0.5 text-xs font-medium ${row.type === 'event' ? 'bg-[#ef6144]/10 text-[#ef6144]' : 'bg-blue-100 text-blue-700'}`}>
-                    {row.type === 'event' ? 'Evento' : 'Attività'}
+                    {row.type === 'event' ? tr('Evento', 'Event') : tr('Attività', 'Task')}
                   </span>
                   <span className="font-medium text-gray-700 min-w-[70px]">{row.detailTime}</span>
                   <span>{row.label}</span>
@@ -218,25 +219,25 @@ export default function EssentialHome() {
               ))}
             </ul>
           ) : (
-            <p className="text-sm text-gray-600">Nessun dettaglio operativo da mostrare in questo momento.</p>
+            <p className="text-sm text-gray-600">{tr('Nessun dettaglio operativo da mostrare in questo momento.', 'No operational details to show right now.')}</p>
           )}
         </CardContent>
       </Card>
 
       <BigTile
         icon={Briefcase}
-        title="Progetti coinvolto"
+        title={tr('Progetti coinvolti', 'Projects involved')}
         value={contextProjects.length}
-        subtitle="Apri progetti"
+        subtitle={tr('Apri progetti', 'Open projects')}
         onClick={() => navigate('/essenziale/progetti')}
       />
 
       {currentContext === 'personal' ? (
         <BigTile
           icon={Building2}
-          title="Società coinvolto"
+          title={tr('Società coinvolte', 'Companies involved')}
           value={companies.length}
-          subtitle="Apri società"
+          subtitle={tr('Apri società', 'Open companies')}
           onClick={() => navigate('/essenziale/societa')}
         />
       ) : null}
@@ -245,7 +246,7 @@ export default function EssentialHome() {
         <CardContent className="p-6">
           <div className="flex items-start justify-between gap-3">
             <div>
-              <p className="text-sm text-gray-500">Prossimo evento</p>
+              <p className="text-sm text-gray-500">{tr('Prossimo evento', 'Next event')}</p>
               {nextEvent ? (
                 <>
                   <p className="text-xl font-semibold text-gray-900 mt-2">{nextEvent.title}</p>
@@ -254,7 +255,7 @@ export default function EssentialHome() {
                   </p>
                 </>
               ) : (
-                <p className="text-lg font-medium text-gray-900 mt-2">Nessun evento in arrivo</p>
+                <p className="text-lg font-medium text-gray-900 mt-2">{tr('Nessun evento in arrivo', 'No upcoming events')}</p>
               )}
             </div>
             <div className="h-12 w-12 rounded-xl bg-[#ef6144]/10 flex items-center justify-center">
@@ -262,7 +263,7 @@ export default function EssentialHome() {
             </div>
           </div>
           <Button variant="outline" className="w-full mt-4 border-[#ef6144]/30 text-[#ef6144] hover:bg-[#ef6144]/10" onClick={() => navigate('/essenziale/calendario')}>
-            Apri calendario
+            {tr('Apri calendario', 'Open calendar')}
             <ArrowRight className="h-4 w-4 ml-2" />
           </Button>
         </CardContent>
@@ -271,7 +272,7 @@ export default function EssentialHome() {
       <Dialog open={unreadNotificationsOpen} onOpenChange={setUnreadNotificationsOpen}>
         <DialogContent className="sm:max-w-lg">
           <DialogHeader>
-            <DialogTitle>Notifiche non lette</DialogTitle>
+            <DialogTitle>{tr('Notifiche non lette', 'Unread notifications')}</DialogTitle>
           </DialogHeader>
           <div className="max-h-[60vh] overflow-y-auto space-y-3">
             {unreadNotifications.length > 0 ? (
@@ -285,7 +286,7 @@ export default function EssentialHome() {
                 </div>
               ))
             ) : (
-              <p className="text-sm text-gray-600">Nessuna notifica non letta nel contesto attuale.</p>
+              <p className="text-sm text-gray-600">{tr('Nessuna notifica non letta nel contesto attuale.', 'No unread notifications in the current context.')}</p>
             )}
           </div>
         </DialogContent>
@@ -294,13 +295,13 @@ export default function EssentialHome() {
       <Dialog open={unreadMessagesOpen} onOpenChange={setUnreadMessagesOpen}>
         <DialogContent className="sm:max-w-lg">
           <DialogHeader>
-            <DialogTitle>Messaggi non letti</DialogTitle>
+            <DialogTitle>{tr('Messaggi non letti', 'Unread messages')}</DialogTitle>
           </DialogHeader>
           <div className="max-h-[60vh] overflow-y-auto space-y-3">
             {unreadMessagesSorted.length > 0 ? (
               unreadMessagesSorted.map((message) => {
-                const projectName = projectNameById[message.project_id] || 'Progetto';
-                const channelName = contextChannels.find((channel) => channel.id === message.channel_id)?.name || 'Canale';
+                const projectName = projectNameById[message.project_id] || tr('Progetto', 'Project');
+                const channelName = contextChannels.find((channel) => channel.id === message.channel_id)?.name || tr('Canale', 'Channel');
                 return (
                   <div key={message.id} className="rounded-xl border border-[#ef6144]/20 p-3">
                     <p className="font-medium text-gray-900">{projectName} • {channelName}</p>
@@ -312,7 +313,7 @@ export default function EssentialHome() {
                 );
               })
             ) : (
-              <p className="text-sm text-gray-600">Nessun messaggio non letto nel contesto attuale.</p>
+              <p className="text-sm text-gray-600">{tr('Nessun messaggio non letto nel contesto attuale.', 'No unread messages in the current context.')}</p>
             )}
           </div>
         </DialogContent>
