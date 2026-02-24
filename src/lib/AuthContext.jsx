@@ -1,5 +1,5 @@
-import React, { createContext, useState, useContext, useEffect } from 'react';
 import { appClient } from '@/api/appClient';
+import { createContext, useContext, useEffect, useRef, useState } from 'react';
 
 const AuthContext = createContext();
 
@@ -11,6 +11,16 @@ export const AuthProvider = ({ children }) => {
   const [authError, setAuthError] = useState(null);
   const [appPublicSettings, setAppPublicSettings] = useState(null); // Contains only { id, public_settings }
   const [hasCompletedInitialAuthCheck, setHasCompletedInitialAuthCheck] = useState(false);
+  const isAuthenticatedRef = useRef(false);
+  const hasCompletedInitialAuthCheckRef = useRef(false);
+
+  useEffect(() => {
+    isAuthenticatedRef.current = isAuthenticated;
+  }, [isAuthenticated]);
+
+  useEffect(() => {
+    hasCompletedInitialAuthCheckRef.current = hasCompletedInitialAuthCheck;
+  }, [hasCompletedInitialAuthCheck]);
 
   useEffect(() => {
     checkAppState();
@@ -25,6 +35,7 @@ export const AuthProvider = ({ children }) => {
       if (event === 'SIGNED_OUT' || !session?.user) {
         setUser(null);
         setIsAuthenticated(false);
+        isAuthenticatedRef.current = false;
         setAuthError({
           type: 'auth_required',
           message: 'Authentication required'
@@ -33,7 +44,7 @@ export const AuthProvider = ({ children }) => {
       }
 
       if (event === 'SIGNED_IN' || event === 'USER_UPDATED' || event === 'INITIAL_SESSION') {
-        const shouldRunSilent = hasCompletedInitialAuthCheck || isAuthenticated;
+        const shouldRunSilent = hasCompletedInitialAuthCheckRef.current || isAuthenticatedRef.current;
         checkUserAuth({ silent: shouldRunSilent });
       }
     });
@@ -41,7 +52,7 @@ export const AuthProvider = ({ children }) => {
     return () => {
       unsubscribe();
     };
-  }, [hasCompletedInitialAuthCheck, isAuthenticated]);
+  }, []);
 
   const checkAppState = async () => {
     try {
@@ -69,12 +80,14 @@ export const AuthProvider = ({ children }) => {
       const currentUser = await appClient.auth.me();
       setUser(currentUser);
       setIsAuthenticated(true);
+      isAuthenticatedRef.current = true;
       setAuthError(null);
       if (!silent) {
         setIsLoadingAuth(false);
       }
       if (!hasCompletedInitialAuthCheck) {
         setHasCompletedInitialAuthCheck(true);
+        hasCompletedInitialAuthCheckRef.current = true;
       }
     } catch (error) {
       console.error('User auth check failed:', error);
@@ -82,12 +95,14 @@ export const AuthProvider = ({ children }) => {
         setIsLoadingAuth(false);
       }
       setIsAuthenticated(false);
+      isAuthenticatedRef.current = false;
       setAuthError({
         type: 'auth_required',
         message: 'Authentication required'
       });
       if (!hasCompletedInitialAuthCheck) {
         setHasCompletedInitialAuthCheck(true);
+        hasCompletedInitialAuthCheckRef.current = true;
       }
     }
   };
@@ -98,7 +113,12 @@ export const AuthProvider = ({ children }) => {
       const currentUser = await appClient.auth.signInWithPassword({ email, password });
       setUser(currentUser);
       setIsAuthenticated(true);
+      isAuthenticatedRef.current = true;
       setAuthError(null);
+      if (!hasCompletedInitialAuthCheckRef.current) {
+        setHasCompletedInitialAuthCheck(true);
+        hasCompletedInitialAuthCheckRef.current = true;
+      }
       return currentUser;
     } catch (error) {
       setAuthError({
@@ -120,9 +140,14 @@ export const AuthProvider = ({ children }) => {
         const currentUser = await appClient.auth.me();
         setUser(currentUser);
         setIsAuthenticated(true);
+        isAuthenticatedRef.current = true;
       }
 
       setAuthError(null);
+      if (!hasCompletedInitialAuthCheckRef.current) {
+        setHasCompletedInitialAuthCheck(true);
+        hasCompletedInitialAuthCheckRef.current = true;
+      }
       return response;
     } catch (error) {
       setAuthError({
@@ -138,6 +163,7 @@ export const AuthProvider = ({ children }) => {
   const logout = (shouldRedirect = true) => {
     setUser(null);
     setIsAuthenticated(false);
+    isAuthenticatedRef.current = false;
 
     if (shouldRedirect) {
       appClient.auth.logout(window.location.href);
