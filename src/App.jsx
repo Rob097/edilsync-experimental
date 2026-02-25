@@ -9,6 +9,7 @@ import { AuthProvider, useAuth } from '@/lib/AuthContext';
 import UserNotRegisteredError from '@/components/UserNotRegisteredError';
 import AuthScreen from '@/components/auth/AuthScreen';
 import EssentialAppRouter from '@/essential/EssentialAppRouter.jsx';
+import OperativeAppRouter from '@/operativa/OperativeAppRouter.jsx';
 
 const { Pages, Layout, mainPage } = pagesConfig;
 const mainPageKey = mainPage ?? Object.keys(Pages)[0];
@@ -47,6 +48,7 @@ const AuthenticatedApp = () => {
   return (
     <Routes>
       <Route path="/essenziale/*" element={<EssentialAppRouter />} />
+      <Route path="/operativa/*" element={<OperativeAppRouter />} />
       <Route path="/" element={
         <LayoutWrapper currentPageName={mainPageKey}>
           <MainPage />

@@ -1,0 +1,8 @@
+- Concetto di "Dispute" (Molto importante per vendite e marketing)
+- Migliorare gestione società (dipendenti, eccetera)
+- Iniziare a pensare all'introduzione della gestione "finanziaria"
+    - importo totale
+    - importo per società
+    - importo per attività extra
+    - ecc
+- Iniziare a pensare all'introduzione di un sistema di timbrature per società/progetto

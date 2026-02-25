@@ -43,7 +43,7 @@ import AssistantFloatingButton from '@/components/assistant/AssistantFloatingBut
 import LanguageSelector from '@/components/language/LanguageSelector';
 import TourProvider from '@/components/tour/TourProvider';
 import TourOverlay from '@/components/tour/TourOverlay';
-import { setEssentialMode } from '@/essential/essential-mode';
+import { setUiMode, UI_MODES } from '@/essential/essential-mode';
 import {
   Dialog,
   DialogContent,
@@ -59,6 +59,7 @@ export default function Layout({ children, currentPageName }) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [isChangingContext, setIsChangingContext] = useState(false);
   const [switchDialogOpen, setSwitchDialogOpen] = useState(false);
+  const [switchModeTarget, setSwitchModeTarget] = useState(null);
   const { t, currentLanguage } = useLanguage();
 
   const { data: user } = useQuery({
@@ -139,13 +140,36 @@ export default function Layout({ children, currentPageName }) {
     }
   };
 
-  const switchToEssentialMode = () => setSwitchDialogOpen(true);
-
-  const confirmSwitchToEssentialMode = () => {
-    setEssentialMode(true);
-    setSwitchDialogOpen(false);
-    navigate('/essenziale');
+  const switchToEssentialMode = () => {
+    setSwitchModeTarget(UI_MODES.ESSENTIAL);
+    setSwitchDialogOpen(true);
   };
+
+  const switchToOperationalMode = () => {
+    setSwitchModeTarget(UI_MODES.OPERATIONAL);
+    setSwitchDialogOpen(true);
+  };
+
+  const confirmModeSwitch = () => {
+    if (!switchModeTarget) return;
+
+    setUiMode(switchModeTarget);
+    setSwitchDialogOpen(false);
+    setSwitchModeTarget(null);
+    navigate(switchModeTarget === UI_MODES.OPERATIONAL ? '/operativa' : '/essenziale');
+  };
+
+  const switchDialogTitle = switchModeTarget === UI_MODES.OPERATIONAL
+    ? t('operationalMode.switchDialogTitle')
+    : t('essentialMode.switchDialogTitle');
+
+  const switchDialogDescription = switchModeTarget === UI_MODES.OPERATIONAL
+    ? t('operationalMode.switchDialogDescription')
+    : t('essentialMode.switchDialogDescription');
+
+  const switchDialogConfirm = switchModeTarget === UI_MODES.OPERATIONAL
+    ? t('operationalMode.switchDialogConfirm')
+    : t('essentialMode.switchDialogConfirm');
 
   const getInitials = (name) => {
     if (!name) return 'U';
@@ -250,6 +274,12 @@ export default function Layout({ children, currentPageName }) {
                     <Sparkles className="h-4 w-4 mr-2" />
                     {t('essentialMode.switchMenuItem')}
                   </DropdownMenuItem>
+                  {currentContext === 'company' && (
+                    <DropdownMenuItem onClick={switchToOperationalMode} className="cursor-pointer">
+                      <HardHat className="h-4 w-4 mr-2" />
+                      {t('operationalMode.switchMenuItem')}
+                    </DropdownMenuItem>
+                  )}
                   <DropdownMenuSeparator />
                   <div className="px-2 py-2">
                     <LanguageSelector />
@@ -335,20 +365,23 @@ export default function Layout({ children, currentPageName }) {
       <CookieBanner />
       <AssistantFloatingButton />
 
-      <Dialog open={switchDialogOpen} onOpenChange={setSwitchDialogOpen}>
+      <Dialog open={switchDialogOpen} onOpenChange={(open) => {
+        setSwitchDialogOpen(open);
+        if (!open) setSwitchModeTarget(null);
+      }}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>{t('essentialMode.switchDialogTitle')}</DialogTitle>
+            <DialogTitle>{switchDialogTitle}</DialogTitle>
             <DialogDescription>
-              {t('essentialMode.switchDialogDescription')}
+              {switchDialogDescription}
             </DialogDescription>
           </DialogHeader>
           <DialogFooter>
             <Button variant="outline" onClick={() => setSwitchDialogOpen(false)}>
               {t('common.cancel')}
             </Button>
-            <Button className="bg-[#ef6144] hover:bg-[#d9553a]" onClick={confirmSwitchToEssentialMode}>
-              {t('essentialMode.switchDialogConfirm')}
+            <Button className="bg-[#ef6144] hover:bg-[#d9553a]" onClick={confirmModeSwitch}>
+              {switchDialogConfirm}
             </Button>
           </DialogFooter>
         </DialogContent>

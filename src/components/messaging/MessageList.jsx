@@ -14,10 +14,12 @@ export default function MessageList({
   channelId, 
   projectId,
   currentUserEmail,
+  focusedMessageId,
   onNavigate
 }) {
   const queryClient = useQueryClient();
   const messagesContainerRef = useRef(null);
+  const messageRefs = useRef({});
   const [selectedDocument, setSelectedDocument] = useState(null);
   const [previewOpen, setPreviewOpen] = useState(false);
 
@@ -154,6 +156,7 @@ export default function MessageList({
   };
 
   useEffect(() => {
+    if (focusedMessageId) return;
     const container = messagesContainerRef.current;
     if (!container) return;
 
@@ -163,6 +166,18 @@ export default function MessageList({
 
     return () => cancelAnimationFrame(frame);
   }, [sortedMessages]);
+
+  useEffect(() => {
+    if (!focusedMessageId) return;
+    const node = messageRefs.current[focusedMessageId];
+    if (!node) return;
+    node.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    node.classList.add('ring-2', 'ring-[#ef6144]/40');
+    const timer = setTimeout(() => {
+      node.classList.remove('ring-2', 'ring-[#ef6144]/40');
+    }, 1800);
+    return () => clearTimeout(timer);
+  }, [focusedMessageId, sortedMessages]);
 
   if (isLoading) {
     return (
@@ -191,7 +206,7 @@ export default function MessageList({
             : resolvedSenderName;
 
           return (
-            <div key={message.id} className={`flex gap-3 ${isOwnMessage ? 'flex-row-reverse' : ''}`}>
+            <div key={message.id} ref={(element) => { messageRefs.current[message.id] = element; }} className={`flex gap-3 rounded-lg transition-all ${isOwnMessage ? 'flex-row-reverse' : ''}`}>
               {!isOwnMessage && (
                 <Avatar className="h-8 w-8 flex-shrink-0">
                   {message.sender_context_type === 'company' ? (
