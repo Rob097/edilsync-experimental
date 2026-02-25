@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
 import { appClient } from '@/api/appClient';
@@ -75,16 +75,20 @@ export default function ProjectDetail() {
   const queryClient = useQueryClient();
   const urlParams = new URLSearchParams(window.location.search);
   const projectId = urlParams.get('id');
+  const initialTab = urlParams.get('tab');
+  const initialSection = urlParams.get('section');
+  const initialItemId = urlParams.get('itemId');
   
   const [inviteDialogOpen, setInviteDialogOpen] = useState(false);
   const [editProjectDialogOpen, setEditProjectDialogOpen] = useState(false);
-  const [activeTab, setActiveTab] = useState('cantiere');
+  const [activeTab, setActiveTab] = useState(initialTab || 'cantiere');
   const [quickActionOpen, setQuickActionOpen] = useState(false);
-  const [lavoriSection, setLavoriSection] = useState('all');
-  const [infoSection, setInfoSection] = useState('all');
+  const [lavoriSection, setLavoriSection] = useState(initialTab === 'lavori' && initialSection ? initialSection : 'all');
+  const [infoSection, setInfoSection] = useState(initialTab === 'info' && initialSection ? initialSection : 'all');
   const [documentUploadOpen, setDocumentUploadOpen] = useState(false);
   const [changeCreateOpen, setChangeCreateOpen] = useState(false);
   const [taskFilterMilestoneId, setTaskFilterMilestoneId] = useState(null);
+  const [hasScrolledToItem, setHasScrolledToItem] = useState(false);
 
   const acceptInviteMutation = useMutation({
     mutationFn: async (participantId) => {
@@ -242,6 +246,22 @@ export default function ProjectDetail() {
   });
   
   const blockedTasks = allTasks.filter(t => t.status === 'blocked');
+
+  useEffect(() => {
+    if (!initialItemId || hasScrolledToItem) return;
+    if (activeTab !== 'lavori' || lavoriSection !== 'tasks') return;
+    if (allTasks.length === 0) return;
+
+    const timer = setTimeout(() => {
+      const element = document.getElementById(initialItemId);
+      if (element) {
+        element.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        setHasScrolledToItem(true);
+      }
+    }, 350);
+
+    return () => clearTimeout(timer);
+  }, [initialItemId, hasScrolledToItem, activeTab, lavoriSection, allTasks.length]);
 
   // Navigation helper
   const navigateToSection = (tab, section = null, itemId = null) => {

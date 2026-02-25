@@ -23,7 +23,7 @@ export default function EssentialTasksSection({ projectId, participants, userPar
   const queryClient = useQueryClient();
   const [title, setTitle] = useState('');
   const [dueDate, setDueDate] = useState('');
-  const [assignedId, setAssignedId] = useState(userParticipation?.id || '');
+  const [assignedId, setAssignedId] = useState('none');
 
   const activeParticipants = useMemo(() => participants.filter((entry) => entry.status === 'active'), [participants]);
 
@@ -72,23 +72,24 @@ export default function EssentialTasksSection({ projectId, participants, userPar
   const createTaskMutation = useMutation({
     mutationFn: async () => {
       const assignee = activeParticipants.find((entry) => entry.id === assignedId);
-      if (!assignee) return;
+
       await appClient.entities.Task.create({
         project_id: projectId,
         title: title.trim(),
         status: 'not_started',
         due_date: dueDate || null,
-        assigned_participant_id: assignee.id,
-        assigned_participant_type: assignee.participant_type,
-        assigned_user_email: assignee.user_email || null,
-        assigned_user_name: assignee.user_display_name || assignee.user_email || null,
-        assigned_company_id: assignee.company_id || null,
-        assigned_company_name: assignee.company_name || null,
+        assigned_participant_id: assignee?.id || null,
+        assigned_participant_type: assignee?.participant_type || null,
+        assigned_user_email: assignee?.user_email || null,
+        assigned_user_name: assignee ? (assignee.user_display_name || assignee.user_email || null) : null,
+        assigned_company_id: assignee?.company_id || null,
+        assigned_company_name: assignee?.company_name || null,
       });
     },
     onSuccess: async () => {
       setTitle('');
       setDueDate('');
+      setAssignedId('none');
       await queryClient.invalidateQueries({ queryKey: ['essentialTasks', projectId] });
     },
   });
@@ -116,6 +117,7 @@ export default function EssentialTasksSection({ projectId, participants, userPar
                   <SelectValue placeholder={tr('Assegna a', 'Assign to')} />
                 </SelectTrigger>
                 <SelectContent>
+                  <SelectItem value="none">{tr('Nessuno', 'None')}</SelectItem>
                   {activeParticipants.map((participant) => (
                     <SelectItem key={participant.id} value={participant.id}>
                       <div className="flex items-center gap-2">
@@ -150,7 +152,7 @@ export default function EssentialTasksSection({ projectId, participants, userPar
             <Button
               className="w-full bg-[#ef6144] hover:bg-[#d9553a] text-white"
               onClick={() => createTaskMutation.mutate()}
-              disabled={createTaskMutation.isPending || !title.trim() || !assignedId}
+              disabled={createTaskMutation.isPending || !title.trim()}
             >
               {createTaskMutation.isPending ? <Loader2 className="h-4 w-4 mr-2 animate-spin" /> : null}
               {tr('Aggiungi attività', 'Add task')}

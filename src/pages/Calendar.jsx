@@ -3,12 +3,10 @@ import { appClient } from '@/api/appClient';
 import { useQuery } from '@tanstack/react-query';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { 
   Plus, 
   ChevronLeft, 
-  ChevronRight,
-  Calendar as CalendarIcon
+  ChevronRight
 } from "lucide-react";
 import { format, startOfMonth, endOfMonth, eachDayOfInterval, isSameMonth, isSameDay, addMonths, subMonths, startOfWeek, endOfWeek } from 'date-fns';
 import { it, enUS } from 'date-fns/locale';
@@ -17,6 +15,7 @@ import ContextBadge from '@/components/context/ContextBadge';
 import CalendarDayView from '@/components/calendar/CalendarDayView';
 import EventDialog from '@/components/calendar/EventDialog';
 import EventDetailDialog from '@/components/calendar/EventDetailDialog';
+import TaskDetailDialog from '@/components/calendar/TaskDetailDialog';
 import { useLanguage } from '@/components/i18n/useLanguage';
 
 export default function Calendar() {
@@ -27,6 +26,8 @@ export default function Calendar() {
   const [eventDialogOpen, setEventDialogOpen] = useState(false);
   const [selectedEvent, setSelectedEvent] = useState(null);
   const [eventDetailOpen, setEventDetailOpen] = useState(false);
+  const [selectedTask, setSelectedTask] = useState(null);
+  const [taskDetailOpen, setTaskDetailOpen] = useState(false);
 
   const { data: user, isLoading: userLoading } = useQuery({
     queryKey: ['currentUser'],
@@ -53,6 +54,35 @@ export default function Calendar() {
     staleTime: 5 * 60 * 1000,
   });
 
+  const { data: projectParticipations = [] } = useQuery({
+    queryKey: ['calendarProjectParticipations', user?.id, companyMemberships],
+    queryFn: async () => {
+      const allParticipations = await appClient.entities.ProjectParticipant.list();
+      const companyIds = companyMemberships.map(m => m.company_id);
+
+      return allParticipations.filter((participation) =>
+        (participation.status === 'active' || participation.status === 'invited') && (
+          (participation.participant_type === 'personal' && participation.user_id === user?.id) ||
+          (participation.participant_type === 'company' && companyIds.includes(participation.company_id))
+        )
+      );
+    },
+    enabled: !!user?.id,
+    staleTime: 2 * 60 * 1000,
+  });
+
+  const { data: projects = [] } = useQuery({
+    queryKey: ['calendarProjects', projectParticipations],
+    queryFn: async () => {
+      if (projectParticipations.length === 0) return [];
+      const projectIds = [...new Set(projectParticipations.map(p => p.project_id))];
+      const allProjects = await appClient.entities.Project.list();
+      return allProjects.filter(project => projectIds.includes(project.id));
+    },
+    enabled: projectParticipations.length > 0,
+    staleTime: 60 * 1000,
+  });
+
   const { data: events = [], isLoading: eventsLoading } = useQuery({
     queryKey: ['events'],
     queryFn: () => appClient.entities.Event.filter({ status: 'scheduled' }),
@@ -68,6 +98,27 @@ export default function Calendar() {
 
   const currentContext = user?.active_context || 'personal';
   const currentCompany = companies.find(c => c.id === user?.active_company_id);
+
+  const contextProjectIds = useMemo(() => {
+    return projectParticipations
+      .filter(participation => {
+        if (currentContext === 'personal') {
+          return participation.participant_type === 'personal' && participation.user_id === user?.id;
+        }
+        return participation.participant_type === 'company' && participation.company_id === user?.active_company_id;
+      })
+      .map(participation => participation.project_id);
+  }, [projectParticipations, currentContext, user?.id, user?.active_company_id]);
+
+  const { data: contextProjectTasks = [], isLoading: tasksLoading } = useQuery({
+    queryKey: ['calendarContextTasks', contextProjectIds],
+    queryFn: () => {
+      if (contextProjectIds.length === 0) return [];
+      return appClient.entities.Task.filter({ project_id: contextProjectIds }, '-created_date');
+    },
+    enabled: contextProjectIds.length > 0,
+    staleTime: 60 * 1000,
+  });
 
   // Filter events based on user involvement
   const userEvents = useMemo(() => {
@@ -110,6 +161,48 @@ export default function Calendar() {
     }
   }, [userEvents, currentContext, user, eventParticipants]);
 
+  const projectNameById = useMemo(() => {
+    return projects.reduce((acc, project) => {
+      acc[project.id] = project.name;
+      return acc;
+    }, {});
+  }, [projects]);
+
+  const contextAssignedTasks = useMemo(() => {
+    return contextProjectTasks.filter(task => {
+      if (!task.due_date) return false;
+      if (task.assigned_user_email === user?.email) return true;
+
+      if (currentContext === 'company' && task.assigned_company_id === user?.active_company_id) {
+        return true;
+      }
+
+      return false;
+    });
+  }, [contextProjectTasks, currentContext, user?.email, user?.active_company_id]);
+
+  const contextCalendarItems = useMemo(() => {
+    const eventItems = contextEvents.map(event => ({
+      ...event,
+      entry_type: 'event',
+    }));
+
+    const taskItems = contextAssignedTasks.map(task => ({
+      id: `task-${task.id}`,
+      source_id: task.id,
+      entry_type: 'task',
+      title: task.title,
+      description: task.description,
+      due_date: task.due_date,
+      project_id: task.project_id,
+      project_name: projectNameById[task.project_id],
+      status: task.status,
+      room_area: task.room_area,
+    }));
+
+    return [...eventItems, ...taskItems];
+  }, [contextEvents, contextAssignedTasks, projectNameById]);
+
   // Calendar days
   const monthStart = startOfMonth(currentDate);
   const monthEnd = endOfMonth(currentDate);
@@ -118,15 +211,19 @@ export default function Calendar() {
   const calendarDays = eachDayOfInterval({ start: calendarStart, end: calendarEnd });
 
   const getEventsForDay = (day) => {
-    return contextEvents.filter(event => {
-      const startDate = new Date(event.start_datetime);
-      const endDate = new Date(event.end_datetime);
+    return contextCalendarItems.filter(item => {
+      const currentDateDay = format(day, 'yyyy-MM-dd');
+
+      if (item.entry_type === 'task') {
+        return item.due_date === currentDateDay;
+      }
+
+      const startDate = new Date(item.start_datetime);
+      const endDate = new Date(item.end_datetime);
       const currentDate = new Date(format(day, 'yyyy-MM-dd'));
-      
-      // Check if the current date is within the event's date range
       const eventStartDay = new Date(format(startDate, 'yyyy-MM-dd'));
       const eventEndDay = new Date(format(endDate, 'yyyy-MM-dd'));
-      
+
       return currentDate >= eventStartDay && currentDate <= eventEndDay;
     });
   };
@@ -144,6 +241,12 @@ export default function Calendar() {
     setEventDetailOpen(true);
   };
 
+  const handleTaskClick = (task, e) => {
+    e?.stopPropagation?.();
+    setSelectedTask(task);
+    setTaskDetailOpen(true);
+  };
+
   const handleCreateEvent = () => {
     setSelectedEvent(null);
     setEventDialogOpen(true);
@@ -154,7 +257,7 @@ export default function Calendar() {
     : ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
   const dateLocale = currentLanguage === 'it' ? it : enUS;
 
-  if (userLoading || eventsLoading || participantsLoading) {
+  if (userLoading || eventsLoading || participantsLoading || tasksLoading) {
     return (
       <div className="space-y-6">
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
@@ -251,10 +354,22 @@ export default function Calendar() {
                     {dayEvents.slice(0, 3).map(event => (
                       <div
                         key={event.id}
-                        onClick={(e) => handleEventClick(event, e)}
-                        className="text-xs p-1 rounded bg-[#ef6144]/10 text-[#ef6144] truncate hover:bg-[#ef6144]/20 cursor-pointer"
+                        onClick={(e) => {
+                          if (event.entry_type === 'event') {
+                            handleEventClick(event, e);
+                          } else {
+                            handleTaskClick(event, e);
+                          }
+                        }}
+                        className={`text-xs p-1 rounded truncate ${
+                          event.entry_type === 'task'
+                            ? 'bg-blue-100 text-blue-700 cursor-pointer hover:bg-blue-200'
+                            : 'bg-[#ef6144]/10 text-[#ef6144] hover:bg-[#ef6144]/20 cursor-pointer'
+                        }`}
                       >
-                        {format(new Date(event.start_datetime), 'HH:mm')} {event.title}
+                        {event.entry_type === 'task'
+                          ? `${currentLanguage === 'it' ? 'Attività' : 'Task'}: ${event.title} ${event.project_name ? `• ${event.project_name}` : ''}`
+                          : `${format(new Date(event.start_datetime), 'HH:mm')} ${event.title}`}
                       </div>
                     ))}
                     {dayEvents.length > 3 && (
@@ -268,7 +383,7 @@ export default function Calendar() {
                     {dayEvents.slice(0, 3).map(event => (
                       <div
                         key={event.id}
-                        className="w-1.5 h-1.5 rounded-full bg-[#ef6144]"
+                        className={`w-1.5 h-1.5 rounded-full ${event.entry_type === 'task' ? 'bg-blue-500' : 'bg-[#ef6144]'}`}
                       />
                     ))}
                     {dayEvents.length > 3 && (
@@ -290,6 +405,10 @@ export default function Calendar() {
           onEventClick={(event) => {
             setSelectedEvent(event);
             setEventDetailOpen(true);
+          }}
+          onTaskClick={(task) => {
+            setSelectedTask(task);
+            setTaskDetailOpen(true);
           }}
           onClose={() => setSelectedDate(null)}
           onCreateEvent={() => {
@@ -320,6 +439,12 @@ export default function Calendar() {
           setSelectedEvent(event);
           setEventDialogOpen(true);
         }}
+      />
+
+      <TaskDetailDialog
+        open={taskDetailOpen}
+        onOpenChange={setTaskDetailOpen}
+        task={selectedTask}
       />
     </div>
   );

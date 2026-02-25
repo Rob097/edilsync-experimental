@@ -76,23 +76,11 @@ export default function TaskDialog({ open, onOpenChange, task, projectId }) {
         blocked_by_name: task.blocked_by_name || '',
       });
     } else {
-      // Set default assignee based on context
-      let defaultAssignee = '';
-      if (user?.active_context === 'personal') {
-        // Find user's personal participation
-        const userParticipation = participants.find(p => p.user_email === user?.email && p.participant_type === 'personal');
-        defaultAssignee = userParticipation?.id || '';
-      } else if (user?.active_context === 'company' && user?.active_company_id) {
-        // Find company's participation
-        const companyParticipation = participants.find(p => p.company_id === user?.active_company_id && p.participant_type === 'company');
-        defaultAssignee = companyParticipation?.id || '';
-      }
-
       setFormData({
         title: '',
         description: '',
         status: 'not_started',
-        assigned_participant_id: defaultAssignee,
+        assigned_participant_id: '',
         room_area: '',
         due_date: '',
         milestone_id: '',
@@ -139,8 +127,8 @@ export default function TaskDialog({ open, onOpenChange, task, projectId }) {
       title: formData.title,
       description: formData.description,
       status: formData.status,
-      assigned_participant_id: formData.assigned_participant_id,
-      assigned_participant_type: assignee?.participant_type || 'personal',
+      assigned_participant_id: formData.assigned_participant_id || null,
+      assigned_participant_type: assignee?.participant_type || null,
       assigned_user_email: assignee?.participant_type === 'personal' ? assignee.user_email : null,
       assigned_user_name: assignedUserName,
       assigned_company_id: assignee?.participant_type === 'company' ? assignee.company_id : null,
@@ -157,7 +145,7 @@ export default function TaskDialog({ open, onOpenChange, task, projectId }) {
     saveMutation.mutate(data);
   };
 
-  const isValid = formData.title && formData.assigned_participant_id;
+  const isValid = formData.title;
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -221,7 +209,7 @@ export default function TaskDialog({ open, onOpenChange, task, projectId }) {
             companies={companies}
             allUsers={allUsers}
             value={formData.assigned_participant_id}
-            onChange={(option) => setFormData(prev => ({ ...prev, assigned_participant_id: option.id }))}
+            onChange={(option) => setFormData(prev => ({ ...prev, assigned_participant_id: option?.id || '' }))}
           />
 
           <div className="space-y-2">

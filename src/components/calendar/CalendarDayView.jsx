@@ -7,13 +7,15 @@ import { X, Plus, Clock, MapPin } from "lucide-react";
 import EmptyState from '@/components/ui/EmptyState';
 import { useLanguage } from '@/components/i18n/useLanguage';
 
-export default function CalendarDayView({ date, events, onEventClick, onClose, onCreateEvent }) {
+export default function CalendarDayView({ date, events, onEventClick, onTaskClick, onClose, onCreateEvent }) {
   const { currentLanguage } = useLanguage();
   const tr = (itText, enText) => currentLanguage === 'it' ? itText : enText;
   const dateLocale = currentLanguage === 'it' ? it : enUS;
-  const sortedEvents = [...events].sort((a, b) => 
-    new Date(a.start_datetime) - new Date(b.start_datetime)
-  );
+  const sortedEvents = [...events].sort((a, b) => {
+    const firstDate = a.entry_type === 'task' ? new Date(a.due_date) : new Date(a.start_datetime);
+    const secondDate = b.entry_type === 'task' ? new Date(b.due_date) : new Date(b.start_datetime);
+    return firstDate - secondDate;
+  });
 
   return (
     <Card>
@@ -37,17 +39,27 @@ export default function CalendarDayView({ date, events, onEventClick, onClose, o
             {sortedEvents.map(event => (
               <div
                 key={event.id}
-                onClick={() => onEventClick(event)}
-                className="p-4 rounded-lg border bg-white hover:bg-gray-50 cursor-pointer transition-colors"
+                onClick={() => {
+                  if (event.entry_type === 'event') {
+                    onEventClick(event);
+                  } else {
+                    onTaskClick?.(event);
+                  }
+                }}
+                className="p-4 rounded-lg border bg-white transition-colors hover:bg-gray-50 cursor-pointer"
               >
                 <div className="flex items-start justify-between">
                   <div className="flex-1 min-w-0">
-                    <h4 className="font-medium text-gray-900">{event.title}</h4>
+                    <h4 className="font-medium text-gray-900">
+                      {event.entry_type === 'task' ? `${tr('Attività', 'Task')}: ${event.title}` : event.title}
+                    </h4>
                     <div className="flex items-center gap-4 mt-1 text-sm text-gray-500">
                       <div className="flex items-center gap-1">
                         <Clock className="h-3.5 w-3.5" />
                         <span>
-                          {format(new Date(event.start_datetime), 'HH:mm')} - {format(new Date(event.end_datetime), 'HH:mm')}
+                          {event.entry_type === 'task'
+                            ? tr('Scadenza giornata', 'Due today')
+                            : `${format(new Date(event.start_datetime), 'HH:mm')} - ${format(new Date(event.end_datetime), 'HH:mm')}`}
                         </span>
                       </div>
                       {event.location && (
@@ -57,6 +69,11 @@ export default function CalendarDayView({ date, events, onEventClick, onClose, o
                         </div>
                       )}
                     </div>
+                    {event.entry_type === 'task' && event.project_name && (
+                      <p className="text-sm text-gray-600 mt-2">
+                        {tr('Progetto', 'Project')}: {event.project_name}
+                      </p>
+                    )}
                     {event.description && (
                       <p className="text-sm text-gray-500 mt-2 line-clamp-2">{event.description}</p>
                     )}

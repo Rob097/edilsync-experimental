@@ -153,6 +153,7 @@ export default function TaskList({ projectId, canEdit, filterMilestoneId }) {
                 return (
                   <div
                     key={task.id}
+                    id={`task-${task.id}`}
                     onClick={() => canEdit && handleEdit(task)}
                     className={`p-4 rounded-lg border ${canEdit ? 'cursor-pointer hover:bg-gray-50' : ''} transition-colors`}
                   >

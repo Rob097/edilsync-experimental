@@ -87,9 +87,7 @@
   "required": [
     "project_id",
     "title",
-    "status",
-    "assigned_participant_id",
-    "assigned_participant_type"
+    "status"
   ],
   "rls": {
     "create": {

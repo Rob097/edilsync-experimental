@@ -125,6 +125,7 @@ export default function TaskBoard({ projectId, canEdit, onTaskCreate, filteredTa
                         >
                           {(provided, snapshot) => (
                             <div
+                              id={`task-${task.id}`}
                               ref={provided.innerRef}
                               {...provided.draggableProps}
                               {...provided.dragHandleProps}

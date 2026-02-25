@@ -55,6 +55,7 @@ export default function AssigneeSelector({
   );
 
   const selectedOption = [...options.users, ...options.companies].find(o => o.id === value);
+  const noneLabel = tr('Nessuno', 'None');
 
   const handleSelect = (option) => {
     onChange(option);
@@ -64,7 +65,7 @@ export default function AssigneeSelector({
 
   return (
     <div className="space-y-2">
-      <Label>{label || tr('Assegnato a *', 'Assigned to *')}</Label>
+      <Label>{label || tr('Assegnato a', 'Assigned to')}</Label>
       <div className="relative">
         <button
           type="button"
@@ -81,7 +82,7 @@ export default function AssigneeSelector({
               <span className="flex-1">{selectedOption.label}</span>
             </>
           ) : (
-            <span className="text-gray-400">{tr('Seleziona assegnatario...', 'Select assignee...')}</span>
+            <span className="text-gray-600">{noneLabel}</span>
           )}
         </button>
 
@@ -99,6 +100,18 @@ export default function AssigneeSelector({
             
             <ScrollArea className="max-h-64">
               <div className="p-1">
+                <button
+                  type="button"
+                  onClick={() => handleSelect({ id: '', type: 'none', label: noneLabel })}
+                  className={cn(
+                    "w-full flex items-center gap-2 px-2 py-1.5 rounded hover:bg-gray-100 mb-2",
+                    !value && "bg-gray-100"
+                  )}
+                >
+                  <span className="flex-1 text-sm text-left">{noneLabel}</span>
+                  {!value && <Check className="h-4 w-4 text-[#ef6144]" />}
+                </button>
+
                 {filteredUsers.length > 0 && (
                   <div className="mb-2">
                     <div className="px-2 py-1 text-xs font-medium text-gray-500">{tr('Utenti', 'Users')}</div>
