@@ -1,4 +1,4 @@
-- Concetto di "Dispute" (Molto importante per vendite e marketing)
+- [X] Concetto di "Dispute" (Molto importante per vendite e marketing)
 - Migliorare gestione società (dipendenti, eccetera)
 - Iniziare a pensare all'introduzione della gestione "finanziaria"
     - importo totale
@@ -6,3 +6,15 @@
     - importo per attività extra
     - ecc
 - Iniziare a pensare all'introduzione di un sistema di timbrature per società/progetto
+- Ampliare ventaglio di professionisti + migliorie controlli permessi
+- Migliorare usabilità per progettisti
+    - Migliore gestione / consultazione dei design/progetti
+    - Analizzare formati comuni
+    - Analizzare difficoltà integrazione BIM
+- Ragionare al concetto di "Decision Making".
+- Parte pubblica
+    - Landing page
+    - Pagine in base al ruolo
+    - Mega menu
+    - Pagine pubbliche varie
+    - Blog

@@ -26,6 +26,10 @@ const typeIcons = {
   event_updated: Calendar,
   conflict_resolved: Check,
   participant_declined: AlertTriangle,
+  task_status_changed: AlertTriangle,
+  dispute_opened: AlertTriangle,
+  dispute_status_changed: AlertTriangle,
+  dispute_commented: AlertTriangle,
 };
 
 const typeColors = {
@@ -34,7 +38,26 @@ const typeColors = {
   event_updated: 'bg-yellow-100 text-yellow-700',
   conflict_resolved: 'bg-green-100 text-green-700',
   participant_declined: 'bg-orange-100 text-orange-700',
+  task_status_changed: 'bg-red-100 text-red-700',
+  dispute_opened: 'bg-red-100 text-red-700',
+  dispute_status_changed: 'bg-purple-100 text-purple-700',
+  dispute_commented: 'bg-orange-100 text-orange-700',
 };
+
+const DIRECT_PROJECT_NOTIFICATION_TYPES = new Set([
+  'project_invite',
+  'dispute_opened',
+  'dispute_status_changed',
+  'dispute_commented',
+  'task_status_changed',
+]);
+
+const EVENT_BASED_NOTIFICATION_TYPES = new Set([
+  'event_invite',
+  'event_cancelled',
+  'event_updated',
+  'conflict_resolved',
+]);
 
 export default function Notifications() {
   const { t } = useLanguage();
@@ -56,6 +79,27 @@ export default function Notifications() {
     queryKey: ['allNotifications', user?.email],
     queryFn: () => appClient.entities.Notification.filter({ user_email: user?.email }),
     enabled: !!user?.email,
+  });
+
+  const { data: projects = [] } = useQuery({
+    queryKey: ['projectsForNotifications'],
+    queryFn: () => appClient.entities.Project.list(),
+    enabled: !!user?.email,
+    staleTime: 2 * 60 * 1000,
+  });
+
+  const { data: events = [] } = useQuery({
+    queryKey: ['eventsForNotifications'],
+    queryFn: () => appClient.entities.Event.list(),
+    enabled: !!user?.email,
+    staleTime: 2 * 60 * 1000,
+  });
+
+  const { data: messages = [] } = useQuery({
+    queryKey: ['messagesForNotifications'],
+    queryFn: () => appClient.entities.Message.list('-created_date', 500),
+    enabled: !!user?.email,
+    staleTime: 2 * 60 * 1000,
   });
 
   const currentContext = user?.active_context || 'personal';
@@ -92,12 +136,52 @@ export default function Notifications() {
     },
   });
 
-  const handleNotificationClick = async (notification) => {
-    // Mark as read
-    if (!notification.is_read) {
-      await markAsReadMutation.mutateAsync(notification.id);
+  const eventsById = React.useMemo(() => {
+    return events.reduce((map, event) => {
+      map[event.id] = event;
+      return map;
+    }, {});
+  }, [events]);
+
+  const projectsById = React.useMemo(() => {
+    return projects.reduce((map, project) => {
+      map[project.id] = project;
+      return map;
+    }, {});
+  }, [projects]);
+
+  const messagesById = React.useMemo(() => {
+    return messages.reduce((map, message) => {
+      map[message.id] = message;
+      return map;
+    }, {});
+  }, [messages]);
+
+  const resolveNotificationProjectId = (notification) => {
+    if (!notification?.related_event_id) return null;
+
+    if (DIRECT_PROJECT_NOTIFICATION_TYPES.has(notification.type)) {
+      return notification.related_event_id;
     }
 
+    if (EVENT_BASED_NOTIFICATION_TYPES.has(notification.type)) {
+      return eventsById[notification.related_event_id]?.project_id || null;
+    }
+
+    if (notification.type === 'message_mention') {
+      return messagesById[notification.related_event_id]?.project_id || null;
+    }
+
+    return null;
+  };
+
+  const resolveNotificationProjectName = (notification) => {
+    const projectId = resolveNotificationProjectId(notification);
+    if (!projectId) return null;
+    return projectsById[projectId]?.name || null;
+  };
+
+  const handleNotificationClick = (notification) => {
     // Navigate based on notification type
     if (!notification.related_event_id) return;
 
@@ -116,8 +200,20 @@ export default function Notifications() {
         break;
       
       case 'message_mention':
-        // Navigate to project detail (messages tab)
-        navigate(createPageUrl('ProjectDetail') + `?id=${notification.related_event_id}`);
+        // Navigate to project detail using message project if available
+        if (messagesById[notification.related_event_id]?.project_id) {
+          navigate(createPageUrl('ProjectDetail') + `?id=${messagesById[notification.related_event_id].project_id}&tab=info&section=chat`);
+        }
+        break;
+
+      case 'task_status_changed':
+        navigate(createPageUrl('ProjectDetail') + `?id=${notification.related_event_id}&tab=lavori&section=tasks`);
+        break;
+
+      case 'dispute_opened':
+      case 'dispute_status_changed':
+      case 'dispute_commented':
+        navigate(createPageUrl('ProjectDetail') + `?id=${notification.related_event_id}&tab=lavori&section=disputes`);
         break;
       
       default:
@@ -185,6 +281,11 @@ export default function Notifications() {
                           <p className="text-sm text-gray-500 mt-0.5">
                             {notification.message}
                           </p>
+                          {resolveNotificationProjectName(notification) ? (
+                            <p className="text-xs text-gray-500 mt-1">
+                              {t('notificationsPage.projectContext', { project: resolveNotificationProjectName(notification) })}
+                            </p>
+                          ) : null}
                         </div>
                         {!notification.is_read && (
                           <Button

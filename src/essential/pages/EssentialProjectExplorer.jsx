@@ -4,13 +4,14 @@ import { useQuery } from '@tanstack/react-query';
 import { appClient } from '@/api/appClient';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { MessageSquare, CheckCircle2, Flag, FileText, ReceiptText, ArrowRight } from 'lucide-react';
+import { MessageSquare, CheckCircle2, Flag, FileText, ReceiptText, ShieldAlert, ArrowRight } from 'lucide-react';
 import EditProjectDialog from '@/components/project/EditProjectDialog';
 import { useEssentialData } from '@/essential/useEssentialData';
 import EssentialTasksSection from '@/essential/project/EssentialTasksSection';
 import EssentialMilestonesSection from '@/essential/project/EssentialMilestonesSection';
 import EssentialDocumentsSection from '@/essential/project/EssentialDocumentsSection';
 import EssentialChangeRequestsSection from '@/essential/project/EssentialChangeRequestsSection';
+import DisputeCaseList from '@/components/project/DisputeCaseList';
 import ProjectMessaging from '@/components/messaging/ProjectMessaging';
 import { useLanguage } from '@/components/i18n/useLanguage';
 
@@ -48,6 +49,7 @@ export default function EssentialProjectExplorer() {
     { key: 'milestone', label: tr('Milestone', 'Milestones'), icon: Flag },
     { key: 'documenti', label: tr('Documenti', 'Documents'), icon: FileText },
     { key: 'richieste', label: tr('Richieste', 'Requests'), icon: ReceiptText },
+    { key: 'dispute', label: tr('Dispute', 'Disputes'), icon: ShieldAlert },
   ];
 
   const [editProjectDialogOpen, setEditProjectDialogOpen] = useState(false);
@@ -203,6 +205,16 @@ export default function EssentialProjectExplorer() {
           canCreate={canCreateChangeRequest}
           canRespond={canRespondToChangeRequest}
           currentUser={user}
+        />
+      ) : null}
+
+      {section === 'dispute' ? (
+        <DisputeCaseList
+          projectId={projectId}
+          currentUser={user}
+          currentParticipant={userParticipation}
+          canCreate={isActiveParticipant}
+          canRespond={isActiveParticipant}
         />
       ) : null}
     </div>

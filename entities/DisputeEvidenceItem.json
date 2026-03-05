@@ -1,0 +1,43 @@
+{
+  "name": "DisputeEvidenceItem",
+  "type": "object",
+  "properties": {
+    "dispute_case_id": {
+      "type": "string",
+      "description": "Reference to DisputeCase"
+    },
+    "project_id": {
+      "type": "string",
+      "description": "Reference to Project"
+    },
+    "source_type": {
+      "type": "string",
+      "enum": [
+        "task",
+        "change_request",
+        "message",
+        "document_comment",
+        "event",
+        "manual_note"
+      ],
+      "description": "Origin of evidence"
+    },
+    "source_id": {
+      "type": "string",
+      "description": "Optional id of linked source entity"
+    },
+    "snapshot": {
+      "type": "object",
+      "description": "Snapshot payload of linked entity"
+    },
+    "note": {
+      "type": "string",
+      "description": "Optional note"
+    }
+  },
+  "required": [
+    "dispute_case_id",
+    "project_id",
+    "source_type"
+  ]
+}

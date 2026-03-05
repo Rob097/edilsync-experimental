@@ -1,0 +1,135 @@
+{
+  "name": "DisputeCase",
+  "type": "object",
+  "properties": {
+    "project_id": {
+      "type": "string",
+      "description": "Reference to Project"
+    },
+    "task_id": {
+      "type": "string",
+      "description": "Optional reference to Task when dispute originates from a task"
+    },
+    "change_request_id": {
+      "type": "string",
+      "description": "Optional reference to ChangeRequest"
+    },
+    "opened_by_participant_id": {
+      "type": "string",
+      "description": "ProjectParticipant opening the dispute"
+    },
+    "against_participant_id": {
+      "type": "string",
+      "description": "Optional target ProjectParticipant"
+    },
+    "category": {
+      "type": "string",
+      "enum": [
+        "scope",
+        "cost",
+        "delay",
+        "quality",
+        "payment",
+        "other"
+      ],
+      "default": "other",
+      "description": "Dispute category"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "open",
+        "awaiting_response",
+        "in_review",
+        "resolved",
+        "closed_no_agreement",
+        "escalated"
+      ],
+      "default": "open",
+      "description": "Dispute status"
+    },
+    "title": {
+      "type": "string",
+      "description": "Dispute title"
+    },
+    "summary": {
+      "type": "string",
+      "description": "Dispute summary"
+    },
+    "amount_impact": {
+      "type": "number",
+      "description": "Claimed amount impact"
+    },
+    "time_impact_days": {
+      "type": "number",
+      "description": "Claimed delay in days"
+    },
+    "resolution_note": {
+      "type": "string",
+      "description": "Resolution note"
+    },
+    "resolved_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Resolution datetime"
+    }
+  },
+  "required": [
+    "project_id",
+    "title",
+    "summary",
+    "category",
+    "status"
+  ],
+  "rls": {
+    "create": {
+      "$or": [
+        {
+          "project_id": {
+            "$in": "{{user.data.project_ids}}"
+          }
+        },
+        {
+          "created_by": "{{user.email}}"
+        }
+      ]
+    },
+    "read": {
+      "$or": [
+        {
+          "project_id": {
+            "$in": "{{user.data.project_ids}}"
+          }
+        },
+        {
+          "created_by": "{{user.email}}"
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    },
+    "update": {
+      "$or": [
+        {
+          "created_by": "{{user.email}}"
+        },
+        {
+          "project_id": {
+            "$in": "{{user.data.project_ids}}"
+          }
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    },
+    "delete": {
+      "created_by": "{{user.email}}"
+    }
+  }
+}

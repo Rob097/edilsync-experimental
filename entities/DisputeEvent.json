@@ -1,0 +1,42 @@
+{
+  "name": "DisputeEvent",
+  "type": "object",
+  "properties": {
+    "dispute_case_id": {
+      "type": "string",
+      "description": "Reference to DisputeCase"
+    },
+    "project_id": {
+      "type": "string",
+      "description": "Reference to Project"
+    },
+    "actor_participant_id": {
+      "type": "string",
+      "description": "ProjectParticipant actor"
+    },
+    "event_type": {
+      "type": "string",
+      "enum": [
+        "opened",
+        "commented",
+        "status_changed",
+        "resolved",
+        "escalated"
+      ],
+      "description": "Type of event"
+    },
+    "note": {
+      "type": "string",
+      "description": "Event note"
+    },
+    "payload": {
+      "type": "object",
+      "description": "Optional structured event payload"
+    }
+  },
+  "required": [
+    "dispute_case_id",
+    "project_id",
+    "event_type"
+  ]
+}

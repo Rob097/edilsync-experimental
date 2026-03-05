@@ -13,10 +13,12 @@ import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
-import { Calendar, MessageSquare, ListTodo, Plus, Clock, FileText, MapPin, User, Building2, Menu, UploadCloud, Loader2, ChevronDown, FolderTree, History } from 'lucide-react';
+import { Calendar, MessageSquare, ListTodo, Plus, Clock, FileText, MapPin, User, Building2, Menu, UploadCloud, Loader2, ChevronDown, FolderTree, History, ShieldAlert } from 'lucide-react';
 import ChannelList from '@/components/messaging/ChannelList';
 import MessageList from '@/components/messaging/MessageList';
 import MessageInput from '@/components/messaging/MessageInput';
+import DisputeCaseList from '@/components/project/DisputeCaseList';
+import DisputeCreateDialog from '@/components/project/DisputeCreateDialog';
 import { getUserDisplayNameByEmail } from '@/lib/userDisplay';
 
 const tabs = ['today', 'work', 'docs', 'chat'];
@@ -48,6 +50,7 @@ export default function OperativeProjectWorkspace() {
   const [chatShowChannels, setChatShowChannels] = useState(true);
   const [selectedChannelId, setSelectedChannelId] = useState(null);
   const [focusedMessageId, setFocusedMessageId] = useState(null);
+  const [disputeQuickOpen, setDisputeQuickOpen] = useState(false);
   const { currentLanguage, t } = useLanguage();
   const dateLocale = currentLanguage === 'it' ? it : enUS;
 
@@ -328,6 +331,12 @@ export default function OperativeProjectWorkspace() {
     setActiveTab('docs');
   };
 
+  const openQuickDispute = () => {
+    setQuickOpen(false);
+    setDisputeQuickOpen(true);
+    setActiveTab('work');
+  };
+
   const handleChannelSelection = (channelId) => {
     setSelectedChannelId(channelId);
     setChatShowChannels(false);
@@ -574,6 +583,19 @@ export default function OperativeProjectWorkspace() {
                 </AccordionContent>
               </AccordionItem>
 
+              <AccordionItem value="disputes">
+                <AccordionTrigger>{t('disputes.title')}</AccordionTrigger>
+                <AccordionContent className="space-y-2">
+                  <DisputeCaseList
+                    projectId={projectId}
+                    currentUser={user}
+                    currentParticipant={contextParticipation}
+                    canCreate={!!contextParticipation}
+                    canRespond={!!contextParticipation}
+                  />
+                </AccordionContent>
+              </AccordionItem>
+
               <AccordionItem value="events">
                 <AccordionTrigger>{t('operational.calendarEvents')}</AccordionTrigger>
                 <AccordionContent className="space-y-2">
@@ -755,9 +777,20 @@ export default function OperativeProjectWorkspace() {
               <FileText className="h-4 w-4 mr-2" />
               {t('operational.addDocument')}
             </Button>
+            <Button className="w-full" variant="outline" onClick={openQuickDispute}>
+              <ShieldAlert className="h-4 w-4 mr-2" />
+              {t('operational.openDispute')}
+            </Button>
           </div>
         </DialogContent>
       </Dialog>
+
+      <DisputeCreateDialog
+        open={disputeQuickOpen}
+        onOpenChange={setDisputeQuickOpen}
+        projectId={projectId}
+        currentParticipant={contextParticipation}
+      />
 
       <Dialog open={projectDetailsOpen} onOpenChange={setProjectDetailsOpen}>
         <DialogContent className="max-h-[80vh] overflow-y-auto">

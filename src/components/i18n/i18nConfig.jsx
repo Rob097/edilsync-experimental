@@ -65,8 +65,8 @@ const itTranslations = {
     "companyRequiredTitle": "Seleziona un contesto aziendale",
     "companyRequiredDescription": "La modalità Operativa è disponibile solo nel contesto aziendale.",
     "backToNormal": "Normale",
-    "fullModeLabel": "Modalità Completa",
-    "essentialModeLabel": "Modalità Essenziale"
+    "fullModeLabel": "Completa",
+    "essentialModeLabel": "Essenziale"
   },
   "header": {
     "notifications": "Notifiche",
@@ -136,7 +136,11 @@ const itTranslations = {
     "blocked": "Bloccato",
     "assignee": "Assegnato a",
     "dueDate": "Data di Scadenza",
-    "noTasks": "Nessun task disponibile"
+    "noTasks": "Nessun task disponibile",
+    "blockedNotificationTitle": "Task bloccato",
+    "blockedNotificationMessage": "Il task \"{{task}}\" è bloccato per te nel progetto \"{{project}}\". Motivo: {{reason}} (segnalato da {{actor}})",
+    "blockedNotificationEmailSubject": "Task bloccato nel progetto",
+    "blockedNotificationEmailBody": "Il task \"{{task}}\" nel progetto \"{{project}}\" è stato bloccato con motivo: {{reason}}. Segnalato da {{actor}}."
   },
   "milestones": {
     "milestone": "Milestone",
@@ -221,7 +225,8 @@ const itTranslations = {
     "historyMessage": "Messaggio inviato da {{name}}",
     "historyDocument": "Documento caricato: {{name}}",
     "quickActions": "Azioni rapide",
-    "openChat": "Apri chat"
+    "openChat": "Apri chat",
+    "openDispute": "Apri disputa"
   },
   "events": {
     "event": "Evento",
@@ -263,6 +268,84 @@ const itTranslations = {
     "clarificationNeeded": "Chiarimento Necessario",
     "costImpact": "Impatto Costo",
     "timeImpact": "Impatto Tempo"
+  },
+  "disputes": {
+    "title": "Dispute",
+    "newDispute": "Nuova disputa",
+    "openDispute": "Apri disputa",
+    "openFromTask": "Apri disputa da task",
+    "titlePlaceholder": "Titolo disputa",
+    "categoryLabel": "Categoria disputa",
+    "summaryPlaceholder": "Descrivi chiaramente il problema e l'impatto",
+    "amountImpactPlaceholder": "Impatto economico (€)",
+    "timeImpactPlaceholder": "Impatto tempo (giorni)",
+    "linkedTask": "Task collegato: {{title}}",
+    "autoEvidenceFromTask": "Evidenza automatica generata dal task",
+    "fromTaskPrefix": "Disputa su",
+    "emptyTitle": "Nessuna disputa aperta",
+    "emptyDescription": "Apri una disputa per tracciare contestazioni su tempi, costi, qualità e responsabilità.",
+    "detailTitle": "Dettaglio disputa",
+    "timelineTitle": "Timeline eventi",
+    "eventActor": "Da: {{name}}",
+    "unknownActor": "Utente non identificato",
+    "noEvents": "Nessun evento registrato",
+    "linkedTaskInfoTitle": "Origine da task",
+    "linkedTaskLabel": "Task collegato",
+    "blockedReasonLabel": "Motivo blocco",
+    "causedByLabel": "Causata da",
+    "evidenceTitle": "Evidenze",
+    "noEvidence": "Nessuna evidenza allegata",
+    "addComment": "Aggiungi commento",
+    "commentPlaceholder": "Inserisci un aggiornamento o una nota operativa",
+    "publishComment": "Pubblica commento",
+    "addEvidence": "Aggiungi evidenza",
+    "evidencePlaceholder": "Descrivi l'evidenza che stai allegando",
+    "saveEvidence": "Salva evidenza",
+    "evidenceAddedEvent": "Evidenza aggiunta",
+    "days": "{{count}} gg",
+    "eventType": {
+      "opened": "Disputa aperta",
+      "commented": "Commento",
+      "statusChanged": "Stato aggiornato",
+      "resolved": "Disputa risolta",
+      "escalated": "Disputa escalata"
+    },
+    "sourceType": {
+      "task": "Task",
+      "change_request": "Richiesta di modifica",
+      "message": "Messaggio",
+      "document_comment": "Commento documento",
+      "event": "Evento",
+      "manual_note": "Nota manuale"
+    },
+    "notifications": {
+      "openedTitle": "Nuova disputa aperta",
+      "openedMessage": "È stata aperta una disputa: {{title}}",
+      "openedEmailSubject": "Nuova disputa nel progetto",
+      "openedEmailBody": "È stata aperta una nuova disputa: {{title}}.",
+      "statusChangedTitle": "Stato disputa aggiornato",
+      "statusChangedMessage": "La disputa \"{{title}}\" è ora: {{status}}",
+      "statusChangedEmailSubject": "Aggiornamento stato disputa",
+      "statusChangedEmailBody": "La disputa \"{{title}}\" è stata aggiornata allo stato: {{status}}.",
+      "commentedTitle": "Nuovo commento su disputa",
+      "commentedMessage": "Nuovo commento nella disputa: {{title}}"
+    },
+    "category": {
+      "scope": "Ambito",
+      "cost": "Costi",
+      "delay": "Ritardi",
+      "quality": "Qualità",
+      "payment": "Pagamenti",
+      "other": "Altro"
+    },
+    "status": {
+      "open": "Aperta",
+      "awaiting_response": "In attesa risposta",
+      "in_review": "In revisione",
+      "resolved": "Risolta",
+      "closed_no_agreement": "Chiusa senza accordo",
+      "escalated": "Escalata"
+    }
   },
   "assistant": {
     "title": "Assistente AI",
@@ -330,6 +413,7 @@ const itTranslations = {
       "viewAll": "Vedi Tutto",
       "activities": "Attività in Corso",
       "changesExtras": "Modifiche & Extra",
+      "disputes": "Dispute",
       "milestones": "Milestones",
       "messaging": "Messaggistica",
       "participants": "Partecipanti",
@@ -363,6 +447,7 @@ const itTranslations = {
     "unread": "non lette",
     "allRead": "Tutte lette",
     "markAllAsRead": "Segna tutte come lette",
+    "projectContext": "Progetto: {{project}}",
     "noNotifications": "Nessuna notifica",
     "noNotificationsDescription": "Non hai ancora ricevuto notifiche."
   },
@@ -507,6 +592,14 @@ const itTranslations = {
     "blockedReasonPlaceholder": "Es. In attesa di selezione materiali",
     "blockedBy": "Bloccato da",
     "blockedByPlaceholder": "Nome persona responsabile",
+    "blockedBySelectPlaceholder": "Seleziona partecipante responsabile",
+    "someoneElse": "Qualcun altro",
+    "createLinkedDispute": "Apri disputa collegata",
+    "createLinkedDisputeDescription": "Se selezioni questa opzione, il task verrà bloccato e verrà aperta una disputa collegata.",
+    "linkedDisputes": "Dispute collegate",
+    "noLinkedDisputes": "Nessuna disputa collegata a questa attività.",
+    "blockTaskTitle": "Blocca attività",
+    "confirmBlock": "Conferma blocco",
     "delete": "Elimina",
     "cancel": "Annulla",
     "save": "Salva",
@@ -680,8 +773,8 @@ const enTranslations = {
     "companyRequiredTitle": "Select a company context",
     "companyRequiredDescription": "Operational mode is available only in company context.",
     "backToNormal": "Normal",
-    "fullModeLabel": "Full Mode",
-    "essentialModeLabel": "Essential Mode"
+    "fullModeLabel": "Full",
+    "essentialModeLabel": "Essential"
   },
   "header": {
     "notifications": "Notifications",
@@ -751,7 +844,11 @@ const enTranslations = {
     "blocked": "Blocked",
     "assignee": "Assigned to",
     "dueDate": "Due Date",
-    "noTasks": "No tasks available"
+    "noTasks": "No tasks available",
+    "blockedNotificationTitle": "Task blocked",
+    "blockedNotificationMessage": "The task \"{{task}}\" is blocked for you in project \"{{project}}\". Reason: {{reason}} (reported by {{actor}})",
+    "blockedNotificationEmailSubject": "Task blocked in project",
+    "blockedNotificationEmailBody": "The task \"{{task}}\" in project \"{{project}}\" has been blocked with reason: {{reason}}. Reported by {{actor}}."
   },
   "milestones": {
     "milestone": "Milestone",
@@ -836,7 +933,8 @@ const enTranslations = {
     "historyMessage": "Message sent by {{name}}",
     "historyDocument": "Document uploaded: {{name}}",
     "quickActions": "Quick actions",
-    "openChat": "Open chat"
+    "openChat": "Open chat",
+    "openDispute": "Open dispute"
   },
   "events": {
     "event": "Event",
@@ -878,6 +976,84 @@ const enTranslations = {
     "clarificationNeeded": "Clarification Needed",
     "costImpact": "Cost Impact",
     "timeImpact": "Time Impact"
+  },
+  "disputes": {
+    "title": "Disputes",
+    "newDispute": "New dispute",
+    "openDispute": "Open dispute",
+    "openFromTask": "Open dispute from task",
+    "titlePlaceholder": "Dispute title",
+    "categoryLabel": "Dispute category",
+    "summaryPlaceholder": "Clearly describe the issue and impact",
+    "amountImpactPlaceholder": "Amount impact (€)",
+    "timeImpactPlaceholder": "Time impact (days)",
+    "linkedTask": "Linked task: {{title}}",
+    "autoEvidenceFromTask": "Automatic evidence generated from task",
+    "fromTaskPrefix": "Dispute on",
+    "emptyTitle": "No open disputes",
+    "emptyDescription": "Open a dispute to track claims on delays, costs, quality, and responsibilities.",
+    "detailTitle": "Dispute details",
+    "timelineTitle": "Event timeline",
+    "eventActor": "By: {{name}}",
+    "unknownActor": "Unknown user",
+    "noEvents": "No events recorded",
+    "linkedTaskInfoTitle": "Task origin",
+    "linkedTaskLabel": "Linked task",
+    "blockedReasonLabel": "Blocking reason",
+    "causedByLabel": "Caused by",
+    "evidenceTitle": "Evidence",
+    "noEvidence": "No evidence attached",
+    "addComment": "Add comment",
+    "commentPlaceholder": "Enter an operational update or note",
+    "publishComment": "Publish comment",
+    "addEvidence": "Add evidence",
+    "evidencePlaceholder": "Describe the evidence you are attaching",
+    "saveEvidence": "Save evidence",
+    "evidenceAddedEvent": "Evidence added",
+    "days": "{{count}} days",
+    "eventType": {
+      "opened": "Dispute opened",
+      "commented": "Comment",
+      "statusChanged": "Status updated",
+      "resolved": "Dispute resolved",
+      "escalated": "Dispute escalated"
+    },
+    "sourceType": {
+      "task": "Task",
+      "change_request": "Change request",
+      "message": "Message",
+      "document_comment": "Document comment",
+      "event": "Event",
+      "manual_note": "Manual note"
+    },
+    "notifications": {
+      "openedTitle": "New dispute opened",
+      "openedMessage": "A new dispute has been opened: {{title}}",
+      "openedEmailSubject": "New dispute in project",
+      "openedEmailBody": "A new dispute has been opened: {{title}}.",
+      "statusChangedTitle": "Dispute status updated",
+      "statusChangedMessage": "Dispute \"{{title}}\" is now: {{status}}",
+      "statusChangedEmailSubject": "Dispute status update",
+      "statusChangedEmailBody": "Dispute \"{{title}}\" has been updated to status: {{status}}.",
+      "commentedTitle": "New dispute comment",
+      "commentedMessage": "New comment in dispute: {{title}}"
+    },
+    "category": {
+      "scope": "Scope",
+      "cost": "Cost",
+      "delay": "Delay",
+      "quality": "Quality",
+      "payment": "Payment",
+      "other": "Other"
+    },
+    "status": {
+      "open": "Open",
+      "awaiting_response": "Awaiting response",
+      "in_review": "In review",
+      "resolved": "Resolved",
+      "closed_no_agreement": "Closed without agreement",
+      "escalated": "Escalated"
+    }
   },
   "assistant": {
     "title": "AI Assistant",
@@ -945,6 +1121,7 @@ const enTranslations = {
       "viewAll": "View All",
       "activities": "Ongoing Activities",
       "changesExtras": "Changes & Extras",
+      "disputes": "Disputes",
       "milestones": "Milestones",
       "messaging": "Messaging",
       "participants": "Participants",
@@ -978,6 +1155,7 @@ const enTranslations = {
     "unread": "unread",
     "allRead": "All read",
     "markAllAsRead": "Mark all as read",
+    "projectContext": "Project: {{project}}",
     "noNotifications": "No notifications",
     "noNotificationsDescription": "You have not received any notifications yet."
   },
@@ -1122,6 +1300,14 @@ const enTranslations = {
     "blockedReasonPlaceholder": "E.g. Waiting for material selection",
     "blockedBy": "Blocked by",
     "blockedByPlaceholder": "Name of responsible person",
+    "blockedBySelectPlaceholder": "Select responsible participant",
+    "someoneElse": "Someone else",
+    "createLinkedDispute": "Open linked dispute",
+    "createLinkedDisputeDescription": "If selected, the task will be blocked and a linked dispute will be opened.",
+    "linkedDisputes": "Linked disputes",
+    "noLinkedDisputes": "No disputes linked to this task.",
+    "blockTaskTitle": "Block task",
+    "confirmBlock": "Confirm block",
     "delete": "Delete",
     "cancel": "Cancel",
     "save": "Save",

@@ -14,6 +14,9 @@ const DEFAULT_PREFERENCES = {
   event_cancelled: { notification: true, email: true },
   message_mention: { notification: true, email: false },
   document_comment: { notification: true, email: false },
+  dispute_opened: { notification: true, email: true },
+  dispute_status_changed: { notification: true, email: true },
+  dispute_commented: { notification: true, email: false },
 };
 
 const supabaseUrl = Deno.env.get("SUPABASE_URL")!;

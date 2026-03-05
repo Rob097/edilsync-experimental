@@ -23,6 +23,9 @@ const DEFAULT_PREFERENCES = {
   event_cancelled: { notification: true, email: true },
   message_mention: { notification: true, email: false },
   document_comment: { notification: true, email: false },
+  dispute_opened: { notification: true, email: true },
+  dispute_status_changed: { notification: true, email: true },
+  dispute_commented: { notification: true, email: false },
 };
 
 const NOTIFICATION_GROUPS = [
@@ -58,6 +61,14 @@ const NOTIFICATION_GROUPS = [
       { key: 'document_comment', label: { it: 'Commento su documento', en: 'Comment on a document' } },
     ],
   },
+  {
+    group: { it: 'Gestione Dispute', en: 'Dispute Management' },
+    actions: [
+      { key: 'dispute_opened', label: { it: 'Nuova disputa aperta', en: 'New dispute opened' } },
+      { key: 'dispute_status_changed', label: { it: 'Cambio stato disputa', en: 'Dispute status changed' } },
+      { key: 'dispute_commented', label: { it: 'Nuovo commento in disputa', en: 'New dispute comment' } },
+    ],
+  },
 ];
 
 export default function NotificationPreferences({ userEmail }) {
@@ -78,7 +89,10 @@ export default function NotificationPreferences({ userEmail }) {
 
   useEffect(() => {
     if (userPrefs) {
-      setPreferences(userPrefs.preferences);
+      setPreferences({
+        ...DEFAULT_PREFERENCES,
+        ...(userPrefs.preferences || {}),
+      });
     } else {
       setPreferences(DEFAULT_PREFERENCES);
     }

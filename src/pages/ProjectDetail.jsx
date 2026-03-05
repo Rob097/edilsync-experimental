@@ -27,6 +27,7 @@ import {
   MessageSquare,
   Activity,
   Flag,
+  ShieldAlert,
   Camera,
   Upload,
   AlertCircle,
@@ -47,6 +48,7 @@ import DocumentList from '@/components/project/DocumentList';
 import ActivityFeed from '@/components/project/ActivityFeed';
 import TaskList from '@/components/project/TaskList';
 import ChangeRequestList from '@/components/project/ChangeRequestList';
+import DisputeCaseList from '@/components/project/DisputeCaseList';
 import ProjectMessaging from '@/components/messaging/ProjectMessaging';
 import EmptyState from '@/components/ui/EmptyState';
 import EditProjectDialog from '@/components/project/EditProjectDialog';
@@ -211,6 +213,7 @@ export default function ProjectDetail() {
   const canEditTasks = isActiveParticipant;
   const canCreateChangeRequest = isActiveParticipant && (userParticipation?.project_role === 'homeowner' || project?.owner_user_id === user?.id);
   const canRespondToChangeRequest = isActiveParticipant && (userParticipation?.project_role === 'homeowner' || project?.owner_user_id === user?.id);
+  const canManageDisputes = isActiveParticipant;
   const canRemoveParticipants = isActiveParticipant && (userParticipation?.project_role === 'homeowner' || project?.owner_user_id === user?.id || canInvite);
 
   // Start project tour when viewing project detail
@@ -601,6 +604,24 @@ export default function ProjectDetail() {
                {t('projectDetail.sections.changesExtras')}
              </Button>
             <Button
+               variant={lavoriSection === 'disputes' ? 'default' : 'outline'}
+               onClick={() => {
+                 setLavoriSection('disputes');
+                 setTimeout(() => {
+                   const tabsElement = document.querySelector('[role="tablist"]');
+                   if (tabsElement) {
+                     const offset = 100;
+                     const elementPosition = tabsElement.getBoundingClientRect().top;
+                     const offsetPosition = elementPosition + window.pageYOffset - offset;
+                     window.scrollTo({ top: offsetPosition, behavior: 'smooth' });
+                   }
+                 }, 100);
+               }}
+               className={lavoriSection === 'disputes' ? 'bg-[#ef6144] hover:bg-[#d9553a]' : ''}
+             >
+               {t('projectDetail.sections.disputes')}
+             </Button>
+            <Button
                variant={lavoriSection === 'milestones' ? 'default' : 'outline'}
                onClick={() => {
                  setLavoriSection('milestones');
@@ -672,6 +693,24 @@ export default function ProjectDetail() {
                     }
                   }, 100);
                 }}
+              />
+            </div>
+          )}
+
+          {(lavoriSection === 'all' || lavoriSection === 'disputes') && (
+            <div id="section-disputes" className={lavoriSection === 'all' ? 'border-t pt-6' : ''}>
+              <div className="flex items-center justify-between mb-4">
+                <h3 className="text-lg font-semibold flex items-center gap-2">
+                  <ShieldAlert className="h-5 w-5 text-[#ef6144]" />
+                  {t('projectDetail.sections.disputes')}
+                </h3>
+              </div>
+              <DisputeCaseList
+                projectId={projectId}
+                currentUser={user}
+                currentParticipant={userParticipation}
+                canCreate={canManageDisputes}
+                canRespond={canManageDisputes}
               />
             </div>
           )}

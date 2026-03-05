@@ -141,6 +141,39 @@
               "type": "boolean"
             }
           }
+        },
+        "dispute_opened": {
+          "type": "object",
+          "properties": {
+            "notification": {
+              "type": "boolean"
+            },
+            "email": {
+              "type": "boolean"
+            }
+          }
+        },
+        "dispute_status_changed": {
+          "type": "object",
+          "properties": {
+            "notification": {
+              "type": "boolean"
+            },
+            "email": {
+              "type": "boolean"
+            }
+          }
+        },
+        "dispute_commented": {
+          "type": "object",
+          "properties": {
+            "notification": {
+              "type": "boolean"
+            },
+            "email": {
+              "type": "boolean"
+            }
+          }
         }
       }
     }

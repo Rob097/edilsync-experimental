@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { appClient } from '@/api/appClient';
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { useQuery } from '@tanstack/react-query';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -24,7 +24,6 @@ export default function TaskList({ projectId, canEdit, filterMilestoneId }) {
     completed: { label: tr('Completato', 'Completed'), color: 'bg-green-100 text-green-700', icon: CheckCircle2 },
     blocked: { label: tr('Bloccato', 'Blocked'), color: 'bg-red-100 text-red-700', icon: AlertCircle },
   };
-  const queryClient = useQueryClient();
   const [dialogOpen, setDialogOpen] = useState(false);
   const [selectedTask, setSelectedTask] = useState(null);
   const [viewMode, setViewMode] = useState('board'); // 'list' or 'board'
@@ -150,6 +149,7 @@ export default function TaskList({ projectId, canEdit, filterMilestoneId }) {
               {sortedTasks.map(task => {
                 const config = statusConfig[task.status];
                 const Icon = config.icon;
+                const blockedByLabel = task.blocked_by_name || task.blocked_by_email;
                 return (
                   <div
                     key={task.id}
@@ -165,6 +165,11 @@ export default function TaskList({ projectId, canEdit, filterMilestoneId }) {
                             <Icon className="h-3 w-3" />
                             {config.label}
                           </Badge>
+                          {task.status === 'blocked' && blockedByLabel ? (
+                            <Badge variant="outline" className="text-red-700 border-red-200 bg-red-50">
+                              {tr('Bloccato da', 'Blocked by')}: {blockedByLabel}
+                            </Badge>
+                          ) : null}
                         </div>
                         {task.description && (
                           <p className="text-sm text-gray-600 mb-2">{task.description}</p>
@@ -184,7 +189,6 @@ export default function TaskList({ projectId, canEdit, filterMilestoneId }) {
                           <div className="mt-2 p-2 rounded bg-red-50 border border-red-200">
                             <p className="text-sm text-red-700">
                               <strong>{tr('Bloccato:', 'Blocked:')}</strong> {task.blocked_reason}
-                              {task.blocked_by_name && ` (${tr('da', 'by')} ${task.blocked_by_name})`}
                             </p>
                           </div>
                         )}
