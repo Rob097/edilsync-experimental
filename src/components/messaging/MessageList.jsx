@@ -13,6 +13,8 @@ import { getUserDisplayNameByEmail } from '@/lib/userDisplay';
 export default function MessageList({ 
   channelId, 
   projectId,
+  companyId,
+  scopeType = 'project',
   currentUserEmail,
   focusedMessageId,
   onNavigate
@@ -23,11 +25,16 @@ export default function MessageList({
   const [selectedDocument, setSelectedDocument] = useState(null);
   const [previewOpen, setPreviewOpen] = useState(false);
 
-  // Use project-level messages and filter by channel for instant display
+  const isCompanyScope = scopeType === 'company';
+  const scopeId = isCompanyScope ? companyId : projectId;
+
+  // Use scope-level messages and filter by channel for instant display
   const { data: allMessages = [] } = useQuery({
-    queryKey: ['messages', projectId],
-    queryFn: () => appClient.entities.Message.filter({ project_id: projectId }),
-    enabled: !!projectId,
+    queryKey: ['messages', scopeType, scopeId],
+    queryFn: () => appClient.entities.Message.filter(
+      isCompanyScope ? { company_id: companyId } : { project_id: projectId },
+    ),
+    enabled: !!scopeId,
     staleTime: 5 * 60 * 1000, // 5 minuti
   });
 
@@ -50,7 +57,7 @@ export default function MessageList({
   const { data: allDocuments = [] } = useQuery({
     queryKey: ['documents', projectId],
     queryFn: () => appClient.entities.ProjectDocument.filter({ project_id: projectId }),
-    enabled: !!projectId,
+    enabled: !isCompanyScope && !!projectId,
     staleTime: 60 * 1000,
   });
 
@@ -99,6 +106,7 @@ export default function MessageList({
 
     const handleDocumentClick = () => {
       if (type === 'document') {
+        if (isCompanyScope) return;
         const doc = allDocuments.find(d => d.id === id);
         if (doc) {
           setSelectedDocument(doc);

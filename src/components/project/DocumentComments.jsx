@@ -11,11 +11,12 @@ import { it, enUS } from 'date-fns/locale';
 import { useLanguage } from '@/components/i18n/useLanguage';
 import { getUserDisplayNameByEmail } from '@/lib/userDisplay';
 
-export default function DocumentComments({ documentId, projectId }) {
+export default function DocumentComments({ documentId, projectId, companyId, scopeType = 'project' }) {
   const { currentLanguage } = useLanguage();
   const tr = (itText, enText) => currentLanguage === 'it' ? itText : enText;
   const dateLocale = currentLanguage === 'it' ? it : enUS;
   const queryClient = useQueryClient();
+  const isCompanyScope = scopeType === 'company';
   const [commentText, setCommentText] = useState('');
 
   const { data: user } = useQuery({
@@ -49,7 +50,8 @@ export default function DocumentComments({ documentId, projectId }) {
 
     createCommentMutation.mutate({
       document_id: documentId,
-      project_id: projectId,
+      project_id: isCompanyScope ? null : projectId,
+      company_id: isCompanyScope ? companyId : null,
       comment: commentText.trim(),
       author_email: user.email,
       author_name: user.full_name,

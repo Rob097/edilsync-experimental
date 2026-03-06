@@ -45,6 +45,12 @@ export default function OperativeDaySummary() {
 
   return (
     <div className="space-y-4">
+      <div className="sticky top-16 z-20 bg-gray-100 pb-2">
+        <Button variant="outline" className="w-full" onClick={() => navigate('/operativa')}>
+          Torna alla home
+        </Button>
+      </div>
+
       <Card className="border-[#ef6144]/20">
         <CardHeader>
           <CardTitle className="text-base">{t('operational.daySummary')}</CardTitle>
@@ -87,9 +93,6 @@ export default function OperativeDaySummary() {
         </CardContent>
       </Card>
 
-      <Button variant="outline" className="w-full" onClick={() => navigate('/operativa')}>
-        {t('operational.backToSelection')}
-      </Button>
     </div>
   );
 }

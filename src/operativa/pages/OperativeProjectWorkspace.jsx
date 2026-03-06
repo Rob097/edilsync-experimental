@@ -701,6 +701,8 @@ export default function OperativeProjectWorkspace() {
           {chatShowChannels || !selectedChannelId ? (
             <div className="p-3 overflow-y-auto">
               <ChannelList
+                scopeType="project"
+                scopeId={projectId}
                 projectId={projectId}
                 currentUserEmail={user?.email}
                 activeCompanyId={activeCompanyId}

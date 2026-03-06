@@ -9,35 +9,48 @@ import CreateChannelDialog from './CreateChannelDialog';
 import { useLanguage } from '@/components/i18n/useLanguage';
 
 export default function ChannelList({ 
+  scopeType = 'project',
+  scopeId,
   projectId, 
+  companyId,
   currentUserEmail,
   activeCompanyId,
   selectedChannelId,
   onSelectChannel,
-  participants
+  participants,
+  canCreateChannels = true,
 }) {
   const { currentLanguage } = useLanguage();
   const tr = (it, en) => currentLanguage === 'it' ? it : en;
   const [createDialogOpen, setCreateDialogOpen] = useState(false);
+  const effectiveProjectId = scopeType === 'project' ? (projectId || scopeId) : null;
+  const effectiveCompanyId = scopeType === 'company' ? (companyId || scopeId) : activeCompanyId;
+  const isCompanyScope = scopeType === 'company';
 
   const { data: channels = [], isLoading: channelsLoading } = useQuery({
-    queryKey: ['channels', projectId],
-    queryFn: () => appClient.entities.Channel.filter({ project_id: projectId }),
-    enabled: !!projectId,
+    queryKey: ['channels', scopeType, scopeId],
+    queryFn: () => appClient.entities.Channel.filter(
+      isCompanyScope ? { company_id: effectiveCompanyId } : { project_id: effectiveProjectId },
+    ),
+    enabled: !!scopeId,
     staleTime: 2 * 60 * 1000, // 2 minuti
   });
 
   const { data: channelMembers = [], isLoading: membersLoading } = useQuery({
-    queryKey: ['channelMembers', projectId],
-    queryFn: () => appClient.entities.ChannelMember.filter({ project_id: projectId }),
-    enabled: !!projectId,
+    queryKey: ['channelMembers', scopeType, scopeId],
+    queryFn: () => appClient.entities.ChannelMember.filter(
+      isCompanyScope ? { company_id: effectiveCompanyId } : { project_id: effectiveProjectId },
+    ),
+    enabled: !!scopeId,
     staleTime: 2 * 60 * 1000, // 2 minuti
   });
 
   const { data: messages = [] } = useQuery({
-    queryKey: ['messages', projectId],
-    queryFn: () => appClient.entities.Message.filter({ project_id: projectId }),
-    enabled: !!projectId,
+    queryKey: ['messages', scopeType, scopeId],
+    queryFn: () => appClient.entities.Message.filter(
+      isCompanyScope ? { company_id: effectiveCompanyId } : { project_id: effectiveProjectId },
+    ),
+    enabled: !!scopeId,
     staleTime: 2 * 60 * 1000, // 2 minuti
   });
 
@@ -50,15 +63,19 @@ export default function ChannelList({
       // Match by user email
       if (m.user_email === currentUserEmail) return true;
       // Match by company id (for company participants)
-      if (activeCompanyId && m.company_id === activeCompanyId) return true;
+      if (effectiveCompanyId && m.company_id === effectiveCompanyId) return true;
       return false;
     });
     return !!membership;
   });
 
   // Group channels by type
-  const generalChannel = myChannels.find(c => c.type === 'general');
-  const companyChannel = myChannels.find(c => c.type === 'company' && c.company_id === activeCompanyId);
+  const generalChannel = isCompanyScope
+    ? myChannels.find((c) => c.type === 'company')
+    : myChannels.find((c) => c.type === 'general');
+  const companyChannel = !isCompanyScope
+    ? myChannels.find((c) => c.type === 'company' && c.company_id === activeCompanyId)
+    : null;
   const directChannels = myChannels.filter(c => c.type === 'direct');
   const customChannels = myChannels.filter(c => c.type === 'custom');
 
@@ -151,7 +168,7 @@ export default function ChannelList({
       )}
 
       {/* Direct Messages */}
-      {directChannels.length > 0 && (
+      {!isCompanyScope && directChannels.length > 0 && (
         <div>
           <h3 className="text-xs font-semibold text-gray-500 uppercase mb-2 px-3">
             {tr('Messaggi Diretti', 'Direct Messages')}
@@ -171,14 +188,16 @@ export default function ChannelList({
             <h3 className="text-xs font-semibold text-gray-500 uppercase">
               {tr('Canali', 'Channels')}
             </h3>
-            <Button
-              variant="ghost"
-              size="icon"
-              className="h-6 w-6"
-              onClick={() => setCreateDialogOpen(true)}
-            >
-              <Plus className="h-4 w-4" />
-            </Button>
+            {canCreateChannels && (
+              <Button
+                variant="ghost"
+                size="icon"
+                className="h-6 w-6"
+                onClick={() => setCreateDialogOpen(true)}
+              >
+                <Plus className="h-4 w-4" />
+              </Button>
+            )}
           </div>
           <div className="space-y-1">
             {customChannels.map(channel => 
@@ -189,7 +208,7 @@ export default function ChannelList({
       )}
 
       {/* Create Channel Button */}
-      {customChannels.length === 0 && (
+      {canCreateChannels && customChannels.length === 0 && (
         <Button
           variant="outline"
           className="w-full"
@@ -200,14 +219,17 @@ export default function ChannelList({
         </Button>
       )}
 
-      <CreateChannelDialog
-        open={createDialogOpen}
-        onOpenChange={setCreateDialogOpen}
-        projectId={projectId}
-        participants={participants}
-        currentUserEmail={currentUserEmail}
-        activeCompanyId={activeCompanyId}
-      />
+      {canCreateChannels && (
+        <CreateChannelDialog
+          open={createDialogOpen}
+          onOpenChange={setCreateDialogOpen}
+          scopeType={scopeType}
+          projectId={effectiveProjectId}
+          companyId={effectiveCompanyId}
+          participants={participants}
+          currentUserEmail={currentUserEmail}
+        />
+      )}
     </div>
   );
 }

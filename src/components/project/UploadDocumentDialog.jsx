@@ -29,10 +29,12 @@ const getCategoryLabel = (value, t) => {
   return categoryMap[value] || value;
 };
 
-export default function UploadDocumentDialog({ open, onOpenChange, projectId, document }) {
+export default function UploadDocumentDialog({ open, onOpenChange, projectId, companyId, document }) {
   const { t, currentLanguage } = useLanguage();
   const tr = (itText, enText) => (currentLanguage === 'it' ? itText : enText);
   const queryClient = useQueryClient();
+  const isCompanyScope = !projectId && !!companyId;
+  const documentsQueryKey = isCompanyScope ? ['companyDocuments', companyId] : ['projectDocuments', projectId];
   const fileInputRef = useRef(null);
   const isEditMode = !!document;
   
@@ -91,7 +93,8 @@ export default function UploadDocumentDialog({ open, onOpenChange, projectId, do
         const fileType = file.name.split('.').pop()?.toLowerCase() || '';
         
         return appClient.entities.ProjectDocument.create({
-          project_id: projectId,
+          project_id: isCompanyScope ? null : projectId,
+          company_id: isCompanyScope ? companyId : null,
           name: name || file.name,
           description: description || null,
           file_url,
@@ -104,7 +107,7 @@ export default function UploadDocumentDialog({ open, onOpenChange, projectId, do
       }
     },
     onSuccess: () => {
-      queryClient.invalidateQueries(['projectDocuments', projectId]);
+      queryClient.invalidateQueries({ queryKey: documentsQueryKey });
       onOpenChange(false);
       resetForm();
     },

@@ -36,6 +36,7 @@ const ENTITY_TO_TABLE = {
   ProjectMessage: 'project_messages',
   ProjectParticipant: 'project_participants',
   Task: 'tasks',
+  WorkSession: 'work_sessions',
   User: 'users',
 };
 

@@ -17,7 +17,9 @@ import { useLanguage } from '@/components/i18n/useLanguage';
 export default function CreateChannelDialog({ 
   open, 
   onOpenChange, 
+  scopeType = 'project',
   projectId,
+  companyId,
   participants,
   currentUserEmail,
   activeCompanyId
@@ -25,6 +27,9 @@ export default function CreateChannelDialog({
   const { currentLanguage } = useLanguage();
   const tr = (it, en) => currentLanguage === 'it' ? it : en;
   const queryClient = useQueryClient();
+  const isCompanyScope = scopeType === 'company';
+  const scopeId = isCompanyScope ? companyId : projectId;
+  const minParticipants = isCompanyScope ? 1 : 2;
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
   const [selectedParticipants, setSelectedParticipants] = useState([]);
@@ -52,9 +57,9 @@ export default function CreateChannelDialog({
 
   const createChannelMutation = useMutation({
     mutationFn: async (channelData) => {
-      // Security check: If creating as company (activeCompanyId set), user must be admin
-      if (activeCompanyId) {
-        const membership = companyMemberships.find(m => m.company_id === activeCompanyId);
+      // Security check: for company-scoped channel, user must be admin of current company
+      if (isCompanyScope) {
+        const membership = companyMemberships.find((m) => m.company_id === companyId);
         if (!membership || membership.role !== 'admin') {
           throw new Error(tr('Solo gli amministratori della società possono creare canali a nome della società', 'Only company administrators can create channels on behalf of the company'));
         }
@@ -67,10 +72,10 @@ export default function CreateChannelDialog({
         const participant = participants.find(p => p.id === participantId);
         await appClient.entities.ChannelMember.create({
           channel_id: channel.id,
-          project_id: projectId,
+          project_id: isCompanyScope ? null : projectId,
           participant_id: participantId,
           user_email: participant.user_email,
-          company_id: participant.company_id || null,
+          company_id: isCompanyScope ? companyId : (participant.company_id || null),
           last_read_at: new Date().toISOString()
         });
       }
@@ -78,8 +83,8 @@ export default function CreateChannelDialog({
       return channel;
     },
     onSuccess: () => {
-      queryClient.invalidateQueries(['channels', projectId]);
-      queryClient.invalidateQueries(['channelMembers', projectId]);
+      queryClient.invalidateQueries({ queryKey: ['channels', scopeType, scopeId] });
+      queryClient.invalidateQueries({ queryKey: ['channelMembers', scopeType, scopeId] });
       setName('');
       setDescription('');
       setSelectedParticipants([]);
@@ -88,10 +93,11 @@ export default function CreateChannelDialog({
   });
 
   const handleSubmit = () => {
-    if (!name.trim() || selectedParticipants.length < 2) return;
+    if (!name.trim() || selectedParticipants.length < minParticipants) return;
 
     createChannelMutation.mutate({
-      project_id: projectId,
+      project_id: isCompanyScope ? null : projectId,
+      company_id: isCompanyScope ? companyId : null,
       name: name.trim(),
       description: description.trim(),
       type: 'custom',
@@ -136,7 +142,7 @@ export default function CreateChannelDialog({
           </div>
 
           <div>
-            <Label>{tr('Partecipanti (minimo 2)', 'Participants (minimum 2)')}</Label>
+            <Label>{tr(`Partecipanti (minimo ${minParticipants})`, `Participants (minimum ${minParticipants})`)}</Label>
             <div className="mt-2 space-y-2 max-h-48 overflow-y-auto border rounded-lg p-3">
               {participants.map(participant => {
                 let displayName;
@@ -167,7 +173,7 @@ export default function CreateChannelDialog({
             </Button>
             <Button
               onClick={handleSubmit}
-              disabled={!name.trim() || selectedParticipants.length < 2 || createChannelMutation.isPending}
+              disabled={!name.trim() || selectedParticipants.length < minParticipants || createChannelMutation.isPending}
               className="bg-[#ef6144] hover:bg-[#d9553a]"
             >
               {tr('Crea Canale', 'Create Channel')}

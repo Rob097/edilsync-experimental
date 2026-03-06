@@ -15,16 +15,20 @@ import SelectDocumentDialog from './SelectDocumentDialog';
 export default function MessageInput({ 
   channelId, 
   projectId,
+  companyId,
   currentUserEmail,
   currentUserName,
   contextType,
   activeCompanyId,
   activeCompanyName,
-  participants
+  participants,
+  scopeType = 'project',
 }) {
   const { t, currentLanguage } = useLanguage();
   const tr = (it, en) => currentLanguage === 'it' ? it : en;
   const queryClient = useQueryClient();
+  const isCompanyScope = scopeType === 'company';
+  const scopeId = isCompanyScope ? companyId : projectId;
   const [message, setMessage] = useState('');
   const [showMentions, setShowMentions] = useState(false);
   const [mentionSearch, setMentionSearch] = useState('');
@@ -35,25 +39,27 @@ export default function MessageInput({
   const { data: tasks = [] } = useQuery({
     queryKey: ['tasks', projectId],
     queryFn: () => appClient.entities.Task.filter({ project_id: projectId }),
-    enabled: !!projectId && mentionType === 'task',
+    enabled: !isCompanyScope && !!projectId && mentionType === 'task',
   });
 
   const { data: milestones = [] } = useQuery({
     queryKey: ['milestones', projectId],
     queryFn: () => appClient.entities.Milestone.filter({ project_id: projectId }),
-    enabled: !!projectId && mentionType === 'milestone',
+    enabled: !isCompanyScope && !!projectId && mentionType === 'milestone',
   });
 
   const { data: changeRequests = [] } = useQuery({
     queryKey: ['changeRequests', projectId],
     queryFn: () => appClient.entities.ChangeRequest.filter({ project_id: projectId }),
-    enabled: !!projectId && mentionType === 'change_request',
+    enabled: !isCompanyScope && !!projectId && mentionType === 'change_request',
   });
 
   const { data: documents = [] } = useQuery({
-    queryKey: ['documents', projectId],
-    queryFn: () => appClient.entities.ProjectDocument.filter({ project_id: projectId }),
-    enabled: !!projectId && mentionType === 'document',
+    queryKey: ['documents', scopeType, scopeId],
+    queryFn: () => appClient.entities.ProjectDocument.filter(
+      isCompanyScope ? { company_id: companyId } : { project_id: projectId },
+    ),
+    enabled: !!scopeId && mentionType === 'document',
   });
 
   const { data: allUsers = [] } = useQuery({
@@ -71,7 +77,7 @@ export default function MessageInput({
       if (messageData.mentioned_user_emails?.length > 0) {
         Promise.all([
           appClient.entities.Channel.filter({ id: channelId }),
-          appClient.entities.Project.filter({ id: projectId })
+          !isCompanyScope && projectId ? appClient.entities.Project.filter({ id: projectId }) : Promise.resolve([]),
         ]).then(([channels, projects]) => {
           const channel = channels[0];
           const project = projects[0];
@@ -85,8 +91,12 @@ export default function MessageInput({
                 type: 'message_mention',
                 title: tr('Sei stato menzionato', 'You were mentioned'),
                 message: tr(
-                  `${messageData.sender_name} ti ha menzionato in "${channel?.name}" nel progetto "${project?.name}"`,
-                  `${messageData.sender_name} mentioned you in "${channel?.name}" in project "${project?.name}"`
+                  isCompanyScope
+                    ? `${messageData.sender_name} ti ha menzionato in "${channel?.name}" nella società "${activeCompanyName || ''}"`
+                    : `${messageData.sender_name} ti ha menzionato in "${channel?.name}" nel progetto "${project?.name}"`,
+                  isCompanyScope
+                    ? `${messageData.sender_name} mentioned you in "${channel?.name}" in company "${activeCompanyName || ''}"`
+                    : `${messageData.sender_name} mentioned you in "${channel?.name}" in project "${project?.name}"`
                 ),
                 related_event_id: msg.id,
                 is_read: false
@@ -99,8 +109,8 @@ export default function MessageInput({
       return msg;
     },
     onSuccess: () => {
-      queryClient.invalidateQueries(['messages', channelId]);
-      queryClient.invalidateQueries(['notifications']);
+      queryClient.invalidateQueries({ queryKey: ['messages', scopeType, scopeId] });
+      queryClient.invalidateQueries({ queryKey: ['notifications'] });
       setMessage('');
     },
   });
@@ -128,7 +138,8 @@ export default function MessageInput({
 
     sendMessageMutation.mutate({
       channel_id: channelId,
-      project_id: projectId,
+      project_id: isCompanyScope ? null : projectId,
+      company_id: isCompanyScope ? companyId : null,
       content: message,
       sender_email: currentUserEmail,
       sender_name: currentUserName || currentUserEmail || 'Utente',
@@ -167,9 +178,9 @@ export default function MessageInput({
 
   const getMentionItems = () => {
     if (mentionType === 'user') return participants;
-    if (mentionType === 'task') return tasks;
-    if (mentionType === 'milestone') return milestones;
-    if (mentionType === 'change_request') return changeRequests;
+    if (!isCompanyScope && mentionType === 'task') return tasks;
+    if (!isCompanyScope && mentionType === 'milestone') return milestones;
+    if (!isCompanyScope && mentionType === 'change_request') return changeRequests;
     if (mentionType === 'document') return documents;
     return [];
   };
@@ -230,6 +241,7 @@ export default function MessageInput({
           </PopoverContent>
         </Popover>
 
+        {!isCompanyScope && (
         <Popover open={showMentions && mentionType === 'task'} onOpenChange={(open) => {
           setShowMentions(open);
           if (!open) setMentionType(null);
@@ -266,7 +278,9 @@ export default function MessageInput({
             </div>
           </PopoverContent>
         </Popover>
+        )}
 
+        {!isCompanyScope && (
         <Popover open={showMentions && mentionType === 'milestone'} onOpenChange={(open) => {
           setShowMentions(open);
           if (!open) setMentionType(null);
@@ -303,7 +317,9 @@ export default function MessageInput({
             </div>
           </PopoverContent>
         </Popover>
+        )}
 
+        {!isCompanyScope && (
         <Popover open={showMentions && mentionType === 'change_request'} onOpenChange={(open) => {
           setShowMentions(open);
           if (!open) setMentionType(null);
@@ -340,6 +356,7 @@ export default function MessageInput({
             </div>
           </PopoverContent>
         </Popover>
+        )}
 
         <Button
           variant="ghost"
@@ -376,6 +393,8 @@ export default function MessageInput({
 
       <SelectDocumentDialog
         projectId={projectId}
+        companyId={companyId}
+        scopeType={scopeType}
         open={selectDocumentOpen}
         onOpenChange={setSelectDocumentOpen}
         onSelectDocument={insertDocument}

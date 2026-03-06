@@ -50,18 +50,23 @@ const getFileIcon = (fileType) => {
   return <File className="h-5 w-5 text-blue-500" />;
 };
 
-export default function SelectDocumentDialog({ projectId, open, onOpenChange, onSelectDocument }) {
+export default function SelectDocumentDialog({ projectId, companyId, scopeType = 'project', open, onOpenChange, onSelectDocument }) {
   const { currentLanguage, t } = useLanguage();
   const tr = (it, en) => currentLanguage === 'it' ? it : en;
   const [searchQuery, setSearchQuery] = useState('');
   const [filterCategory, setFilterCategory] = useState('all');
   const [filterType, setFilterType] = useState('all');
   const [viewMode, setViewMode] = useState('list');
+  const isCompanyScope = scopeType === 'company';
+  const scopeId = isCompanyScope ? companyId : projectId;
+  const documentsQueryKey = isCompanyScope ? ['companyDocuments', companyId] : ['projectDocuments', projectId];
 
   const { data: documents = [], isLoading } = useQuery({
-    queryKey: ['projectDocuments', projectId],
-    queryFn: () => appClient.entities.ProjectDocument.filter({ project_id: projectId }),
-    enabled: !!projectId && open,
+    queryKey: documentsQueryKey,
+    queryFn: () => appClient.entities.ProjectDocument.filter(
+      isCompanyScope ? { company_id: companyId } : { project_id: projectId },
+    ),
+    enabled: !!scopeId && open,
   });
 
   let filteredDocuments = documents.filter(doc => {

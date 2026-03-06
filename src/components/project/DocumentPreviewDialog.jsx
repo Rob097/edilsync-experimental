@@ -10,7 +10,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Download, X, ChevronLeft, ChevronRight, MessageSquare, FileText } from "lucide-react";
 import DocumentComments from './DocumentComments';
 
-export default function DocumentPreviewDialog({ document, open, onOpenChange, allDocuments = [], onNavigate }) {
+export default function DocumentPreviewDialog({ document, open, onOpenChange, allDocuments = [], onNavigate, scopeType = 'project' }) {
   const [activeTab, setActiveTab] = useState('preview');
   
   if (!document) return null;
@@ -119,7 +119,12 @@ export default function DocumentPreviewDialog({ document, open, onOpenChange, al
           </TabsContent>
 
           <TabsContent value="comments" className="flex-1 overflow-auto p-6 mt-0">
-            <DocumentComments documentId={document.id} projectId={document.project_id} />
+            <DocumentComments
+              documentId={document.id}
+              projectId={document.project_id}
+              companyId={document.company_id}
+              scopeType={scopeType}
+            />
           </TabsContent>
         </Tabs>
       </DialogContent>

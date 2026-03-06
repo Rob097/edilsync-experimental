@@ -1,0 +1,147 @@
+{
+  "name": "WorkSession",
+  "type": "object",
+  "properties": {
+    "company_id": {
+      "type": "string",
+      "description": "Company where the shift is tracked"
+    },
+    "user_email": {
+      "type": "string",
+      "description": "Member email"
+    },
+    "project_id": {
+      "type": "string",
+      "description": "Optional project linked to the shift"
+    },
+    "started_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Shift start timestamp"
+    },
+    "ended_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Shift end timestamp"
+    },
+    "note": {
+      "type": "string",
+      "description": "Optional notes"
+    },
+    "entry_type": {
+      "type": "string",
+      "enum": [
+        "live",
+        "manual_admin"
+      ],
+      "description": "How this entry was created"
+    },
+    "manual_reason": {
+      "type": "string",
+      "description": "Reason for manual admin insertion/edit"
+    },
+    "source_mode": {
+      "type": "string",
+      "enum": [
+        "normal",
+        "essential",
+        "operational",
+        "api"
+      ],
+      "description": "UI mode where action happened"
+    },
+    "clock_in_latitude": {
+      "type": "number",
+      "description": "Optional GPS latitude at clock-in"
+    },
+    "clock_in_longitude": {
+      "type": "number",
+      "description": "Optional GPS longitude at clock-in"
+    },
+    "clock_out_latitude": {
+      "type": "number",
+      "description": "Optional GPS latitude at clock-out"
+    },
+    "clock_out_longitude": {
+      "type": "number",
+      "description": "Optional GPS longitude at clock-out"
+    },
+    "clock_in_accuracy_m": {
+      "type": "number",
+      "description": "Optional GPS accuracy in meters at clock-in"
+    },
+    "clock_out_accuracy_m": {
+      "type": "number",
+      "description": "Optional GPS accuracy in meters at clock-out"
+    }
+  },
+  "required": [
+    "company_id",
+    "user_email",
+    "started_at",
+    "entry_type"
+  ],
+  "rls": {
+    "create": {
+      "$or": [
+        {
+          "company_id": {
+            "$in": "{{user.data.company_ids}}"
+          },
+          "user_email": "{{user.email}}"
+        },
+        {
+          "company_id": {
+            "$in": "{{user.data.admin_company_ids}}"
+          }
+        }
+      ]
+    },
+    "read": {
+      "$or": [
+        {
+          "company_id": {
+            "$in": "{{user.data.company_ids}}"
+          }
+        },
+        {
+          "user_email": "{{user.email}}"
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    },
+    "update": {
+      "$or": [
+        {
+          "company_id": {
+            "$in": "{{user.data.company_ids}}"
+          },
+          "user_email": "{{user.email}}"
+        },
+        {
+          "company_id": {
+            "$in": "{{user.data.admin_company_ids}}"
+          }
+        }
+      ]
+    },
+    "delete": {
+      "$or": [
+        {
+          "company_id": {
+            "$in": "{{user.data.admin_company_ids}}"
+          }
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    }
+  }
+}

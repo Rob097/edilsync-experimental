@@ -77,6 +77,14 @@ export default function OperativeEntry() {
             <CalendarClock className="h-4 w-4 mr-2" />
             {t('operational.daySummary')}
           </Button>
+          <Button
+            variant="outline"
+            className="w-full border-[#ef6144]/30 text-[#ef6144] hover:bg-[#ef6144]/10 h-12"
+            onClick={() => navigate('/operativa/societa')}
+          >
+            <Building2 className="h-4 w-4 mr-2" />
+            Società
+          </Button>
         </CardContent>
       </Card>
 

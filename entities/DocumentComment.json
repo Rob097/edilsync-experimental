@@ -8,7 +8,11 @@
     },
     "project_id": {
       "type": "string",
-      "description": "Reference to Project for easy querying"
+      "description": "Reference to Project for easy querying (optional if company_id is set)"
+    },
+    "company_id": {
+      "type": "string",
+      "description": "Reference to Company for easy querying (optional if project_id is set)"
     },
     "comment": {
       "type": "string",
@@ -25,7 +29,6 @@
   },
   "required": [
     "document_id",
-    "project_id",
     "comment",
     "author_email"
   ],
@@ -38,6 +41,11 @@
           }
         },
         {
+          "company_id": {
+            "$in": "{{user.data.company_ids}}"
+          }
+        },
+        {
           "created_by": "{{user.email}}"
         }
       ]
@@ -47,6 +55,11 @@
         {
           "project_id": {
             "$in": "{{user.data.project_ids}}"
+          }
+        },
+        {
+          "company_id": {
+            "$in": "{{user.data.company_ids}}"
           }
         },
         {

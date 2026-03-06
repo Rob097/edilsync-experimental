@@ -1,79 +1,87 @@
 import React, { useState, useEffect } from 'react';
 import { appClient } from '@/api/appClient';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { Card } from "@/components/ui/card";
-import { Skeleton } from "@/components/ui/skeleton.jsx";
-import { Button } from "@/components/ui/button";
-import { Menu, Users } from "lucide-react";
+import { Card } from '@/components/ui/card';
+import { Skeleton } from '@/components/ui/skeleton.jsx';
+import { Button } from '@/components/ui/button';
+import { Menu, Users } from 'lucide-react';
 import ChannelList from './ChannelList';
 import MessageList from './MessageList';
 import MessageInput from './MessageInput';
 import ChannelMembersDialog from './ChannelMembersDialog';
 import { useLanguage } from '@/components/i18n/useLanguage';
 
-export default function ProjectMessaging({ 
+export default function ProjectMessaging({
   projectId,
+  companyId,
+  companyName,
   currentUser,
   activeCompanyId,
-  participants,
-  onNavigate
+  participants = [],
+  onNavigate,
+  canCreateChannels = true,
 }) {
   const { currentLanguage, t } = useLanguage();
-  const tr = (it, en) => currentLanguage === 'it' ? it : en;
+  const tr = (it, en) => (currentLanguage === 'it' ? it : en);
   const queryClient = useQueryClient();
+  const isCompanyScope = !projectId && !!companyId;
+  const scopeType = isCompanyScope ? 'company' : 'project';
+  const scopeId = isCompanyScope ? companyId : projectId;
+
   const [selectedChannelId, setSelectedChannelId] = useState(null);
   const [initialized, setInitialized] = useState(false);
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [membersDialogOpen, setMembersDialogOpen] = useState(false);
 
   const { data: channels = [], isLoading: channelsLoading } = useQuery({
-    queryKey: ['channels', projectId],
-    queryFn: () => appClient.entities.Channel.filter({ project_id: projectId }),
-    enabled: !!projectId,
-    staleTime: 2 * 60 * 1000, // 2 minuti
+    queryKey: ['channels', scopeType, scopeId],
+    queryFn: () => appClient.entities.Channel.filter(
+      isCompanyScope ? { company_id: companyId } : { project_id: projectId },
+    ),
+    enabled: !!scopeId,
+    staleTime: 2 * 60 * 1000,
   });
 
-  const { data: channelMembers = [], isLoading: membersLoading } = useQuery({
-    queryKey: ['channelMembers', projectId],
-    queryFn: () => appClient.entities.ChannelMember.filter({ project_id: projectId }),
-    enabled: !!projectId,
-    staleTime: 2 * 60 * 1000, // 2 minuti
+  const { data: channelMembers = [] } = useQuery({
+    queryKey: ['channelMembers', scopeType, scopeId],
+    queryFn: () => appClient.entities.ChannelMember.filter(
+      isCompanyScope ? { company_id: companyId } : { project_id: projectId },
+    ),
+    enabled: !!scopeId,
+    staleTime: 2 * 60 * 1000,
   });
 
   const { data: companies = [] } = useQuery({
     queryKey: ['companies'],
     queryFn: () => appClient.entities.Company.list(),
-    staleTime: 5 * 60 * 1000, // 5 minuti
+    enabled: !isCompanyScope,
+    staleTime: 5 * 60 * 1000,
   });
 
-
-
   const createChannelMutation = useMutation({
-    mutationFn: async (channelData) => {
-      return await appClient.entities.Channel.create(channelData);
-    },
+    mutationFn: async (channelData) => appClient.entities.Channel.create(channelData),
     onSuccess: () => {
-      queryClient.invalidateQueries(['channels', projectId]);
+      queryClient.invalidateQueries({ queryKey: ['channels', scopeType, scopeId] });
     },
   });
 
   const createMemberMutation = useMutation({
-    mutationFn: async (memberData) => {
-      return await appClient.entities.ChannelMember.create(memberData);
-    },
+    mutationFn: async (memberData) => appClient.entities.ChannelMember.create(memberData),
     onSuccess: () => {
-      queryClient.invalidateQueries(['channelMembers', projectId]);
+      queryClient.invalidateQueries({ queryKey: ['channelMembers', scopeType, scopeId] });
     },
   });
 
-  // Initialize channels
   useEffect(() => {
-    if (!projectId || !currentUser || initialized) return;
-    
-    // Only initialize if we have loaded channels and confirmed general doesn't exist
-    if (channelsLoading) return;
-    
-    const existingGeneral = channels.find(c => c.type === 'general' && c.project_id === projectId);
+    if (!scopeId || !currentUser || initialized || channelsLoading) return;
+
+    const existingGeneral = channels.find((channel) => {
+      if (isCompanyScope) {
+        return channel.type === 'company' && channel.company_id === companyId;
+      }
+      return channel.type === 'general' && channel.project_id === projectId;
+    });
+
     if (existingGeneral) {
       setInitialized(true);
       return;
@@ -82,25 +90,26 @@ export default function ProjectMessaging({
     const initializeChannels = async () => {
       try {
         const generalChannel = await createChannelMutation.mutateAsync({
-          project_id: projectId,
-          name: t('messages.general'),
-          type: 'general',
+          project_id: isCompanyScope ? null : projectId,
+          company_id: isCompanyScope ? companyId : null,
+          name: isCompanyScope ? (companyName || tr('Generale', 'General')) : t('messages.general'),
+          type: isCompanyScope ? 'company' : 'general',
+          description: isCompanyScope ? tr('Canale generale società', 'Company general channel') : null,
           created_by_email: currentUser.email,
         });
 
-        // Add all participants to general channel (with delay to avoid rate limit)
-        for (let i = 0; i < participants.length; i++) {
+        for (let i = 0; i < participants.length; i += 1) {
           const participant = participants[i];
           await createMemberMutation.mutateAsync({
             channel_id: generalChannel.id,
-            project_id: projectId,
+            project_id: isCompanyScope ? null : projectId,
             participant_id: participant.id,
             user_email: participant.user_email,
-            company_id: participant.company_id || null,
+            company_id: isCompanyScope ? companyId : (participant.company_id || null),
             last_read_at: new Date().toISOString(),
           });
           if (i < participants.length - 1) {
-            await new Promise(resolve => setTimeout(resolve, 200));
+            await new Promise((resolve) => setTimeout(resolve, 200));
           }
         }
 
@@ -112,28 +121,46 @@ export default function ProjectMessaging({
     };
 
     initializeChannels();
-  }, [projectId, currentUser, participants?.length, channelsLoading, initialized]);
+  }, [
+    scopeId,
+    currentUser,
+    initialized,
+    channelsLoading,
+    channels,
+    isCompanyScope,
+    companyId,
+    projectId,
+    createChannelMutation,
+    createMemberMutation,
+    participants,
+    companyName,
+    t,
+    tr,
+  ]);
 
-  // Select first available channel
   useEffect(() => {
-    if (!selectedChannelId && channels.length > 0) {
-      const myChannels = channels.filter(channel => {
-        const membership = channelMembers.find(m =>
-          m.channel_id === channel.id &&
-          m.user_email === currentUser?.email &&
-          (!activeCompanyId || m.company_id === activeCompanyId)
-        );
-        return !!membership;
+    if (selectedChannelId || channels.length === 0) return;
+
+    const myChannels = channels.filter((channel) => {
+      const membership = channelMembers.find((member) => {
+        if (member.channel_id !== channel.id) return false;
+        if (member.user_email === currentUser?.email) return true;
+        if (isCompanyScope && member.company_id === companyId) return true;
+        if (!isCompanyScope && activeCompanyId && member.company_id === activeCompanyId) return true;
+        return false;
       });
+      return !!membership;
+    });
 
-      if (myChannels.length > 0) {
-        setSelectedChannelId(myChannels[0].id);
-      }
+    if (myChannels.length > 0) {
+      setSelectedChannelId(myChannels[0].id);
     }
-  }, [channels, channelMembers, selectedChannelId, currentUser, activeCompanyId]);
+  }, [selectedChannelId, channels, channelMembers, currentUser, isCompanyScope, companyId, activeCompanyId]);
 
-  const selectedChannel = channels.find(c => c.id === selectedChannelId);
-  const activeCompany = companies.find(c => c.id === activeCompanyId);
+  const selectedChannel = channels.find((channel) => channel.id === selectedChannelId);
+  const activeCompany = isCompanyScope
+    ? { id: companyId, name: companyName }
+    : companies.find((company) => company.id === activeCompanyId);
 
   if (!currentUser || channelsLoading) {
     return (
@@ -145,21 +172,23 @@ export default function ProjectMessaging({
 
   return (
     <div className="flex gap-4 h-[80vh] md:h-[600px]">
-      {/* Desktop sidebar - always visible */}
       <Card className="hidden md:flex md:col-span-1 p-4 overflow-y-auto w-64">
         <ChannelList
+          scopeType={scopeType}
+          scopeId={scopeId}
           projectId={projectId}
+          companyId={companyId}
           currentUserEmail={currentUser.email}
           activeCompanyId={activeCompanyId}
           selectedChannelId={selectedChannelId}
           onSelectChannel={setSelectedChannelId}
           participants={participants}
+          canCreateChannels={canCreateChannels}
         />
       </Card>
 
       <div className="relative flex-1 min-w-0">
         <Card className="flex-1 h-full flex flex-col overflow-hidden">
-          {/* Mobile top bar - always visible */}
           <div className="border-b p-3 flex items-center justify-between md:hidden">
             <div className="min-w-0">
               <h3 className="font-semibold truncate">
@@ -167,7 +196,7 @@ export default function ProjectMessaging({
               </h3>
             </div>
             <div className="flex items-center gap-1 ml-2">
-              {selectedChannel && (
+              {selectedChannel && !isCompanyScope && (
                 <Button
                   variant="ghost"
                   size="icon"
@@ -192,33 +221,40 @@ export default function ProjectMessaging({
                     <p className="text-sm text-gray-500 mt-1">{selectedChannel.description}</p>
                   )}
                 </div>
-                <div className="flex items-center gap-1">
-                  <Button 
-                    variant="ghost" 
-                    size="icon"
-                    onClick={() => setMembersDialogOpen(true)}
-                    title={tr('Membri del canale', 'Channel members')}
-                  >
-                    <Users className="h-5 w-5" />
-                  </Button>
-                </div>
+                {!isCompanyScope && (
+                  <div className="flex items-center gap-1">
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      onClick={() => setMembersDialogOpen(true)}
+                      title={tr('Membri del canale', 'Channel members')}
+                    >
+                      <Users className="h-5 w-5" />
+                    </Button>
+                  </div>
+                )}
               </div>
-            <MessageList
-              channelId={selectedChannelId}
-              projectId={projectId}
-              currentUserEmail={currentUser.email}
-              onNavigate={onNavigate}
-            />
-            <MessageInput
-              channelId={selectedChannelId}
-              projectId={projectId}
-              currentUserEmail={currentUser.email}
-              currentUserName={currentUser.full_name}
-              contextType={activeCompanyId ? 'company' : 'personal'}
-              activeCompanyId={activeCompanyId}
-              activeCompanyName={activeCompany?.name}
-              participants={participants}
-            />
+
+              <MessageList
+                channelId={selectedChannelId}
+                projectId={projectId}
+                companyId={companyId}
+                scopeType={scopeType}
+                currentUserEmail={currentUser.email}
+                onNavigate={onNavigate}
+              />
+              <MessageInput
+                channelId={selectedChannelId}
+                projectId={projectId}
+                companyId={companyId}
+                currentUserEmail={currentUser.email}
+                currentUserName={currentUser.full_name}
+                contextType={isCompanyScope ? 'company' : (activeCompanyId ? 'company' : 'personal')}
+                activeCompanyId={isCompanyScope ? companyId : activeCompanyId}
+                activeCompanyName={activeCompany?.name}
+                participants={participants}
+                scopeType={scopeType}
+              />
             </>
           ) : (
             <div className="flex items-center justify-center h-full text-gray-500 px-4 text-center">
@@ -227,7 +263,6 @@ export default function ProjectMessaging({
           )}
         </Card>
 
-        {/* Mobile in-panel sidebar */}
         <div
           className={`absolute inset-y-0 left-0 z-20 w-64 bg-white border-r shadow-xl transform transition-transform duration-200 md:hidden ${
             sidebarOpen ? 'translate-x-0' : '-translate-x-full'
@@ -235,7 +270,10 @@ export default function ProjectMessaging({
         >
           <div className="p-4 overflow-y-auto h-full">
             <ChannelList
+              scopeType={scopeType}
+              scopeId={scopeId}
               projectId={projectId}
+              companyId={companyId}
               currentUserEmail={currentUser.email}
               activeCompanyId={activeCompanyId}
               selectedChannelId={selectedChannelId}
@@ -244,6 +282,7 @@ export default function ProjectMessaging({
                 setSidebarOpen(false);
               }}
               participants={participants}
+              canCreateChannels={canCreateChannels}
             />
           </div>
         </div>
@@ -257,13 +296,16 @@ export default function ProjectMessaging({
           />
         )}
       </div>
-      <ChannelMembersDialog
-        open={membersDialogOpen}
-        onOpenChange={setMembersDialogOpen}
-        channelId={selectedChannelId}
-        projectId={projectId}
-        canManage={true}
-      />
+
+      {!isCompanyScope && (
+        <ChannelMembersDialog
+          open={membersDialogOpen}
+          onOpenChange={setMembersDialogOpen}
+          channelId={selectedChannelId}
+          projectId={projectId}
+          canManage={true}
+        />
+      )}
     </div>
   );
 }

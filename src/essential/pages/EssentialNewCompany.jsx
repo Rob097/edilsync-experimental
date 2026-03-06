@@ -94,7 +94,7 @@ export default function EssentialNewCompany() {
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="space-y-2">
-            <Label>{tr('Tipologia societa', 'Company type')}</Label>
+            <Label>{tr('Tipologia società', 'Company type')}</Label>
             <Select
               value={formData.company_type}
               onValueChange={(value) => setFormData((prev) => ({ ...prev, company_type: value }))}

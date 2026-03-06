@@ -73,6 +73,11 @@ export default function OperativeLayout() {
     navigate('/operativa/riepilogo');
   };
 
+  const goToCompanyWorkspace = () => {
+    setMenuOpen(false);
+    navigate('/operativa/societa');
+  };
+
   const handleCompanyChangeFromMenu = async (company) => {
     await handleContextChange(company);
     setMenuOpen(false);
@@ -161,6 +166,10 @@ export default function OperativeLayout() {
                 <CardContent className="p-4 space-y-3">
                   <h3 className="text-sm font-semibold text-gray-900">{t('settings.language')}</h3>
                   <LanguageSelector />
+                  <Button variant="outline" className="w-full border-[#ef6144]/30 text-[#ef6144]" onClick={goToCompanyWorkspace}>
+                    <Building2 className="h-4 w-4 mr-2" />
+                    Società
+                  </Button>
                 </CardContent>
               </Card>
 

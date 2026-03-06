@@ -4,7 +4,11 @@
   "properties": {
     "project_id": {
       "type": "string",
-      "description": "Reference to Project"
+      "description": "Reference to Project (optional if company_id is set)"
+    },
+    "company_id": {
+      "type": "string",
+      "description": "Reference to Company (optional if project_id is set)"
     },
     "name": {
       "type": "string",
@@ -49,7 +53,6 @@
     }
   },
   "required": [
-    "project_id",
     "name",
     "file_url"
   ],
@@ -62,6 +65,11 @@
           }
         },
         {
+          "company_id": {
+            "$in": "{{user.data.company_ids}}"
+          }
+        },
+        {
           "created_by": "{{user.email}}"
         }
       ]
@@ -71,6 +79,11 @@
         {
           "project_id": {
             "$in": "{{user.data.project_ids}}"
+          }
+        },
+        {
+          "company_id": {
+            "$in": "{{user.data.company_ids}}"
           }
         },
         {

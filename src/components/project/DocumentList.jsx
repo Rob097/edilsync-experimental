@@ -62,11 +62,23 @@ const formatFileSize = (bytes) => {
   return (bytes / (1024 * 1024)).toFixed(1) + ' MB';
 };
 
-export default function DocumentList({ projectId, canUpload, currentUserEmail, uploadDialogOpen: externalUploadDialog, onUploadDialogChange }) {
+export default function DocumentList({
+  projectId,
+  companyId,
+  scopeType = 'project',
+  canUpload,
+  currentUserEmail,
+  uploadDialogOpen: externalUploadDialog,
+  onUploadDialogChange,
+}) {
   const { currentLanguage, t } = useLanguage();
   const tr = (itText, enText) => currentLanguage === 'it' ? itText : enText;
   const dateLocale = currentLanguage === 'it' ? it : enUS;
   const queryClient = useQueryClient();
+  const isCompanyScope = scopeType === 'company';
+  const scopeId = isCompanyScope ? companyId : projectId;
+  const documentsQueryKey = isCompanyScope ? ['companyDocuments', companyId] : ['projectDocuments', projectId];
+  const scopeLabel = isCompanyScope ? tr('società', 'company') : tr('progetto', 'project');
   const [searchQuery, setSearchQuery] = useState('');
   const [filterCategory, setFilterCategory] = useState('all');
   const [filterType, setFilterType] = useState('all');
@@ -78,15 +90,17 @@ export default function DocumentList({ projectId, canUpload, currentUserEmail, u
   const [openFolder, setOpenFolder] = useState(null); // category name when folder is open
 
   const { data: documents = [], isLoading } = useQuery({
-    queryKey: ['projectDocuments', projectId],
-    queryFn: () => appClient.entities.ProjectDocument.filter({ project_id: projectId }),
-    enabled: !!projectId,
+    queryKey: documentsQueryKey,
+    queryFn: () => appClient.entities.ProjectDocument.filter(
+      isCompanyScope ? { company_id: companyId } : { project_id: projectId },
+    ),
+    enabled: !!scopeId,
   });
 
   const deleteMutation = useMutation({
     mutationFn: (docId) => appClient.entities.ProjectDocument.delete(docId),
     onSuccess: () => {
-      queryClient.invalidateQueries(['projectDocuments', projectId]);
+      queryClient.invalidateQueries({ queryKey: documentsQueryKey });
     },
   });
 
@@ -288,7 +302,7 @@ export default function DocumentList({ projectId, canUpload, currentUserEmail, u
           <EmptyState
             icon={Folder}
             title={tr('Nessun documento', 'No documents')}
-            description={tr('Carica il primo documento del progetto.', 'Upload the first project document.')}
+            description={tr(`Carica il primo documento della ${scopeLabel}.`, `Upload the first ${scopeLabel} document.`)}
             actionLabel={canUpload ? tr('Carica documento', 'Upload document') : undefined}
             onAction={canUpload ? () => {
               setUploadDialogOpen(true);
@@ -487,7 +501,7 @@ export default function DocumentList({ projectId, canUpload, currentUserEmail, u
             description={
               searchQuery
                 ? t('common.tryModifyingSearchTerms')
-                : tr('Carica il primo documento del progetto.', 'Upload the first project document.')
+                : tr(`Carica il primo documento della ${scopeLabel}.`, `Upload the first ${scopeLabel} document.`)
             }
             actionLabel={!searchQuery && canUpload ? tr('Carica documento', 'Upload document') : undefined}
             onAction={!searchQuery && canUpload ? () => {
@@ -505,12 +519,14 @@ export default function DocumentList({ projectId, canUpload, currentUserEmail, u
           onUploadDialogChange?.(open);
         }}
         projectId={projectId}
+        companyId={companyId}
       />
 
       <UploadDocumentDialog
         open={!!editingDocument}
         onOpenChange={(open) => !open && setEditingDocument(null)}
         projectId={projectId}
+        companyId={companyId}
         document={editingDocument}
       />
 
@@ -520,6 +536,7 @@ export default function DocumentList({ projectId, canUpload, currentUserEmail, u
         onOpenChange={(open) => !open && setPreviewDocument(null)}
         allDocuments={filteredDocuments}
         onNavigate={setPreviewDocument}
+        scopeType={scopeType}
       />
     </div>
   );
