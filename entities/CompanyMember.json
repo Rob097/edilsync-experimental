@@ -31,9 +31,33 @@
         "surveyor",
         "designer",
         "accountant",
-        "other"
+        "other",
+        "owner_admin",
+        "project_manager",
+        "site_manager",
+        "crew_leader",
+        "technical_office",
+        "safety_manager",
+        "worker",
+        "backoffice",
+        "external_consultant"
       ],
       "description": "Professional role"
+    },
+    "company_member_role": {
+      "type": "string",
+      "enum": [
+        "owner_admin",
+        "project_manager",
+        "site_manager",
+        "crew_leader",
+        "technical_office",
+        "safety_manager",
+        "worker",
+        "backoffice",
+        "external_consultant"
+      ],
+      "description": "Operational role of the member inside the company"
     },
     "status": {
       "type": "string",

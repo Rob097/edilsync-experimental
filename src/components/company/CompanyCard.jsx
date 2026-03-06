@@ -3,8 +3,9 @@ import { Link } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Building2, Users, Briefcase } from "lucide-react";
+import { Building2, Users } from "lucide-react";
 import { useLanguage } from '@/components/i18n/useLanguage';
+import { getCompanyTypeLabel } from '@/lib/domainRoles';
 
 export default function CompanyCard({ company, userRole, memberCount }) {
   const { t, currentLanguage } = useLanguage();
@@ -34,6 +35,9 @@ export default function CompanyCard({ company, userRole, memberCount }) {
               </div>
               {company.vat_number && (
                 <p className="text-sm text-gray-500 mb-2">{tr('P.IVA', 'VAT')}: {company.vat_number}</p>
+              )}
+              {company.company_type && (
+                <p className="text-sm text-gray-500 mb-2">{getCompanyTypeLabel(company.company_type, currentLanguage)}</p>
               )}
               <div className="flex items-center gap-4 text-sm text-gray-500">
                 {memberCount > 0 && (

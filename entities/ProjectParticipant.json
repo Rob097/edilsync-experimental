@@ -36,7 +36,8 @@
         "engineer",
         "surveyor",
         "designer",
-        "consultant"
+        "consultant",
+        "supplier"
       ],
       "description": "Contextual role in this project"
     },

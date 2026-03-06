@@ -9,15 +9,18 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { ArrowLeft, Loader2 } from "lucide-react";
+import { getCompanyTypeOptions } from '@/lib/domainRoles';
 
 export default function NewCompany() {
-  const { t } = useLanguage();
+  const { t, currentLanguage } = useLanguage();
   const navigate = useNavigate();
   const queryClient = useQueryClient();
   
   const [formData, setFormData] = useState({
     name: '',
+    company_type: 'general_contractor',
     vat_number: '',
     address: '',
     phone: '',
@@ -41,7 +44,8 @@ export default function NewCompany() {
         user_id: user?.id,
         user_email: user?.email,
         role: 'admin',
-        profession: 'general',
+        profession: 'owner_admin',
+        company_member_role: 'owner_admin',
         status: 'active',
       });
 
@@ -91,6 +95,8 @@ export default function NewCompany() {
     setFormData(prev => ({ ...prev, [field]: value }));
   };
 
+  const companyTypeOptions = getCompanyTypeOptions(currentLanguage);
+
   return (
     <div className="max-w-2xl mx-auto">
       <Button
@@ -120,6 +126,22 @@ export default function NewCompany() {
                 placeholder={t('newCompany.companyNamePlaceholder')}
                 required
               />
+            </div>
+
+            <div className="space-y-2">
+              <Label>{t('newCompany.companyType')}</Label>
+              <Select value={formData.company_type} onValueChange={(value) => handleChange('company_type', value)}>
+                <SelectTrigger>
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  {companyTypeOptions.map((option) => (
+                    <SelectItem key={option.value} value={option.value}>
+                      {option.label}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
             </div>
 
             <div className="space-y-2">

@@ -198,15 +198,7 @@ Deno.serve(async (req) => {
     }
 
     if (payload?.sync_all === true) {
-      const { data: users, error: usersError } = await supabase
-        .from("users")
-        .select("email");
-
-      if (usersError) throw usersError;
-
-      for (const user of users ?? []) {
-        if (user.email) emailsToSync.add(user.email);
-      }
+      return jsonResponse({ error: "sync_all is disabled" }, 403);
     }
 
     if (emailsToSync.size === 0) {

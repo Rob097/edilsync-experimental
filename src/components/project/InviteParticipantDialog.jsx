@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { appClient } from '@/api/appClient';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useLanguage } from '@/components/i18n/useLanguage';
@@ -15,6 +15,13 @@ import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Loader2, Building2, User } from "lucide-react";
+import { Alert, AlertDescription } from '@/components/ui/alert';
+import {
+  getProjectRoleLabel,
+  getProjectRoleOptions,
+  getCompatibleProjectRolesForCompanyType,
+  isCompanyTypeCompatibleWithProjectRole,
+} from '@/lib/domainRoles';
 
 export default function InviteParticipantDialog({ 
   open, 
@@ -22,23 +29,24 @@ export default function InviteParticipantDialog({
   projectId,
   currentUserParticipation 
 }) {
-  const { t } = useLanguage();
+  const { t, currentLanguage } = useLanguage();
   const queryClient = useQueryClient();
-  
-  const projectRoles = [
-    { value: 'contractor', label: t('inviteParticipantDialog.contractor'), description: t('inviteParticipantDialog.contractorDesc') },
-    { value: 'subcontractor', label: t('inviteParticipantDialog.subcontractor'), description: t('inviteParticipantDialog.subcontractorDesc') },
-    { value: 'architect', label: t('inviteParticipantDialog.architectRole'), description: t('inviteParticipantDialog.architectDesc') },
-    { value: 'engineer', label: t('inviteParticipantDialog.engineer'), description: t('inviteParticipantDialog.engineerDesc') },
-    { value: 'surveyor', label: t('inviteParticipantDialog.surveyor'), description: t('inviteParticipantDialog.surveyorDesc') },
-    { value: 'designer', label: t('inviteParticipantDialog.designer'), description: t('inviteParticipantDialog.designerDesc') },
-    { value: 'consultant', label: t('inviteParticipantDialog.consultant'), description: t('inviteParticipantDialog.consultantDesc') },
-  ];
   
   const [participantType, setParticipantType] = useState('company');
   const [email, setEmail] = useState('');
   const [selectedCompanyId, setSelectedCompanyId] = useState('');
   const [projectRole, setProjectRole] = useState('');
+
+  const roleDescriptions = {
+    contractor: t('inviteParticipantDialog.contractorDesc'),
+    subcontractor: t('inviteParticipantDialog.subcontractorDesc'),
+    architect: t('inviteParticipantDialog.architectDesc'),
+    engineer: t('inviteParticipantDialog.engineerDesc'),
+    surveyor: t('inviteParticipantDialog.surveyorDesc'),
+    designer: t('inviteParticipantDialog.designerDesc'),
+    consultant: t('inviteParticipantDialog.consultantDesc'),
+    supplier: t('inviteParticipantDialog.supplierDesc'),
+  };
 
   const { data: allCompanies = [] } = useQuery({
     queryKey: ['allCompanies'],
@@ -211,10 +219,33 @@ export default function InviteParticipantDialog({
     (participantType === 'personal' && email)
   );
 
-  // Filter available roles based on who is inviting
-  const availableRoles = currentUserParticipation?.project_role === 'contractor'
-    ? projectRoles.filter(r => r.value === 'subcontractor')
-    : projectRoles;
+  const selectedCompany = allCompanies.find((company) => company.id === selectedCompanyId);
+  const selectedCompanyType = selectedCompany?.company_type || null;
+
+  // Contractors can only invite subcontractors for now.
+  const invitableRoleValues = currentUserParticipation?.project_role === 'contractor'
+    ? ['subcontractor']
+    : getProjectRoleOptions(currentLanguage).map((option) => option.value);
+
+  const availableRoles = useMemo(() => {
+    if (participantType !== 'company') {
+      return invitableRoleValues;
+    }
+    const compatibleRoles = getCompatibleProjectRolesForCompanyType(selectedCompanyType);
+    return invitableRoleValues.filter((roleValue) => compatibleRoles.includes(roleValue));
+  }, [invitableRoleValues, participantType, selectedCompanyType]);
+
+  useEffect(() => {
+    if (projectRole && !availableRoles.includes(projectRole)) {
+      setProjectRole('');
+    }
+  }, [availableRoles, projectRole]);
+
+  const hasCompatibilityIssue =
+    participantType === 'company' &&
+    !!selectedCompanyId &&
+    !!projectRole &&
+    !isCompanyTypeCompatibleWithProjectRole(selectedCompanyType, projectRole);
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -274,6 +305,11 @@ export default function InviteParticipantDialog({
                   ))}
                 </SelectContent>
               </Select>
+              {selectedCompanyId && !selectedCompanyType && (
+                <p className="text-xs text-amber-700">
+                  {t('inviteParticipantDialog.missingCompanyType')}
+                </p>
+              )}
             </div>
           ) : (
             <div className="space-y-2">
@@ -296,17 +332,25 @@ export default function InviteParticipantDialog({
                 <SelectValue placeholder={t('inviteParticipantDialog.selectRolePlaceholder')} />
               </SelectTrigger>
               <SelectContent>
-                {availableRoles.map(role => (
-                  <SelectItem key={role.value} value={role.value}>
+                {availableRoles.map((roleValue) => (
+                  <SelectItem key={roleValue} value={roleValue}>
                     <div>
-                      <p className="font-medium">{role.label}</p>
-                      <p className="text-xs text-gray-500">{role.description}</p>
+                      <p className="font-medium">{getProjectRoleLabel(roleValue, currentLanguage)}</p>
+                      <p className="text-xs text-gray-500">{roleDescriptions[roleValue] || roleValue}</p>
                     </div>
                   </SelectItem>
                 ))}
               </SelectContent>
             </Select>
           </div>
+
+          {hasCompatibilityIssue && (
+            <Alert variant="destructive">
+              <AlertDescription>
+                {t('inviteParticipantDialog.compatibilityError')}
+              </AlertDescription>
+            </Alert>
+          )}
 
           <div className="flex gap-3 pt-2">
             <Button
@@ -320,7 +364,7 @@ export default function InviteParticipantDialog({
             <Button
               type="submit"
               className="flex-1 bg-[#ef6144] hover:bg-[#d9553a]"
-              disabled={!isValid || inviteMutation.isPending}
+              disabled={!isValid || inviteMutation.isPending || hasCompatibilityIssue}
             >
               {inviteMutation.isPending && (
                 <Loader2 className="h-4 w-4 mr-2 animate-spin" />

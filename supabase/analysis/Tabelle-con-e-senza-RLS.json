@@ -1,0 +1,140 @@
+[
+  {
+    "schema_name": "public",
+    "table_name": "app_logs",
+    "rls_enabled": true,
+    "rls_forced": false
+  },
+  {
+    "schema_name": "public",
+    "table_name": "assistant_conversations",
+    "rls_enabled": true,
+    "rls_forced": false
+  },
+  {
+    "schema_name": "public",
+    "table_name": "change_requests",
+    "rls_enabled": true,
+    "rls_forced": false
+  },
+  {
+    "schema_name": "public",
+    "table_name": "channel_members",
+    "rls_enabled": true,
+    "rls_forced": false
+  },
+  {
+    "schema_name": "public",
+    "table_name": "channels",
+    "rls_enabled": true,
+    "rls_forced": false
+  },
+  {
+    "schema_name": "public",
+    "table_name": "companies",
+    "rls_enabled": true,
+    "rls_forced": false
+  },
+  {
+    "schema_name": "public",
+    "table_name": "company_members",
+    "rls_enabled": true,
+    "rls_forced": false
+  },
+  {
+    "schema_name": "public",
+    "table_name": "dispute_cases",
+    "rls_enabled": true,
+    "rls_forced": false
+  },
+  {
+    "schema_name": "public",
+    "table_name": "dispute_events",
+    "rls_enabled": true,
+    "rls_forced": false
+  },
+  {
+    "schema_name": "public",
+    "table_name": "dispute_evidence_items",
+    "rls_enabled": true,
+    "rls_forced": false
+  },
+  {
+    "schema_name": "public",
+    "table_name": "document_comments",
+    "rls_enabled": true,
+    "rls_forced": false
+  },
+  {
+    "schema_name": "public",
+    "table_name": "event_participants",
+    "rls_enabled": true,
+    "rls_forced": false
+  },
+  {
+    "schema_name": "public",
+    "table_name": "events",
+    "rls_enabled": true,
+    "rls_forced": false
+  },
+  {
+    "schema_name": "public",
+    "table_name": "messages",
+    "rls_enabled": true,
+    "rls_forced": false
+  },
+  {
+    "schema_name": "public",
+    "table_name": "milestones",
+    "rls_enabled": true,
+    "rls_forced": false
+  },
+  {
+    "schema_name": "public",
+    "table_name": "notification_preferences",
+    "rls_enabled": true,
+    "rls_forced": false
+  },
+  {
+    "schema_name": "public",
+    "table_name": "notifications",
+    "rls_enabled": true,
+    "rls_forced": false
+  },
+  {
+    "schema_name": "public",
+    "table_name": "project_documents",
+    "rls_enabled": true,
+    "rls_forced": false
+  },
+  {
+    "schema_name": "public",
+    "table_name": "project_messages",
+    "rls_enabled": true,
+    "rls_forced": false
+  },
+  {
+    "schema_name": "public",
+    "table_name": "project_participants",
+    "rls_enabled": true,
+    "rls_forced": false
+  },
+  {
+    "schema_name": "public",
+    "table_name": "projects",
+    "rls_enabled": true,
+    "rls_forced": false
+  },
+  {
+    "schema_name": "public",
+    "table_name": "tasks",
+    "rls_enabled": true,
+    "rls_forced": false
+  },
+  {
+    "schema_name": "public",
+    "table_name": "users",
+    "rls_enabled": true,
+    "rls_forced": false
+  }
+]

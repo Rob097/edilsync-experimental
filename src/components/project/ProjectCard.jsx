@@ -32,7 +32,8 @@ export default function ProjectCard({ project, userRole, participantCount }) {
     engineer: tr('Ingegnere', 'Engineer'),
     surveyor: tr('Geometra', 'Surveyor'),
     designer: tr('Designer', 'Designer'),
-    consultant: tr('Consulente', 'Consultant')
+    consultant: tr('Consulente', 'Consultant'),
+    supplier: tr('Fornitore', 'Supplier')
   };
 
   return (

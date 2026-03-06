@@ -164,6 +164,7 @@ export default function OperativeProjectWorkspace() {
       surveyor: t('inviteParticipantDialog.surveyor'),
       designer: t('inviteParticipantDialog.designer'),
       consultant: t('inviteParticipantDialog.consultant'),
+      supplier: t('inviteParticipantDialog.supplier'),
     };
     return roleMap[role] || role || '-';
   };

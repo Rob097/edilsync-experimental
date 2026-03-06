@@ -6,7 +6,7 @@
     - importo per attività extra
     - ecc
 - Iniziare a pensare all'introduzione di un sistema di timbrature per società/progetto
-- Ampliare ventaglio di professionisti + migliorie controlli permessi
+- [X] Ampliare ventaglio di professionisti + migliorie controlli permessi
 - Migliorare usabilità per progettisti
     - Migliore gestione / consultazione dei design/progetti
     - Analizzare formati comuni

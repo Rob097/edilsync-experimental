@@ -5,6 +5,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { User, Clock, Shield, Trash2, Loader2 } from "lucide-react";
 import { useLanguage } from '@/components/i18n/useLanguage';
+import { getCompanyMemberRoleLabel } from '@/lib/domainRoles';
 
 export default function MemberCard({ member, displayName, isCurrentUser, isPending, isAdmin, companyId, canRemoveSelf = true }) {
   const { t, currentLanguage } = useLanguage();
@@ -17,15 +18,7 @@ export default function MemberCard({ member, displayName, isCurrentUser, isPendi
     member: t('companies.member'),
   };
 
-  const localizedProfessionLabels = {
-    general: tr('Generale', 'General'),
-    architect: tr('Architetto', 'Architect'),
-    engineer: tr('Ingegnere', 'Engineer'),
-    surveyor: tr('Geometra', 'Surveyor'),
-    designer: tr('Designer', 'Designer'),
-    accountant: tr('Contabile', 'Accountant'),
-    other: tr('Altro', 'Other'),
-  };
+  const companyMemberRole = member.company_member_role || member.profession;
 
   const resolvedDisplayName = displayName || member.user_email;
 
@@ -58,9 +51,9 @@ export default function MemberCard({ member, displayName, isCurrentUser, isPendi
           {resolvedDisplayName !== member.user_email && (
             <p className="text-sm text-gray-500 break-all">{member.user_email}</p>
           )}
-          {member.profession && member.profession !== 'general' && (
+          {companyMemberRole && (
             <p className="text-sm text-gray-500">
-              {localizedProfessionLabels[member.profession] || member.profession}
+              {getCompanyMemberRoleLabel(companyMemberRole, currentLanguage)}
             </p>
           )}
         </div>

@@ -8,8 +8,10 @@ import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Loader2 } from 'lucide-react';
 import { useLanguage } from '@/components/i18n/useLanguage';
+import { getCompanyTypeOptions } from '@/lib/domainRoles';
 
 export default function EssentialNewCompany() {
   const navigate = useNavigate();
@@ -20,6 +22,7 @@ export default function EssentialNewCompany() {
 
   const [formData, setFormData] = useState({
     name: '',
+    company_type: 'general_contractor',
     vat_number: '',
     address: '',
     phone: '',
@@ -31,6 +34,7 @@ export default function EssentialNewCompany() {
     mutationFn: async (payload) => {
       const company = await appClient.entities.Company.create({
         name: payload.name,
+        company_type: payload.company_type,
         vat_number: payload.vat_number || null,
         address: payload.address || null,
         phone: payload.phone || null,
@@ -43,7 +47,8 @@ export default function EssentialNewCompany() {
         user_id: user?.id,
         user_email: user?.email,
         role: 'admin',
-        profession: 'general',
+        profession: 'owner_admin',
+        company_member_role: 'owner_admin',
         status: 'active',
       });
 
@@ -88,6 +93,25 @@ export default function EssentialNewCompany() {
           <CardTitle className="text-xl">{tr('Nuova società', 'New company')}</CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
+          <div className="space-y-2">
+            <Label>{tr('Tipologia societa', 'Company type')}</Label>
+            <Select
+              value={formData.company_type}
+              onValueChange={(value) => setFormData((prev) => ({ ...prev, company_type: value }))}
+            >
+              <SelectTrigger>
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                {getCompanyTypeOptions(currentLanguage).map((option) => (
+                  <SelectItem key={option.value} value={option.value}>
+                    {option.label}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+
           <div className="space-y-2">
             <Label htmlFor="name">{tr('Nome società', 'Company name')}</Label>
             <Input id="name" value={formData.name} onChange={(event) => setFormData((prev) => ({ ...prev, name: event.target.value }))} />

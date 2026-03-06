@@ -1,0 +1,50 @@
+[
+  {
+    "schema_name": "public",
+    "function_name": "current_admin_company_ids",
+    "args": "",
+    "security_definer": true
+  },
+  {
+    "schema_name": "public",
+    "function_name": "current_company_ids",
+    "args": "",
+    "security_definer": true
+  },
+  {
+    "schema_name": "public",
+    "function_name": "current_project_ids",
+    "args": "",
+    "security_definer": true
+  },
+  {
+    "schema_name": "public",
+    "function_name": "current_user_email",
+    "args": "",
+    "security_definer": true
+  },
+  {
+    "schema_name": "public",
+    "function_name": "is_admin",
+    "args": "",
+    "security_definer": true
+  },
+  {
+    "schema_name": "public",
+    "function_name": "set_audit_fields",
+    "args": "",
+    "security_definer": false
+  },
+  {
+    "schema_name": "public",
+    "function_name": "sync_user_access_for_email",
+    "args": "p_user_email text",
+    "security_definer": true
+  },
+  {
+    "schema_name": "public",
+    "function_name": "sync_user_access_trigger",
+    "args": "",
+    "security_definer": true
+  }
+]

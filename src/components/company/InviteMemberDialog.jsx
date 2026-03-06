@@ -14,24 +14,17 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Loader2 } from "lucide-react";
+import { getCompanyMemberRoleOptions } from '@/lib/domainRoles';
 
 export default function InviteMemberDialog({ open, onOpenChange, companyId }) {
-  const { t } = useLanguage();
+  const { t, currentLanguage } = useLanguage();
   const queryClient = useQueryClient();
-  
-  const professions = [
-    { value: 'general', label: t('inviteMemberDialog.general') },
-    { value: 'architect', label: t('inviteMemberDialog.architect') },
-    { value: 'engineer', label: t('inviteMemberDialog.engineer') },
-    { value: 'surveyor', label: t('inviteMemberDialog.surveyor') },
-    { value: 'designer', label: t('inviteMemberDialog.designer') },
-    { value: 'accountant', label: t('inviteMemberDialog.accountant') },
-    { value: 'other', label: t('inviteMemberDialog.other') },
-  ];
+
+  const memberRoles = getCompanyMemberRoleOptions(currentLanguage);
   
   const [email, setEmail] = useState('');
   const [role, setRole] = useState('member');
-  const [profession, setProfession] = useState('general');
+  const [companyMemberRole, setCompanyMemberRole] = useState('worker');
 
   const { data: company } = useQuery({
     queryKey: ['company', companyId],
@@ -48,7 +41,8 @@ export default function InviteMemberDialog({ open, onOpenChange, companyId }) {
         company_id: companyId,
         user_email: email,
         role: role,
-        profession: profession,
+        profession: companyMemberRole,
+        company_member_role: companyMemberRole,
         status: 'invited',
       });
 
@@ -102,7 +96,7 @@ export default function InviteMemberDialog({ open, onOpenChange, companyId }) {
   const resetForm = () => {
     setEmail('');
     setRole('member');
-    setProfession('general');
+    setCompanyMemberRole('worker');
   };
 
   const handleSubmit = (e) => {
@@ -150,14 +144,14 @@ export default function InviteMemberDialog({ open, onOpenChange, companyId }) {
 
           <div className="space-y-2">
             <Label>{t('inviteMemberDialog.profession')}</Label>
-            <Select value={profession} onValueChange={setProfession}>
+            <Select value={companyMemberRole} onValueChange={setCompanyMemberRole}>
               <SelectTrigger>
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
-                {professions.map(p => (
-                  <SelectItem key={p.value} value={p.value}>
-                    {p.label}
+                {memberRoles.map((memberRole) => (
+                  <SelectItem key={memberRole.value} value={memberRole.value}>
+                    {memberRole.label}
                   </SelectItem>
                 ))}
               </SelectContent>

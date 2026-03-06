@@ -1,0 +1,862 @@
+[
+  {
+    "schemaname": "public",
+    "tablename": "app_logs",
+    "policyname": "app_logs_insert",
+    "permissive": "PERMISSIVE",
+    "roles": "{authenticated}",
+    "cmd": "INSERT",
+    "qual": null,
+    "with_check": "true"
+  },
+  {
+    "schemaname": "public",
+    "tablename": "app_logs",
+    "policyname": "app_logs_read",
+    "permissive": "PERMISSIVE",
+    "roles": "{authenticated}",
+    "cmd": "SELECT",
+    "qual": "((user_email = current_user_email()) OR is_admin())",
+    "with_check": null
+  },
+  {
+    "schemaname": "public",
+    "tablename": "assistant_conversations",
+    "policyname": "assistant_conv_all",
+    "permissive": "PERMISSIVE",
+    "roles": "{authenticated}",
+    "cmd": "ALL",
+    "qual": "(user_email = current_user_email())",
+    "with_check": "(user_email = current_user_email())"
+  },
+  {
+    "schemaname": "public",
+    "tablename": "change_requests",
+    "policyname": "change_requests_create",
+    "permissive": "PERMISSIVE",
+    "roles": "{authenticated}",
+    "cmd": "INSERT",
+    "qual": null,
+    "with_check": "((project_id = ANY (current_project_ids())) OR (created_by = current_user_email()))"
+  },
+  {
+    "schemaname": "public",
+    "tablename": "change_requests",
+    "policyname": "change_requests_delete",
+    "permissive": "PERMISSIVE",
+    "roles": "{authenticated}",
+    "cmd": "DELETE",
+    "qual": "(created_by = current_user_email())",
+    "with_check": null
+  },
+  {
+    "schemaname": "public",
+    "tablename": "change_requests",
+    "policyname": "change_requests_read",
+    "permissive": "PERMISSIVE",
+    "roles": "{authenticated}",
+    "cmd": "SELECT",
+    "qual": "((project_id = ANY (current_project_ids())) OR (created_by = current_user_email()) OR (assigned_user_email = current_user_email()) OR (assigned_company_id = ANY (current_company_ids())) OR is_admin())",
+    "with_check": null
+  },
+  {
+    "schemaname": "public",
+    "tablename": "change_requests",
+    "policyname": "change_requests_update",
+    "permissive": "PERMISSIVE",
+    "roles": "{authenticated}",
+    "cmd": "UPDATE",
+    "qual": "((created_by = current_user_email()) OR (assigned_user_email = current_user_email()) OR (assigned_company_id = ANY (current_admin_company_ids())))",
+    "with_check": "((created_by = current_user_email()) OR (assigned_user_email = current_user_email()) OR (assigned_company_id = ANY (current_admin_company_ids())))"
+  },
+  {
+    "schemaname": "public",
+    "tablename": "channel_members",
+    "policyname": "channel_members_create",
+    "permissive": "PERMISSIVE",
+    "roles": "{authenticated}",
+    "cmd": "INSERT",
+    "qual": null,
+    "with_check": "true"
+  },
+  {
+    "schemaname": "public",
+    "tablename": "channel_members",
+    "policyname": "channel_members_delete",
+    "permissive": "PERMISSIVE",
+    "roles": "{authenticated}",
+    "cmd": "DELETE",
+    "qual": "((user_email = current_user_email()) OR (created_by = current_user_email()))",
+    "with_check": null
+  },
+  {
+    "schemaname": "public",
+    "tablename": "channel_members",
+    "policyname": "channel_members_read",
+    "permissive": "PERMISSIVE",
+    "roles": "{authenticated}",
+    "cmd": "SELECT",
+    "qual": "((user_email = current_user_email()) OR (company_id = ANY (current_company_ids())) OR (project_id = ANY (current_project_ids())) OR (created_by = current_user_email()) OR is_admin())",
+    "with_check": null
+  },
+  {
+    "schemaname": "public",
+    "tablename": "channel_members",
+    "policyname": "channel_members_update",
+    "permissive": "PERMISSIVE",
+    "roles": "{authenticated}",
+    "cmd": "UPDATE",
+    "qual": "((user_email = current_user_email()) OR (created_by = current_user_email()))",
+    "with_check": "((user_email = current_user_email()) OR (created_by = current_user_email()))"
+  },
+  {
+    "schemaname": "public",
+    "tablename": "channels",
+    "policyname": "channels_create",
+    "permissive": "PERMISSIVE",
+    "roles": "{authenticated}",
+    "cmd": "INSERT",
+    "qual": null,
+    "with_check": "((project_id = ANY (current_project_ids())) OR (company_id = ANY (current_company_ids())) OR (created_by = current_user_email()))"
+  },
+  {
+    "schemaname": "public",
+    "tablename": "channels",
+    "policyname": "channels_delete",
+    "permissive": "PERMISSIVE",
+    "roles": "{authenticated}",
+    "cmd": "DELETE",
+    "qual": "((created_by = current_user_email()) OR (company_id = ANY (current_company_ids())))",
+    "with_check": null
+  },
+  {
+    "schemaname": "public",
+    "tablename": "channels",
+    "policyname": "channels_read",
+    "permissive": "PERMISSIVE",
+    "roles": "{authenticated}",
+    "cmd": "SELECT",
+    "qual": "((project_id = ANY (current_project_ids())) OR (company_id = ANY (current_company_ids())) OR (created_by = current_user_email()) OR is_admin())",
+    "with_check": null
+  },
+  {
+    "schemaname": "public",
+    "tablename": "channels",
+    "policyname": "channels_update",
+    "permissive": "PERMISSIVE",
+    "roles": "{authenticated}",
+    "cmd": "UPDATE",
+    "qual": "((created_by = current_user_email()) OR (company_id = ANY (current_company_ids())))",
+    "with_check": "((created_by = current_user_email()) OR (company_id = ANY (current_company_ids())))"
+  },
+  {
+    "schemaname": "public",
+    "tablename": "companies",
+    "policyname": "companies_create",
+    "permissive": "PERMISSIVE",
+    "roles": "{authenticated}",
+    "cmd": "INSERT",
+    "qual": null,
+    "with_check": "true"
+  },
+  {
+    "schemaname": "public",
+    "tablename": "companies",
+    "policyname": "companies_delete",
+    "permissive": "PERMISSIVE",
+    "roles": "{authenticated}",
+    "cmd": "DELETE",
+    "qual": "((id = ANY (current_admin_company_ids())) OR (created_by = current_user_email()))",
+    "with_check": null
+  },
+  {
+    "schemaname": "public",
+    "tablename": "companies",
+    "policyname": "companies_read",
+    "permissive": "PERMISSIVE",
+    "roles": "{authenticated}",
+    "cmd": "SELECT",
+    "qual": "true",
+    "with_check": null
+  },
+  {
+    "schemaname": "public",
+    "tablename": "companies",
+    "policyname": "companies_update",
+    "permissive": "PERMISSIVE",
+    "roles": "{authenticated}",
+    "cmd": "UPDATE",
+    "qual": "((id = ANY (current_admin_company_ids())) OR (created_by = current_user_email()))",
+    "with_check": "((id = ANY (current_admin_company_ids())) OR (created_by = current_user_email()))"
+  },
+  {
+    "schemaname": "public",
+    "tablename": "company_members",
+    "policyname": "company_members_create",
+    "permissive": "PERMISSIVE",
+    "roles": "{authenticated}",
+    "cmd": "INSERT",
+    "qual": null,
+    "with_check": "((company_id = ANY (current_admin_company_ids())) OR (created_by = current_user_email()))"
+  },
+  {
+    "schemaname": "public",
+    "tablename": "company_members",
+    "policyname": "company_members_delete",
+    "permissive": "PERMISSIVE",
+    "roles": "{authenticated}",
+    "cmd": "DELETE",
+    "qual": "((company_id = ANY (current_admin_company_ids())) OR (created_by = current_user_email()))",
+    "with_check": null
+  },
+  {
+    "schemaname": "public",
+    "tablename": "company_members",
+    "policyname": "company_members_read",
+    "permissive": "PERMISSIVE",
+    "roles": "{authenticated}",
+    "cmd": "SELECT",
+    "qual": "((company_id = ANY (current_company_ids())) OR (user_email = current_user_email()) OR (created_by = current_user_email()) OR is_admin())",
+    "with_check": null
+  },
+  {
+    "schemaname": "public",
+    "tablename": "company_members",
+    "policyname": "company_members_update",
+    "permissive": "PERMISSIVE",
+    "roles": "{authenticated}",
+    "cmd": "UPDATE",
+    "qual": "((company_id = ANY (current_admin_company_ids())) OR (created_by = current_user_email()))",
+    "with_check": "((company_id = ANY (current_admin_company_ids())) OR (created_by = current_user_email()))"
+  },
+  {
+    "schemaname": "public",
+    "tablename": "dispute_cases",
+    "policyname": "dispute_cases_create",
+    "permissive": "PERMISSIVE",
+    "roles": "{authenticated}",
+    "cmd": "INSERT",
+    "qual": null,
+    "with_check": "((project_id = ANY (current_project_ids())) OR is_admin())"
+  },
+  {
+    "schemaname": "public",
+    "tablename": "dispute_cases",
+    "policyname": "dispute_cases_delete",
+    "permissive": "PERMISSIVE",
+    "roles": "{authenticated}",
+    "cmd": "DELETE",
+    "qual": "((created_by = current_user_email()) OR is_admin())",
+    "with_check": null
+  },
+  {
+    "schemaname": "public",
+    "tablename": "dispute_cases",
+    "policyname": "dispute_cases_read",
+    "permissive": "PERMISSIVE",
+    "roles": "{authenticated}",
+    "cmd": "SELECT",
+    "qual": "((project_id = ANY (current_project_ids())) OR is_admin())",
+    "with_check": null
+  },
+  {
+    "schemaname": "public",
+    "tablename": "dispute_cases",
+    "policyname": "dispute_cases_update",
+    "permissive": "PERMISSIVE",
+    "roles": "{authenticated}",
+    "cmd": "UPDATE",
+    "qual": "((project_id = ANY (current_project_ids())) OR (created_by = current_user_email()) OR is_admin())",
+    "with_check": "((project_id = ANY (current_project_ids())) OR (created_by = current_user_email()) OR is_admin())"
+  },
+  {
+    "schemaname": "public",
+    "tablename": "dispute_events",
+    "policyname": "dispute_events_create",
+    "permissive": "PERMISSIVE",
+    "roles": "{authenticated}",
+    "cmd": "INSERT",
+    "qual": null,
+    "with_check": "((project_id = ANY (current_project_ids())) OR is_admin())"
+  },
+  {
+    "schemaname": "public",
+    "tablename": "dispute_events",
+    "policyname": "dispute_events_delete",
+    "permissive": "PERMISSIVE",
+    "roles": "{authenticated}",
+    "cmd": "DELETE",
+    "qual": "((created_by = current_user_email()) OR is_admin())",
+    "with_check": null
+  },
+  {
+    "schemaname": "public",
+    "tablename": "dispute_events",
+    "policyname": "dispute_events_read",
+    "permissive": "PERMISSIVE",
+    "roles": "{authenticated}",
+    "cmd": "SELECT",
+    "qual": "((project_id = ANY (current_project_ids())) OR is_admin())",
+    "with_check": null
+  },
+  {
+    "schemaname": "public",
+    "tablename": "dispute_events",
+    "policyname": "dispute_events_update",
+    "permissive": "PERMISSIVE",
+    "roles": "{authenticated}",
+    "cmd": "UPDATE",
+    "qual": "((created_by = current_user_email()) OR is_admin())",
+    "with_check": "((created_by = current_user_email()) OR is_admin())"
+  },
+  {
+    "schemaname": "public",
+    "tablename": "dispute_evidence_items",
+    "policyname": "dispute_evidence_create",
+    "permissive": "PERMISSIVE",
+    "roles": "{authenticated}",
+    "cmd": "INSERT",
+    "qual": null,
+    "with_check": "((project_id = ANY (current_project_ids())) OR is_admin())"
+  },
+  {
+    "schemaname": "public",
+    "tablename": "dispute_evidence_items",
+    "policyname": "dispute_evidence_delete",
+    "permissive": "PERMISSIVE",
+    "roles": "{authenticated}",
+    "cmd": "DELETE",
+    "qual": "((created_by = current_user_email()) OR is_admin())",
+    "with_check": null
+  },
+  {
+    "schemaname": "public",
+    "tablename": "dispute_evidence_items",
+    "policyname": "dispute_evidence_read",
+    "permissive": "PERMISSIVE",
+    "roles": "{authenticated}",
+    "cmd": "SELECT",
+    "qual": "((project_id = ANY (current_project_ids())) OR is_admin())",
+    "with_check": null
+  },
+  {
+    "schemaname": "public",
+    "tablename": "dispute_evidence_items",
+    "policyname": "dispute_evidence_update",
+    "permissive": "PERMISSIVE",
+    "roles": "{authenticated}",
+    "cmd": "UPDATE",
+    "qual": "((created_by = current_user_email()) OR is_admin())",
+    "with_check": "((created_by = current_user_email()) OR is_admin())"
+  },
+  {
+    "schemaname": "public",
+    "tablename": "document_comments",
+    "policyname": "comments_create",
+    "permissive": "PERMISSIVE",
+    "roles": "{authenticated}",
+    "cmd": "INSERT",
+    "qual": null,
+    "with_check": "((project_id = ANY (current_project_ids())) OR (created_by = current_user_email()))"
+  },
+  {
+    "schemaname": "public",
+    "tablename": "document_comments",
+    "policyname": "comments_delete",
+    "permissive": "PERMISSIVE",
+    "roles": "{authenticated}",
+    "cmd": "DELETE",
+    "qual": "(created_by = current_user_email())",
+    "with_check": null
+  },
+  {
+    "schemaname": "public",
+    "tablename": "document_comments",
+    "policyname": "comments_read",
+    "permissive": "PERMISSIVE",
+    "roles": "{authenticated}",
+    "cmd": "SELECT",
+    "qual": "((project_id = ANY (current_project_ids())) OR (created_by = current_user_email()) OR is_admin())",
+    "with_check": null
+  },
+  {
+    "schemaname": "public",
+    "tablename": "document_comments",
+    "policyname": "comments_update",
+    "permissive": "PERMISSIVE",
+    "roles": "{authenticated}",
+    "cmd": "UPDATE",
+    "qual": "(created_by = current_user_email())",
+    "with_check": "(created_by = current_user_email())"
+  },
+  {
+    "schemaname": "public",
+    "tablename": "event_participants",
+    "policyname": "event_participants_create",
+    "permissive": "PERMISSIVE",
+    "roles": "{authenticated}",
+    "cmd": "INSERT",
+    "qual": null,
+    "with_check": "true"
+  },
+  {
+    "schemaname": "public",
+    "tablename": "event_participants",
+    "policyname": "event_participants_delete",
+    "permissive": "PERMISSIVE",
+    "roles": "{authenticated}",
+    "cmd": "DELETE",
+    "qual": "(created_by = current_user_email())",
+    "with_check": null
+  },
+  {
+    "schemaname": "public",
+    "tablename": "event_participants",
+    "policyname": "event_participants_read",
+    "permissive": "PERMISSIVE",
+    "roles": "{authenticated}",
+    "cmd": "SELECT",
+    "qual": "((user_email = current_user_email()) OR (company_id = ANY (current_company_ids())) OR (created_by = current_user_email()) OR is_admin())",
+    "with_check": null
+  },
+  {
+    "schemaname": "public",
+    "tablename": "event_participants",
+    "policyname": "event_participants_update",
+    "permissive": "PERMISSIVE",
+    "roles": "{authenticated}",
+    "cmd": "UPDATE",
+    "qual": "((user_email = current_user_email()) OR (created_by = current_user_email()))",
+    "with_check": "((user_email = current_user_email()) OR (created_by = current_user_email()))"
+  },
+  {
+    "schemaname": "public",
+    "tablename": "events",
+    "policyname": "events_create",
+    "permissive": "PERMISSIVE",
+    "roles": "{authenticated}",
+    "cmd": "INSERT",
+    "qual": null,
+    "with_check": "true"
+  },
+  {
+    "schemaname": "public",
+    "tablename": "events",
+    "policyname": "events_delete",
+    "permissive": "PERMISSIVE",
+    "roles": "{authenticated}",
+    "cmd": "DELETE",
+    "qual": "((created_by = current_user_email()) OR (owner_company_id = ANY (current_company_ids())) OR (owner_project_id = ANY (current_project_ids())))",
+    "with_check": null
+  },
+  {
+    "schemaname": "public",
+    "tablename": "events",
+    "policyname": "events_read",
+    "permissive": "PERMISSIVE",
+    "roles": "{authenticated}",
+    "cmd": "SELECT",
+    "qual": "((created_by = current_user_email()) OR (creator_email = current_user_email()) OR (owner_company_id = ANY (current_company_ids())) OR (owner_project_id = ANY (current_project_ids())) OR is_admin())",
+    "with_check": null
+  },
+  {
+    "schemaname": "public",
+    "tablename": "events",
+    "policyname": "events_update",
+    "permissive": "PERMISSIVE",
+    "roles": "{authenticated}",
+    "cmd": "UPDATE",
+    "qual": "((created_by = current_user_email()) OR (owner_company_id = ANY (current_company_ids())) OR (owner_project_id = ANY (current_project_ids())))",
+    "with_check": "((created_by = current_user_email()) OR (owner_company_id = ANY (current_company_ids())) OR (owner_project_id = ANY (current_project_ids())))"
+  },
+  {
+    "schemaname": "public",
+    "tablename": "messages",
+    "policyname": "messages_create",
+    "permissive": "PERMISSIVE",
+    "roles": "{authenticated}",
+    "cmd": "INSERT",
+    "qual": null,
+    "with_check": "true"
+  },
+  {
+    "schemaname": "public",
+    "tablename": "messages",
+    "policyname": "messages_delete",
+    "permissive": "PERMISSIVE",
+    "roles": "{authenticated}",
+    "cmd": "DELETE",
+    "qual": "(created_by = current_user_email())",
+    "with_check": null
+  },
+  {
+    "schemaname": "public",
+    "tablename": "messages",
+    "policyname": "messages_read",
+    "permissive": "PERMISSIVE",
+    "roles": "{authenticated}",
+    "cmd": "SELECT",
+    "qual": "((project_id = ANY (current_project_ids())) OR (company_id = ANY (current_company_ids())) OR (created_by = current_user_email()) OR (sender_email = current_user_email()) OR is_admin())",
+    "with_check": null
+  },
+  {
+    "schemaname": "public",
+    "tablename": "messages",
+    "policyname": "messages_update",
+    "permissive": "PERMISSIVE",
+    "roles": "{authenticated}",
+    "cmd": "UPDATE",
+    "qual": "(created_by = current_user_email())",
+    "with_check": "(created_by = current_user_email())"
+  },
+  {
+    "schemaname": "public",
+    "tablename": "milestones",
+    "policyname": "milestones_create",
+    "permissive": "PERMISSIVE",
+    "roles": "{authenticated}",
+    "cmd": "INSERT",
+    "qual": null,
+    "with_check": "((project_id = ANY (current_project_ids())) OR (created_by = current_user_email()))"
+  },
+  {
+    "schemaname": "public",
+    "tablename": "milestones",
+    "policyname": "milestones_delete",
+    "permissive": "PERMISSIVE",
+    "roles": "{authenticated}",
+    "cmd": "DELETE",
+    "qual": "(created_by = current_user_email())",
+    "with_check": null
+  },
+  {
+    "schemaname": "public",
+    "tablename": "milestones",
+    "policyname": "milestones_read",
+    "permissive": "PERMISSIVE",
+    "roles": "{authenticated}",
+    "cmd": "SELECT",
+    "qual": "((project_id = ANY (current_project_ids())) OR (created_by = current_user_email()) OR is_admin())",
+    "with_check": null
+  },
+  {
+    "schemaname": "public",
+    "tablename": "milestones",
+    "policyname": "milestones_update",
+    "permissive": "PERMISSIVE",
+    "roles": "{authenticated}",
+    "cmd": "UPDATE",
+    "qual": "((project_id = ANY (current_project_ids())) OR (created_by = current_user_email()))",
+    "with_check": "((project_id = ANY (current_project_ids())) OR (created_by = current_user_email()))"
+  },
+  {
+    "schemaname": "public",
+    "tablename": "notification_preferences",
+    "policyname": "notification_preferences_create",
+    "permissive": "PERMISSIVE",
+    "roles": "{authenticated}",
+    "cmd": "INSERT",
+    "qual": null,
+    "with_check": "true"
+  },
+  {
+    "schemaname": "public",
+    "tablename": "notification_preferences",
+    "policyname": "notification_preferences_delete",
+    "permissive": "PERMISSIVE",
+    "roles": "{authenticated}",
+    "cmd": "DELETE",
+    "qual": "(user_email = current_user_email())",
+    "with_check": null
+  },
+  {
+    "schemaname": "public",
+    "tablename": "notification_preferences",
+    "policyname": "notification_preferences_read",
+    "permissive": "PERMISSIVE",
+    "roles": "{authenticated}",
+    "cmd": "SELECT",
+    "qual": "((user_email = current_user_email()) OR is_admin())",
+    "with_check": null
+  },
+  {
+    "schemaname": "public",
+    "tablename": "notification_preferences",
+    "policyname": "notification_preferences_update",
+    "permissive": "PERMISSIVE",
+    "roles": "{authenticated}",
+    "cmd": "UPDATE",
+    "qual": "(user_email = current_user_email())",
+    "with_check": "(user_email = current_user_email())"
+  },
+  {
+    "schemaname": "public",
+    "tablename": "notifications",
+    "policyname": "notifications_create",
+    "permissive": "PERMISSIVE",
+    "roles": "{authenticated}",
+    "cmd": "INSERT",
+    "qual": null,
+    "with_check": "true"
+  },
+  {
+    "schemaname": "public",
+    "tablename": "notifications",
+    "policyname": "notifications_delete",
+    "permissive": "PERMISSIVE",
+    "roles": "{authenticated}",
+    "cmd": "DELETE",
+    "qual": "(user_email = current_user_email())",
+    "with_check": null
+  },
+  {
+    "schemaname": "public",
+    "tablename": "notifications",
+    "policyname": "notifications_read",
+    "permissive": "PERMISSIVE",
+    "roles": "{authenticated}",
+    "cmd": "SELECT",
+    "qual": "((user_email = current_user_email()) OR is_admin())",
+    "with_check": null
+  },
+  {
+    "schemaname": "public",
+    "tablename": "notifications",
+    "policyname": "notifications_update",
+    "permissive": "PERMISSIVE",
+    "roles": "{authenticated}",
+    "cmd": "UPDATE",
+    "qual": "(user_email = current_user_email())",
+    "with_check": "(user_email = current_user_email())"
+  },
+  {
+    "schemaname": "public",
+    "tablename": "project_documents",
+    "policyname": "docs_create",
+    "permissive": "PERMISSIVE",
+    "roles": "{authenticated}",
+    "cmd": "INSERT",
+    "qual": null,
+    "with_check": "((project_id = ANY (current_project_ids())) OR (created_by = current_user_email()))"
+  },
+  {
+    "schemaname": "public",
+    "tablename": "project_documents",
+    "policyname": "docs_delete",
+    "permissive": "PERMISSIVE",
+    "roles": "{authenticated}",
+    "cmd": "DELETE",
+    "qual": "(created_by = current_user_email())",
+    "with_check": null
+  },
+  {
+    "schemaname": "public",
+    "tablename": "project_documents",
+    "policyname": "docs_read",
+    "permissive": "PERMISSIVE",
+    "roles": "{authenticated}",
+    "cmd": "SELECT",
+    "qual": "((project_id = ANY (current_project_ids())) OR (created_by = current_user_email()) OR is_admin())",
+    "with_check": null
+  },
+  {
+    "schemaname": "public",
+    "tablename": "project_documents",
+    "policyname": "docs_update",
+    "permissive": "PERMISSIVE",
+    "roles": "{authenticated}",
+    "cmd": "UPDATE",
+    "qual": "(created_by = current_user_email())",
+    "with_check": "(created_by = current_user_email())"
+  },
+  {
+    "schemaname": "public",
+    "tablename": "project_messages",
+    "policyname": "project_messages_create",
+    "permissive": "PERMISSIVE",
+    "roles": "{authenticated}",
+    "cmd": "INSERT",
+    "qual": null,
+    "with_check": "((project_id = ANY (current_project_ids())) OR (created_by = current_user_email()))"
+  },
+  {
+    "schemaname": "public",
+    "tablename": "project_messages",
+    "policyname": "project_messages_delete",
+    "permissive": "PERMISSIVE",
+    "roles": "{authenticated}",
+    "cmd": "DELETE",
+    "qual": "(created_by = current_user_email())",
+    "with_check": null
+  },
+  {
+    "schemaname": "public",
+    "tablename": "project_messages",
+    "policyname": "project_messages_read",
+    "permissive": "PERMISSIVE",
+    "roles": "{authenticated}",
+    "cmd": "SELECT",
+    "qual": "((project_id = ANY (current_project_ids())) OR (created_by = current_user_email()) OR is_admin())",
+    "with_check": null
+  },
+  {
+    "schemaname": "public",
+    "tablename": "project_messages",
+    "policyname": "project_messages_update",
+    "permissive": "PERMISSIVE",
+    "roles": "{authenticated}",
+    "cmd": "UPDATE",
+    "qual": "(created_by = current_user_email())",
+    "with_check": "(created_by = current_user_email())"
+  },
+  {
+    "schemaname": "public",
+    "tablename": "project_participants",
+    "policyname": "project_participants_create",
+    "permissive": "PERMISSIVE",
+    "roles": "{authenticated}",
+    "cmd": "INSERT",
+    "qual": null,
+    "with_check": "((project_id = ANY (current_project_ids())) OR (created_by = current_user_email()))"
+  },
+  {
+    "schemaname": "public",
+    "tablename": "project_participants",
+    "policyname": "project_participants_delete",
+    "permissive": "PERMISSIVE",
+    "roles": "{authenticated}",
+    "cmd": "DELETE",
+    "qual": "(created_by = current_user_email())",
+    "with_check": null
+  },
+  {
+    "schemaname": "public",
+    "tablename": "project_participants",
+    "policyname": "project_participants_read",
+    "permissive": "PERMISSIVE",
+    "roles": "{authenticated}",
+    "cmd": "SELECT",
+    "qual": "((project_id = ANY (current_project_ids())) OR (user_email = current_user_email()) OR (created_by = current_user_email()) OR is_admin())",
+    "with_check": null
+  },
+  {
+    "schemaname": "public",
+    "tablename": "project_participants",
+    "policyname": "project_participants_update",
+    "permissive": "PERMISSIVE",
+    "roles": "{authenticated}",
+    "cmd": "UPDATE",
+    "qual": "((created_by = current_user_email()) OR (user_email = current_user_email()))",
+    "with_check": "((created_by = current_user_email()) OR (user_email = current_user_email()))"
+  },
+  {
+    "schemaname": "public",
+    "tablename": "projects",
+    "policyname": "projects_create",
+    "permissive": "PERMISSIVE",
+    "roles": "{authenticated}",
+    "cmd": "INSERT",
+    "qual": null,
+    "with_check": "true"
+  },
+  {
+    "schemaname": "public",
+    "tablename": "projects",
+    "policyname": "projects_delete",
+    "permissive": "PERMISSIVE",
+    "roles": "{authenticated}",
+    "cmd": "DELETE",
+    "qual": "(created_by = current_user_email())",
+    "with_check": null
+  },
+  {
+    "schemaname": "public",
+    "tablename": "projects",
+    "policyname": "projects_read",
+    "permissive": "PERMISSIVE",
+    "roles": "{authenticated}",
+    "cmd": "SELECT",
+    "qual": "((id = ANY (current_project_ids())) OR (created_by = current_user_email()) OR is_admin())",
+    "with_check": null
+  },
+  {
+    "schemaname": "public",
+    "tablename": "projects",
+    "policyname": "projects_update",
+    "permissive": "PERMISSIVE",
+    "roles": "{authenticated}",
+    "cmd": "UPDATE",
+    "qual": "((id = ANY (current_project_ids())) OR (created_by = current_user_email()))",
+    "with_check": "((id = ANY (current_project_ids())) OR (created_by = current_user_email()))"
+  },
+  {
+    "schemaname": "public",
+    "tablename": "tasks",
+    "policyname": "tasks_create",
+    "permissive": "PERMISSIVE",
+    "roles": "{authenticated}",
+    "cmd": "INSERT",
+    "qual": null,
+    "with_check": "((project_id = ANY (current_project_ids())) OR (created_by = current_user_email()))"
+  },
+  {
+    "schemaname": "public",
+    "tablename": "tasks",
+    "policyname": "tasks_delete",
+    "permissive": "PERMISSIVE",
+    "roles": "{authenticated}",
+    "cmd": "DELETE",
+    "qual": "(created_by = current_user_email())",
+    "with_check": null
+  },
+  {
+    "schemaname": "public",
+    "tablename": "tasks",
+    "policyname": "tasks_read",
+    "permissive": "PERMISSIVE",
+    "roles": "{authenticated}",
+    "cmd": "SELECT",
+    "qual": "((project_id = ANY (current_project_ids())) OR (created_by = current_user_email()) OR is_admin())",
+    "with_check": null
+  },
+  {
+    "schemaname": "public",
+    "tablename": "tasks",
+    "policyname": "tasks_update",
+    "permissive": "PERMISSIVE",
+    "roles": "{authenticated}",
+    "cmd": "UPDATE",
+    "qual": "((created_by = current_user_email()) OR (assigned_user_email = current_user_email()) OR (assigned_company_id = ANY (current_admin_company_ids())))",
+    "with_check": "((created_by = current_user_email()) OR (assigned_user_email = current_user_email()) OR (assigned_company_id = ANY (current_admin_company_ids())))"
+  },
+  {
+    "schemaname": "public",
+    "tablename": "users",
+    "policyname": "users_insert",
+    "permissive": "PERMISSIVE",
+    "roles": "{authenticated}",
+    "cmd": "INSERT",
+    "qual": null,
+    "with_check": "((email = current_user_email()) OR is_admin())"
+  },
+  {
+    "schemaname": "public",
+    "tablename": "users",
+    "policyname": "users_select",
+    "permissive": "PERMISSIVE",
+    "roles": "{authenticated}",
+    "cmd": "SELECT",
+    "qual": "((email = current_user_email()) OR is_admin() OR (company_ids && current_company_ids()) OR (project_ids && current_project_ids()) OR (email IN ( SELECT cm.user_email\n   FROM company_members cm\n  WHERE ((cm.company_id = ANY (current_company_ids())) AND (cm.status = ANY (ARRAY['active'::text, 'invited'::text])) AND (cm.user_email IS NOT NULL)))) OR (email IN ( SELECT pp.user_email\n   FROM project_participants pp\n  WHERE ((pp.project_id = ANY (current_project_ids())) AND (pp.status = ANY (ARRAY['active'::text, 'invited'::text])) AND (pp.user_email IS NOT NULL)))))",
+    "with_check": null
+  },
+  {
+    "schemaname": "public",
+    "tablename": "users",
+    "policyname": "users_update",
+    "permissive": "PERMISSIVE",
+    "roles": "{authenticated}",
+    "cmd": "UPDATE",
+    "qual": "((email = current_user_email()) OR is_admin())",
+    "with_check": "((email = current_user_email()) OR is_admin())"
+  }
+]

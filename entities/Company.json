@@ -6,6 +6,35 @@
       "type": "string",
       "description": "Company legal name"
     },
+    "company_type": {
+      "type": "string",
+      "enum": [
+        "general_contractor",
+        "excavation",
+        "demolition",
+        "foundations",
+        "concrete_structures",
+        "metal_carpentry",
+        "masonry",
+        "roofing_tinsmithing",
+        "waterproofing_insulation",
+        "electrical_systems",
+        "plumbing_hvac",
+        "drywall",
+        "flooring_cladding",
+        "painting",
+        "fixtures_windows",
+        "blacksmith",
+        "restoration",
+        "architecture_studio",
+        "engineering_studio",
+        "surveying_studio",
+        "design_studio",
+        "supplier",
+        "other"
+      ],
+      "description": "Company specialization type"
+    },
     "vat_number": {
       "type": "string",
       "description": "VAT number / P.IVA"

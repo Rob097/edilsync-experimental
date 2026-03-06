@@ -15,6 +15,7 @@ const roleColors = {
   surveyor: 'bg-teal-100 text-teal-700',
   designer: 'bg-pink-100 text-pink-700',
   consultant: 'bg-gray-100 text-gray-700',
+  supplier: 'bg-amber-100 text-amber-700',
 };
 
 export default function ParticipantCard({ participant, userDisplayName, companyName, isPending, canRemove, projectId }) {
@@ -34,6 +35,7 @@ export default function ParticipantCard({ participant, userDisplayName, companyN
     surveyor: tr('Geometra', 'Surveyor'),
     designer: tr('Designer', 'Designer'),
     consultant: tr('Consulente', 'Consultant'),
+    supplier: tr('Fornitore', 'Supplier'),
   };
 
   const resolvedUserName = userDisplayName || participant.user_email;

@@ -13,7 +13,9 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Loader2 } from "lucide-react";
+import { getCompanyTypeOptions } from '@/lib/domainRoles';
 
 export default function EditCompanyDialog({ open, onOpenChange, company }) {
   const { t, currentLanguage } = useLanguage();
@@ -22,6 +24,7 @@ export default function EditCompanyDialog({ open, onOpenChange, company }) {
   
   const [formData, setFormData] = useState({
     name: '',
+    company_type: 'general_contractor',
     vat_number: '',
     address: '',
     phone: '',
@@ -33,6 +36,7 @@ export default function EditCompanyDialog({ open, onOpenChange, company }) {
     if (company) {
       setFormData({
         name: company.name || '',
+        company_type: company.company_type || 'general_contractor',
         vat_number: company.vat_number || '',
         address: company.address || '',
         phone: company.phone || '',
@@ -62,6 +66,8 @@ export default function EditCompanyDialog({ open, onOpenChange, company }) {
     setFormData(prev => ({ ...prev, [field]: value }));
   };
 
+  const companyTypeOptions = getCompanyTypeOptions(currentLanguage);
+
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-lg max-h-[90vh] overflow-y-auto">
@@ -81,6 +87,22 @@ export default function EditCompanyDialog({ open, onOpenChange, company }) {
               onChange={(e) => handleChange('name', e.target.value)}
               required
             />
+          </div>
+
+          <div className="space-y-2">
+            <Label>{t('editCompanyDialog.companyType')}</Label>
+            <Select value={formData.company_type} onValueChange={(value) => handleChange('company_type', value)}>
+              <SelectTrigger>
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                {companyTypeOptions.map((option) => (
+                  <SelectItem key={option.value} value={option.value}>
+                    {option.label}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
           </div>
 
           <div className="space-y-2">
