@@ -25,6 +25,8 @@ const ENTITY_TO_TABLE = {
   DisputeEvent: 'dispute_events',
   DisputeEvidenceItem: 'dispute_evidence_items',
   DocumentComment: 'document_comments',
+  DocumentRevisionEvent: 'document_revision_events',
+  DocumentApproval: 'document_approvals',
   Event: 'events',
   EventParticipant: 'event_participants',
   Message: 'messages',
@@ -258,6 +260,15 @@ const functions = {
   },
 };
 
+const absolutizeStorageUrl = (url) => {
+  if (!url) return null;
+  try {
+    return new URL(url, supabaseUrl).toString();
+  } catch {
+    return url;
+  }
+};
+
 const integrations = {
   Core: {
     UploadFile: async ({ file }) => {
@@ -270,9 +281,28 @@ const integrations = {
 
       const { data } = supabase.storage.from('project-files').getPublicUrl(filePath);
       return {
-        file_url: data.publicUrl,
+        file_url: absolutizeStorageUrl(data.publicUrl),
         file_path: filePath,
       };
+    },
+    GetSignedFileUrl: async ({ filePath, expiresIn = 3600 }) => {
+      if (!filePath) return null;
+      const { data, error } = await supabase.storage
+        .from('project-files')
+        .createSignedUrl(filePath, expiresIn);
+      if (error) throw error;
+      return absolutizeStorageUrl(data?.signedUrl) || null;
+    },
+    ResolveFileAccessUrl: async ({ filePath, fallbackUrl, expiresIn = 3600 }) => {
+      if (filePath) {
+        try {
+          const signedUrl = await integrations.Core.GetSignedFileUrl({ filePath, expiresIn });
+          if (signedUrl) return signedUrl;
+        } catch {
+          // Fall back to legacy public URL for existing records.
+        }
+      }
+      return absolutizeStorageUrl(fallbackUrl) || null;
     },
   },
 };

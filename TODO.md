@@ -1,11 +1,11 @@
 - [X] Concetto di "Dispute" (Molto importante per vendite e marketing)
-- Migliorare gestione società (dipendenti, eccetera)
+- [X] Migliorare gestione società (dipendenti, eccetera)
 - Iniziare a pensare all'introduzione della gestione "finanziaria"
     - importo totale
     - importo per società
     - importo per attività extra
     - ecc
-- Iniziare a pensare all'introduzione di un sistema di timbrature per società/progetto
+- [X] Iniziare a pensare all'introduzione di un sistema di timbrature per società/progetto
 - [X] Ampliare ventaglio di professionisti + migliorie controlli permessi
 - Migliorare usabilità per progettisti
     - Migliore gestione / consultazione dei design/progetti
@@ -18,3 +18,12 @@
     - Mega menu
     - Pagine pubbliche varie
     - Blog
+
+- IFC viewer in-app rollout
+    - [X] Feature flag rimosso: IFC in-app come default
+    - [X] Componente dedicato `InAppIfcViewer` (scaffold + fallback esterno)
+    - [X] Routing condizionale in `DocumentPreviewDialog` senza regressioni flusso BIM attuale
+    - [X] Integrazione runtime `@thatopen/components` nel viewer in-app
+    - [X] Hardening runtime WASM (`web-ifc.wasm`/`web-ifc-mt.wasm`) con asset statici in `public/`
+    - [X] Telemetria base (open success/fail, first render time, fallback rate)
+    - [ ] Test comparativi IFC small/medium/large + decisione cutover

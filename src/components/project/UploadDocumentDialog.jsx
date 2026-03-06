@@ -16,17 +16,15 @@ import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Loader2, Upload, File, X } from "lucide-react";
 
-const getCategoryLabel = (value, t) => {
-  const categoryMap = {
-    'project': t('uploadDocumentDialog.categoryProject'),
-    'contract': t('uploadDocumentDialog.categoryContract'),
-    'permit': t('uploadDocumentDialog.categoryPermit'),
-    'drawing': t('uploadDocumentDialog.categoryDrawing'),
-    'photo': t('uploadDocumentDialog.categoryPhoto'),
-    'report': t('uploadDocumentDialog.categoryReport'),
-    'other': t('uploadDocumentDialog.categoryOther'),
-  };
-  return categoryMap[value] || value;
+const LEGACY_TECHNICAL_CATEGORIES = new Set(['project', 'permit', 'drawing', 'technical']);
+
+const normalizeCategory = (value) => (LEGACY_TECHNICAL_CATEGORIES.has(value) ? 'technical' : (value || 'other'));
+
+const inferModelFormat = (fileType) => {
+  if (fileType === 'ifc') return 'ifc';
+  if (fileType === 'glb') return 'glb';
+  if (fileType === 'gltf') return 'gltf';
+  return null;
 };
 
 export default function UploadDocumentDialog({ open, onOpenChange, projectId, companyId, document }) {
@@ -42,15 +40,65 @@ export default function UploadDocumentDialog({ open, onOpenChange, projectId, co
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
   const [category, setCategory] = useState('other');
+  const [discipline, setDiscipline] = useState('');
+  const [workArea, setWorkArea] = useState('');
+  const [projectPhase, setProjectPhase] = useState('');
+  const [documentStatus, setDocumentStatus] = useState('draft');
+  const [documentTags, setDocumentTags] = useState('');
   const [isUploading, setIsUploading] = useState(false);
   const [dragActive, setDragActive] = useState(false);
+  const isTechnicalCategory = category === 'technical';
+
+  const disciplineOptions = [
+    { value: 'architecture', label: tr('Architettura', 'Architecture') },
+    { value: 'structure', label: tr('Struttura', 'Structure') },
+    { value: 'mep', label: tr('Impianti (MEP)', 'MEP') },
+    { value: 'interior', label: tr('Interni', 'Interior') },
+    { value: 'landscape', label: tr('Paesaggio', 'Landscape') },
+    { value: 'geotechnical', label: tr('Geotecnica', 'Geotechnical') },
+    { value: 'other', label: tr('Altro', 'Other') },
+  ];
+
+  const workAreaOptions = [
+    { value: 'room', label: tr('Stanza', 'Room') },
+    { value: 'detail', label: tr('Particolare', 'Detail') },
+    { value: 'interior', label: tr('Interno', 'Interior') },
+    { value: 'exterior', label: tr('Esterno', 'Exterior') },
+    { value: 'garden', label: tr('Giardino', 'Garden') },
+    { value: 'foundation', label: tr('Fondamenta', 'Foundation') },
+    { value: 'section', label: tr('Sezione', 'Section') },
+    { value: 'static_calculation', label: tr('Calcoli statici', 'Static calculations') },
+    { value: 'other', label: tr('Altro', 'Other') },
+  ];
+
+  const phaseOptions = [
+    { value: 'concept', label: tr('Concept', 'Concept') },
+    { value: 'definitive', label: tr('Definitivo', 'Definitive') },
+    { value: 'executive', label: tr('Esecutivo', 'Executive') },
+    { value: 'as_built', label: tr('As built', 'As built') },
+    { value: 'calculation', label: tr('Calcolo', 'Calculation') },
+    { value: 'other', label: tr('Altro', 'Other') },
+  ];
+
+  const statusOptions = [
+    { value: 'draft', label: tr('Bozza', 'Draft') },
+    { value: 'in_review', label: tr('In revisione', 'In review') },
+    { value: 'approved', label: tr('Approvato', 'Approved') },
+    { value: 'rejected', label: tr('Respinto', 'Rejected') },
+    { value: 'archived', label: tr('Archiviato', 'Archived') },
+  ];
 
   // Initialize form with document data when editing
   React.useEffect(() => {
     if (document) {
       setName(document.name || '');
       setDescription(document.description || '');
-      setCategory(document.category || 'other');
+      setCategory(normalizeCategory(document.category));
+      setDiscipline(document.discipline || '');
+      setWorkArea(document.work_area || '');
+      setProjectPhase(document.project_phase || '');
+      setDocumentStatus(document.document_status || 'draft');
+      setDocumentTags(Array.isArray(document.document_tags) ? document.document_tags.join(', ') : '');
     } else {
       resetForm();
     }
@@ -66,31 +114,69 @@ export default function UploadDocumentDialog({ open, onOpenChange, projectId, co
       setIsUploading(true);
       
       if (isEditMode) {
-        // Edit mode
-        let file_url = document.file_url;
-        let file_type = document.file_type;
-        let file_size = document.file_size;
-
-        // If new file is selected, upload it
+        // New file in edit mode creates a new revision and marks the old one as superseded.
         if (file) {
           const uploadResult = await appClient.integrations.Core.UploadFile({ file });
-          file_url = uploadResult.file_url;
-          file_type = file.name.split('.').pop()?.toLowerCase() || '';
-          file_size = file.size;
+
+          await appClient.entities.ProjectDocument.update(document.id, {
+            is_current_revision: false,
+            document_status: 'superseded',
+          });
+
+          const fileType = file.name.split('.').pop()?.toLowerCase() || '';
+          const tagArray = documentTags
+            .split(',')
+            .map((tag) => tag.trim())
+            .filter(Boolean);
+
+          return appClient.entities.ProjectDocument.create({
+            project_id: isCompanyScope ? null : projectId,
+            company_id: isCompanyScope ? companyId : null,
+            parent_document_id: document.id,
+            root_document_id: document.root_document_id || document.id,
+            revision_number: (document.revision_number || 1) + 1,
+            is_current_revision: true,
+            name,
+            description: description || null,
+            file_url: uploadResult.file_url,
+            file_path: uploadResult.file_path,
+            file_type: fileType,
+            file_size: file.size,
+            uploaded_by_email: user?.email,
+            uploaded_by_name: user?.full_name,
+            category,
+            discipline: isTechnicalCategory ? (discipline || null) : null,
+            work_area: isTechnicalCategory ? (workArea || null) : null,
+            project_phase: isTechnicalCategory ? (projectPhase || null) : null,
+            document_status: isTechnicalCategory ? documentStatus : 'draft',
+            document_tags: isTechnicalCategory ? tagArray : [],
+            model_format: inferModelFormat(fileType),
+          });
         }
+
+        const tagArray = documentTags
+          .split(',')
+          .map((tag) => tag.trim())
+          .filter(Boolean);
 
         return appClient.entities.ProjectDocument.update(document.id, {
           name,
           description: description || null,
-          file_url,
-          file_type,
-          file_size,
           category,
+          discipline: isTechnicalCategory ? (discipline || null) : null,
+          work_area: isTechnicalCategory ? (workArea || null) : null,
+          project_phase: isTechnicalCategory ? (projectPhase || null) : null,
+          document_status: isTechnicalCategory ? documentStatus : 'draft',
+          document_tags: isTechnicalCategory ? tagArray : [],
         });
       } else {
         // Create mode
-        const { file_url } = await appClient.integrations.Core.UploadFile({ file });
+        const { file_url, file_path } = await appClient.integrations.Core.UploadFile({ file });
         const fileType = file.name.split('.').pop()?.toLowerCase() || '';
+        const tagArray = documentTags
+          .split(',')
+          .map((tag) => tag.trim())
+          .filter(Boolean);
         
         return appClient.entities.ProjectDocument.create({
           project_id: isCompanyScope ? null : projectId,
@@ -98,16 +184,27 @@ export default function UploadDocumentDialog({ open, onOpenChange, projectId, co
           name: name || file.name,
           description: description || null,
           file_url,
+          file_path,
           file_type: fileType,
           file_size: file.size,
           uploaded_by_email: user?.email,
           uploaded_by_name: user?.full_name,
           category,
+          discipline: isTechnicalCategory ? (discipline || null) : null,
+          work_area: isTechnicalCategory ? (workArea || null) : null,
+          project_phase: isTechnicalCategory ? (projectPhase || null) : null,
+          document_status: isTechnicalCategory ? documentStatus : 'draft',
+          document_tags: isTechnicalCategory ? tagArray : [],
+          model_format: inferModelFormat(fileType),
         });
       }
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: documentsQueryKey });
+      queryClient.invalidateQueries({ queryKey: ['projectDocuments'] });
+      queryClient.invalidateQueries({ queryKey: ['companyDocuments'] });
+      queryClient.invalidateQueries({ queryKey: ['documentRevisions'] });
+      queryClient.invalidateQueries({ queryKey: ['documentAccessUrl'] });
       onOpenChange(false);
       resetForm();
     },
@@ -121,6 +218,11 @@ export default function UploadDocumentDialog({ open, onOpenChange, projectId, co
     setName('');
     setDescription('');
     setCategory('other');
+    setDiscipline('');
+    setWorkArea('');
+    setProjectPhase('');
+    setDocumentStatus('draft');
+    setDocumentTags('');
   };
 
   const handleFileChange = (e) => {
@@ -150,6 +252,18 @@ export default function UploadDocumentDialog({ open, onOpenChange, projectId, co
     uploadMutation.mutate();
   };
 
+  const handleCategoryChange = (value) => {
+    const nextCategory = normalizeCategory(value);
+    setCategory(nextCategory);
+    if (nextCategory !== 'technical') {
+      setDiscipline('');
+      setWorkArea('');
+      setProjectPhase('');
+      setDocumentStatus('draft');
+      setDocumentTags('');
+    }
+  };
+
   const isValid = isEditMode ? name : (file && name);
 
   return (
@@ -173,7 +287,7 @@ export default function UploadDocumentDialog({ open, onOpenChange, projectId, co
               type="file"
               onChange={handleFileChange}
               className="hidden"
-              accept="image/*,.heic,.heif,.webp,.pdf,.doc,.docx,.xls,.xlsx,.txt,.csv,.dwg,.dxf,.zip,.rar"
+              accept="image/*,.heic,.heif,.webp,.pdf,.doc,.docx,.xls,.xlsx,.txt,.csv,.dwg,.dxf,.ifc,.glb,.gltf,.zip,.rar"
             />
             
             {file ? (
@@ -243,21 +357,94 @@ export default function UploadDocumentDialog({ open, onOpenChange, projectId, co
           {/* Category */}
           <div className="space-y-2">
             <Label>{t('uploadDocumentDialog.category')}</Label>
-            <Select value={category} onValueChange={setCategory}>
+            <Select value={category} onValueChange={handleCategoryChange}>
               <SelectTrigger>
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="project">{t('uploadDocumentDialog.categoryProject')}</SelectItem>
+                <SelectItem value="technical">{t('uploadDocumentDialog.categoryTechnical')}</SelectItem>
                 <SelectItem value="contract">{t('uploadDocumentDialog.categoryContract')}</SelectItem>
-                <SelectItem value="permit">{t('uploadDocumentDialog.categoryPermit')}</SelectItem>
-                <SelectItem value="drawing">{t('uploadDocumentDialog.categoryDrawing')}</SelectItem>
                 <SelectItem value="photo">{t('uploadDocumentDialog.categoryPhoto')}</SelectItem>
                 <SelectItem value="report">{t('uploadDocumentDialog.categoryReport')}</SelectItem>
                 <SelectItem value="other">{t('uploadDocumentDialog.categoryOther')}</SelectItem>
               </SelectContent>
             </Select>
           </div>
+
+          {isTechnicalCategory && (
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+              <div className="space-y-2">
+                <Label>{tr('Disciplina', 'Discipline')}</Label>
+                <Select value={discipline || 'none'} onValueChange={(value) => setDiscipline(value === 'none' ? '' : value)}>
+                  <SelectTrigger>
+                    <SelectValue placeholder={tr('Seleziona disciplina', 'Select discipline')} />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="none">{tr('Nessuna', 'None')}</SelectItem>
+                    {disciplineOptions.map((option) => (
+                      <SelectItem key={option.value} value={option.value}>{option.label}</SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+
+              <div className="space-y-2">
+                <Label>{tr('Ambito tecnico del documento', 'Technical scope of document')}</Label>
+                <Select value={workArea || 'none'} onValueChange={(value) => setWorkArea(value === 'none' ? '' : value)}>
+                  <SelectTrigger>
+                    <SelectValue placeholder={tr('Seleziona ambito tecnico', 'Select technical scope')} />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="none">{tr('Nessuna', 'None')}</SelectItem>
+                    {workAreaOptions.map((option) => (
+                      <SelectItem key={option.value} value={option.value}>{option.label}</SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+
+              <div className="space-y-2">
+                <Label>{tr('Fase progetto', 'Project phase')}</Label>
+                <Select value={projectPhase || 'none'} onValueChange={(value) => setProjectPhase(value === 'none' ? '' : value)}>
+                  <SelectTrigger>
+                    <SelectValue placeholder={tr('Seleziona fase', 'Select phase')} />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="none">{tr('Nessuna', 'None')}</SelectItem>
+                    {phaseOptions.map((option) => (
+                      <SelectItem key={option.value} value={option.value}>{option.label}</SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+
+              <div className="space-y-2">
+                <Label>{tr('Stato documento', 'Document status')}</Label>
+                <Select value={documentStatus} onValueChange={setDocumentStatus}>
+                  <SelectTrigger>
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {statusOptions.map((option) => (
+                      <SelectItem key={option.value} value={option.value}>{option.label}</SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+            </div>
+          )}
+
+          {isTechnicalCategory && (
+            <div className="space-y-2">
+              <Label htmlFor="tags">{tr('Tag (separati da virgola)', 'Tags (comma separated)')}</Label>
+              <Input
+                id="tags"
+                value={documentTags}
+                onChange={(e) => setDocumentTags(e.target.value)}
+                placeholder={tr('es. piano terra, struttura, variante', 'e.g. ground floor, structure, variation')}
+              />
+            </div>
+          )}
 
           {/* Description */}
           <div className="space-y-2">

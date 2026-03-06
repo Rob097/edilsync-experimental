@@ -22,6 +22,10 @@
       "type": "string",
       "description": "URL of the uploaded file"
     },
+    "file_path": {
+      "type": "string",
+      "description": "Path in storage bucket used for signed URL access"
+    },
     "file_type": {
       "type": "string",
       "description": "File extension/type (pdf, jpg, dwg, etc.)"
@@ -50,6 +54,60 @@
         "other"
       ],
       "description": "Document category"
+    },
+    "parent_document_id": {
+      "type": "string",
+      "description": "Previous revision id when this document is a substitution"
+    },
+    "root_document_id": {
+      "type": "string",
+      "description": "Revision chain root document id"
+    },
+    "revision_number": {
+      "type": "number",
+      "description": "Progressive revision number"
+    },
+    "is_current_revision": {
+      "type": "boolean",
+      "description": "True for the latest active revision"
+    },
+    "document_status": {
+      "type": "string",
+      "enum": [
+        "draft",
+        "in_review",
+        "approved",
+        "rejected",
+        "superseded",
+        "archived"
+      ],
+      "description": "Document lifecycle status"
+    },
+    "discipline": {
+      "type": "string",
+      "description": "Design discipline (architecture, structure, mep, etc.)"
+    },
+    "work_area": {
+      "type": "string",
+      "description": "Project area or object (room, foundation, section, etc.)"
+    },
+    "project_phase": {
+      "type": "string",
+      "description": "Design phase (concept, executive, as-built, etc.)"
+    },
+    "document_tags": {
+      "type": "array",
+      "description": "Flexible user tags for search and filtering"
+    },
+    "model_format": {
+      "type": "string",
+      "enum": [
+        "ifc",
+        "glb",
+        "gltf",
+        "other"
+      ],
+      "description": "3D/BIM model format when applicable"
     }
   },
   "required": [

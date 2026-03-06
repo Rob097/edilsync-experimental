@@ -34,15 +34,17 @@ import DocumentPreviewDialog from './DocumentPreviewDialog';
 import { Eye } from "lucide-react";
 import { useLanguage } from '@/components/i18n/useLanguage';
 
-const categoryLabels = {
-  project: 'Progetto',
-  contract: 'Contratto',
-  permit: 'Permesso',
-  drawing: 'Disegno',
-  photo: 'Foto',
+const LEGACY_TECHNICAL_CATEGORIES = new Set(['project', 'permit', 'drawing', 'technical']);
+
+const normalizeCategory = (value) => (LEGACY_TECHNICAL_CATEGORIES.has(value) ? 'technical' : (value || 'other'));
+
+const getCategoryLabels = (tr) => ({
+  technical: tr('Documentazione tecnica', 'Technical documentation'),
+  contract: tr('Contratti', 'Contracts'),
+  photo: tr('Foto', 'Photo'),
   report: 'Report',
-  other: 'Altro',
-};
+  other: tr('Altro', 'Other'),
+});
 
 const getFileIcon = (fileType) => {
   const type = fileType?.toLowerCase();
@@ -73,6 +75,7 @@ export default function DocumentList({
 }) {
   const { currentLanguage, t } = useLanguage();
   const tr = (itText, enText) => currentLanguage === 'it' ? itText : enText;
+  const categoryLabels = getCategoryLabels(tr);
   const dateLocale = currentLanguage === 'it' ? it : enUS;
   const queryClient = useQueryClient();
   const isCompanyScope = scopeType === 'company';
@@ -82,6 +85,7 @@ export default function DocumentList({
   const [searchQuery, setSearchQuery] = useState('');
   const [filterCategory, setFilterCategory] = useState('all');
   const [filterType, setFilterType] = useState('all');
+  const [filterStatus, setFilterStatus] = useState('all');
   const [sortBy, setSortBy] = useState('date_desc');
   const [uploadDialogOpen, setUploadDialogOpen] = useState(false);
   const [previewDocument, setPreviewDocument] = useState(null);
@@ -97,6 +101,29 @@ export default function DocumentList({
     enabled: !!scopeId,
   });
 
+  const { data: accessUrlMap = {} } = useQuery({
+    queryKey: [
+      ...documentsQueryKey,
+      'accessUrls',
+      documents.map((doc) => `${doc.id}:${doc.updated_date || ''}`).join('|'),
+    ],
+    queryFn: async () => {
+      const pairs = await Promise.all(
+        documents.map(async (doc) => {
+          const accessUrl = await appClient.integrations.Core.ResolveFileAccessUrl({
+            filePath: doc.file_path,
+            fallbackUrl: doc.file_url,
+          });
+          return [doc.id, accessUrl || doc.file_url];
+        }),
+      );
+
+      return Object.fromEntries(pairs);
+    },
+    enabled: documents.length > 0,
+    staleTime: 1000 * 60 * 30,
+  });
+
   const deleteMutation = useMutation({
     mutationFn: (docId) => appClient.entities.ProjectDocument.delete(docId),
     onSuccess: () => {
@@ -104,12 +131,21 @@ export default function DocumentList({
     },
   });
 
-  let filteredDocuments = documents.filter(doc => {
+  const currentDocuments = documents
+    .filter((doc) => doc.is_current_revision !== false)
+    .map((doc) => ({
+      ...doc,
+      normalized_category: normalizeCategory(doc.category),
+      access_url: accessUrlMap[doc.id] || doc.file_url,
+    }));
+
+  let filteredDocuments = currentDocuments.filter(doc => {
     const matchesSearch = doc.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
       (doc.description && doc.description.toLowerCase().includes(searchQuery.toLowerCase()));
-    const matchesCategory = filterCategory === 'all' || doc.category === filterCategory;
+    const matchesCategory = filterCategory === 'all' || doc.normalized_category === filterCategory;
     const matchesType = filterType === 'all' || doc.file_type === filterType;
-    return matchesSearch && matchesCategory && matchesType;
+    const matchesStatus = filterStatus === 'all' || doc.document_status === filterStatus;
+    return matchesSearch && matchesCategory && matchesType && matchesStatus;
   });
 
   // Sort documents
@@ -127,21 +163,21 @@ export default function DocumentList({
     );
   }
 
-  const uniqueFileTypes = [...new Set(documents.map(d => d.file_type))].filter(Boolean);
+  const uniqueFileTypes = [...new Set(currentDocuments.map(d => d.file_type))].filter(Boolean);
 
   // Group documents by category for folder view (use filtered documents)
   const categoriesWithCounts = Object.keys(categoryLabels).map(category => ({
     value: category,
     label: categoryLabels[category],
-    count: filteredDocuments.filter(doc => doc.category === category).length
+    count: filteredDocuments.filter(doc => doc.normalized_category === category).length
   })).filter(cat => cat.count > 0);
 
   // Get documents for open folder
   // If search or filters are active, show all filtered documents
   // Otherwise, show only documents from the selected category
-  const hasActiveFilters = searchQuery || filterCategory !== 'all' || filterType !== 'all';
+  const hasActiveFilters = searchQuery || filterCategory !== 'all' || filterType !== 'all' || filterStatus !== 'all';
   const folderDocuments = openFolder 
-    ? (hasActiveFilters ? filteredDocuments : filteredDocuments.filter(doc => doc.category === openFolder))
+    ? (hasActiveFilters ? filteredDocuments : filteredDocuments.filter(doc => doc.normalized_category === openFolder))
     : [];
 
   const isImageFile = (fileType) => {
@@ -236,10 +272,8 @@ export default function DocumentList({
             </SelectTrigger>
             <SelectContent>
               <SelectItem value="all">{tr('Tutte', 'All')}</SelectItem>
-              <SelectItem value="project">{tr('Progetto', 'Project')}</SelectItem>
-              <SelectItem value="contract">{tr('Contratto', 'Contract')}</SelectItem>
-              <SelectItem value="permit">{tr('Permesso', 'Permit')}</SelectItem>
-              <SelectItem value="drawing">{tr('Disegno', 'Drawing')}</SelectItem>
+              <SelectItem value="technical">{tr('Documentazione tecnica', 'Technical documentation')}</SelectItem>
+              <SelectItem value="contract">{tr('Contratti', 'Contracts')}</SelectItem>
               <SelectItem value="photo">{tr('Foto', 'Photo')}</SelectItem>
               <SelectItem value="report">Report</SelectItem>
               <SelectItem value="other">{tr('Altro', 'Other')}</SelectItem>
@@ -259,6 +293,20 @@ export default function DocumentList({
               </SelectContent>
             </Select>
           )}
+
+          <Select value={filterStatus} onValueChange={setFilterStatus}>
+            <SelectTrigger className="w-40">
+              <SelectValue placeholder={tr('Stato', 'Status')} />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">{tr('Tutti gli stati', 'All statuses')}</SelectItem>
+              <SelectItem value="draft">{tr('Bozza', 'Draft')}</SelectItem>
+              <SelectItem value="in_review">{tr('In revisione', 'In review')}</SelectItem>
+              <SelectItem value="approved">{tr('Approvato', 'Approved')}</SelectItem>
+              <SelectItem value="rejected">{tr('Respinto', 'Rejected')}</SelectItem>
+              <SelectItem value="archived">{tr('Archiviato', 'Archived')}</SelectItem>
+            </SelectContent>
+          </Select>
           
           <Select value={sortBy} onValueChange={setSortBy}>
             <SelectTrigger className="w-36">
@@ -335,7 +383,7 @@ export default function DocumentList({
                   >
                     {isImageFile(doc.file_type) ? (
                       <img 
-                        src={doc.file_url} 
+                        src={doc.access_url} 
                         alt={doc.name}
                         className="w-full h-full object-cover"
                       />
@@ -370,7 +418,7 @@ export default function DocumentList({
                           asChild
                           title={tr('Scarica', 'Download')}
                         >
-                          <a href={doc.file_url} target="_blank" rel="noopener noreferrer" download>
+                          <a href={doc.access_url} target="_blank" rel="noopener noreferrer" download>
                             <Download className="h-3.5 w-3.5 text-gray-500" />
                           </a>
                         </Button>
@@ -433,7 +481,17 @@ export default function DocumentList({
                     <div className="flex items-center gap-2 text-sm text-gray-500">
                       {doc.category && (
                         <span className="bg-gray-100 px-2 py-0.5 rounded text-xs">
-                          {categoryLabels[doc.category] || doc.category}
+                          {categoryLabels[doc.normalized_category] || doc.normalized_category}
+                        </span>
+                      )}
+                      {doc.document_status && (
+                        <span className="bg-orange-50 text-orange-700 px-2 py-0.5 rounded text-xs uppercase">
+                          {doc.document_status.replace('_', ' ')}
+                        </span>
+                      )}
+                      {doc.revision_number && (
+                        <span className="bg-blue-50 text-blue-700 px-2 py-0.5 rounded text-xs">
+                          Rev {doc.revision_number}
                         </span>
                       )}
                       {doc.file_size && (
@@ -444,6 +502,11 @@ export default function DocumentList({
                     </div>
                     {doc.description && (
                       <p className="text-sm text-gray-500 truncate mt-0.5">{doc.description}</p>
+                    )}
+                    {(doc.work_area || doc.discipline || doc.project_phase) && (
+                      <p className="text-xs text-gray-500 truncate mt-0.5">
+                        {[doc.work_area, doc.discipline, doc.project_phase].filter(Boolean).join(' • ')}
+                      </p>
                     )}
                   </div>
                 </div>
@@ -463,7 +526,7 @@ export default function DocumentList({
                     asChild
                     title={tr('Scarica', 'Download')}
                   >
-                    <a href={doc.file_url} target="_blank" rel="noopener noreferrer" download>
+                    <a href={doc.access_url} target="_blank" rel="noopener noreferrer" download>
                       <Download className="h-4 w-4 text-gray-500" />
                     </a>
                   </Button>

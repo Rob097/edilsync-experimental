@@ -30,6 +30,10 @@ const taskStatusMeta = {
   blocked: { key: 'operational.taskStatusBlocked', fallback: 'Bloccata', className: 'bg-red-100 text-red-700' },
 };
 
+const LEGACY_TECHNICAL_CATEGORIES = new Set(['project', 'permit', 'drawing', 'technical']);
+
+const normalizeCategory = (value) => (LEGACY_TECHNICAL_CATEGORIES.has(value) ? 'technical' : (value || 'other'));
+
 export default function OperativeProjectWorkspace() {
   const { projectId } = useParams();
   const location = useLocation();
@@ -170,13 +174,15 @@ export default function OperativeProjectWorkspace() {
   };
 
   const documentCategoryLabel = (category) => {
+    const normalized = normalizeCategory(category);
     const map = {
+      technical: t('operational.technicalDocumentation'),
+      contract: t('operational.contracts'),
       photo: t('operational.photo'),
       report: t('operational.report'),
-      drawing: t('operational.drawing'),
       other: t('operational.other'),
     };
-    return map[category] || category || t('operational.other');
+    return map[normalized] || normalized || t('operational.other');
   };
 
   const milestoneStatusLabel = (status) => {
@@ -265,12 +271,30 @@ export default function OperativeProjectWorkspace() {
 
   const docsByCategory = useMemo(() => {
     return documentsChronological.reduce((acc, document) => {
-      const key = document.category || 'other';
+      const key = normalizeCategory(document.category);
       if (!acc[key]) acc[key] = [];
       acc[key].push(document);
       return acc;
     }, {});
   }, [documentsChronological]);
+
+  const inferModelFormat = (fileType) => {
+    if (fileType === 'ifc') return 'ifc';
+    if (fileType === 'glb') return 'glb';
+    if (fileType === 'gltf') return 'gltf';
+    return null;
+  };
+
+  const openDocumentFile = async (document) => {
+    if (!document) return;
+    const url = await appClient.integrations.Core.ResolveFileAccessUrl({
+      filePath: document.file_path,
+      fallbackUrl: document.file_url,
+    });
+    if (url) {
+      window.open(url, '_blank', 'noopener,noreferrer');
+    }
+  };
 
   const updateTaskStatusMutation = useMutation({
     mutationFn: ({ taskId, status }) => appClient.entities.Task.update(taskId, { status }),
@@ -298,9 +322,11 @@ export default function OperativeProjectWorkspace() {
         project_id: projectId,
         name: uploadName.trim() || uploadFile.name,
         file_url: uploaded.file_url,
+        file_path: uploaded.file_path,
         file_type: uploadFile.name.split('.').pop()?.toLowerCase() || 'file',
         file_size: uploadFile.size,
         category: uploadCategory,
+        model_format: inferModelFormat(uploadFile.name.split('.').pop()?.toLowerCase() || ''),
         uploaded_by_email: user?.email,
         uploaded_by_name: user?.display_name || user?.full_name || user?.email,
       });
@@ -353,8 +379,8 @@ export default function OperativeProjectWorkspace() {
   const handleHistoryItemClick = (item) => {
     if (!item) return;
     if (item.type === 'document') {
-      if (item.entity?.file_url) {
-        window.open(item.entity.file_url, '_blank', 'noopener,noreferrer');
+      if (item.entity) {
+        openDocumentFile(item.entity);
       }
       return;
     }
@@ -657,7 +683,7 @@ export default function OperativeProjectWorkspace() {
                       {' • '}
                       {documentCategoryLabel(document.category)}
                     </p>
-                    <Button size="sm" variant="outline" className="mt-2" onClick={() => window.open(document.file_url, '_blank', 'noopener,noreferrer')}>
+                    <Button size="sm" variant="outline" className="mt-2" onClick={() => openDocumentFile(document)}>
                       {t('operational.openFile')}
                     </Button>
                   </div>
@@ -672,7 +698,7 @@ export default function OperativeProjectWorkspace() {
                           <div key={document.id} className="rounded-lg border border-[#ef6144]/20 p-3">
                             <p className="font-medium text-gray-900">{document.name}</p>
                             <p className="text-xs text-gray-500 mt-1">{format(new Date(document.created_date), 'dd MMM yyyy HH:mm', { locale: dateLocale })}</p>
-                            <Button size="sm" variant="outline" className="mt-2" onClick={() => window.open(document.file_url, '_blank', 'noopener,noreferrer')}>
+                            <Button size="sm" variant="outline" className="mt-2" onClick={() => openDocumentFile(document)}>
                               {t('operational.openFile')}
                             </Button>
                           </div>
@@ -892,15 +918,16 @@ export default function OperativeProjectWorkspace() {
             <DialogTitle>{t('operational.uploadTitle')}</DialogTitle>
           </DialogHeader>
           <div className="space-y-3">
-            <Input type="file" accept="image/*,.pdf,.doc,.docx,.xls,.xlsx,.txt,.csv,.zip,.rar" onChange={(event) => setUploadFile(event.target.files?.[0] || null)} />
+            <Input type="file" accept="image/*,.pdf,.doc,.docx,.xls,.xlsx,.txt,.csv,.dwg,.dxf,.ifc,.glb,.gltf,.zip,.rar" onChange={(event) => setUploadFile(event.target.files?.[0] || null)} />
             <Select value={uploadCategory} onValueChange={setUploadCategory}>
               <SelectTrigger>
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
+                <SelectItem value="technical">{t('operational.technicalDocumentation')}</SelectItem>
+                <SelectItem value="contract">{t('operational.contracts')}</SelectItem>
                 <SelectItem value="photo">{t('operational.photo')}</SelectItem>
                 <SelectItem value="report">{t('operational.report')}</SelectItem>
-                <SelectItem value="drawing">{t('operational.drawing')}</SelectItem>
                 <SelectItem value="other">{t('operational.other')}</SelectItem>
               </SelectContent>
             </Select>

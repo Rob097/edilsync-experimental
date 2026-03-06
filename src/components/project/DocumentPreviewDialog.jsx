@@ -1,4 +1,6 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
+import { useQuery } from '@tanstack/react-query';
+import { appClient } from '@/api/appClient';
 import {
   Dialog,
   DialogContent,
@@ -7,15 +9,16 @@ import {
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Download, X, ChevronLeft, ChevronRight, MessageSquare, FileText } from "lucide-react";
+import { Download, ChevronLeft, ChevronRight, MessageSquare, FileText, History, Cuboid } from "lucide-react";
 import DocumentComments from './DocumentComments';
+import BimViewer from './BimViewer';
+import InAppIfcViewer from './InAppIfcViewer';
 
 export default function DocumentPreviewDialog({ document, open, onOpenChange, allDocuments = [], onNavigate, scopeType = 'project' }) {
   const [activeTab, setActiveTab] = useState('preview');
-  
-  if (!document) return null;
+  const safeDocument = document || {};
 
-  const currentIndex = allDocuments.findIndex(doc => doc.id === document.id);
+  const currentIndex = allDocuments.findIndex(doc => doc.id === safeDocument.id);
   const hasPrevious = currentIndex > 0;
   const hasNext = currentIndex < allDocuments.length - 1;
 
@@ -31,8 +34,43 @@ export default function DocumentPreviewDialog({ document, open, onOpenChange, al
     }
   };
 
-  const isImage = ['jpg', 'jpeg', 'png', 'gif', 'webp'].includes(document.file_type?.toLowerCase());
-  const isPdf = document.file_type?.toLowerCase() === 'pdf';
+  const fileType = safeDocument.file_type?.toLowerCase();
+  const isImage = ['jpg', 'jpeg', 'png', 'gif', 'webp'].includes(fileType);
+  const isPdf = fileType === 'pdf';
+  const isBim = ['ifc', 'glb', 'gltf'].includes(fileType) || ['ifc', 'glb', 'gltf'].includes(safeDocument.model_format);
+  const isIfc = (fileType || safeDocument.model_format) === 'ifc';
+
+  const { data: accessUrl } = useQuery({
+    queryKey: ['documentAccessUrl', safeDocument.id, safeDocument.file_path, safeDocument.updated_date],
+    queryFn: () => appClient.integrations.Core.ResolveFileAccessUrl({
+      filePath: safeDocument.file_path,
+      fallbackUrl: safeDocument.file_url,
+    }),
+    enabled: !!document,
+    staleTime: 1000 * 60 * 30,
+  });
+
+  const { data: revisions = [] } = useQuery({
+    queryKey: ['documentRevisions', safeDocument.root_document_id || safeDocument.id],
+    queryFn: async () => {
+      const rootId = safeDocument.root_document_id || safeDocument.id;
+      let rows = await appClient.entities.ProjectDocument.filter({ root_document_id: rootId });
+      if (!rows.length) {
+        rows = [safeDocument];
+      }
+      return [...rows].sort((a, b) => (b.revision_number || 1) - (a.revision_number || 1));
+    },
+    enabled: !!document,
+  });
+
+  useEffect(() => {
+    if (!open) return;
+    setActiveTab(isBim ? 'bim' : 'preview');
+  }, [open, isBim, safeDocument.id]);
+
+  const downloadUrl = accessUrl || safeDocument.access_url || safeDocument.file_url;
+
+  if (!document) return null;
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -46,7 +84,7 @@ export default function DocumentPreviewDialog({ document, open, onOpenChange, al
               asChild
               className="flex-shrink-0"
             >
-              <a href={document.file_url} download target="_blank" rel="noopener noreferrer">
+              <a href={downloadUrl} download target="_blank" rel="noopener noreferrer">
                 <Download className="h-4 w-4 mr-2" />
                 Scarica
               </a>
@@ -56,16 +94,29 @@ export default function DocumentPreviewDialog({ document, open, onOpenChange, al
         
         <Tabs value={activeTab} onValueChange={setActiveTab} className="flex-1 flex flex-col overflow-hidden">
           <TabsList className="mx-6 mt-2">
-            <TabsTrigger value="preview" className="flex items-center gap-2">
-              <FileText className="h-4 w-4" />
-              Anteprima
-            </TabsTrigger>
+            {!isBim && (
+              <TabsTrigger value="preview" className="flex items-center gap-2">
+                <FileText className="h-4 w-4" />
+                Anteprima
+              </TabsTrigger>
+            )}
+            {isBim && (
+              <TabsTrigger value="bim" className="flex items-center gap-2">
+                <Cuboid className="h-4 w-4" />
+                BIM 3D
+              </TabsTrigger>
+            )}
             <TabsTrigger value="comments" className="flex items-center gap-2">
               <MessageSquare className="h-4 w-4" />
               Commenti
             </TabsTrigger>
+            <TabsTrigger value="history" className="flex items-center gap-2">
+              <History className="h-4 w-4" />
+              Revisioni
+            </TabsTrigger>
           </TabsList>
 
+          {!isBim && (
           <TabsContent value="preview" className="flex-1 overflow-hidden bg-gray-50 relative mt-0">
           {/* Navigation Arrows */}
           {hasPrevious && (
@@ -92,14 +143,14 @@ export default function DocumentPreviewDialog({ document, open, onOpenChange, al
           {isImage ? (
             <div className="flex items-center justify-center h-full p-4">
               <img 
-                src={document.file_url} 
+                src={downloadUrl} 
                 alt={document.name}
                 className="max-w-full max-h-full object-contain rounded-lg shadow-lg"
               />
             </div>
           ) : isPdf ? (
             <iframe
-              src={`https://docs.google.com/viewer?url=${encodeURIComponent(document.file_url)}&embedded=true`}
+              src={downloadUrl}
               className="w-full h-full border-0"
               title={document.name}
             />
@@ -109,7 +160,7 @@ export default function DocumentPreviewDialog({ document, open, onOpenChange, al
                 Anteprima non disponibile per questo tipo di file.
               </p>
               <Button asChild>
-                <a href={document.file_url} download target="_blank" rel="noopener noreferrer">
+                <a href={downloadUrl} download target="_blank" rel="noopener noreferrer">
                   <Download className="h-4 w-4 mr-2" />
                   Scarica per visualizzare
                 </a>
@@ -117,6 +168,29 @@ export default function DocumentPreviewDialog({ document, open, onOpenChange, al
             </div>
           )}
           </TabsContent>
+          )}
+
+          {isBim && (
+            <TabsContent value="bim" className="flex-1 overflow-hidden p-4 mt-0 bg-slate-100">
+              {isIfc ? (
+                <InAppIfcViewer
+                  fileUrl={downloadUrl}
+                  fallbackUrl={safeDocument.file_url}
+                  filePath={safeDocument.file_path}
+                  documentId={safeDocument.id}
+                  fileType={fileType || safeDocument.model_format || 'ifc'}
+                  fileSize={safeDocument.file_size}
+                />
+              ) : (
+                <BimViewer
+                  fileUrl={downloadUrl}
+                  fallbackUrl={safeDocument.file_url}
+                  filePath={safeDocument.file_path}
+                  fileType={fileType || document.model_format}
+                />
+              )}
+            </TabsContent>
+          )}
 
           <TabsContent value="comments" className="flex-1 overflow-auto p-6 mt-0">
             <DocumentComments
@@ -125,6 +199,33 @@ export default function DocumentPreviewDialog({ document, open, onOpenChange, al
               companyId={document.company_id}
               scopeType={scopeType}
             />
+          </TabsContent>
+
+          <TabsContent value="history" className="flex-1 overflow-auto p-6 mt-0 space-y-3">
+            {revisions.length === 0 ? (
+              <p className="text-sm text-gray-500">Nessuna revisione disponibile.</p>
+            ) : (
+              revisions.map((revision) => (
+                <button
+                  key={revision.id}
+                  type="button"
+                  className={`w-full text-left rounded-md border px-4 py-3 transition-colors ${
+                    revision.id === document.id ? 'border-[#ef6144] bg-[#ef6144]/5' : 'hover:bg-slate-50'
+                  }`}
+                  onClick={() => onNavigate?.(revision)}
+                >
+                  <div className="flex items-center justify-between gap-2">
+                    <p className="font-medium text-sm">Rev {revision.revision_number || 1} - {revision.name}</p>
+                    <span className="text-xs uppercase bg-slate-100 px-2 py-1 rounded">
+                      {revision.document_status || 'draft'}
+                    </span>
+                  </div>
+                  <p className="text-xs text-slate-500 mt-1">
+                    {revision.created_date ? new Date(revision.created_date).toLocaleString() : ''}
+                  </p>
+                </button>
+              ))
+            )}
           </TabsContent>
         </Tabs>
       </DialogContent>
