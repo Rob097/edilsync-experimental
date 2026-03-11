@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
-import { AlertTriangle, ExternalLink, Download, RotateCcw } from 'lucide-react';
+import { AlertTriangle, ExternalLink, RotateCcw } from 'lucide-react';
 import * as THREE from 'three';
 import * as OBC from '@thatopen/components';
 import { appClient } from '@/api/appClient';
@@ -330,31 +330,8 @@ export default function InAppIfcViewer({ fileUrl, fallbackUrl, filePath, documen
                 <ExternalLink className="h-4 w-4 mr-2" />
                 Apri IFC nel viewer
               </a>
-              <a
-                href={ifcSourceUrl || '#'}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center rounded-md border border-slate-300 hover:bg-slate-100 px-4 py-2 text-sm"
-              >
-                <Download className="h-4 w-4 mr-2" />
-                Apri file IFC
-              </a>
             </div>
           </div>
-        </div>
-      )}
-
-      {status === 'ready' && (
-        <div className="absolute right-3 top-3 z-10">
-          <a
-            href={ifcSourceUrl || '#'}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex items-center rounded-md bg-white/90 border border-slate-200 hover:bg-white px-3 py-1.5 text-xs text-slate-700"
-          >
-            <Download className="h-3.5 w-3.5 mr-1.5" />
-            Apri file IFC
-          </a>
         </div>
       )}
     </div>

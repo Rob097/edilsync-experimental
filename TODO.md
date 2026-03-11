@@ -7,10 +7,10 @@
     - ecc
 - [X] Iniziare a pensare all'introduzione di un sistema di timbrature per società/progetto
 - [X] Ampliare ventaglio di professionisti + migliorie controlli permessi
-- Migliorare usabilità per progettisti
-    - Migliore gestione / consultazione dei design/progetti
-    - Analizzare formati comuni
-    - Analizzare difficoltà integrazione BIM
+- [X] Migliorare usabilità per progettisti
+    - [X] Migliore gestione / consultazione dei design/progetti
+    - [X] Analizzare formati comuni
+    - [X] Analizzare difficoltà integrazione BIM
 - Ragionare al concetto di "Decision Making".
 - Parte pubblica
     - Landing page

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { appClient } from '@/api/appClient';
 import {
@@ -9,14 +9,17 @@ import {
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Download, ChevronLeft, ChevronRight, MessageSquare, FileText, History, Cuboid } from "lucide-react";
+import { Download, ChevronLeft, ChevronRight, MessageSquare, FileText, History, Cuboid, Maximize2, Minimize2 } from "lucide-react";
 import DocumentComments from './DocumentComments';
 import BimViewer from './BimViewer';
 import InAppIfcViewer from './InAppIfcViewer';
 
 export default function DocumentPreviewDialog({ document, open, onOpenChange, allDocuments = [], onNavigate, scopeType = 'project' }) {
   const [activeTab, setActiveTab] = useState('preview');
+  const [isBimFullscreen, setIsBimFullscreen] = useState(false);
+  const bimContainerRef = useRef(null);
   const safeDocument = document || {};
+  const browserDocument = typeof window !== 'undefined' ? window.document : null;
 
   const currentIndex = allDocuments.findIndex(doc => doc.id === safeDocument.id);
   const hasPrevious = currentIndex > 0;
@@ -67,6 +70,28 @@ export default function DocumentPreviewDialog({ document, open, onOpenChange, al
     if (!open) return;
     setActiveTab(isBim ? 'bim' : 'preview');
   }, [open, isBim, safeDocument.id]);
+
+  useEffect(() => {
+    if (!browserDocument) return undefined;
+
+    const handleFullscreenChange = () => {
+      const container = bimContainerRef.current;
+      const fullscreenElement = browserDocument.fullscreenElement;
+      setIsBimFullscreen(Boolean(container && fullscreenElement === container));
+    };
+
+    window.addEventListener('fullscreenchange', handleFullscreenChange);
+    return () => window.removeEventListener('fullscreenchange', handleFullscreenChange);
+  }, [browserDocument]);
+
+  const toggleBimFullscreen = async () => {
+    if (!bimContainerRef.current || !browserDocument) return;
+    if (browserDocument.fullscreenElement === bimContainerRef.current) {
+      await browserDocument.exitFullscreen();
+      return;
+    }
+    await bimContainerRef.current.requestFullscreen();
+  };
 
   const downloadUrl = accessUrl || safeDocument.access_url || safeDocument.file_url;
 
@@ -172,23 +197,36 @@ export default function DocumentPreviewDialog({ document, open, onOpenChange, al
 
           {isBim && (
             <TabsContent value="bim" className="flex-1 overflow-hidden p-4 mt-0 bg-slate-100">
-              {isIfc ? (
-                <InAppIfcViewer
-                  fileUrl={downloadUrl}
-                  fallbackUrl={safeDocument.file_url}
-                  filePath={safeDocument.file_path}
-                  documentId={safeDocument.id}
-                  fileType={fileType || safeDocument.model_format || 'ifc'}
-                  fileSize={safeDocument.file_size}
-                />
-              ) : (
-                <BimViewer
-                  fileUrl={downloadUrl}
-                  fallbackUrl={safeDocument.file_url}
-                  filePath={safeDocument.file_path}
-                  fileType={fileType || document.model_format}
-                />
-              )}
+              <div ref={bimContainerRef} className="relative h-full w-full bg-slate-100">
+                <Button
+                  type="button"
+                  size="icon"
+                  variant="outline"
+                  onClick={toggleBimFullscreen}
+                  className="absolute right-2 top-2 z-30 bg-white/90"
+                  title={isBimFullscreen ? 'Esci da schermo intero' : 'Schermo intero'}
+                >
+                  {isBimFullscreen ? <Minimize2 className="h-4 w-4" /> : <Maximize2 className="h-4 w-4" />}
+                </Button>
+
+                {isIfc ? (
+                  <InAppIfcViewer
+                    fileUrl={downloadUrl}
+                    fallbackUrl={safeDocument.file_url}
+                    filePath={safeDocument.file_path}
+                    documentId={safeDocument.id}
+                    fileType={fileType || safeDocument.model_format || 'ifc'}
+                    fileSize={safeDocument.file_size}
+                  />
+                ) : (
+                  <BimViewer
+                    fileUrl={downloadUrl}
+                    fallbackUrl={safeDocument.file_url}
+                    filePath={safeDocument.file_path}
+                    fileType={fileType || document.model_format}
+                  />
+                )}
+              </div>
             </TabsContent>
           )}
 
