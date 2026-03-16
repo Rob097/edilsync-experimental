@@ -1,0 +1,103 @@
+{
+  "name": "LaborRate",
+  "type": "object",
+  "properties": {
+    "company_id": {
+      "type": "string",
+      "description": "Reference to Company"
+    },
+    "project_id": {
+      "type": "string",
+      "description": "Optional project scope"
+    },
+    "user_email": {
+      "type": "string",
+      "description": "Optional user scope"
+    },
+    "company_member_role": {
+      "type": "string",
+      "description": "Optional company role scope"
+    },
+    "hourly_cost": {
+      "type": "number",
+      "description": "Hourly labor cost"
+    },
+    "valid_from": {
+      "type": "string",
+      "format": "date",
+      "description": "Validity start date"
+    },
+    "valid_to": {
+      "type": "string",
+      "format": "date",
+      "description": "Optional validity end date"
+    },
+    "notes": {
+      "type": "string",
+      "description": "Optional notes"
+    }
+  },
+  "required": [
+    "company_id",
+    "hourly_cost",
+    "valid_from"
+  ],
+  "rls": {
+    "create": {
+      "$or": [
+        {
+          "company_id": {
+            "$in": "{{user.data.admin_company_ids}}"
+          }
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    },
+    "read": {
+      "$or": [
+        {
+          "company_id": {
+            "$in": "{{user.data.company_ids}}"
+          }
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    },
+    "update": {
+      "$or": [
+        {
+          "company_id": {
+            "$in": "{{user.data.admin_company_ids}}"
+          }
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    },
+    "delete": {
+      "$or": [
+        {
+          "company_id": {
+            "$in": "{{user.data.admin_company_ids}}"
+          }
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    }
+  }
+}

@@ -417,6 +417,7 @@ const itTranslations = {
       "changesExtras": "Modifiche & Extra",
       "disputes": "Dispute",
       "milestones": "Milestones",
+      "finance": "Economia",
       "messaging": "Messaggistica",
       "participants": "Partecipanti",
       "documents": "Documenti",
@@ -706,6 +707,111 @@ const itTranslations = {
     "cancel": "Annulla",
     "upload": "Carica",
     "save": "Salva"
+  },
+  "finance": {
+    "sectionTitle": "Economia di commessa",
+    "plannedBudget": "Budget pianificato",
+    "recordedActual": "Consuntivo registrato",
+    "laborActual": "Consuntivo manodopera (da timbrature)",
+    "toSync": "Da sincronizzare",
+    "finalForecast": "Forecast finale",
+    "approvedVariations": "Extra approvati",
+    "contested": "Contestato",
+    "financialSettings": "Impostazioni economiche",
+    "currency": "Valuta",
+    "budgetMode": "Modalità budget",
+    "simple": "Semplice",
+    "byCostCode": "Per cost code",
+    "kpiTitle": "Indicatori economici",
+    "visibility": "Visibilità",
+    "laborMethod": "Metodo manodopera",
+    "saveSettings": "Salva impostazioni",
+    "updateSettings": "Aggiorna impostazioni",
+    "budgetLines": "Budget per voci",
+    "lineCodeOptional": "Codice (opzionale)",
+    "lineTitle": "Titolo voce",
+    "plannedAmount": "Importo pianificato",
+    "responsibleCompany": "Società responsabile",
+    "noCompany": "Nessuna società",
+    "addBudgetLine": "Aggiungi voce budget",
+    "noBudgetLines": "Nessuna voce budget inserita.",
+    "costEntries": "Consuntivi",
+    "costDescription": "Descrizione costo",
+    "amount": "Importo",
+    "companyOptional": "Società (opzionale)",
+    "recordCost": "Registra costo",
+    "noCosts": "Nessun costo registrato.",
+    "laborRates": "Tariffe manodopera",
+    "syncFromWorkSessions": "Sincronizzazione costi da timbrature",
+    "sessionsReady": "Sessioni pronte",
+    "estimatedAmount": "Importo stimato",
+    "syncLaborCosts": "Sincronizza manodopera",
+    "company": "Società",
+    "selectCompany": "Seleziona società",
+    "personOptional": "Persona (opzionale)",
+    "genericRate": "Tariffa generale",
+    "hourlyCost": "Costo orario",
+    "saveRate": "Salva tariffa",
+    "noRates": "Nessuna tariffa configurata.",
+    "derivedLaborNote": "Nota: il costo manodopera da timbrature è un consuntivo derivato, separato dai costi registrati manualmente.",
+    "operator": "Operatore:",
+    "access": {
+      "viewerNotice": "Stai visualizzando una versione di controllo e trasparenza: puoi leggere budget, consuntivi e SAL, ma non modificare le impostazioni economiche operative.",
+      "contributorNotice": "Puoi registrare costi e sincronizzare la manodopera, ma budget, tariffe, SAL e impostazioni restano gestiti dagli amministratori della società contractor."
+    },
+    "budgetModes": {
+      "simple": "Semplice",
+      "cost_code": "Analitica per codici"
+    },
+    "visibilityModes": {
+      "project_full": "Intero progetto",
+      "company_scoped": "Per società"
+    },
+    "laborMethods": {
+      "manual": "Manuale",
+      "from_work_sessions": "Da timbrature"
+    },
+    "salToggle": {
+      "on": "Attivo",
+      "off": "Disattivo"
+    },
+    "salReport": {
+      "title": "Report SAL",
+      "count": "N. SAL",
+      "matured": "Tot. maturato",
+      "advances": "Tot. anticipi",
+      "toPay": "Tot. da pagare",
+      "approved": "SAL approvati"
+    },
+    "statuses": {
+      "draft": "Bozza",
+      "approved": "Approvato",
+      "cancelled": "Annullato"
+    },
+    "categories": {
+      "labor": "Manodopera",
+      "materials": "Materiali",
+      "equipment": "Noli/Mezzi",
+      "subcontract": "Subappalto",
+      "indirect": "Indiretti",
+      "extra": "Extra",
+      "adjustment": "Rettifica"
+    },
+    "progressStatements": {
+      "title": "Stati avanzamento (SAL)",
+      "sequence": "Progressivo SAL",
+      "sequenceHelp": "Numero progressivo assegnato automaticamente dal sistema (es. 1, 2, 3...).",
+      "statementDate": "Data SAL",
+      "maturedAmount": "Importo maturato",
+      "advancesPaid": "Anticipi pagati",
+      "amountToPay": "Importo da pagare",
+      "notes": "Note",
+      "create": "Crea SAL",
+      "approve": "Approva",
+      "cancel": "Annulla",
+      "empty": "Nessun SAL registrato.",
+      "enableHint": "Abilita i SAL nelle impostazioni economiche per usarli pienamente."
+    }
   },
   "tour": {
     "dashboard": "Questo è il tuo dashboard. Qui vedi una panoramica dei tuoi progetti.",
@@ -1134,6 +1240,7 @@ const enTranslations = {
       "changesExtras": "Changes & Extras",
       "disputes": "Disputes",
       "milestones": "Milestones",
+      "finance": "Finance",
       "messaging": "Messaging",
       "participants": "Participants",
       "documents": "Documents",
@@ -1423,6 +1530,111 @@ const enTranslations = {
     "cancel": "Cancel",
     "upload": "Upload",
     "save": "Save"
+  },
+  "finance": {
+    "sectionTitle": "Project finance",
+    "plannedBudget": "Planned budget",
+    "recordedActual": "Recorded actual",
+    "laborActual": "Labor actual (from work sessions)",
+    "toSync": "To sync",
+    "finalForecast": "Final forecast",
+    "approvedVariations": "Approved variations",
+    "contested": "Contested",
+    "financialSettings": "Financial settings",
+    "currency": "Currency",
+    "budgetMode": "Budget mode",
+    "simple": "Simple",
+    "byCostCode": "By cost code",
+    "kpiTitle": "Financial indicators",
+    "visibility": "Visibility",
+    "laborMethod": "Labor method",
+    "saveSettings": "Save settings",
+    "updateSettings": "Update settings",
+    "budgetLines": "Budget lines",
+    "lineCodeOptional": "Code (optional)",
+    "lineTitle": "Line title",
+    "plannedAmount": "Planned amount",
+    "responsibleCompany": "Responsible company",
+    "noCompany": "No company",
+    "addBudgetLine": "Add budget line",
+    "noBudgetLines": "No budget lines yet.",
+    "costEntries": "Cost entries",
+    "costDescription": "Cost description",
+    "amount": "Amount",
+    "companyOptional": "Company (optional)",
+    "recordCost": "Record cost",
+    "noCosts": "No costs recorded yet.",
+    "laborRates": "Labor rates",
+    "syncFromWorkSessions": "Sync costs from work sessions",
+    "sessionsReady": "Sessions ready",
+    "estimatedAmount": "Estimated amount",
+    "syncLaborCosts": "Sync labor costs",
+    "company": "Company",
+    "selectCompany": "Select company",
+    "personOptional": "Person (optional)",
+    "genericRate": "Generic rate",
+    "hourlyCost": "Hourly cost",
+    "saveRate": "Save rate",
+    "noRates": "No rates configured yet.",
+    "derivedLaborNote": "Note: labor costs from work sessions are derived actuals and remain separate from manually recorded costs.",
+    "operator": "Operator:",
+    "access": {
+      "viewerNotice": "You are viewing the transparency version of project finance: you can read budget, actuals, and progress statements, but not change operational financial settings.",
+      "contributorNotice": "You can record costs and sync labor, but budget, rates, progress statements, and settings remain managed by contractor company administrators."
+    },
+    "budgetModes": {
+      "simple": "Simple",
+      "cost_code": "Analytical by cost codes"
+    },
+    "visibilityModes": {
+      "project_full": "Whole project",
+      "company_scoped": "Company scoped"
+    },
+    "laborMethods": {
+      "manual": "Manual",
+      "from_work_sessions": "From work sessions"
+    },
+    "salToggle": {
+      "on": "Enabled",
+      "off": "Disabled"
+    },
+    "salReport": {
+      "title": "Progress report",
+      "count": "Statements",
+      "matured": "Total matured",
+      "advances": "Total advances",
+      "toPay": "Total to pay",
+      "approved": "Approved statements"
+    },
+    "statuses": {
+      "draft": "Draft",
+      "approved": "Approved",
+      "cancelled": "Cancelled"
+    },
+    "categories": {
+      "labor": "Labor",
+      "materials": "Materials",
+      "equipment": "Equipment",
+      "subcontract": "Subcontract",
+      "indirect": "Indirect",
+      "extra": "Extra",
+      "adjustment": "Adjustment"
+    },
+    "progressStatements": {
+      "title": "Progress statements",
+      "sequence": "Statement sequence",
+      "sequenceHelp": "Sequential number automatically assigned by the system (for example 1, 2, 3...).",
+      "statementDate": "Statement date",
+      "maturedAmount": "Matured amount",
+      "advancesPaid": "Advances paid",
+      "amountToPay": "Amount to pay",
+      "notes": "Notes",
+      "create": "Create statement",
+      "approve": "Approve",
+      "cancel": "Cancel",
+      "empty": "No progress statements yet.",
+      "enableHint": "Enable progress statements in financial settings for full workflow."
+    }
   },
   "tour": {
     "dashboard": "This is your dashboard. Here you see an overview of your projects.",

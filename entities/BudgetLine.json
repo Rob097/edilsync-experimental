@@ -1,0 +1,135 @@
+{
+  "name": "BudgetLine",
+  "type": "object",
+  "properties": {
+    "project_id": {
+      "type": "string",
+      "description": "Reference to Project"
+    },
+    "code": {
+      "type": "string",
+      "description": "Budget line code"
+    },
+    "title": {
+      "type": "string",
+      "description": "Budget line title"
+    },
+    "category": {
+      "type": "string",
+      "enum": [
+        "labor",
+        "materials",
+        "equipment",
+        "subcontract",
+        "indirect",
+        "extra"
+      ],
+      "description": "Cost category"
+    },
+    "unit": {
+      "type": "string",
+      "description": "Measurement unit"
+    },
+    "quantity_planned": {
+      "type": "number",
+      "description": "Planned quantity"
+    },
+    "unit_cost_planned": {
+      "type": "number",
+      "description": "Planned unit cost"
+    },
+    "amount_planned": {
+      "type": "number",
+      "description": "Planned total amount"
+    },
+    "company_id": {
+      "type": "string",
+      "description": "Responsible company ID"
+    },
+    "task_id": {
+      "type": "string",
+      "description": "Optional linked task"
+    },
+    "milestone_id": {
+      "type": "string",
+      "description": "Optional linked milestone"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "active",
+        "archived"
+      ],
+      "default": "active",
+      "description": "Budget line status"
+    },
+    "notes": {
+      "type": "string",
+      "description": "Optional notes"
+    }
+  },
+  "required": [
+    "project_id",
+    "title",
+    "category"
+  ],
+  "rls": {
+    "create": {
+      "project_id": {
+        "$in": "{{user.data.project_ids}}"
+      }
+    },
+    "read": {
+      "$or": [
+        {
+          "project_id": {
+            "$in": "{{user.data.project_ids}}"
+          }
+        },
+        {
+          "company_id": {
+            "$in": "{{user.data.company_ids}}"
+          }
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    },
+    "update": {
+      "$or": [
+        {
+          "project_id": {
+            "$in": "{{user.data.project_ids}}"
+          }
+        },
+        {
+          "company_id": {
+            "$in": "{{user.data.admin_company_ids}}"
+          }
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    },
+    "delete": {
+      "$or": [
+        {
+          "project_id": {
+            "$in": "{{user.data.project_ids}}"
+          }
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    }
+  }
+}

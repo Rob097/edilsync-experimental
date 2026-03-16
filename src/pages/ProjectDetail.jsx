@@ -16,29 +16,17 @@ import {
   Calendar, 
   Users, 
   Plus,
-  Building2,
-  User,
   Settings,
-  MoreVertical,
   UserPlus,
   FileText,
   CheckCircle2,
   DollarSign,
-  MessageSquare,
+  BookOpen,
   Activity,
-  Flag,
   ShieldAlert,
-  Camera,
   Upload,
-  AlertCircle,
-  Clock
+  AlertCircle
 } from "lucide-react";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
 import { format } from 'date-fns';
 import { it, enUS } from 'date-fns/locale';
 import { useLanguage } from '@/components/i18n/useLanguage';
@@ -54,13 +42,11 @@ import EmptyState from '@/components/ui/EmptyState';
 import EditProjectDialog from '@/components/project/EditProjectDialog';
 import MilestoneList from '@/components/project/MilestoneList';
 import ProjectOverview from '@/components/project/ProjectOverview';
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
+import ProjectFinancialSection from '@/components/project/ProjectFinancialSection';
 import { getUserDisplayNameByEmail } from '@/lib/userDisplay';
+import { getProjectFinancialPermissions } from '@/lib/financePermissions';
+import { useTour } from '@/components/tour/TourProvider';
+import { getFinanceSectionTour } from '@/components/tour/tours/financeTour';
 
 const statusConfig = {
   planning: { color: 'bg-blue-100 text-blue-700' },
@@ -72,6 +58,7 @@ const statusConfig = {
 export default function ProjectDetail() {
   const { t, currentLanguage } = useLanguage();
   const tr = (itText, enText) => (currentLanguage === 'it' ? itText : enText);
+  const { startTour } = useTour();
   const dateLocale = currentLanguage === 'it' ? it : enUS;
   const navigate = useNavigate();
   const queryClient = useQueryClient();
@@ -215,6 +202,21 @@ export default function ProjectDetail() {
   const canRespondToChangeRequest = isActiveParticipant && (userParticipation?.project_role === 'homeowner' || project?.owner_user_id === user?.id);
   const canManageDisputes = isActiveParticipant;
   const canRemoveParticipants = isActiveParticipant && (userParticipation?.project_role === 'homeowner' || project?.owner_user_id === user?.id || canInvite);
+  const currentCompanyMembership = user?.active_company_id
+    ? companyMemberships.find((membership) => membership.company_id === user.active_company_id && membership.status === 'active')
+    : null;
+  const financialPermissions = getProjectFinancialPermissions({
+    isActiveParticipant,
+    participantType: userParticipation?.participant_type,
+    projectRole: userParticipation?.project_role,
+    companyRole: currentCompanyMembership?.role,
+  });
+
+  useEffect(() => {
+    if (infoSection === 'finance' && !financialPermissions.canViewSection) {
+      setInfoSection('all');
+    }
+  }, [infoSection, financialPermissions.canViewSection]);
 
   // Start project tour when viewing project detail
   const shouldStartProjectTour = user && 
@@ -757,24 +759,6 @@ export default function ProjectDetail() {
                {t('projectDetail.sections.messaging')}
              </Button>
              <Button
-               variant={infoSection === 'participants' ? 'default' : 'outline'}
-               onClick={() => {
-                 setInfoSection('participants');
-                 setTimeout(() => {
-                   const tabsElement = document.querySelector('[role="tablist"]');
-                   if (tabsElement) {
-                     const offset = 100;
-                     const elementPosition = tabsElement.getBoundingClientRect().top;
-                     const offsetPosition = elementPosition + window.pageYOffset - offset;
-                     window.scrollTo({ top: offsetPosition, behavior: 'smooth' });
-                   }
-                 }, 100);
-               }}
-               className={infoSection === 'participants' ? 'bg-[#ef6144] hover:bg-[#d9553a]' : ''}
-             >
-               {t('projectDetail.sections.participants')}
-             </Button>
-             <Button
                variant={infoSection === 'documents' ? 'default' : 'outline'}
                onClick={() => {
                  setInfoSection('documents');
@@ -791,6 +775,44 @@ export default function ProjectDetail() {
                className={infoSection === 'documents' ? 'bg-[#ef6144] hover:bg-[#d9553a]' : ''}
              >
                {t('projectDetail.sections.documents')}
+             </Button>
+             {financialPermissions.canViewSection ? (
+               <Button
+                 variant={infoSection === 'finance' ? 'default' : 'outline'}
+                 onClick={() => {
+                   setInfoSection('finance');
+                   setTimeout(() => {
+                     const tabsElement = document.querySelector('[role="tablist"]');
+                     if (tabsElement) {
+                       const offset = 100;
+                       const elementPosition = tabsElement.getBoundingClientRect().top;
+                       const offsetPosition = elementPosition + window.pageYOffset - offset;
+                       window.scrollTo({ top: offsetPosition, behavior: 'smooth' });
+                     }
+                   }, 100);
+                 }}
+                 className={infoSection === 'finance' ? 'bg-[#ef6144] hover:bg-[#d9553a]' : ''}
+               >
+                 {t('projectDetail.sections.finance')}
+               </Button>
+             ) : null}
+             <Button
+               variant={infoSection === 'participants' ? 'default' : 'outline'}
+               onClick={() => {
+                 setInfoSection('participants');
+                 setTimeout(() => {
+                   const tabsElement = document.querySelector('[role="tablist"]');
+                   if (tabsElement) {
+                     const offset = 100;
+                     const elementPosition = tabsElement.getBoundingClientRect().top;
+                     const offsetPosition = elementPosition + window.pageYOffset - offset;
+                     window.scrollTo({ top: offsetPosition, behavior: 'smooth' });
+                   }
+                 }, 100);
+               }}
+               className={infoSection === 'participants' ? 'bg-[#ef6144] hover:bg-[#d9553a]' : ''}
+             >
+               {t('projectDetail.sections.participants')}
              </Button>
           </div>
 
@@ -812,6 +834,57 @@ export default function ProjectDetail() {
                     navigateToSection('lavori', 'changes', `change-${id}`);
                   }
                 }}
+              />
+            </div>
+          )}
+
+          {/* Documents Section */}
+          {(infoSection === 'all' || infoSection === 'documents') && (
+            <Card id="section-documents">
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <FileText className="h-5 w-5" />
+                  {t('projectDetail.sections.documents')}
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <DocumentList 
+                  projectId={projectId}
+                  canUpload={isActiveParticipant}
+                  currentUserEmail={user?.email}
+                  uploadDialogOpen={documentUploadOpen}
+                  onUploadDialogChange={setDocumentUploadOpen}
+                />
+              </CardContent>
+            </Card>
+          )}
+
+          {financialPermissions.canViewSection && (infoSection === 'all' || infoSection === 'finance') && (
+            <div id="section-finance" className={infoSection === 'all' ? 'border-t pt-6' : ''}>
+              <div className="flex items-center justify-between mb-4">
+                <h3 className="text-lg font-semibold flex items-center gap-2">
+                  <DollarSign className="h-5 w-5 text-[#ef6144]" />
+                  {t('finance.sectionTitle')}
+                </h3>
+                <Button
+                  variant="default"
+                  size="sm"
+                  className="bg-[#ef6144] hover:bg-[#d9553a] text-white"
+                  onClick={() => {
+                    const tour = getFinanceSectionTour(currentLanguage, financialPermissions.scope);
+                    startTour(tour.id, tour.steps, { force: true });
+                  }}
+                  data-tour="finance-section-help-button"
+                >
+                  <BookOpen className="h-4 w-4 mr-2" />
+                  {tr('Guida sezione', 'Section guide')}
+                </Button>
+              </div>
+              <ProjectFinancialSection
+                projectId={projectId}
+                permissions={financialPermissions}
+                user={user}
+                participants={activeParticipants}
               />
             </div>
           )}
@@ -875,27 +948,6 @@ export default function ProjectDetail() {
                     </div>
                   </div>
                 )}
-              </CardContent>
-            </Card>
-          )}
-
-          {/* Documents Section */}
-          {(infoSection === 'all' || infoSection === 'documents') && (
-            <Card id="section-documents">
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <FileText className="h-5 w-5" />
-                  {t('projectDetail.sections.documents')}
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <DocumentList 
-                  projectId={projectId}
-                  canUpload={isActiveParticipant}
-                  currentUserEmail={user?.email}
-                  uploadDialogOpen={documentUploadOpen}
-                  onUploadDialogChange={setDocumentUploadOpen}
-                />
               </CardContent>
             </Card>
           )}

@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, useEffect } from 'react';
+import React, { createContext, useContext, useState } from 'react';
 import { appClient } from '@/api/appClient';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 
@@ -45,8 +45,8 @@ export default function TourProvider({ children }) {
     // Check if tour is already completed or dismissed
     const completedKey = `${tourId}_completed`;
     const dismissedKey = `${tourId}_dismissed`;
-    
-    if (tourState[completedKey] || tourState[dismissedKey]) {
+
+    if (!options.force && (tourState[completedKey] || tourState[dismissedKey])) {
       return false;
     }
 

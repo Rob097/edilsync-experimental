@@ -1,0 +1,160 @@
+{
+  "name": "CostEntry",
+  "type": "object",
+  "properties": {
+    "project_id": {
+      "type": "string",
+      "description": "Reference to Project"
+    },
+    "budget_line_id": {
+      "type": "string",
+      "description": "Optional reference to BudgetLine"
+    },
+    "company_id": {
+      "type": "string",
+      "description": "Reference to Company"
+    },
+    "cost_type": {
+      "type": "string",
+      "enum": [
+        "labor",
+        "materials",
+        "equipment",
+        "subcontract",
+        "indirect",
+        "extra",
+        "adjustment"
+      ],
+      "description": "Type of cost"
+    },
+    "description": {
+      "type": "string",
+      "description": "Cost entry description"
+    },
+    "amount": {
+      "type": "number",
+      "description": "Entry amount in project currency"
+    },
+    "quantity": {
+      "type": "number",
+      "description": "Optional quantity"
+    },
+    "unit_cost": {
+      "type": "number",
+      "description": "Optional unit cost"
+    },
+    "entry_date": {
+      "type": "string",
+      "format": "date",
+      "description": "Accounting date"
+    },
+    "task_id": {
+      "type": "string",
+      "description": "Optional linked task"
+    },
+    "source_type": {
+      "type": "string",
+      "enum": [
+        "manual",
+        "work_session",
+        "change_request",
+        "dispute",
+        "system"
+      ],
+      "default": "manual",
+      "description": "Origin type"
+    },
+    "source_id": {
+      "type": "string",
+      "description": "Origin entity ID"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "recorded",
+        "approved",
+        "contested"
+      ],
+      "default": "recorded",
+      "description": "Validation status"
+    },
+    "notes": {
+      "type": "string",
+      "description": "Optional notes"
+    }
+  },
+  "required": [
+    "project_id",
+    "cost_type",
+    "description",
+    "amount"
+  ],
+  "rls": {
+    "create": {
+      "$or": [
+        {
+          "project_id": {
+            "$in": "{{user.data.project_ids}}"
+          }
+        },
+        {
+          "company_id": {
+            "$in": "{{user.data.company_ids}}"
+          }
+        }
+      ]
+    },
+    "read": {
+      "$or": [
+        {
+          "project_id": {
+            "$in": "{{user.data.project_ids}}"
+          }
+        },
+        {
+          "company_id": {
+            "$in": "{{user.data.company_ids}}"
+          }
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    },
+    "update": {
+      "$or": [
+        {
+          "project_id": {
+            "$in": "{{user.data.project_ids}}"
+          }
+        },
+        {
+          "company_id": {
+            "$in": "{{user.data.admin_company_ids}}"
+          }
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    },
+    "delete": {
+      "$or": [
+        {
+          "project_id": {
+            "$in": "{{user.data.project_ids}}"
+          }
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    }
+  }
+}

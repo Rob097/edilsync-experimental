@@ -1,0 +1,108 @@
+{
+  "name": "ProgressStatement",
+  "type": "object",
+  "properties": {
+    "project_id": {
+      "type": "string",
+      "description": "Reference to Project"
+    },
+    "sequence_number": {
+      "type": "number",
+      "description": "Progress statement number"
+    },
+    "statement_date": {
+      "type": "string",
+      "format": "date",
+      "description": "Statement date"
+    },
+    "amount_matured": {
+      "type": "number",
+      "description": "Matured amount"
+    },
+    "advances_paid": {
+      "type": "number",
+      "description": "Already paid advances"
+    },
+    "amount_to_pay": {
+      "type": "number",
+      "description": "Current payable amount"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "draft",
+        "approved",
+        "cancelled"
+      ],
+      "default": "draft",
+      "description": "Statement status"
+    },
+    "notes": {
+      "type": "string",
+      "description": "Optional notes"
+    }
+  },
+  "required": [
+    "project_id",
+    "sequence_number",
+    "statement_date"
+  ],
+  "rls": {
+    "create": {
+      "$or": [
+        {
+          "project_id": {
+            "$in": "{{user.data.project_ids}}"
+          }
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    },
+    "read": {
+      "$or": [
+        {
+          "project_id": {
+            "$in": "{{user.data.project_ids}}"
+          }
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    },
+    "update": {
+      "$or": [
+        {
+          "project_id": {
+            "$in": "{{user.data.project_ids}}"
+          }
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    },
+    "delete": {
+      "$or": [
+        {
+          "project_id": {
+            "$in": "{{user.data.project_ids}}"
+          }
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    }
+  }
+}

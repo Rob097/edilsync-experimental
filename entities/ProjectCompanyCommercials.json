@@ -1,0 +1,107 @@
+{
+  "name": "ProjectCompanyCommercials",
+  "type": "object",
+  "properties": {
+    "project_id": {
+      "type": "string",
+      "description": "Reference to Project"
+    },
+    "company_id": {
+      "type": "string",
+      "description": "Reference to Company"
+    },
+    "contract_type": {
+      "type": "string",
+      "enum": [
+        "lump_sum",
+        "unit_price",
+        "time_and_material"
+      ],
+      "description": "Commercial agreement type"
+    },
+    "contract_amount": {
+      "type": "number",
+      "description": "Contract amount for this company"
+    },
+    "approved_variations_amount": {
+      "type": "number",
+      "description": "Total approved variations amount"
+    },
+    "notes": {
+      "type": "string",
+      "description": "Optional notes"
+    }
+  },
+  "required": [
+    "project_id",
+    "company_id"
+  ],
+  "rls": {
+    "create": {
+      "$or": [
+        {
+          "project_id": {
+            "$in": "{{user.data.project_ids}}"
+          }
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    },
+    "read": {
+      "$or": [
+        {
+          "project_id": {
+            "$in": "{{user.data.project_ids}}"
+          }
+        },
+        {
+          "company_id": {
+            "$in": "{{user.data.company_ids}}"
+          }
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    },
+    "update": {
+      "$or": [
+        {
+          "project_id": {
+            "$in": "{{user.data.project_ids}}"
+          }
+        },
+        {
+          "company_id": {
+            "$in": "{{user.data.admin_company_ids}}"
+          }
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    },
+    "delete": {
+      "$or": [
+        {
+          "project_id": {
+            "$in": "{{user.data.project_ids}}"
+          }
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,99 @@
+{
+  "name": "ProjectFinancialSettings",
+  "type": "object",
+  "properties": {
+    "project_id": {
+      "type": "string",
+      "description": "Reference to Project"
+    },
+    "currency": {
+      "type": "string",
+      "description": "Currency code (ISO 4217)",
+      "default": "EUR"
+    },
+    "budget_tracking_mode": {
+      "type": "string",
+      "enum": [
+        "simple",
+        "cost_code"
+      ],
+      "default": "simple",
+      "description": "Budget tracking mode"
+    },
+    "labor_cost_method": {
+      "type": "string",
+      "enum": [
+        "manual",
+        "from_work_sessions"
+      ],
+      "default": "from_work_sessions",
+      "description": "How labor costs are calculated"
+    },
+    "financial_visibility": {
+      "type": "string",
+      "enum": [
+        "project_full",
+        "company_scoped"
+      ],
+      "default": "project_full",
+      "description": "Financial data visibility mode"
+    },
+    "enable_progress_statements": {
+      "type": "boolean",
+      "default": false,
+      "description": "Whether SAL/progress statements are enabled"
+    }
+  },
+  "required": [
+    "project_id"
+  ],
+  "rls": {
+    "create": {
+      "project_id": {
+        "$in": "{{user.data.project_ids}}"
+      }
+    },
+    "read": {
+      "$or": [
+        {
+          "project_id": {
+            "$in": "{{user.data.project_ids}}"
+          }
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    },
+    "update": {
+      "$or": [
+        {
+          "project_id": {
+            "$in": "{{user.data.project_ids}}"
+          }
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    },
+    "delete": {
+      "$or": [
+        {
+          "project_id": {
+            "$in": "{{user.data.project_ids}}"
+          }
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    }
+  }
+}

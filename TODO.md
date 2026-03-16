@@ -1,10 +1,11 @@
 - [X] Concetto di "Dispute" (Molto importante per vendite e marketing)
 - [X] Migliorare gestione società (dipendenti, eccetera)
-- Iniziare a pensare all'introduzione della gestione "finanziaria"
-    - importo totale
-    - importo per società
-    - importo per attività extra
-    - ecc
+- [X] Iniziare a introdurre la gestione "finanziaria" (MVP economia di commessa)
+    - [X] Nuove entità dominio (budget, cost entries, tariffe, impostazioni progetto, progress statements)
+    - [X] Sezione UI "Economia di commessa" in Project Detail
+    - [X] KPI base: budget, consuntivo, manodopera da timbrature, forecast
+    - [X] Input base: voci budget, costi manuali, tariffe orarie
+    - [X] Migrazione DB Supabase con tabelle + RLS
 - [X] Iniziare a pensare all'introduzione di un sistema di timbrature per società/progetto
 - [X] Ampliare ventaglio di professionisti + migliorie controlli permessi
 - [X] Migliorare usabilità per progettisti
