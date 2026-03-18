@@ -1,6 +1,8 @@
 import i18next from 'i18next';
 import { initReactI18next } from 'react-i18next';
 import LanguageDetector from 'i18next-browser-languagedetector';
+import publicHomeIt from '@/public/i18n/home.it.json';
+import publicHomeEn from '@/public/i18n/home.en.json';
 
 const itTranslations = {
   "common": {
@@ -1649,8 +1651,8 @@ const enTranslations = {
 };
 
 const resources = {
-  it: { translation: itTranslations },
-  en: { translation: enTranslations },
+  it: { translation: { ...itTranslations, publicHome: publicHomeIt } },
+  en: { translation: { ...enTranslations, publicHome: publicHomeEn } },
 };
 
 export const initializeI18n = () => {

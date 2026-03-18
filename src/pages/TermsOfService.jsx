@@ -6,11 +6,19 @@ export default function TermsOfService() {
   const { currentLanguage } = useLanguage();
   const tr = (itText, enText) => currentLanguage === 'it' ? itText : enText;
   return (
-    <div className="max-w-3xl mx-auto py-8 px-4">
-      <Card>
-        <CardContent className="prose prose-sm max-w-none p-6 sm:p-10">
-          <h1 className="text-2xl font-bold text-gray-900 mb-2">{tr('Termini e Condizioni di Servizio', 'Terms and Conditions of Service')}</h1>
-          <p className="text-sm text-gray-500 mb-6">{tr('Ultimo aggiornamento: 17 febbraio 2026', 'Last updated: February 17, 2026')}</p>
+    <div className="bg-[#f2f4f6] min-h-screen">
+      <section className="relative overflow-hidden public-gradient border-b border-[#e5e7eb]">
+        <div className="absolute top-8 left-6 h-[52px] w-[52px] rounded-full bg-[#ef6144]/10 blur-[16px]" aria-hidden />
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 pt-14 sm:pt-18 pb-10 text-center">
+          <p className="section-chip">Legal</p>
+          <h1 className="mt-4 text-[38px] sm:text-[50px] font-[780] leading-[1.08] tracking-[-0.02em] text-[#141821]">{tr('Termini e Condizioni di Servizio', 'Terms and Conditions of Service')}</h1>
+          <p className="mt-4 text-[14px] text-[#5b6470]">{tr('Ultimo aggiornamento: 17 febbraio 2026', 'Last updated: February 17, 2026')}</p>
+        </div>
+      </section>
+      <div className="max-w-4xl mx-auto py-10 px-4 sm:px-6">
+      <Card className="public-panel bg-white border-[#e2e8f0]">
+        <CardContent className="prose prose-sm max-w-none p-6 sm:p-10 prose-headings:text-[#0f172a] prose-p:text-[#526071] prose-li:text-[#526071]">
+          <p className="text-sm text-gray-500 mb-6">{tr('Questi termini regolano l utilizzo della piattaforma EdilSync.', 'These terms govern the use of the EdilSync platform.')}</p>
 
           <h2 className="text-lg font-semibold mt-6 mb-2">{tr('1. Descrizione del servizio', '1. Service description')}</h2>
           <p>{tr('EdilSync è una piattaforma digitale per la gestione di progetti edilizi che consente la collaborazione tra committenti, imprese, professionisti e consulenti. Il servizio include gestione di progetti, attività, documenti, messaggistica e calendario.', 'EdilSync is a digital platform for managing construction projects, enabling collaboration among clients, companies, professionals and consultants. The service includes project, task, document, messaging and calendar management.')}</p>
@@ -57,6 +65,7 @@ export default function TermsOfService() {
           <p>{tr('Per domande relative ai presenti termini, scrivere a:', 'For questions related to these terms, write to:')} <strong>info@edilsync.it</strong></p>
         </CardContent>
       </Card>
+      </div>
     </div>
   );
 }

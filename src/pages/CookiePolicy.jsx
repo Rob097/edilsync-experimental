@@ -6,11 +6,19 @@ export default function CookiePolicy() {
   const { currentLanguage } = useLanguage();
   const tr = (itText, enText) => currentLanguage === 'it' ? itText : enText;
   return (
-    <div className="max-w-3xl mx-auto py-8 px-4">
-      <Card>
-        <CardContent className="prose prose-sm max-w-none p-6 sm:p-10">
-          <h1 className="text-2xl font-bold text-gray-900 mb-2">{tr('Cookie Policy', 'Cookie Policy')}</h1>
-          <p className="text-sm text-gray-500 mb-6">{tr('Ultimo aggiornamento: 17 febbraio 2026', 'Last updated: February 17, 2026')}</p>
+    <div className="bg-[#f2f4f6] min-h-screen">
+      <section className="relative overflow-hidden public-gradient border-b border-[#e5e7eb]">
+        <div className="absolute top-8 left-6 h-[52px] w-[52px] rounded-full bg-[#ef6144]/10 blur-[16px]" aria-hidden />
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 pt-14 sm:pt-18 pb-10 text-center">
+          <p className="section-chip">Legal</p>
+          <h1 className="mt-4 text-[38px] sm:text-[50px] font-[780] leading-[1.08] tracking-[-0.02em] text-[#141821]">{tr('Cookie Policy', 'Cookie Policy')}</h1>
+          <p className="mt-4 text-[14px] text-[#5b6470]">{tr('Ultimo aggiornamento: 17 febbraio 2026', 'Last updated: February 17, 2026')}</p>
+        </div>
+      </section>
+      <div className="max-w-4xl mx-auto py-10 px-4 sm:px-6">
+      <Card className="public-panel bg-white border-[#e2e8f0]">
+        <CardContent className="prose prose-sm max-w-none p-6 sm:p-10 prose-headings:text-[#0f172a] prose-p:text-[#526071] prose-li:text-[#526071]">
+          <p className="text-sm text-gray-500 mb-6">{tr('Questa policy spiega come usiamo i cookie per il funzionamento e il miglioramento del servizio.', 'This policy explains how cookies are used for service operation and improvement.')}</p>
 
           <h2 className="text-lg font-semibold mt-6 mb-2">{tr('1. Cosa sono i cookie', '1. What cookies are')}</h2>
           <p>{tr('I cookie sono piccoli file di testo che vengono memorizzati sul dispositivo dell\'utente durante la navigazione. Vengono utilizzati per migliorare l\'esperienza di utilizzo e per il funzionamento del servizio.', 'Cookies are small text files stored on the user\'s device while browsing. They are used to improve user experience and enable service operation.')}</p>
@@ -65,12 +73,13 @@ export default function CookiePolicy() {
           </table>
 
           <h2 className="text-lg font-semibold mt-6 mb-2">{tr('6. Diritti dell\'utente', '6. User rights')}</h2>
-          <p>{tr('Per maggiori informazioni sui diritti relativi al trattamento dei dati, consultare la nostra', 'For more information on data-processing rights, see our')} <a href="/PrivacyPolicy" className="text-[#ef6144] hover:underline">{tr('Informativa sulla Privacy', 'Privacy Policy')}</a>.</p>
+          <p>{tr('Per maggiori informazioni sui diritti relativi al trattamento dei dati, consultare la nostra', 'For more information on data-processing rights, see our')} <a href="/privacy" className="text-[#ef6144] hover:underline">{tr('Informativa sulla Privacy', 'Privacy Policy')}</a>.</p>
 
           <h2 className="text-lg font-semibold mt-6 mb-2">{tr('7. Contatti', '7. Contacts')}</h2>
           <p>{tr('Per domande relative ai cookie, scrivere a:', 'For cookie-related questions, write to:')} <strong>privacy@edilsync.it</strong></p>
         </CardContent>
       </Card>
+      </div>
     </div>
   );
 }

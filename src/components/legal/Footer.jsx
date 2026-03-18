@@ -1,6 +1,5 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { createPageUrl } from '@/utils';
 import { useLanguage } from '@/components/i18n/useLanguage';
 
 export default function Footer() {
@@ -14,13 +13,13 @@ export default function Footer() {
         <div className="flex flex-col sm:flex-row items-center justify-between gap-3 text-sm text-gray-500">
           <p>{tr(`© ${currentYear} EdilSync. Tutti i diritti riservati.`, `© ${currentYear} EdilSync. All rights reserved.`)}</p>
           <nav className="flex items-center gap-4">
-            <Link to={createPageUrl('PrivacyPolicy')} className="hover:text-gray-700 transition-colors">
+            <Link to="/privacy" className="hover:text-gray-700 transition-colors">
               {t('footer.privacy')}
             </Link>
-            <Link to={createPageUrl('TermsOfService')} className="hover:text-gray-700 transition-colors">
+            <Link to="/termini" className="hover:text-gray-700 transition-colors">
               {t('footer.terms')}
             </Link>
-            <Link to={createPageUrl('CookiePolicy')} className="hover:text-gray-700 transition-colors">
+            <Link to="/cookie" className="hover:text-gray-700 transition-colors">
               {t('footer.cookies')}
             </Link>
           </nav>

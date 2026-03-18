@@ -6,11 +6,19 @@ export default function PrivacyPolicy() {
   const { currentLanguage } = useLanguage();
   const tr = (itText, enText) => currentLanguage === 'it' ? itText : enText;
   return (
-    <div className="max-w-3xl mx-auto py-8 px-4">
-      <Card>
-        <CardContent className="prose prose-sm max-w-none p-6 sm:p-10">
-          <h1 className="text-2xl font-bold text-gray-900 mb-2">{tr('Informativa sulla Privacy', 'Privacy Policy')}</h1>
-          <p className="text-sm text-gray-500 mb-6">{tr('Ultimo aggiornamento: 17 febbraio 2026', 'Last updated: February 17, 2026')}</p>
+    <div className="bg-[#f2f4f6] min-h-screen">
+      <section className="relative overflow-hidden public-gradient border-b border-[#e5e7eb]">
+        <div className="absolute top-8 left-6 h-[52px] w-[52px] rounded-full bg-[#ef6144]/10 blur-[16px]" aria-hidden />
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 pt-14 sm:pt-18 pb-10 text-center">
+          <p className="section-chip">Legal</p>
+          <h1 className="mt-4 text-[38px] sm:text-[50px] font-[780] leading-[1.08] tracking-[-0.02em] text-[#141821]">{tr('Informativa sulla Privacy', 'Privacy Policy')}</h1>
+          <p className="mt-4 text-[14px] text-[#5b6470]">{tr('Ultimo aggiornamento: 17 febbraio 2026', 'Last updated: February 17, 2026')}</p>
+        </div>
+      </section>
+      <div className="max-w-4xl mx-auto py-10 px-4 sm:px-6">
+      <Card className="public-panel bg-white border-[#e2e8f0]">
+        <CardContent className="prose prose-sm max-w-none p-6 sm:p-10 prose-headings:text-[#0f172a] prose-p:text-[#526071] prose-li:text-[#526071]">
+          <p className="text-sm text-gray-500 mb-6">{tr('Questa informativa descrive come trattiamo i dati personali sulla piattaforma EdilSync.', 'This policy explains how personal data is processed on EdilSync.')}</p>
 
           <h2 className="text-lg font-semibold mt-6 mb-2">{tr('1. Titolare del trattamento', '1. Data controller')}</h2>
           <p>{tr('Il titolare del trattamento dei dati personali è EdilSync, raggiungibile all\'indirizzo email:', 'The controller of personal data is EdilSync, reachable at:')} <strong>privacy@edilsync.it</strong>.</p>
@@ -59,12 +67,13 @@ export default function PrivacyPolicy() {
           <p>{tr('Per esercitare i propri diritti, scrivere a:', 'To exercise your rights, write to:')} <strong>privacy@edilsync.it</strong></p>
 
           <h2 className="text-lg font-semibold mt-6 mb-2">{tr('7. Cookie', '7. Cookies')}</h2>
-          <p>{tr('Per informazioni sull\'utilizzo dei cookie, consultare la nostra', 'For information about cookie usage, see our')} <a href="/CookiePolicy" className="text-[#ef6144] hover:underline">Cookie Policy</a>.</p>
+          <p>{tr('Per informazioni sull\'utilizzo dei cookie, consultare la nostra', 'For information about cookie usage, see our')} <a href="/cookie" className="text-[#ef6144] hover:underline">Cookie Policy</a>.</p>
 
           <h2 className="text-lg font-semibold mt-6 mb-2">{tr('8. Modifiche', '8. Changes')}</h2>
           <p>{tr('Ci riserviamo il diritto di aggiornare questa informativa. Eventuali modifiche saranno comunicate tramite l\'applicazione.', 'We reserve the right to update this policy. Any changes will be communicated through the application.')}</p>
         </CardContent>
       </Card>
+      </div>
     </div>
   );
 }

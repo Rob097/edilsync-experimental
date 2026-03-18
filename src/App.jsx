@@ -3,13 +3,15 @@ import { QueryClientProvider } from '@tanstack/react-query'
 import { queryClientInstance } from '@/lib/query-client'
 import NavigationTracker from '@/lib/NavigationTracker'
 import { pagesConfig } from './pages.config'
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import { BrowserRouter as Router, Navigate, Route, Routes } from 'react-router-dom';
 import PageNotFound from './lib/PageNotFound';
 import { AuthProvider, useAuth } from '@/lib/AuthContext';
 import UserNotRegisteredError from '@/components/UserNotRegisteredError';
 import AuthScreen from '@/components/auth/AuthScreen';
 import EssentialAppRouter from '@/essential/EssentialAppRouter.jsx';
 import OperativeAppRouter from '@/operativa/OperativeAppRouter.jsx';
+import PublicSiteRouter from '@/public/PublicSiteRouter';
+import WebAdminRouter from '@/web-admin/WebAdminRouter';
 
 const { Pages, Layout, mainPage } = pagesConfig;
 const mainPageKey = mainPage ?? Object.keys(Pages)[0];
@@ -19,7 +21,14 @@ const LayoutWrapper = ({ children, currentPageName }) => Layout ?
   <Layout currentPageName={currentPageName}>{children}</Layout>
   : <>{children}</>;
 
-const AuthenticatedApp = () => {
+const AppShell = ({ children, withNavigationTracker = false }) => (
+  <AuthProvider>
+    {withNavigationTracker ? <NavigationTracker /> : null}
+    {children}
+  </AuthProvider>
+);
+
+const AuthenticatedAppRoutes = () => {
   const { isLoadingAuth, isLoadingPublicSettings, authError, isAuthenticated } = useAuth();
 
   // Show loading spinner while checking app public settings or auth
@@ -44,12 +53,11 @@ const AuthenticatedApp = () => {
     return <AuthScreen />;
   }
 
-  // Render the main app
   return (
     <Routes>
-      <Route path="/essenziale/*" element={<EssentialAppRouter />} />
-      <Route path="/operativa/*" element={<OperativeAppRouter />} />
-      <Route path="/" element={
+      <Route path="essenziale/*" element={<EssentialAppRouter />} />
+      <Route path="operativa/*" element={<OperativeAppRouter />} />
+      <Route index element={
         <LayoutWrapper currentPageName={mainPageKey}>
           <MainPage />
         </LayoutWrapper>
@@ -57,7 +65,7 @@ const AuthenticatedApp = () => {
       {Object.entries(Pages).map(([path, Page]) => (
         <Route
           key={path}
-          path={`/${path}`}
+          path={path}
           element={
             <LayoutWrapper currentPageName={path}>
               <Page />
@@ -74,15 +82,32 @@ const AuthenticatedApp = () => {
 function App() {
 
   return (
-    <AuthProvider>
-      <QueryClientProvider client={queryClientInstance}>
-        <Router>
-          <NavigationTracker />
-          <AuthenticatedApp />
-        </Router>
-        <Toaster />
-      </QueryClientProvider>
-    </AuthProvider>
+    <QueryClientProvider client={queryClientInstance}>
+      <Router>
+        <Routes>
+          <Route path="/essenziale/*" element={<Navigate to="/app/essenziale" replace />} />
+          <Route path="/operativa/*" element={<Navigate to="/app/operativa" replace />} />
+          <Route
+            path="/app/*"
+            element={
+              <AppShell withNavigationTracker={true}>
+                <AuthenticatedAppRoutes />
+              </AppShell>
+            }
+          />
+          <Route
+            path="/web-admin/*"
+            element={
+              <AppShell>
+                <WebAdminRouter />
+              </AppShell>
+            }
+          />
+          <Route path="*" element={<PublicSiteRouter />} />
+        </Routes>
+      </Router>
+      <Toaster />
+    </QueryClientProvider>
   )
 }
 
