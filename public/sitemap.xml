@@ -2,7 +2,10 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url><loc>https://edilsync.rdlabs.digital/</loc></url>
   <url><loc>https://edilsync.rdlabs.digital/funzionalita</loc></url>
-  <url><loc>https://edilsync.rdlabs.digital/per-imprese</loc></url>
+  <url><loc>https://edilsync.rdlabs.digital/dispute-protection</loc></url>
+  <url><loc>https://edilsync.rdlabs.digital/transparency</loc></url>
+  <url><loc>https://edilsync.rdlabs.digital/team-coordination</loc></url>
+  <url><loc>https://edilsync.rdlabs.digital/contractors</loc></url>
   <url><loc>https://edilsync.rdlabs.digital/per-committenti</loc></url>
   <url><loc>https://edilsync.rdlabs.digital/per-subappaltatori</loc></url>
   <url><loc>https://edilsync.rdlabs.digital/per-tecnici</loc></url>
@@ -16,7 +19,10 @@
   <url><loc>https://edilsync.rdlabs.digital/cookie</loc></url>
   <url><loc>https://edilsync.rdlabs.digital/en</loc></url>
   <url><loc>https://edilsync.rdlabs.digital/en/funzionalita</loc></url>
-  <url><loc>https://edilsync.rdlabs.digital/en/per-imprese</loc></url>
+  <url><loc>https://edilsync.rdlabs.digital/en/dispute-protection</loc></url>
+  <url><loc>https://edilsync.rdlabs.digital/en/transparency</loc></url>
+  <url><loc>https://edilsync.rdlabs.digital/en/team-coordination</loc></url>
+  <url><loc>https://edilsync.rdlabs.digital/en/contractors</loc></url>
   <url><loc>https://edilsync.rdlabs.digital/en/per-committenti</loc></url>
   <url><loc>https://edilsync.rdlabs.digital/en/per-subappaltatori</loc></url>
   <url><loc>https://edilsync.rdlabs.digital/en/per-tecnici</loc></url>
@@ -25,4 +31,7 @@
   <url><loc>https://edilsync.rdlabs.digital/en/faq</loc></url>
   <url><loc>https://edilsync.rdlabs.digital/en/contatti</loc></url>
   <url><loc>https://edilsync.rdlabs.digital/en/blog</loc></url>
+  <url><loc>https://edilsync.rdlabs.digital/en/privacy</loc></url>
+  <url><loc>https://edilsync.rdlabs.digital/en/termini</loc></url>
+  <url><loc>https://edilsync.rdlabs.digital/en/cookie</loc></url>
 </urlset>
