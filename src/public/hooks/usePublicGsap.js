@@ -29,7 +29,9 @@ export default function usePublicGsap(rootRef) {
             delay: 0,
             scrollTrigger: {
               trigger: node,
-              start: 'top 94%',
+              start: 'top bottom-=24',
+              fastScrollEnd: true,
+              invalidateOnRefresh: true,
               once: true,
             },
           },
@@ -94,7 +96,37 @@ export default function usePublicGsap(rootRef) {
       });
     }, rootRef);
 
+    const refresh = () => ScrollTrigger.refresh();
+    const refreshSoon = () => window.setTimeout(refresh, 90);
+
+    const trackedImages = rootRef.current.querySelectorAll('img');
+    trackedImages.forEach((img) => {
+      if (!img.complete) {
+        img.addEventListener('load', refreshSoon);
+      }
+    });
+
+    window.addEventListener('load', refreshSoon);
+    window.addEventListener('resize', refreshSoon);
+    window.addEventListener('orientationchange', refreshSoon);
+
+    const onVisibilityChange = () => {
+      if (document.visibilityState === 'visible') {
+        refreshSoon();
+      }
+    };
+    document.addEventListener('visibilitychange', onVisibilityChange);
+
+    refreshSoon();
+
     return () => {
+      trackedImages.forEach((img) => {
+        img.removeEventListener('load', refreshSoon);
+      });
+      window.removeEventListener('load', refreshSoon);
+      window.removeEventListener('resize', refreshSoon);
+      window.removeEventListener('orientationchange', refreshSoon);
+      document.removeEventListener('visibilitychange', onVisibilityChange);
       ctx.revert();
     };
   }, [rootRef]);

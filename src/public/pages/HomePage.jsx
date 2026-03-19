@@ -1,7 +1,7 @@
 import React, { useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { AlertTriangle, ArrowRight, CalendarDays, Camera, Check, ChevronRight, ClipboardList, Clock3, FileQuestion, FileText, ListChecks, MessageCircle, MessageSquare, Phone, Play, Shield, Users, Wallet } from 'lucide-react';
+import { AlertTriangle, ArrowRight, CalendarDays, Camera, Check, ChevronRight, ClipboardList, Clock3, FileQuestion, FileText, ListChecks, MessageCircle, MessageSquare, Phone, Shield, Users, Wallet } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import usePublicSeo from '@/public/hooks/usePublicSeo';
 import usePublicGsap from '@/public/hooks/usePublicGsap';
@@ -13,6 +13,16 @@ export default function HomePage({ locale = 'it' }) {
   const { t } = useTranslation();
   const canonicalPath = locale === 'en' ? '/en' : '/';
   const basePrefix = locale === 'en' ? '/en' : '';
+
+  const handleLearnMoreClick = (event) => {
+    const target = document.getElementById('problema');
+    if (!target) return;
+
+    event.preventDefault();
+    const headerOffset = 96;
+    const targetY = target.getBoundingClientRect().top + window.pageYOffset - headerOffset;
+    window.scrollTo({ top: targetY, behavior: 'smooth' });
+  };
 
   usePublicGsap(rootRef);
 
@@ -59,16 +69,15 @@ export default function HomePage({ locale = 'it' }) {
               </p>
               <div data-reveal className="mt-10 flex flex-col sm:flex-row items-center justify-center gap-4">
                 <Button asChild className="bg-[#ef6144] text-white hover:bg-[#d9553a] h-10 font-inter rounded-full px-8 text-base gap-2 shadow-lg shadow-[rgba(239,97,68,0.25)] hover:shadow-xl hover:shadow-[rgba(239,97,68,0.3)] transition-all">
-                  <Link to={`${basePrefix}/contatti`}>
+                  <Link to="/app">
                     {t('publicHome.hero.ctaPrimary')}
                     <ArrowRight className="h-4 w-4" />
                   </Link>
                 </Button>
-                <Button asChild variant="outline" className="border-[#d6dce4] bg-white hover:bg-[#fff0eb] text-[#141821] h-10 font-inter rounded-full px-8 text-base gap-2">
-                  <Link to={`${basePrefix}/come-funziona`}>
-                    <Play className="h-4 w-4 text-[#ef6144]" />
+                <Button asChild variant="outline" className="border-[#d6dce4] bg-white hover:bg-[#fff0eb] text-[#141821] h-10 font-inter rounded-full px-8 text-base">
+                  <a href="#problema" onClick={handleLearnMoreClick}>
                     {t('publicHome.hero.ctaSecondary')}
-                  </Link>
+                  </a>
                 </Button>
               </div>
               <p data-reveal className="mt-4 text-sm text-[#6b7280] font-inter">{t('publicHome.hero.note')}</p>
@@ -286,7 +295,7 @@ export default function HomePage({ locale = 'it' }) {
             <p className="mt-3 text-sm text-[#475569]">{t('publicHome.pricing.priceNote')}</p>
             <div className="mt-6">
               <Button asChild className="bg-[#ef6144] hover:bg-[#d9553a] text-white rounded-full h-12 px-6 text-base font-semibold shadow-[0_10px_28px_rgba(239,97,68,0.28)] w-full">
-                <Link to={`${basePrefix}/contatti`}>{t('publicHome.pricing.cta')}</Link>
+                <Link to="/app">{t('publicHome.pricing.cta')}</Link>
               </Button>
             </div>
             <p className="mt-3 text-xs text-center text-[#64748b]">{t('publicHome.pricing.noCard')}</p>
@@ -326,7 +335,7 @@ export default function HomePage({ locale = 'it' }) {
             <p data-reveal className={`mt-5 ${PUBLIC_CLASSES.darkBodyLead} max-w-3xl`}>{t('publicHome.final.text')}</p>
             <div data-reveal className="mt-10 flex justify-center">
               <Button asChild className="bg-[#ef6144] hover:bg-[#d9553a] text-white rounded-full h-10 px-10 text-base font-semibold shadow-lg shadow-[rgba(239,97,68,0.4)] gap-2">
-                <Link to={`${basePrefix}/contatti`}>{t('publicHome.final.ctaPrimary')}</Link>
+                <Link to="/app">{t('publicHome.final.ctaPrimary')}</Link>
               </Button>
             </div>
             <p data-reveal className="mt-4 text-sm text-white/40 font-inter">{t('publicHome.hero.note')}</p>

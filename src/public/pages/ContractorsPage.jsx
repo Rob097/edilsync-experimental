@@ -159,7 +159,7 @@ export default function ContractorsPage({ locale = 'it' }) {
         titleHighlight={copy.titleB}
         subtitle={copy.subtitle}
         ctaLabel={copy.ctaTop}
-        ctaHref={`${basePath}/contatti`}
+        ctaHref="/app"
         quote={copy.quote}
         quoteAuthor={copy.quoteAuthor}
         quoteRole={copy.quoteRole}
@@ -179,7 +179,7 @@ export default function ContractorsPage({ locale = 'it' }) {
         title={copy.finalTitle}
         text={copy.finalText}
         ctaLabel={copy.finalCta}
-        ctaHref={`${basePath}/contatti`}
+        ctaHref="/app"
         note={copy.finalNote}
       />
     </div>

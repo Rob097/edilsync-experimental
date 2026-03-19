@@ -154,7 +154,7 @@ export default function SubcontractorsPage({ locale = 'it' }) {
             </h1>
             <p className={`mt-5 ${PUBLIC_CLASSES.bodyLead}`}>{copy.subtitle}</p>
             <p className="mt-3 text-sm text-[#ef6144] font-semibold">{`✓ ${copy.note}`}</p>
-            <PublicPrimaryCta className="mt-6" to={`${basePath}/contatti`} label={copy.ctaTop} />
+            <PublicPrimaryCta className="mt-6" to="/app" label={copy.ctaTop} />
           </div>
 
           <div data-reveal>
@@ -198,7 +198,7 @@ export default function SubcontractorsPage({ locale = 'it' }) {
         title={copy.finalTitle}
         text={copy.finalText}
         ctaLabel={copy.finalCta}
-        ctaHref={`${basePath}/contatti`}
+        ctaHref="/app"
         note={copy.finalNote}
       />
     </div>

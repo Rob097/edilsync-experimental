@@ -187,7 +187,7 @@ export default function ProfessionalsPage({ locale = 'it' }) {
           <p data-reveal className={`mt-4 ${PUBLIC_CLASSES.bodyLead}`}>
             {copy.subtitle}
           </p>
-          <PublicPrimaryCta className="mt-8" to={`${basePath}/contatti`} label={copy.ctaTop} />
+          <PublicPrimaryCta className="mt-8" to="/app" label={copy.ctaTop} />
         </div>
       </section>
 
@@ -230,7 +230,7 @@ export default function ProfessionalsPage({ locale = 'it' }) {
         title={copy.finalTitle}
         text={copy.finalText}
         ctaLabel={copy.finalCta}
-        ctaHref={`${basePath}/contatti`}
+        ctaHref="/app"
         note={copy.finalNote}
       />
     </div>

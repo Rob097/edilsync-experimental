@@ -15,166 +15,24 @@ import {
 import CookieBanner from '@/components/legal/CookieBanner';
 import Footer from '@/components/legal/Footer';
 import PublicLanguageSelector from '@/public/components/PublicLanguageSelector';
+import publicLayoutIt from '@/public/i18n/layout.it.json';
+import publicLayoutEn from '@/public/i18n/layout.en.json';
 import '@/public/public-site.css';
 
 if (!i18next.isInitialized) {
   initializeI18n();
 }
 
-const menuByLocale = {
-  it: {
-    solutions: {
-      label: 'Soluzione',
-      sections: [
-        {
-          title: 'Panoramica prodotto',
-          links: [
-            { label: 'Funzionalita complete', href: '/funzionalita', desc: 'Task, documenti, dispute, finanza e chat in un unico flusso.' },
-            { label: 'Come funziona', href: '/come-funziona', desc: 'Dal kickoff del cantiere alla chiusura con evidenze tracciate.' },
-            { label: 'Prezzi', href: '/prezzi', desc: 'Onboarding guidato con percorso su misura per il team.' },
-          ],
-        },
-        {
-          title: 'Punti critici che risolve',
-          links: [
-            { label: 'Protezione dispute', href: '/contractors', desc: 'Riduci margine bruciato da extra non formalizzati.' },
-            { label: 'Trasparenza committente', href: '/per-committenti', desc: 'Meno ansia e meno aggiornamenti dispersi su chat.' },
-            { label: 'Coordinamento squadra', href: '/per-subappaltatori', desc: 'Meno viaggi a vuoto e responsabilita piu chiare.' },
-          ],
-        },
-      ],
-      featured: {
-        title: 'Perche EdilSync',
-        text: 'La piattaforma e costruita per proteggere impresa, margine e reputazione con una cronologia che regge quando nascono contestazioni.',
-      },
-    },
-    audiences: {
-      label: 'Per chi è',
-      sections: [
-        {
-          title: '',
-          links: [
-            { label: 'Contractor', href: '/contractors', desc: 'Imprese generali e specializzate', icon: Hammer },
-            { label: 'Committenti', href: '/per-committenti', desc: 'Proprietari e committenti privati', icon: House },
-          ],
-        },
-        {
-          title: '',
-          links: [
-            { label: 'Professionisti Tecnici', href: '/per-tecnici', desc: 'Architetti, ingegneri, geometri, designer', icon: Ruler },
-            { label: 'Subappaltatori', href: '/per-subappaltatori', desc: 'Artigiani e specialisti in subappalto', icon: Wrench },
-          ],
-        },
-      ],
-      featured: {
-        title: 'Modello contestuale',
-        text: 'Una persona puo agire come privato, impresa o tecnico senza duplicare account e dati: cambiano azioni e permessi, non il caos.',
-      },
-    },
-    resources: {
-      label: 'Risorse',
-      sections: [
-        {
-          title: 'Approfondimenti',
-          links: [
-            { label: 'Blog EdilSync', href: '/blog', desc: 'Guide pratiche su dispute, coordinamento e operativita.' },
-            { label: 'FAQ', href: '/faq', desc: 'Risposte rapide su adozione, onboarding e utilizzo sul campo.' },
-            { label: 'Contatti', href: '/contatti', desc: 'Parla con il team per una demo orientata al tuo cantiere.' },
-          ],
-        },
-      ],
-      featured: {
-        title: 'Approccio pratico',
-        text: 'Meno teoria, piu casi reali: ogni contenuto spiega come ridurre ritardi, rilavorazioni e attriti tra gli attori di progetto.',
-      },
-    },
-    quickLinks: [
-      { label: 'Blog', href: '/blog' },
-      { label: 'Contatti', href: '/contatti' },
-    ],
-  },
-  en: {
-    solutions: {
-      label: 'Solution',
-      sections: [
-        {
-          title: 'Product overview',
-          links: [
-            { label: 'Full feature set', href: '/en/funzionalita', desc: 'Tasks, documents, disputes, finance, and chat in one flow.' },
-            { label: 'How it works', href: '/en/come-funziona', desc: 'From project kickoff to closeout with traceable evidence.' },
-            { label: 'Pricing', href: '/en/prezzi', desc: 'Guided onboarding aligned with your team and project volume.' },
-          ],
-        },
-        {
-          title: 'Core pain points solved',
-          links: [
-            { label: 'Dispute protection', href: '/en/contractors', desc: 'Protect margin from untracked scope changes.' },
-            { label: 'Client transparency', href: '/en/per-committenti', desc: 'Reduce anxiety and status-chasing across channels.' },
-            { label: 'Crew coordination', href: '/en/per-subappaltatori', desc: 'Cut wasted trips with clearer accountability.' },
-          ],
-        },
-      ],
-      featured: {
-        title: 'Why EdilSync',
-        text: 'Built to protect contractor margin and reputation through a defensible, project-native timeline when disputes happen.',
-      },
-    },
-    audiences: {
-      label: "Who it's for",
-      sections: [
-        {
-          title: '',
-          links: [
-            { label: 'Contractors', href: '/en/contractors', desc: 'General and specialized construction companies', icon: Hammer },
-            { label: 'Owners', href: '/en/per-committenti', desc: 'Private owners and clients', icon: House },
-          ],
-        },
-        {
-          title: '',
-          links: [
-            { label: 'Technical professionals', href: '/en/per-tecnici', desc: 'Architects, engineers, surveyors, designers', icon: Ruler },
-            { label: 'Subcontractors', href: '/en/per-subappaltatori', desc: 'Specialist trades and external crews', icon: Wrench },
-          ],
-        },
-      ],
-      featured: {
-        title: 'Context-aware permissions',
-        text: 'A person can act as homeowner, contractor, or technical role over time without splitting accounts or losing data continuity.',
-      },
-    },
-    resources: {
-      label: 'Resources',
-      sections: [
-        {
-          title: 'Learn and evaluate',
-          links: [
-            { label: 'EdilSync blog', href: '/en/blog', desc: 'Field-tested content on disputes, workflows, and team alignment.' },
-            { label: 'FAQ', href: '/en/faq', desc: 'Answers on rollout, onboarding, and operational adoption.' },
-            { label: 'Contact', href: '/en/contatti', desc: 'Book a demo focused on your exact operating model.' },
-          ],
-        },
-      ],
-      featured: {
-        title: 'Practical guidance',
-        text: 'Content is built around real jobsite constraints, not generic project management theory.',
-      },
-    },
-    quickLinks: [
-      { label: 'Blog', href: '/en/blog' },
-      { label: 'Contact', href: '/en/contatti' },
-    ],
-  },
+const audienceIconByKey = {
+  hammer: Hammer,
+  house: House,
+  ruler: Ruler,
+  wrench: Wrench,
 };
 
-const ctaByLocale = {
-  it: {
-    demo: 'Richiedi una demo',
-    login: 'Accedi',
-  },
-  en: {
-    demo: 'Request a demo',
-    login: 'Log in',
-  },
+const layoutByLocale = {
+  it: publicLayoutIt,
+  en: publicLayoutEn,
 };
 
 export default function PublicLayout({ locale = 'it', children }) {
@@ -183,8 +41,28 @@ export default function PublicLayout({ locale = 'it', children }) {
 
   const isEnglishPath = location.pathname.startsWith('/en');
   const effectiveLocale = isEnglishPath ? 'en' : locale;
-  const menu = menuByLocale[effectiveLocale] || menuByLocale.it;
-  const copy = ctaByLocale[effectiveLocale] || ctaByLocale.it;
+  const localized = layoutByLocale[effectiveLocale] || layoutByLocale.it;
+  const copy = localized.cta;
+  const aria = localized.aria;
+
+  const menu = useMemo(() => {
+    const rawMenu = localized.menu;
+    const audiences = {
+      ...rawMenu.audiences,
+      sections: rawMenu.audiences.sections.map((section) => ({
+        ...section,
+        links: section.links.map((link) => ({
+          ...link,
+          icon: link.icon ? audienceIconByKey[link.icon] : undefined,
+        })),
+      })),
+    };
+
+    return {
+      ...rawMenu,
+      audiences,
+    };
+  }, [localized]);
 
   const topMenus = useMemo(
     () => [
@@ -204,6 +82,10 @@ export default function PublicLayout({ locale = 'it', children }) {
   useEffect(() => {
     setMobileOpen(false);
   }, [location.pathname]);
+
+  useEffect(() => {
+    window.scrollTo({ top: 0, left: 0, behavior: 'auto' });
+  }, [location.pathname, location.search]);
 
   return (
     <I18nextProvider i18n={i18next}>
@@ -306,14 +188,14 @@ export default function PublicLayout({ locale = 'it', children }) {
                 variant="outline"
                 className="lg:hidden border-[#d8c4be]"
                 onClick={() => setMobileOpen((prev) => !prev)}
-                aria-label={mobileOpen ? 'Close menu' : 'Open menu'}
+                aria-label={mobileOpen ? aria.closeMenu : aria.openMenu}
               >
                 {mobileOpen ? <X className="h-4 w-4" /> : <Menu className="h-4 w-4" />}
               </Button>
-              <Button asChild variant="outline" className="border-[#d8c4be]">
+              <Button asChild variant="outline" className="hidden lg:inline-flex border-[#d8c4be]">
                 <Link to="/app">{copy.login}</Link>
               </Button>
-              <Button asChild className="bg-[#ef6144] hover:bg-[#d9553a] text-white">
+              <Button asChild className="hidden lg:inline-flex bg-[#ef6144] hover:bg-[#d9553a] text-white">
                 <Link to={effectiveLocale === 'en' ? '/en/contatti' : '/contatti'}>{copy.demo}</Link>
               </Button>
             </div>
@@ -321,23 +203,55 @@ export default function PublicLayout({ locale = 'it', children }) {
 
           {mobileOpen ? (
             <div className="lg:hidden border-t border-[#e6d7d2] bg-white">
-              <div className="max-w-6xl mx-auto px-4 sm:px-6 py-4 space-y-5">
+              <div className="max-w-6xl mx-auto px-4 sm:px-6 py-4 space-y-3">
+                <div className="sm:hidden pb-1">
+                  <PublicLanguageSelector />
+                </div>
+
                 {topMenus.map((entry) => (
-                  <div key={entry.key}>
-                    <p className="text-sm font-semibold text-[#261d1a]">{entry.label}</p>
-                    <div className="mt-2 space-y-2">
-                      {entry.sections.flatMap((section) => section.links).map((item) => (
-                        <Link key={item.href} to={item.href} className="block rounded-lg border border-[#e8dbd7] px-3 py-2">
-                          <p className="text-sm font-semibold text-[#2a211f] inline-flex items-center gap-2">
-                            {item.icon ? <item.icon className="h-4 w-4 text-[#ef6144]" /> : null}
-                            {item.label}
-                          </p>
-                          <p className="text-xs text-[#65544f] mt-1">{item.desc}</p>
-                        </Link>
+                  <details key={entry.key} className="group rounded-xl border border-[#eaded9] bg-[#fcf9f8] open:bg-white open:shadow-sm">
+                    <summary className="list-none cursor-pointer px-3 py-2.5 flex items-center justify-between">
+                      <span className="text-sm font-semibold text-[#261d1a]">{entry.label}</span>
+                      <ChevronRight className="h-4 w-4 text-[#8b6f67] transition-transform group-open:rotate-90" />
+                    </summary>
+
+                    <div className="px-3 pb-3 space-y-3">
+                      {entry.sections.map((section, sectionIndex) => (
+                        <div key={`${entry.key}-mobile-${sectionIndex}`}>
+                          {section.title ? <p className="mb-1 text-[10px] font-semibold uppercase tracking-[0.08em] text-[#8f7a74]">{section.title}</p> : null}
+                          <div className="space-y-1.5">
+                            {section.links.map((item) => (
+                              <Link key={item.href} to={item.href} className="block rounded-lg border border-[#e8dbd7] px-3 py-2 bg-white">
+                                <p className="text-[13px] font-semibold text-[#2a211f] inline-flex items-center gap-2 leading-tight">
+                                  {item.icon ? <item.icon className="h-3.5 w-3.5 text-[#ef6144]" /> : null}
+                                  {item.label}
+                                </p>
+                                <p className="text-[11px] text-[#65544f] mt-1 leading-[1.45]">{item.desc}</p>
+                              </Link>
+                            ))}
+                          </div>
+                        </div>
                       ))}
                     </div>
-                  </div>
+                  </details>
                 ))}
+
+                <div className="pt-2 border-t border-[#eaded9] space-y-2">
+                  {menu.quickLinks.map((item) => (
+                    <Link key={item.href} to={item.href} className="block rounded-lg border border-[#e8dbd7] px-3 py-2 text-[13px] font-semibold text-[#2a211f] bg-white">
+                      {item.label}
+                    </Link>
+                  ))}
+                </div>
+
+                <div className="pt-1 space-y-2">
+                  <Button asChild variant="outline" className="w-full border-[#d8c4be]">
+                    <Link to="/app">{copy.login}</Link>
+                  </Button>
+                  <Button asChild className="w-full bg-[#ef6144] hover:bg-[#d9553a] text-white">
+                    <Link to={effectiveLocale === 'en' ? '/en/contatti' : '/contatti'}>{copy.demo}</Link>
+                  </Button>
+                </div>
               </div>
             </div>
           ) : null}

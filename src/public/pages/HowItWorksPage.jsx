@@ -156,7 +156,7 @@ export default function HowItWorksPage({ locale = 'it' }) {
         title={copy.title}
         subtitle={copy.subtitle}
         ctaLabel={copy.ctaTop}
-        ctaHref={`${basePath}/contatti`}
+        ctaHref="/app"
       />
 
       <MarketingStepTimeline steps={copy.steps} />
@@ -165,7 +165,7 @@ export default function HowItWorksPage({ locale = 'it' }) {
         title={copy.finalTitle}
         text={copy.finalText}
         ctaLabel={copy.finalCta}
-        ctaHref={`${basePath}/contatti`}
+        ctaHref="/app"
         note={copy.finalNote}
       />
     </div>

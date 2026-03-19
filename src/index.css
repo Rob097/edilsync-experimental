@@ -86,3 +86,149 @@
     @apply bg-background text-foreground;
   }
 }
+
+@layer components {
+  .blog-markdown {
+    color: #526071;
+    font-size: 17px;
+    line-height: 1.85;
+  }
+
+  .blog-markdown > :first-child {
+    margin-top: 0;
+  }
+
+  .blog-markdown > :last-child {
+    margin-bottom: 0;
+  }
+
+  .blog-markdown h1,
+  .blog-markdown h2,
+  .blog-markdown h3,
+  .blog-markdown h4 {
+    color: #0f172a;
+    font-weight: 780;
+    letter-spacing: -0.02em;
+    line-height: 1.12;
+    margin-top: 2.2em;
+    margin-bottom: 0.7em;
+  }
+
+  .blog-markdown h1 {
+    font-size: clamp(2.1rem, 5vw, 3.2rem);
+  }
+
+  .blog-markdown h2 {
+    font-size: clamp(1.65rem, 3vw, 2.25rem);
+  }
+
+  .blog-markdown h3 {
+    font-size: clamp(1.3rem, 2.4vw, 1.65rem);
+  }
+
+  .blog-markdown h4 {
+    font-size: 1.125rem;
+  }
+
+  .blog-markdown p,
+  .blog-markdown ul,
+  .blog-markdown ol,
+  .blog-markdown blockquote,
+  .blog-markdown pre,
+  .blog-markdown hr {
+    margin-top: 1em;
+    margin-bottom: 1em;
+  }
+
+  .blog-markdown strong {
+    color: #141821;
+    font-weight: 700;
+  }
+
+  .blog-markdown em {
+    font-style: italic;
+  }
+
+  .blog-markdown ul,
+  .blog-markdown ol {
+    padding-left: 1.4em;
+  }
+
+  .blog-markdown ul {
+    list-style: disc;
+  }
+
+  .blog-markdown ol {
+    list-style: decimal;
+  }
+
+  .blog-markdown li {
+    margin: 0.45em 0;
+    padding-left: 0.15em;
+  }
+
+  .blog-markdown li::marker {
+    color: #ef6144;
+  }
+
+  .blog-markdown blockquote {
+    border-left: 4px solid #ef6144;
+    padding: 0.2rem 0 0.2rem 1rem;
+    color: #3f4957;
+    font-size: 1.05em;
+    font-style: italic;
+    background: linear-gradient(90deg, rgba(239, 97, 68, 0.08), transparent);
+  }
+
+  .blog-markdown a {
+    color: #d9553a;
+    text-decoration: underline;
+    text-decoration-color: rgba(217, 85, 58, 0.35);
+    text-underline-offset: 0.18em;
+  }
+
+  .blog-markdown a:hover {
+    color: #b94931;
+  }
+
+  .blog-markdown code {
+    background: #f4f6f8;
+    color: #1f2937;
+    border-radius: 0.4rem;
+    padding: 0.15rem 0.35rem;
+    font-size: 0.9em;
+  }
+
+  .blog-markdown pre {
+    overflow-x: auto;
+    border-radius: 1rem;
+    background: #0f172a;
+    color: #e2e8f0;
+    padding: 1rem 1.1rem;
+  }
+
+  .blog-markdown pre code {
+    background: transparent;
+    color: inherit;
+    padding: 0;
+  }
+
+  .blog-markdown hr {
+    border: 0;
+    border-top: 1px solid #e5e7eb;
+  }
+
+  @media (max-width: 640px) {
+    .blog-markdown {
+      font-size: 16px;
+      line-height: 1.78;
+    }
+
+    .blog-markdown h1,
+    .blog-markdown h2,
+    .blog-markdown h3,
+    .blog-markdown h4 {
+      margin-top: 1.8em;
+    }
+  }
+}

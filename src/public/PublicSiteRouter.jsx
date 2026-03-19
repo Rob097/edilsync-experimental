@@ -5,10 +5,14 @@ import HomePage from '@/public/pages/HomePage';
 import FeaturesPage from '@/public/pages/FeaturesPage';
 import HowItWorksPage from '@/public/pages/HowItWorksPage';
 import ContractorsPage from '@/public/pages/ContractorsPage';
+import DisputeProtectionPage from '@/public/pages/DisputeProtectionPage';
+import TransparencyPage from '@/public/pages/TransparencyPage';
+import TeamCoordinationPage from '@/public/pages/TeamCoordinationPage';
 import HomeownersPage from '@/public/pages/HomeownersPage';
 import ProfessionalsPage from '@/public/pages/ProfessionalsPage';
 import SubcontractorsPage from '@/public/pages/SubcontractorsPage';
-import StaticMarketingPage from '@/public/pages/StaticMarketingPage';
+import PricingPage from '@/public/pages/PricingPage';
+import FaqPage from '@/public/pages/FaqPage';
 import BlogIndexPage from '@/public/pages/BlogIndexPage';
 import BlogPostPage from '@/public/pages/BlogPostPage';
 import ContactPage from '@/public/pages/ContactPage';
@@ -22,14 +26,17 @@ function PublicLocaleRoutes({ locale, basePath }) {
       <Routes>
         <Route index element={<HomePage locale={locale} />} />
         <Route path="funzionalita" element={<FeaturesPage locale={locale} />} />
+        <Route path="dispute-protection" element={<DisputeProtectionPage locale={locale} />} />
+        <Route path="transparency" element={<TransparencyPage locale={locale} />} />
+        <Route path="team-coordination" element={<TeamCoordinationPage locale={locale} />} />
         <Route path="contractors" element={<ContractorsPage locale={locale} />} />
         <Route path="per-imprese" element={<Navigate to={locale === 'en' ? '/en/contractors' : '/contractors'} replace />} />
         <Route path="per-committenti" element={<HomeownersPage locale={locale} />} />
         <Route path="per-subappaltatori" element={<SubcontractorsPage locale={locale} />} />
         <Route path="per-tecnici" element={<ProfessionalsPage locale={locale} />} />
         <Route path="come-funziona" element={<HowItWorksPage locale={locale} />} />
-        <Route path="prezzi" element={<StaticMarketingPage locale={locale} pageKey="prezzi" />} />
-        <Route path="faq" element={<StaticMarketingPage locale={locale} pageKey="faq" />} />
+        <Route path="prezzi" element={<PricingPage locale={locale} />} />
+        <Route path="faq" element={<FaqPage locale={locale} />} />
         <Route path="contatti" element={<ContactPage locale={locale} />} />
         <Route path="blog" element={<BlogIndexPage locale={locale} basePath={basePath} />} />
         <Route path="blog/:slug" element={<BlogPostPage locale={locale} basePath={basePath} />} />
