@@ -6,7 +6,7 @@
         {
           "title": "Panoramica prodotto",
           "links": [
-            { "label": "Funzionalita complete", "href": "/funzionalita", "desc": "Task, documenti, dispute, finanza e chat in un unico flusso." },
+            { "label": "Funzionalità complete", "href": "/funzionalita", "desc": "Task, documenti, dispute, finanza e chat in un unico flusso." },
             { "label": "Come funziona", "href": "/come-funziona", "desc": "Dal kickoff del cantiere alla chiusura con evidenze tracciate." },
             { "label": "Prezzi", "href": "/prezzi", "desc": "Onboarding guidato con percorso su misura per il team." }
           ]
@@ -16,17 +16,17 @@
           "links": [
             { "label": "Protezione dispute", "href": "/dispute-protection", "desc": "Riduci margine bruciato da extra non formalizzati." },
             { "label": "Trasparenza committente", "href": "/transparency", "desc": "Meno ansia e meno aggiornamenti dispersi su chat." },
-            { "label": "Coordinamento squadra", "href": "/team-coordination", "desc": "Meno viaggi a vuoto e responsabilita piu chiare." }
+            { "label": "Coordinamento squadra", "href": "/team-coordination", "desc": "Meno viaggi a vuoto e responsabilità più chiare." }
           ]
         }
       ],
       "featured": {
-        "title": "Perche EdilSync",
-        "text": "La piattaforma e costruita per proteggere impresa, margine e reputazione con una cronologia che regge quando nascono contestazioni."
+        "title": "Perché EdilSync",
+        "text": "La piattaforma è costruita per proteggere impresa, margine e reputazione con una cronologia che regge quando nascono contestazioni."
       }
     },
     "audiences": {
-      "label": "Per chi e",
+      "label": "Per chi è",
       "sections": [
         {
           "title": "",
@@ -45,7 +45,7 @@
       ],
       "featured": {
         "title": "Modello contestuale",
-        "text": "Una persona puo agire come privato, impresa o tecnico senza duplicare account e dati: cambiano azioni e permessi, non il caos."
+        "text": "Una persona può agire come privato, impresa o tecnico senza duplicare account e dati: cambiano azioni e permessi, non il caos."
       }
     },
     "resources": {
@@ -54,7 +54,7 @@
         {
           "title": "Approfondimenti",
           "links": [
-            { "label": "Blog", "href": "/blog", "desc": "Guide pratiche su dispute, coordinamento e operativita." },
+            { "label": "Blog", "href": "/blog", "desc": "Guide pratiche su dispute, coordinamento e operatività." },
             { "label": "FAQ", "href": "/faq", "desc": "Risposte rapide su adozione, onboarding e utilizzo sul campo." },
             { "label": "Contatti", "href": "/contatti", "desc": "Parla con il team per una demo orientata al tuo cantiere." }
           ]
@@ -62,7 +62,7 @@
       ],
       "featured": {
         "title": "Approccio pratico",
-        "text": "Meno teoria, piu casi reali: ogni contenuto spiega come ridurre ritardi, rilavorazioni e attriti tra gli attori di progetto."
+        "text": "Meno teoria, più casi reali: ogni contenuto spiega come ridurre ritardi, rilavorazioni e attriti tra gli attori di progetto."
       }
     },
     "quickLinks": [

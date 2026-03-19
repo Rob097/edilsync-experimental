@@ -93,7 +93,7 @@ const contentByLocale = {
       },
     ],
     citation:
-      'La comunicazione frammentata costa al settore edile USD31 miliardi all anno. Non perche le persone non vogliano comunicare, ma perche non hanno gli strumenti giusti per farlo.',
+      'La comunicazione frammentata costa al settore edile $31 miliardi all anno. Non perche le persone non vogliano comunicare, ma perche non hanno gli strumenti giusti per farlo.',
     citationSource: 'FMI Corporation, Construction Industry Report',
     finalTitle: 'Pronto a portare ordine nel tuo cantiere?',
     finalText:
@@ -187,7 +187,7 @@ const contentByLocale = {
       },
     ],
     citation:
-      'Fragmented communication costs the construction industry USD31B per year. Not because people do not want to communicate, but because they lack the right tools.',
+      'Fragmented communication costs the construction industry $31B per year. Not because people do not want to communicate, but because they lack the right tools.',
     citationSource: 'FMI Corporation, Construction Industry Report',
     finalTitle: 'Ready to bring order to your construction site?',
     finalText: 'Stop wasting time across chats, emails, and calls. Start with EdilSync today and feel the difference from day one.',

@@ -9,14 +9,14 @@ const contentByLocale = {
   it: {
     seoTitle: 'Prezzi',
     seoDescription:
-      'Un prezzo semplice e completo: EUR19/mese per il contractor principale, committenti e subappaltatori gratis.',
+      'Un prezzo semplice e completo: €19/mese per il contractor principale, committenti e subappaltatori gratis.',
     badge: 'Prezzi',
     title: 'Un prezzo. Tutto incluso.',
     subtitle: 'Nessun costo per utente, nessun modulo a pagamento, nessuna sorpresa.',
     planName: 'EdilSync Pro',
     planDesc: 'Per imprese edili di ogni dimensione',
     trialBadge: '30 giorni gratis',
-    price: 'EUR19',
+    price: '€19',
     priceSuffix: '/mese',
     priceNote: 'IVA esclusa - Fatturazione mensile - Cancella quando vuoi',
     cta: 'Inizia la Prova Gratuita',
@@ -44,13 +44,13 @@ const contentByLocale = {
     freeAccessText:
       'Paga solo il contractor principale. Tutti gli altri attori del cantiere - committenti, subappaltatori, professionisti - ricevono accesso gratuito alla piattaforma.',
     roles: [
-      { label: 'Contractor', value: 'EUR19/mese', note: 'Paga l abbonamento' },
+      { label: 'Contractor', value: '€19/mese', note: 'Paga l abbonamento' },
       { label: 'Committente', value: 'Gratis', note: 'Accesso completo al progetto' },
       { label: 'Subappaltatore', value: 'Gratis', note: 'Accesso ai propri task' },
     ],
-    worthTitle: 'EUR19/mese vale la pena se...',
+    worthTitle: '€19/mese vale la pena se...',
     worthItems: [
-      'Eviti anche solo una disputa all anno (vale in media EUR200-EUR2.000)',
+      'Eviti anche solo una disputa all anno (vale in media €200-€2.000)',
       'Risparmi 2 ore al mese di chiamate di status update',
       'Elimini un viaggio a vuoto al mese dei tuoi subappaltatori',
       'Un committente soddisfatto ti porta anche un solo referral',
@@ -75,7 +75,7 @@ const contentByLocale = {
       },
       {
         q: 'Esiste un piano per agenzie o grandi imprese?',
-        a: 'Stiamo lavorando su un piano Enterprise. Scrivici a ciao@edilsync.it per discutere le tue esigenze.',
+        a: 'Stiamo lavorando su un piano Enterprise. Scrivici a info@rdlabs.digital per discutere le tue esigenze.',
       },
     ],
     faqFooterStart: 'Hai altre domande?',
@@ -86,14 +86,14 @@ const contentByLocale = {
   en: {
     seoTitle: 'Pricing',
     seoDescription:
-      'Simple all-inclusive pricing: EUR19/month for the main contractor, owners and subcontractors access for free.',
+      'Simple all-inclusive pricing: €19/month for the main contractor, owners and subcontractors access for free.',
     badge: 'Pricing',
     title: 'One price. Everything included.',
     subtitle: 'No per-user fee, no paid add-ons, no surprises.',
     planName: 'EdilSync Pro',
     planDesc: 'For construction companies of any size',
     trialBadge: '30 days free',
-    price: 'EUR19',
+    price: '€19',
     priceSuffix: '/month',
     priceNote: 'VAT excluded - Monthly billing - Cancel anytime',
     cta: 'Start Free Trial',
@@ -121,13 +121,13 @@ const contentByLocale = {
     freeAccessText:
       'Only the main contractor pays. All other project actors - owners, subcontractors, professionals - get free access to the platform.',
     roles: [
-      { label: 'Contractor', value: 'EUR19/month', note: 'Pays subscription' },
+      { label: 'Contractor', value: '€19/month', note: 'Pays subscription' },
       { label: 'Owner', value: 'Free', note: 'Full project access' },
       { label: 'Subcontractor', value: 'Free', note: 'Access to assigned tasks' },
     ],
-    worthTitle: 'EUR19/month is worth it if...',
+    worthTitle: '€19/month is worth it if...',
     worthItems: [
-      'You avoid even one dispute per year (average value EUR200-EUR2,000)',
+      'You avoid even one dispute per year (average value €200-€2,000)',
       'You save 2 hours per month on status calls',
       'You remove one wasted trip per month for your subcontractors',
       'One satisfied owner brings you even one referral',
@@ -152,7 +152,7 @@ const contentByLocale = {
       },
       {
         q: 'Do you offer an enterprise plan?',
-        a: 'We are preparing an Enterprise plan. Write to ciao@edilsync.it to discuss your needs.',
+        a: 'We are preparing an Enterprise plan. Write to info@rdlabs.digital to discuss your needs.',
       },
     ],
     faqFooterStart: 'Need more details?',

@@ -62,7 +62,7 @@ export default function TermsOfService() {
           <p>{tr('Ci riserviamo il diritto di modificare i presenti termini. Le modifiche saranno comunicate tramite l\'applicazione con un preavviso ragionevole. L\'uso continuato del servizio dopo la modifica costituisce accettazione dei nuovi termini.', 'We reserve the right to modify these terms. Changes will be communicated through the application with reasonable notice. Continued use after changes implies acceptance of the updated terms.')}</p>
 
           <h2 className="text-lg font-semibold mt-6 mb-2">{tr('11. Contatti', '11. Contacts')}</h2>
-          <p>{tr('Per domande relative ai presenti termini, scrivere a:', 'For questions related to these terms, write to:')} <strong>info@edilsync.it</strong></p>
+          <p>{tr('Per domande relative ai presenti termini, scrivere a:', 'For questions related to these terms, write to:')} <strong>info@rdlabs.digital</strong></p>
         </CardContent>
       </Card>
       </div>

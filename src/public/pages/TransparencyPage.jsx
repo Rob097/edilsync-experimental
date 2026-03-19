@@ -19,7 +19,7 @@ const contentByLocale = {
     note: 'Accesso completamente gratuito per i committenti',
     cta: 'Inizia Gratis',
     quote:
-      '"Ho speso EUR65.000 per ristrutturare l appartamento. Per tre mesi ho chiamato il contractor ogni due giorni per sapere a che punto erano. Mi sentivo fastidioso, ma non avevo altra scelta."',
+      '"Ho speso €65.000 per ristrutturare l appartamento. Per tre mesi ho chiamato il contractor ogni due giorni per sapere a che punto erano. Mi sentivo fastidioso, ma non avevo altra scelta."',
     quoteAuthor: 'Simona',
     quoteRole: 'Committente, Milano - prima di EdilSync',
     compareTitle: 'Prima e dopo EdilSync',
@@ -82,7 +82,7 @@ const contentByLocale = {
     note: 'Completely free access for homeowners',
     cta: 'Start Free',
     quote:
-      '"I spent EUR65,000 to renovate my apartment. For three months I called the contractor every two days just to understand progress. I felt annoying, but I had no alternative."',
+      '"I spent €65,000 to renovate my apartment. For three months I called the contractor every two days just to understand progress. I felt annoying, but I had no alternative."',
     quoteAuthor: 'Simona',
     quoteRole: 'Homeowner, Milan - before EdilSync',
     compareTitle: 'Before and after EdilSync',

@@ -23,6 +23,7 @@ export default function ContactPage({ locale = 'it' }) {
     company_name: '',
     role_label: roleOptions[0],
     message: '',
+    website: '',
   });
 
   const [status, setStatus] = useState({ type: null, message: '' });
@@ -49,7 +50,9 @@ export default function ContactPage({ locale = 'it' }) {
         source_path: window.location.pathname,
       };
 
-      const { error } = await supabase.from('demo_requests').insert(payload);
+      const { error } = await supabase.functions.invoke('submitDemoRequest', {
+        body: payload,
+      });
       if (error) throw error;
     },
     onSuccess: () => {
@@ -60,6 +63,7 @@ export default function ContactPage({ locale = 'it' }) {
         company_name: '',
         role_label: roleOptions[0],
         message: '',
+        website: '',
       });
     },
     onError: () => {
@@ -153,6 +157,17 @@ export default function ContactPage({ locale = 'it' }) {
                   value={form.message}
                   onChange={(e) => setForm((p) => ({ ...p, message: e.target.value }))}
                   placeholder={t.messagePlaceholder}
+                />
+              </div>
+              <div className="hidden" aria-hidden="true">
+                <Label htmlFor="website">Website</Label>
+                <Input
+                  id="website"
+                  tabIndex={-1}
+                  autoComplete="off"
+                  value={form.website}
+                  onChange={(e) => setForm((p) => ({ ...p, website: e.target.value }))}
+                  placeholder="Leave empty"
                 />
               </div>
               <div className="sm:col-span-2 flex flex-wrap items-center gap-3">

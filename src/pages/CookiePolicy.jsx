@@ -76,7 +76,7 @@ export default function CookiePolicy() {
           <p>{tr('Per maggiori informazioni sui diritti relativi al trattamento dei dati, consultare la nostra', 'For more information on data-processing rights, see our')} <a href="/privacy" className="text-[#ef6144] hover:underline">{tr('Informativa sulla Privacy', 'Privacy Policy')}</a>.</p>
 
           <h2 className="text-lg font-semibold mt-6 mb-2">{tr('7. Contatti', '7. Contacts')}</h2>
-          <p>{tr('Per domande relative ai cookie, scrivere a:', 'For cookie-related questions, write to:')} <strong>privacy@edilsync.it</strong></p>
+          <p>{tr('Per domande relative ai cookie, scrivere a:', 'For cookie-related questions, write to:')} <strong>info@rdlabs.digital</strong></p>
         </CardContent>
       </Card>
       </div>

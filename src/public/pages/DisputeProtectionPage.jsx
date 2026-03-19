@@ -20,7 +20,7 @@ const contentByLocale = {
     note: 'Funziona per contractor, committenti, subappaltatori e professionisti.',
     scenarioLabel: 'Il scenario tipico',
     scenarioQuote:
-      '"Ho perso EUR4.200 su un progetto da EUR28.000 per una disputa su due stanze che erano gia incluse secondo il cliente. Non avevo niente di scritto. Avevo solo la mia parola."',
+      '"Ho perso €4.200 su un progetto da €28.000 per una disputa su due stanze che erano gia incluse secondo il cliente. Non avevo niente di scritto. Avevo solo la mia parola."',
     scenarioAuthor: 'Giuseppe',
     scenarioRole: 'Contractor, Torino - prima di EdilSync',
     issuesTitle: 'Le dispute piu frequenti - e come le elimini',
@@ -69,10 +69,10 @@ const contentByLocale = {
     ],
     roiTitle: 'Una disputa evitata vale mesi di abbonamento',
     roiText:
-      'La disputa media in cantiere costa tra EUR200 e EUR2.000 tra tempo, rilavorazioni e margine perso. EdilSync costa EUR19 al mese. Il ROI si calcola da solo.',
+      'La disputa media in cantiere costa tra €200 e €000 tra tempo, rilavorazioni e margine perso. EdilSync costa €19 al mese. Il ROI si calcola da solo.',
     roiCards: [
-      { value: 'EUR300', label: 'Costo medio di una disputa piccola' },
-      { value: 'EUR19/mese', label: 'Costo di EdilSync' },
+      { value: '€300', label: 'Costo medio di una disputa piccola' },
+      { value: '€19/mese', label: 'Costo di EdilSync' },
       { value: '15x', label: 'ROI con una sola disputa evitata all anno' },
     ],
     finalTitle: 'Pronto a portare ordine nel tuo cantiere?',
@@ -94,7 +94,7 @@ const contentByLocale = {
     note: 'Built for contractors, owners, subcontractors, and technical professionals.',
     scenarioLabel: 'Typical scenario',
     scenarioQuote:
-      '"I lost EUR4,200 on a EUR28,000 project because of a dispute on two rooms the client said were already included. I had nothing documented. Only my word."',
+      '"I lost €4,200 on a €28,000 project because of a dispute on two rooms the client said were already included. I had nothing documented. Only my word."',
     scenarioAuthor: 'Giuseppe',
     scenarioRole: 'Contractor, Turin - before EdilSync',
     issuesTitle: 'The most common disputes - and how you prevent them',
@@ -143,10 +143,10 @@ const contentByLocale = {
     ],
     roiTitle: 'One avoided dispute is worth months of subscription',
     roiText:
-      'An average construction dispute can cost between EUR200 and EUR2,000 in time, rework, and lost margin. EdilSync costs EUR19 per month. ROI is straightforward.',
+      'An average construction dispute can cost between €200 and €2,000 in time, rework, and lost margin. EdilSync costs €19 per month. ROI is straightforward.',
     roiCards: [
-      { value: 'EUR300', label: 'Average cost of a minor dispute' },
-      { value: 'EUR19/month', label: 'EdilSync cost' },
+      { value: '€300', label: 'Average cost of a minor dispute' },
+      { value: '€19/month', label: 'EdilSync cost' },
       { value: '15x', label: 'ROI with one avoided dispute per year' },
     ],
     finalTitle: 'Ready to bring order to your construction site?',

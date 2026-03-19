@@ -23,7 +23,7 @@ const contentByLocale = {
           },
           {
             q: 'EdilSync e adatto anche per piccole imprese?',
-            a: 'Assolutamente si. EdilSync e progettato specificamente per imprese edili sotto EUR1M di fatturato annuo che gestiscono 8-12 ristrutturazioni residenziali. L interfaccia e semplice, mobile-first e non richiede formazione.',
+            a: 'Assolutamente si. EdilSync e progettato specificamente per imprese edili sotto €1M di fatturato annuo che gestiscono 8-12 ristrutturazioni residenziali. L interfaccia e semplice, mobile-first e non richiede formazione.',
           },
           {
             q: 'In che lingue e disponibile EdilSync?',
@@ -36,7 +36,7 @@ const contentByLocale = {
         items: [
           {
             q: 'Quanto costa EdilSync?',
-            a: 'EdilSync costa EUR19/mese con tariffa fissa. Non ci sono costi per utente aggiuntivo, ne costi per progetto. L impresa paga, committenti e subappaltatori accedono gratuitamente.',
+            a: 'EdilSync costa €19/mese con tariffa fissa. Non ci sono costi per utente aggiuntivo, ne costi per progetto. L impresa paga, committenti e subappaltatori accedono gratuitamente.',
           },
           {
             q: 'C\'e una prova gratuita?',
@@ -108,45 +108,75 @@ const contentByLocale = {
         items: [
           {
             q: 'What is EdilSync?',
-            a: 'EdilSync is a SaaS platform for construction and renovation coordination. It connects owners, contractors, subcontractors, and professionals in one shared workspace with contextual permissions.',
+            a: 'EdilSync is a SaaS platform for construction-site and renovation coordination. It brings together clients, contractors, subcontractors, and professionals in one shared workspace, with contextual roles and permissions adapted to each project.',
           },
           {
             q: 'Is EdilSync suitable for small companies?',
-            a: 'Yes. It is designed for teams of different sizes and can scale with your operations.',
+            a: 'Absolutely. EdilSync is designed specifically for construction companies under €1M annual revenue that manage 8-12 residential renovations. The interface is simple, mobile-first, and does not require training.',
           },
           {
             q: 'Which languages are supported?',
-            a: 'Currently Italian and English, with localized public flows and interface.',
+            a: 'EdilSync is available in Italian and English. You can switch language at any time from the user menu.',
           },
         ],
       },
       {
         title: 'Pricing & Subscription',
         items: [
-          { q: 'How much does EdilSync cost?', a: 'The standard plan is EUR19/month for the main contractor.' },
-          { q: 'Is there a free trial?', a: 'Yes, a 30-day free trial with no credit card required.' },
-          { q: 'Can I cancel anytime?', a: 'Yes, you can cancel anytime without long-term lock-in.' },
-          { q: 'Do my owners need to pay?', a: 'No. Owners and subcontractors access for free; only the main contractor pays.' },
+          {
+            q: 'How much does EdilSync cost?',
+            a: 'EdilSync costs €19/month with a fixed rate. There are no extra per-user fees and no per-project fees. The contractor company pays, while clients and subcontractors access for free.',
+          },
+          {
+            q: 'Is there a free trial?',
+            a: 'Yes. You can use EdilSync free for 30 days without entering a credit card. At the end of the trial, you decide whether to continue.',
+          },
+          {
+            q: 'Can I cancel anytime?',
+            a: 'Yes, you can cancel your subscription at any time directly from settings. There are no penalties and no hidden costs.',
+          },
+          {
+            q: 'Do my owners need to pay?',
+            a: 'No. Clients and subcontractors can use the platform completely free. Only the contractor company pays for the subscription.',
+          },
         ],
       },
       {
         title: 'Capabilities',
         items: [
-          { q: 'Can I use EdilSync from the jobsite on phone?', a: 'Yes, the platform is mobile-first and designed for field operations.' },
+          {
+            q: 'Can I use EdilSync from the jobsite on phone?',
+            a: 'Yes, EdilSync is mobile-first. There is a dedicated operative mode for on-site use, designed for workers, site managers, and anyone working in the field. Photo uploads, clock-in/out, and task updates happen in just a few taps.',
+          },
           {
             q: 'How do permissions work? Can everyone see everything?',
-            a: 'No. Permissions are contextual by role and project participation, so visibility remains relevant and controlled.',
+            a: 'No. EdilSync uses a 4-level contextual permission model: application role, active context (personal or company), company role, and project role. Each person only sees what is relevant to their role in that specific project.',
           },
-          { q: 'Can I manage multi-level subcontracting?', a: 'Yes, including traceable responsibilities and coordination across teams.' },
-          { q: 'Can I view BIM files or 3D models?', a: 'Yes, BIM viewer support is available for IFC, GLB, and GLTF.' },
-          { q: 'How does dispute management work?', a: 'You can open a formal case with timeline, evidence, comments, and status tracking.' },
+          {
+            q: 'Can I manage multi-level subcontracting?',
+            a: 'Yes. EdilSync natively supports multi-level subcontracting. A contractor can invite subcontractors, who can in turn involve their own teams. Permissions and access are controlled at every level.',
+          },
+          {
+            q: 'Can I view BIM files or 3D models?',
+            a: 'Yes. EdilSync supports IFC, GLB, and GLTF. There is an in-app IFC viewer with direct parsing, plus a Three.js-based 3D viewer for GLB/GLTF with orbit controls and automatic fit.',
+          },
+          {
+            q: 'How does dispute management work?',
+            a: 'The disputes module lets you formalize conflicts about scope, costs, delays, quality, or payments. Each dispute has an event timeline and can include evidence, comments, resolution notes, and stakeholder notifications. Everything is documented and immutable.',
+          },
         ],
       },
       {
         title: 'Privacy & Security',
         items: [
-          { q: 'Are my data secure?', a: 'Yes, we apply secure access controls and platform safeguards for project data protection.' },
-          { q: 'Who can view my projects?', a: 'Only invited users with the correct contextual permissions.' },
+          {
+            q: 'Are my data secure?',
+            a: 'Yes. EdilSync runs on cloud infrastructure with Row Level Security (RLS) enforced on every data operation. Data access is built on synchronized user sets automatically derived from memberships and project participation.',
+          },
+          {
+            q: 'Who can view my projects?',
+            a: 'Only people you have invited as project participants. Each user only sees projects where they are an active participant, and only the sections appropriate for their role in that project.',
+          },
         ],
       },
     ],

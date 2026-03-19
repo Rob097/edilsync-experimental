@@ -21,7 +21,7 @@ export default function PrivacyPolicy() {
           <p className="text-sm text-gray-500 mb-6">{tr('Questa informativa descrive come trattiamo i dati personali sulla piattaforma EdilSync.', 'This policy explains how personal data is processed on EdilSync.')}</p>
 
           <h2 className="text-lg font-semibold mt-6 mb-2">{tr('1. Titolare del trattamento', '1. Data controller')}</h2>
-          <p>{tr('Il titolare del trattamento dei dati personali è EdilSync, raggiungibile all\'indirizzo email:', 'The controller of personal data is EdilSync, reachable at:')} <strong>privacy@edilsync.it</strong>.</p>
+          <p>{tr('Il titolare del trattamento dei dati personali è EdilSync, raggiungibile all\'indirizzo email:', 'The controller of personal data is EdilSync, reachable at:')} <strong>info@rdlabs.digital</strong>.</p>
 
           <h2 className="text-lg font-semibold mt-6 mb-2">{tr('2. Dati raccolti', '2. Data collected')}</h2>
           <p>{tr('Raccogliamo le seguenti categorie di dati personali:', 'We collect the following categories of personal data:')}</p>
@@ -64,7 +64,7 @@ export default function PrivacyPolicy() {
             <li>{tr('Revocare il consenso in qualsiasi momento', 'Withdraw consent at any time')}</li>
             <li>{tr('Proporre reclamo al Garante per la Protezione dei Dati Personali', 'Lodge a complaint with the Data Protection Authority')}</li>
           </ul>
-          <p>{tr('Per esercitare i propri diritti, scrivere a:', 'To exercise your rights, write to:')} <strong>privacy@edilsync.it</strong></p>
+          <p>{tr('Per esercitare i propri diritti, scrivere a:', 'To exercise your rights, write to:')} <strong>info@rdlabs.digital</strong></p>
 
           <h2 className="text-lg font-semibold mt-6 mb-2">{tr('7. Cookie', '7. Cookies')}</h2>
           <p>{tr('Per informazioni sull\'utilizzo dei cookie, consultare la nostra', 'For information about cookie usage, see our')} <a href="/cookie" className="text-[#ef6144] hover:underline">Cookie Policy</a>.</p>

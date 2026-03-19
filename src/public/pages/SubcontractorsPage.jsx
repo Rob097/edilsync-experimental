@@ -28,7 +28,7 @@ const contentByLocale = {
     note: 'Accesso completamente gratuito per i subappaltatori',
     ctaTop: 'Inizia Gratis',
     quote:
-      'Arrivo in cantiere e il lavoro precedente non e finito. Un altro viaggio a vuoto. EUR150 di costo, zero fatturato. E nessuno mi aveva avvisato.',
+      'Arrivo in cantiere e il lavoro precedente non e finito. Un altro viaggio a vuoto. €150 di costo, zero fatturato. E nessuno mi aveva avvisato.',
     quoteAuthor: 'Marco',
     quoteRole: 'Elettricista, 5 cantieri attivi',
     benefitsTitle: 'I vantaggi per chi lavora in subappalto',
@@ -83,7 +83,7 @@ const contentByLocale = {
     note: 'Completely free access for subcontractors',
     ctaTop: 'Start Free',
     quote:
-      'I arrive on site and the previous work is not finished. Another wasted trip. EUR150 cost, zero revenue. And nobody warned me.',
+      'I arrive on site and the previous work is not finished. Another wasted trip. €150 cost, zero revenue. And nobody warned me.',
     quoteAuthor: 'Marco',
     quoteRole: 'Electrician, 5 active jobs',
     benefitsTitle: 'Benefits for subcontractors',

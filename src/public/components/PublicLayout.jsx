@@ -120,29 +120,15 @@ export default function PublicLayout({ locale = 'it', children }) {
                                         <NavigationMenuLink asChild>
                                           <Link
                                             to={item.href}
-                                            className={`group block rounded-xl transition ${entry.key === 'audiences' ? 'p-2.5 hover:bg-[#f9f3f1]' : 'p-1.5 hover:bg-[#f7f2f0]'}`}
+                                            className="group block rounded-xl transition p-1.5 hover:bg-[#f7f2f0]"
                                           >
-                                            {entry.key === 'audiences' ? (
-                                              <div className="flex items-start gap-2.5">
-                                                {item.icon ? (
-                                                  <div className="w-9 h-9 rounded-xl bg-[#f9ebe6] flex items-center justify-center shrink-0">
-                                                    <item.icon className="h-4 w-4 text-[#ef6144]" />
-                                                  </div>
-                                                ) : null}
-                                                <div>
-                                                  <p className="text-[15px] leading-tight font-bold text-[#2a211f]">{item.label}</p>
-                                                  <p className="mt-1 text-[12px] leading-[1.35] text-[#667085]">{item.desc}</p>
-                                                </div>
-                                              </div>
-                                            ) : (
-                                              <>
-                                                <p className="text-[13px] font-semibold text-[#2a211f] group-hover:text-[#ef6144] inline-flex items-center gap-1.5 leading-tight">
-                                                  {item.icon ? <item.icon className="h-3.5 w-3.5 text-[#ef6144]" /> : null}
-                                                  {item.label}
-                                                </p>
-                                                <p className="mt-1 text-[11px] leading-[1.45] text-[#62524c]">{item.desc}</p>
-                                              </>
-                                            )}
+                                            <>
+                                              <p className="text-[13px] font-semibold text-[#2a211f] group-hover:text-[#ef6144] inline-flex items-center gap-1.5 leading-tight">
+                                                {item.icon ? <item.icon className="h-3.5 w-3.5 text-[#ef6144]" /> : null}
+                                                {item.label}
+                                              </p>
+                                              <p className="mt-1 text-[11px] leading-[1.45] text-[#62524c]">{item.desc}</p>
+                                            </>
                                           </Link>
                                         </NavigationMenuLink>
                                       </li>
@@ -152,16 +138,16 @@ export default function PublicLayout({ locale = 'it', children }) {
                               ))}
                             </div>
 
-                            <div className={`rounded-xl border border-[#edd0c8] bg-[#fdf7f5] text-[#2a211f] self-start h-fit ${entry.key === 'audiences' ? 'p-4' : 'p-[18px]'}`}>
-                              <entry.icon className={`${entry.key === 'audiences' ? 'h-4 w-4' : 'h-[18px] w-[18px]'} text-[#ef6144]`} />
-                              <p className={`font-semibold ${entry.key === 'audiences' ? 'mt-2 text-base' : 'mt-2.5 text-[17px] leading-tight'}`}>{entry.featured.title}</p>
-                              <p className={`${entry.key === 'audiences' ? 'mt-1.5 text-xs leading-[1.45]' : 'mt-1.5 text-[12px] leading-[1.5]'} text-[#5e4d47]`}>{entry.featured.text}</p>
+                            <div className="rounded-xl border border-[#edd0c8] bg-[#fdf7f5] text-[#2a211f] self-start h-fit p-[18px]">
+                              <entry.icon className="h-[18px] w-[18px] text-[#ef6144]" />
+                              <p className="mt-2.5 text-[17px] leading-tight font-semibold">{entry.featured.title}</p>
+                              <p className="mt-1.5 text-[12px] leading-[1.5] text-[#5e4d47]">{entry.featured.text}</p>
                               <Link
                                 to={effectiveLocale === 'en' ? '/en/contatti' : '/contatti'}
-                                className={`inline-flex items-center gap-1 font-semibold text-[#c55039] ${entry.key === 'audiences' ? 'mt-3 text-xs' : 'mt-3 text-[12px]'}`}
+                                className="inline-flex items-center gap-1 font-semibold text-[#c55039] mt-3 text-[12px]"
                               >
                                 {copy.demo}
-                                <ChevronRight className={`${entry.key === 'audiences' ? 'h-4 w-4' : 'h-3.5 w-3.5'}`} />
+                                <ChevronRight className="h-3.5 w-3.5" />
                               </Link>
                             </div>
                           </div>

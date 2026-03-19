@@ -11,11 +11,11 @@
     "message": "Messaggio"
   },
   "roles": ["Impresa / Contractor", "Committente", "Subappaltatore", "Tecnico / Progettista", "Altro"],
-  "messagePlaceholder": "Descrivi flusso attuale e criticita principali...",
+  "messagePlaceholder": "Descrivi flusso attuale e criticità principali...",
   "submit": "Invia richiesta",
   "sending": "Invio in corso...",
-  "success": "Richiesta inviata. Ti contatteremo al piu presto.",
-  "error": "Errore durante l invio. Riprova tra poco.",
+  "success": "Richiesta inviata. Ti contatteremo al più presto.",
+  "error": "Errore durante l'invio. Riprova tra poco.",
   "nextTitle": "Cosa succede dopo",
   "nextSteps": [
     "1. Analizziamo la tua richiesta e il contesto.",
