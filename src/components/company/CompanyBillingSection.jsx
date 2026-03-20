@@ -1,9 +1,9 @@
-import React, { useMemo } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { format } from 'date-fns';
 import { enUS, it } from 'date-fns/locale';
 import { CreditCard, ExternalLink, Rocket, Sparkles } from 'lucide-react';
-import { useQuery } from '@tanstack/react-query';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { createPageUrl } from '@/utils';
 import { appClient } from '@/api/appClient';
 import { useLanguage } from '@/components/i18n/useLanguage';
@@ -12,6 +12,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton.jsx';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { useCompanyFeatureAccess } from '@/hooks/useFeatureAccess';
 import { normalizeCompanySubscription } from '@/lib/subscriptions';
 import { toast } from '@/components/ui/use-toast';
@@ -27,9 +28,11 @@ const billingStatusClasses = {
 
 export default function CompanyBillingSection({ companyId, companyName, isAdmin }) {
   const navigate = useNavigate();
+  const queryClient = useQueryClient();
   const { currentLanguage } = useLanguage();
   const tr = (itText, enText) => (currentLanguage === 'it' ? itText : enText);
   const dateLocale = currentLanguage === 'it' ? it : enUS;
+  const [selectedBillingCycle, setSelectedBillingCycle] = useState('monthly');
 
   const { featureMap, isLoading: featuresLoading } = useCompanyFeatureAccess(companyId, [
     'company_billing',
@@ -77,6 +80,116 @@ export default function CompanyBillingSection({ companyId, companyName, isAdmin 
     [sponsoredProjects],
   );
 
+  useEffect(() => {
+    const url = new URL(window.location.href);
+    const checkoutState = url.searchParams.get('stripe_checkout');
+    const portalState = url.searchParams.get('stripe_portal');
+
+    if (!checkoutState && !portalState) {
+      return;
+    }
+
+    if (checkoutState === 'success') {
+      toast({
+        title: tr('Checkout completato', 'Checkout completed'),
+        description: tr(
+          'Stripe ha completato il checkout. La sottoscrizione verra riallineata via webhook e questa sezione si aggiornera automaticamente.',
+          'Stripe completed the checkout. The subscription will be synchronized by webhook and this section will refresh automatically.',
+        ),
+      });
+      queryClient.invalidateQueries({ queryKey: ['companySubscription', companyId] });
+      queryClient.invalidateQueries({ queryKey: ['featureAccess', 'company', companyId] });
+    }
+
+    if (checkoutState === 'canceled') {
+      toast({
+        title: tr('Checkout annullato', 'Checkout canceled'),
+        description: tr(
+          'Nessuna modifica e stata applicata al piano della societa.',
+          'No changes were applied to the company plan.',
+        ),
+      });
+    }
+
+    if (portalState === 'return') {
+      toast({
+        title: tr('Rientro dal customer portal', 'Returned from customer portal'),
+        description: tr(
+          'Ho richiesto un refresh dello stato billing della societa.',
+          'I requested a refresh of the company billing state.',
+        ),
+      });
+      queryClient.invalidateQueries({ queryKey: ['companySubscription', companyId] });
+      queryClient.invalidateQueries({ queryKey: ['featureAccess', 'company', companyId] });
+    }
+
+    url.searchParams.delete('stripe_checkout');
+    url.searchParams.delete('session_id');
+    url.searchParams.delete('stripe_portal');
+    window.history.replaceState({}, '', url.toString());
+  }, [companyId, queryClient, currentLanguage]);
+
+  const checkoutMutation = useMutation({
+    mutationFn: async () => {
+      const returnUrl = `${window.location.origin}${createPageUrl('CompanyDetail')}?id=${companyId}&tab=billing`;
+      return appClient.functions.invoke('createStripeCheckoutSession', {
+        company_id: companyId,
+        billing_cycle: selectedBillingCycle,
+        return_url: returnUrl,
+      });
+    },
+    onSuccess: (result) => {
+      if (result?.url) {
+        window.location.assign(result.url);
+        return;
+      }
+
+      toast({
+        title: tr('Checkout non disponibile', 'Checkout unavailable'),
+        description: tr(
+          'Stripe non ha restituito un URL di checkout valido.',
+          'Stripe did not return a valid checkout URL.',
+        ),
+      });
+    },
+    onError: (error) => {
+      toast({
+        title: tr('Impossibile avviare il checkout', 'Unable to start checkout'),
+        description: error?.message || tr('Controlla la configurazione Stripe del progetto.', 'Check the project Stripe configuration.'),
+      });
+    },
+  });
+
+  const portalMutation = useMutation({
+    mutationFn: async () => {
+      const returnUrl = `${window.location.origin}${createPageUrl('CompanyDetail')}?id=${companyId}&tab=billing`;
+      return appClient.functions.invoke('createStripeBillingPortalSession', {
+        company_id: companyId,
+        return_url: returnUrl,
+      });
+    },
+    onSuccess: (result) => {
+      if (result?.url) {
+        window.location.assign(result.url);
+        return;
+      }
+
+      toast({
+        title: tr('Customer portal non disponibile', 'Customer portal unavailable'),
+        description: tr(
+          'Stripe non ha restituito un URL di portal valido.',
+          'Stripe did not return a valid portal URL.',
+        ),
+      });
+    },
+    onError: (error) => {
+      toast({
+        title: tr('Impossibile aprire il customer portal', 'Unable to open the customer portal'),
+        description: error?.message || tr('Controlla la configurazione Stripe del progetto.', 'Check the project Stripe configuration.'),
+      });
+    },
+  });
+
   if (!isAdmin) {
     return null;
   }
@@ -106,26 +219,6 @@ export default function CompanyBillingSection({ companyId, companyName, isAdmin 
   const formatDateLabel = (value) => {
     if (!value) return tr('Non disponibile', 'Not available');
     return format(new Date(value), 'd MMM yyyy', { locale: dateLocale });
-  };
-
-  const handleUpgradeClick = () => {
-    toast({
-      title: tr('Checkout in arrivo', 'Checkout coming soon'),
-      description: tr(
-        'La UX di fatturazione e pronta. Il checkout Stripe verra collegato nella Phase 6.',
-        'The billing UX is ready. Stripe checkout will be connected in Phase 6.',
-      ),
-    });
-  };
-
-  const handlePortalClick = () => {
-    toast({
-      title: tr('Customer portal in arrivo', 'Customer portal coming soon'),
-      description: tr(
-        'In questa fase mostriamo stato piano, ciclo e sponsorship attive. Il portale Stripe verra collegato nella Phase 6.',
-        'This phase shows plan status, billing cycle and active sponsorships. The Stripe portal will be connected in Phase 6.',
-      ),
-    });
   };
 
   return (
@@ -181,26 +274,39 @@ export default function CompanyBillingSection({ companyId, companyName, isAdmin 
 
           <Alert className="border-[#ef6144]/20 bg-[#ef6144]/5">
             <Rocket className="h-4 w-4 text-[#ef6144]" />
-            <AlertTitle>{tr('Phase 5 pronta per il billing', 'Phase 5 billing surface is ready')}</AlertTitle>
+            <AlertTitle>{tr('Billing Stripe in sandbox', 'Stripe billing in sandbox')}</AlertTitle>
             <AlertDescription>
               {tr(
-                'Questa sezione espone lo stato reale del piano e delle sponsorship. Checkout e customer portal arriveranno nella Phase 6 senza cambiare la struttura UX.',
-                'This section exposes the real plan and sponsorship state. Checkout and customer portal will arrive in Phase 6 without changing the UX structure.',
+                'Checkout e customer portal ora passano da Stripe in modalita test. Il riallineamento del piano avviene tramite webhook sul backend Supabase.',
+                'Checkout and customer portal now go through Stripe in test mode. Plan synchronization happens through a Supabase backend webhook.',
               )}
             </AlertDescription>
           </Alert>
 
           <div className="flex flex-wrap gap-3">
             {canUpgrade ? (
-              <Button className="bg-[#ef6144] hover:bg-[#d9553a]" onClick={handleUpgradeClick}>
-                <Sparkles className="h-4 w-4" />
-                {tr('Avvia upgrade', 'Start upgrade')}
-              </Button>
+              <>
+                <div className="min-w-[180px]">
+                  <Select value={selectedBillingCycle} onValueChange={setSelectedBillingCycle}>
+                    <SelectTrigger>
+                      <SelectValue placeholder={tr('Seleziona ciclo', 'Select cycle')} />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="monthly">{tr('Mensile · 19€', 'Monthly · €19')}</SelectItem>
+                      <SelectItem value="yearly">{tr('Annuale · 190€', 'Yearly · €190')}</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+                <Button className="bg-[#ef6144] hover:bg-[#d9553a]" onClick={() => checkoutMutation.mutate()} disabled={checkoutMutation.isPending}>
+                  <Sparkles className="h-4 w-4" />
+                  {checkoutMutation.isPending ? tr('Apro Stripe...', 'Opening Stripe...') : tr('Avvia upgrade', 'Start upgrade')}
+                </Button>
+              </>
             ) : null}
             {canManageSubscription ? (
-              <Button variant="outline" onClick={handlePortalClick}>
+              <Button variant="outline" onClick={() => portalMutation.mutate()} disabled={portalMutation.isPending}>
                 <ExternalLink className="h-4 w-4" />
-                {tr('Apri customer portal', 'Open customer portal')}
+                {portalMutation.isPending ? tr('Apro portal...', 'Opening portal...') : tr('Apri customer portal', 'Open customer portal')}
               </Button>
             ) : null}
           </div>
