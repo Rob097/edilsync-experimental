@@ -1,5 +1,9 @@
 # EdilSync - Modello Pricing e Accessi
 
+> Nota: questo documento resta utile come analisi e razionalizzazione iniziale.
+>
+> Il documento canonico congelato per l'implementazione e ora `public/Docs/edilsync_pricing_phase0_contract.md`.
+
 ## Scopo di questo documento
 
 Questo documento riassume e formalizza in modo semplice il ragionamento fatto sul pricing di EdilSync.

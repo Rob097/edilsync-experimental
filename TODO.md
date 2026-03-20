@@ -13,12 +13,12 @@
     - [X] Analizzare formati comuni
     - [X] Analizzare difficoltà integrazione BIM
 - Ragionare al concetto di "Decision Making".
-- Parte pubblica
-    - Landing page
-    - Pagine in base al ruolo
-    - Mega menu
-    - Pagine pubbliche varie
-    - Blog
+- [X] Parte pubblica
+    - [X] Landing page
+    - [X] Pagine in base al ruolo
+    - [X] Mega menu
+    - [X] Pagine pubbliche varie
+    - [X] Blog
 
 - IFC viewer in-app rollout
     - [X] Feature flag rimosso: IFC in-app come default
@@ -27,4 +27,16 @@
     - [X] Integrazione runtime `@thatopen/components` nel viewer in-app
     - [X] Hardening runtime WASM (`web-ifc.wasm`/`web-ifc-mt.wasm`) con asset statici in `public/`
     - [X] Telemetria base (open success/fail, first render time, fallback rate)
-    - [ ] Test comparativi IFC small/medium/large + decisione cutover
+    - [X] Test comparativi IFC small/medium/large + decisione cutover
+
+- Pricing / access model rollout
+    - [X] Phase 0 - Freeze the contract (`public/Docs/edilsync_pricing_phase0_contract.md`)
+    - [ ] Phase 1 - Schema piani / sponsorship / feature rules
+    - [ ] Phase 2 - Backend authorization e capability resolution
+    - [ ] Phase 3 - Migrazione write sensibili FE -> BE
+    - [ ] Phase 4 - Gating frontend in modalita normale
+    - [ ] Phase 5 - Billing UX societa + sponsor UX progetto
+    - [ ] Phase 6 - Stripe checkout / portal / webhook
+    - [ ] Phase 7 - Downgrade behavior e invisibilita premium
+    - [ ] Phase 8 - Allineamento sito pubblico
+    - [ ] Phase 9 - Cleanup finale modalita e hardening
