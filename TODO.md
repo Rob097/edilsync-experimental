@@ -35,7 +35,7 @@
     - [X] Phase 2 - Backend authorization e capability resolution
     - [X] Phase 3 - Migrazione write sensibili FE -> BE
     - [X] Phase 4 - Gating frontend in modalita normale
-    - [ ] Phase 5 - Billing UX societa + sponsor UX progetto
+    - [X] Phase 5 - Billing UX societa + sponsor UX progetto
     - [ ] Phase 6 - Stripe checkout / portal / webhook
     - [ ] Phase 7 - Downgrade behavior e invisibilita premium
     - [ ] Phase 8 - Allineamento sito pubblico

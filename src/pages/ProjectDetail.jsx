@@ -43,6 +43,7 @@ import EditProjectDialog from '@/components/project/EditProjectDialog';
 import MilestoneList from '@/components/project/MilestoneList';
 import ProjectOverview from '@/components/project/ProjectOverview';
 import ProjectFinancialSection from '@/components/project/ProjectFinancialSection';
+import ProjectSponsorshipCard from '@/components/project/ProjectSponsorshipCard';
 import { getUserDisplayNameByEmail } from '@/lib/userDisplay';
 import { getProjectFinancialPermissions } from '@/lib/financePermissions';
 import { useTour } from '@/components/tour/TourProvider';
@@ -475,6 +476,14 @@ export default function ProjectDetail() {
           </Card>
         )}
       </div>
+
+      <ProjectSponsorshipCard
+        projectId={projectId}
+        user={user}
+        participants={participants}
+        companies={companies}
+        companyMemberships={companyMemberships}
+      />
 
       {/* Description */}
       {project.description && (

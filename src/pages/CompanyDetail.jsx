@@ -24,12 +24,14 @@ import {
   MessageSquare,
   FileText,
   Plus,
+  CreditCard,
 } from 'lucide-react';
 import EmptyState from '@/components/ui/EmptyState';
 import InviteMemberDialog from '@/components/company/InviteMemberDialog';
 import MemberCard from '@/components/company/MemberCard';
 import EditCompanyDialog from '@/components/company/EditCompanyDialog';
 import CompanyTimeTrackingSection from '@/components/company/CompanyTimeTrackingSection';
+import CompanyBillingSection from '@/components/company/CompanyBillingSection';
 import ProjectMessaging from '@/components/messaging/ProjectMessaging';
 import DocumentList from '@/components/project/DocumentList';
 import { getUserDisplayNameByEmail } from '@/lib/userDisplay';
@@ -104,6 +106,12 @@ export default function CompanyDetail() {
 
   const currentUserMembership = members.find((member) => member.user_email === user?.email);
   const isAdmin = currentUserMembership?.role === 'admin';
+
+  React.useEffect(() => {
+    if (activeTab === 'billing' && !isAdmin) {
+      setActiveTab('panoramica');
+    }
+  }, [activeTab, isAdmin]);
 
   const activeMembers = useMemo(
     () => members.filter((member) => member.status === 'active'),
@@ -298,6 +306,12 @@ export default function CompanyDetail() {
             <Users className="h-4 w-4" />
             {tr('Info', 'Info')}
           </TabsTrigger>
+          {isAdmin && (
+            <TabsTrigger value="billing" className="flex items-center gap-2">
+              <CreditCard className="h-4 w-4" />
+              {tr('Fatturazione', 'Billing')}
+            </TabsTrigger>
+          )}
         </TabsList>
 
         <TabsContent value="panoramica" className="space-y-6">
@@ -343,6 +357,12 @@ export default function CompanyDetail() {
                 <Button variant="outline" onClick={() => setInviteDialogOpen(true)}>
                   <UserPlus className="h-4 w-4 mr-2" />
                   {tr('Invita membro', 'Invite member')}
+                </Button>
+              )}
+              {isAdmin && (
+                <Button variant="outline" onClick={() => navigateToSection('billing')}>
+                  <CreditCard className="h-4 w-4 mr-2" />
+                  {tr('Apri fatturazione', 'Open billing')}
                 </Button>
               )}
             </CardContent>
@@ -524,6 +544,16 @@ export default function CompanyDetail() {
           )}
 
         </TabsContent>
+
+        {isAdmin && (
+          <TabsContent value="billing" className="space-y-6">
+            <CompanyBillingSection
+              companyId={companyId}
+              companyName={company.name}
+              isAdmin={isAdmin}
+            />
+          </TabsContent>
+        )}
       </Tabs>
 
       <button
@@ -565,6 +595,18 @@ export default function CompanyDetail() {
             <FileText className="h-5 w-5 text-gray-700" />
             <span className="font-medium">{tr('Apri documenti', 'Open documents')}</span>
           </button>
+          {isAdmin && (
+            <button
+              onClick={() => {
+                setQuickActionOpen(false);
+                navigateToSection('billing');
+              }}
+              className="w-full flex items-center gap-3 px-4 py-3 hover:bg-gray-50 rounded-lg text-left transition-colors"
+            >
+              <CreditCard className="h-5 w-5 text-gray-700" />
+              <span className="font-medium">{tr('Apri fatturazione', 'Open billing')}</span>
+            </button>
+          )}
           {isAdmin && (
             <button
               onClick={() => {

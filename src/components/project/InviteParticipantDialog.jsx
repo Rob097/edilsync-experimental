@@ -15,13 +15,14 @@ import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Loader2, Building2, User } from "lucide-react";
-import { Alert, AlertDescription } from '@/components/ui/alert';
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import {
   getProjectRoleLabel,
   getProjectRoleOptions,
   getCompatibleProjectRolesForCompanyType,
   isCompanyTypeCompatibleWithProjectRole,
 } from '@/lib/domainRoles';
+import { isPaidCompanySubscription, normalizeCompanySubscription } from '@/lib/subscriptions';
 
 export default function InviteParticipantDialog({ 
   open, 
@@ -30,6 +31,7 @@ export default function InviteParticipantDialog({
   currentUserParticipation 
 }) {
   const { t, currentLanguage } = useLanguage();
+  const tr = (itText, enText) => (currentLanguage === 'it' ? itText : enText);
   const queryClient = useQueryClient();
   
   const [participantType, setParticipantType] = useState('company');
@@ -53,18 +55,22 @@ export default function InviteParticipantDialog({
     queryFn: () => appClient.entities.Company.list(),
   });
 
-  const { data: user } = useQuery({
-    queryKey: ['currentUser'],
-    queryFn: () => appClient.auth.me(),
-  });
-
-  const { data: project } = useQuery({
-    queryKey: ['project', projectId],
+  const { data: activeProjectSponsorship } = useQuery({
+    queryKey: ['projectSponsorship', projectId],
     queryFn: async () => {
-      const projects = await appClient.entities.Project.filter({ id: projectId });
-      return projects[0];
+      const records = await appClient.entities.ProjectSponsorship.filter({ project_id: projectId, status: 'active' });
+      return records[0] || null;
     },
     enabled: !!projectId,
+  });
+
+  const { data: selectedCompanySubscription } = useQuery({
+    queryKey: ['companySubscription', selectedCompanyId],
+    queryFn: async () => {
+      const records = await appClient.entities.CompanySubscription.filter({ company_id: selectedCompanyId });
+      return normalizeCompanySubscription(records[0], selectedCompanyId);
+    },
+    enabled: participantType === 'company' && !!selectedCompanyId,
   });
 
   const inviteMutation = useMutation({
@@ -133,6 +139,50 @@ export default function InviteParticipantDialog({
     !!selectedCompanyId &&
     !!projectRole &&
     !isCompanyTypeCompatibleWithProjectRole(selectedCompanyType, projectRole);
+
+  const inviteContextNotice = useMemo(() => {
+    if (participantType !== 'company' || !selectedCompanyId) {
+      return null;
+    }
+
+    const companyIsPaid = isPaidCompanySubscription(selectedCompanySubscription);
+    const projectIsSponsored = Boolean(activeProjectSponsorship);
+
+    if (projectIsSponsored && !companyIsPaid) {
+      return {
+        title: tr('Societa free, progetto sponsorizzato', 'Free company, sponsored project'),
+        description: tr(
+          'Questa societa restera free a livello globale, ma dentro questo progetto potra usare le feature premium progettuali grazie alla sponsorship attiva.',
+          'This company will remain free globally, but inside this project it will be able to use premium project features thanks to the active sponsorship.',
+        ),
+        className: 'border-green-200 bg-green-50 text-green-900',
+      };
+    }
+
+    if (!projectIsSponsored && !companyIsPaid) {
+      return {
+        title: tr('Societa free, progetto non sponsorizzato', 'Free company, unsponsored project'),
+        description: tr(
+          'Questa societa potra partecipare al progetto solo con le feature gratuite finche nessuna societa paid partecipante non attivera una sponsorship.',
+          'This company will join the project with free features only until a paid participant company activates a sponsorship.',
+        ),
+        className: 'border-slate-200 bg-slate-50 text-slate-900',
+      };
+    }
+
+    if (!projectIsSponsored && companyIsPaid) {
+      return {
+        title: tr('Societa paid, progetto non sponsorizzato', 'Paid company, unsponsored project'),
+        description: tr(
+          'Dopo l ingresso nel progetto, questa societa potra sponsorizzarlo e sbloccare le feature premium progettuali per tutti i partecipanti.',
+          'After joining the project, this company will be able to sponsor it and unlock premium project features for all participants.',
+        ),
+        className: 'border-[#ef6144]/20 bg-[#ef6144]/5 text-slate-900',
+      };
+    }
+
+    return null;
+  }, [activeProjectSponsorship, participantType, selectedCompanyId, selectedCompanySubscription, currentLanguage]);
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -236,6 +286,13 @@ export default function InviteParticipantDialog({
               <AlertDescription>
                 {t('inviteParticipantDialog.compatibilityError')}
               </AlertDescription>
+            </Alert>
+          )}
+
+          {inviteContextNotice && (
+            <Alert className={inviteContextNotice.className}>
+              <AlertTitle>{inviteContextNotice.title}</AlertTitle>
+              <AlertDescription>{inviteContextNotice.description}</AlertDescription>
             </Alert>
           )}
 
