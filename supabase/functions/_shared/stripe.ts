@@ -5,7 +5,8 @@ import { adminClient } from "./supabase.ts";
 const stripeSecretKey = Deno.env.get("STRIPE_SECRET_KEY") || "";
 
 export const stripe = new Stripe(stripeSecretKey, {
-  apiVersion: "2024-11-20",
+  // Use the account default API version to avoid runtime incompatibilities
+  // between the deployed Stripe SDK and a pinned future API date.
 });
 
 export const stripeCryptoProvider = Stripe.createSubtleCryptoProvider();
