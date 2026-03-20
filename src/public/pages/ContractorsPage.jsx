@@ -18,7 +18,7 @@ const contentByLocale = {
     titleB: 'Ogni giorno.',
     subtitle:
       'Con margini del 3-5%, una sola disputa non documentata puo azzerare il profitto di un intero progetto. EdilSync ti protegge automaticamente mentre lavori.',
-    ctaTop: 'Inizia Gratis',
+    ctaTop: 'Crea account azienda',
     quote:
       'Non sono io in ritardo - sto aspettando che il cliente scelga le piastrelle da tre settimane. Ma quando lascia una recensione negativa, indovina di chi e la colpa?',
     quoteAuthor: 'Michele',
@@ -68,8 +68,8 @@ const contentByLocale = {
     finalTitle: 'Pronto a portare ordine nel tuo cantiere?',
     finalText:
       'Smetti di perdere tempo tra chat, email e telefonate. Inizia oggi con EdilSync e vedi la differenza dal primo giorno.',
-    finalCta: 'Inizia Gratis per 30 Giorni',
-    finalNote: 'Nessuna carta di credito · Setup in 2 minuti · Cancella quando vuoi',
+    finalCta: 'Crea account azienda',
+    finalNote: 'Societa free o Pro · Nessuna carta per iniziare · Upgrade quando serve',
   },
   en: {
     seoTitle: 'For Contractors',
@@ -80,7 +80,7 @@ const contentByLocale = {
     titleB: 'Every day.',
     subtitle:
       'With 3-5% margins, one undocumented dispute can erase profit on an entire project. EdilSync protects your operations automatically while you work.',
-    ctaTop: 'Start Free',
+    ctaTop: 'Create company account',
     quote:
       'I am not late - I am waiting for the client to choose the tiles for three weeks. But when they leave a bad review, guess who gets blamed?',
     quoteAuthor: 'Michele',
@@ -129,8 +129,8 @@ const contentByLocale = {
     valueCost: '€19/month',
     finalTitle: 'Ready to bring order to your construction site?',
     finalText: 'Stop wasting time across chats, emails, and calls. Start today with EdilSync and feel the difference from day one.',
-    finalCta: 'Start 30-Day Free Trial',
-    finalNote: 'No credit card · 2-minute setup · Cancel anytime',
+    finalCta: 'Create company account',
+    finalNote: 'Free or Pro company · No card required to start · Upgrade when needed',
   },
 };
 

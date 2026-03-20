@@ -10,9 +10,9 @@
     "titleHighlight": "Coordinate everything",
     "titleB": "in one place.",
     "subtitle": "EdilSync brings owners, contractors, subcontractors, and professionals into one platform. Fewer calls, fewer misunderstandings, more control.",
-    "ctaPrimary": "Start 30-Day Free Trial",
+    "ctaPrimary": "Create free account",
     "ctaSecondary": "Learn more",
-    "note": "No credit card required · 2-minute setup · €19/month after trial"
+    "note": "Personal or company account · No card required to start · Upgrade when needed"
   },
   "stats": {
     "aValue": "$31B",
@@ -103,7 +103,7 @@
     "t1": "Real-time visibility without constant calls",
     "t2": "Know exactly when progress is expected",
     "t3": "No surprises on unapproved extra costs",
-    "t4": "Free access — contractor pays",
+    "t4": "Free access on the project you are invited to",
     "r1": "See only tasks and deadlines relevant to you",
     "r2": "Avoid wasted trips with shared calendar",
     "r3": "Project chat without sharing personal number",
@@ -112,17 +112,17 @@
   "pricing": {
     "chip": "Pricing",
     "title": "Simple pricing. No surprises.",
-    "subtitle": "Contractor pays. Owners and subcontractors join for free.",
-    "badge": "Most popular",
-    "trial": "30 days free",
+    "subtitle": "Private owners stay free. Companies can be free or Pro. Premium project capabilities unlock through sponsorship.",
+    "badge": "Company + sponsorship",
+    "trial": "€19/month or €190/year",
     "plan": "ONE PLAN",
     "price": "€19/month",
-    "priceNote": "Fixed fee. No per-user cost. No per-project cost.",
-    "cta": "Start Free Trial",
-    "noCard": "No credit card required",
-    "included": "Everything included:",
-    "p1": "Unlimited projects",
-    "p2": "Unlimited users (owners and subcontractors free)",
+    "priceNote": "Company premium with project sponsorship. No card required to get started.",
+    "cta": "Create company account",
+    "noCard": "No card required to get started",
+    "included": "EdilSync Pro unlocks:",
+    "p1": "Company time tracking",
+    "p2": "Project sponsorship and project premium on sponsored projects",
     "p3": "Tasks, milestones and change requests",
     "p4": "Contextual project and company chat",
     "p5": "Shared calendar with conflict detection",
@@ -130,8 +130,8 @@
     "p7": "Dispute module and document protection",
     "p8": "Project financial control",
     "p9": "Attendance and clock-in",
-    "p10": "3 usage modes: full, essential, operative",
-    "p11": "BIM / 3D viewer support",
+    "p10": "Premium company operative workspace",
+    "p11": "Billing and subscription management",
     "p12": "In-app and email notifications",
     "hint": " per year can repay the whole subscription.",
     "hintStrong": "One avoided dispute",
@@ -140,7 +140,7 @@
   "final": {
     "title": "Ready to bring order to your construction site?",
     "text": "Stop wasting time across chats, email, and phone calls. Start with EdilSync today and feel the difference from day one.",
-    "ctaPrimary": "Start 30-Day Free Trial",
+    "ctaPrimary": "Open EdilSync",
     "ctaSecondary": "Contact us"
   }
 }

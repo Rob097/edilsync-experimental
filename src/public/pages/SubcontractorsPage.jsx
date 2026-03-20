@@ -25,8 +25,8 @@ const contentByLocale = {
     titleC: 'essere in cantiere.',
     subtitle:
       'Gestire 3-5 cantieri contemporaneamente e una sfida di coordinamento. EdilSync ti da il contesto giusto per ogni progetto senza confusione.',
-    note: 'Accesso completamente gratuito per i subappaltatori',
-    ctaTop: 'Inizia Gratis',
+    note: 'Accesso gratuito nei progetti in cui vieni invitato',
+    ctaTop: 'Apri account gratis',
     quote:
       'Arrivo in cantiere e il lavoro precedente non e finito. Un altro viaggio a vuoto. €150 di costo, zero fatturato. E nessuno mi aveva avvisato.',
     quoteAuthor: 'Marco',
@@ -59,16 +59,16 @@ const contentByLocale = {
         icon: Navigation,
       },
       {
-        title: 'Accesso gratuito',
-        text: 'Come subappaltatore, accedi alla piattaforma completamente gratis. Paga solo il contractor principale.',
+        title: 'Accesso gratuito su invito',
+        text: 'Come subappaltatore, entri gratis nei progetti a cui vieni invitato. Se il progetto e sponsorizzato, sblocchi anche le feature premium progettuali disponibili in quel progetto.',
         icon: ArrowRight,
       },
     ],
     finalTitle: 'Pronto a portare ordine nel tuo cantiere?',
     finalText:
       'Smetti di perdere tempo tra chat, email e telefonate. Inizia oggi con EdilSync e vedi la differenza dal primo giorno.',
-    finalCta: 'Inizia Gratis per 30 Giorni',
-    finalNote: 'Nessuna carta di credito · Setup in 2 minuti · Cancella quando vuoi',
+    finalCta: 'Apri account gratis',
+    finalNote: 'Accesso solo ai progetti invitati · Nessuna carta per iniziare · Collaborazione immediata',
   },
   en: {
     seoTitle: 'For Subcontractors',
@@ -80,8 +80,8 @@ const contentByLocale = {
     titleC: 'to be on site.',
     subtitle:
       'Managing 3-5 active jobs at once is a coordination challenge. EdilSync gives you the right context for each project without confusion.',
-    note: 'Completely free access for subcontractors',
-    ctaTop: 'Start Free',
+    note: 'Free access on projects where you are invited',
+    ctaTop: 'Open free account',
     quote:
       'I arrive on site and the previous work is not finished. Another wasted trip. €150 cost, zero revenue. And nobody warned me.',
     quoteAuthor: 'Marco',
@@ -114,15 +114,15 @@ const contentByLocale = {
         icon: Navigation,
       },
       {
-        title: 'Free access',
-        text: 'As a subcontractor, access is fully free. Only the primary contractor pays for the plan.',
+        title: 'Free invited access',
+        text: 'As a subcontractor, you join invited projects for free. If the project is sponsored, you also unlock the premium project capabilities available inside that project.',
         icon: ArrowRight,
       },
     ],
     finalTitle: 'Ready to bring order to your construction site?',
     finalText: 'Stop wasting time across chats, emails, and calls. Start today with EdilSync and feel the difference from day one.',
-    finalCta: 'Start 30-Day Free Trial',
-    finalNote: 'No credit card · 2-minute setup · Cancel anytime',
+    finalCta: 'Open free account',
+    finalNote: 'Only invited-project access · No card required to start · Fast collaboration',
   },
 };
 

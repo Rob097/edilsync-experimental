@@ -10,9 +10,9 @@
     "titleHighlight": "Coordina tutto",
     "titleB": "in un unico spazio.",
     "subtitle": "EdilSync unisce committenti, imprese, subappaltatori e professionisti in un'unica piattaforma. Meno chiamate, meno incomprensioni, più controllo sul tuo cantiere.",
-    "ctaPrimary": "Inizia Gratis per 30 Giorni",
+    "ctaPrimary": "Crea account gratis",
     "ctaSecondary": "Scopri di più",
-    "note": "Nessuna carta di credito richiesta · Setup in 2 minuti · €19/mese dopo la prova"
+    "note": "Account personale o societa · Nessuna carta per iniziare · Upgrade quando serve"
   },
   "stats": {
     "aValue": "$31B",
@@ -103,7 +103,7 @@
     "t1": "Visibilità in tempo reale senza dover chiamare",
     "t2": "Sai esattamente quando aspettarti i progressi",
     "t3": "Nessuna sorpresa su costi extra non concordati",
-    "t4": "Accesso gratuito — paga solo l'impresa",
+    "t4": "Accesso gratuito nel progetto in cui sei invitato",
     "r1": "Vedi solo i task e le scadenze che ti riguardano",
     "r2": "Zero viaggi a vuoto grazie al calendario condiviso",
     "r3": "Chat di progetto senza dare il numero personale",
@@ -112,17 +112,17 @@
   "pricing": {
     "chip": "Prezzi",
     "title": "Un prezzo semplice. Zero sorprese.",
-    "subtitle": "L'impresa paga. Committenti e subappaltatori accedono gratis.",
-    "badge": "30 giorni gratis",
-    "trial": "30 giorni gratis",
+    "subtitle": "Privati sempre free. Societa free o Pro. Le feature premium di progetto si sbloccano tramite sponsorship.",
+    "badge": "Societa + sponsorship",
+    "trial": "€19/mese o €190/anno",
     "plan": "PIANO UNICO",
     "price": "€19/mese",
-    "priceNote": "Tariffa fissa. Nessun costo per utente. Nessun costo per progetto.",
-    "cta": "Inizia la Prova Gratuita",
-    "noCard": "Nessuna carta di credito richiesta",
-    "included": "Tutto incluso:",
-    "p1": "Progetti illimitati",
-    "p2": "Utenti illimitati (committenti e subappaltatori gratis)",
+    "priceNote": "Premium societario con sponsorship progetto. Nessuna carta per iniziare.",
+    "cta": "Crea account societa",
+    "noCard": "Nessuna carta richiesta per iniziare",
+    "included": "Con EdilSync Pro sblocchi:",
+    "p1": "Timbrature societarie",
+    "p2": "Sponsorship progetto e premium progettuale nei progetti sponsorizzati",
     "p3": "Task, milestone e change request",
     "p4": "Chat contestuale di progetto e società",
     "p5": "Calendario condiviso con rilevamento conflitti",
@@ -130,8 +130,8 @@
     "p7": "Modulo dispute e protezione documentale",
     "p8": "Controllo economico di progetto",
     "p9": "Timbrature e presenze",
-    "p10": "3 modalità d'uso: completa, essenziale, operativa",
-    "p11": "Supporto BIM / viewer 3D",
+    "p10": "Workspace operativo premium della societa",
+    "p11": "Fatturazione e gestione abbonamento",
     "p12": "Notifiche in-app e via email",
     "hint": " all'anno ripaga l'intero abbonamento.",
     "hintStrong": "Una disputa evitata",
@@ -140,7 +140,7 @@
   "final": {
     "title": "Pronto a portare ordine nel tuo cantiere?",
     "text": "Smetti di perdere tempo tra chat, email e telefonate. Inizia oggi con EdilSync e vedi la differenza dal primo giorno.",
-    "ctaPrimary": "Inizia Gratis per 30 Giorni",
+    "ctaPrimary": "Apri EdilSync",
     "ctaSecondary": "Contattaci"
   }
 }

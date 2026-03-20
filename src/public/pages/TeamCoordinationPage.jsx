@@ -16,7 +16,7 @@ const contentByLocale = {
     titleHighlight: 'Tutti devono essere allineati.',
     subtitle:
       'Contractor, committente, subappaltatori, architetti. Ognuno ha il suo calendario, le sue priorita, i suoi strumenti. EdilSync li allinea in un unico spazio condiviso.',
-    cta: 'Inizia Gratis',
+    cta: 'Apri EdilSync',
     stakeholdersTitle: 'Chi coordini con EdilSync',
     stakeholders: [
       {
@@ -98,8 +98,8 @@ const contentByLocale = {
     finalTitle: 'Pronto a portare ordine nel tuo cantiere?',
     finalText:
       'Smetti di perdere tempo tra chat, email e telefonate. Inizia oggi con EdilSync e vedi la differenza dal primo giorno.',
-    finalCta: 'Inizia Gratis per 30 Giorni',
-    finalNote: 'Nessuna carta di credito - Setup in 2 minuti - Cancella quando vuoi',
+    finalCta: 'Apri EdilSync',
+    finalNote: 'Account personale o societa - Nessuna carta per iniziare - Upgrade quando serve',
   },
   en: {
     seoTitle: 'Team Coordination',
@@ -110,7 +110,7 @@ const contentByLocale = {
     titleHighlight: 'Everyone must stay aligned.',
     subtitle:
       'Contractor, owner, subcontractors, architects. Each has different priorities, schedules, and tools. EdilSync aligns everyone in one shared workspace.',
-    cta: 'Start Free',
+    cta: 'Open EdilSync',
     stakeholdersTitle: 'Who you coordinate with EdilSync',
     stakeholders: [
       {
@@ -191,8 +191,8 @@ const contentByLocale = {
     citationSource: 'FMI Corporation, Construction Industry Report',
     finalTitle: 'Ready to bring order to your construction site?',
     finalText: 'Stop wasting time across chats, emails, and calls. Start with EdilSync today and feel the difference from day one.',
-    finalCta: 'Start 30-Day Free Trial',
-    finalNote: 'No credit card - 2-minute setup - Cancel anytime',
+    finalCta: 'Open EdilSync',
+    finalNote: 'Personal or company account - No card required to start - Upgrade when needed',
   },
 };
 

@@ -36,11 +36,11 @@ const contentByLocale = {
         items: [
           {
             q: 'Quanto costa EdilSync?',
-            a: 'EdilSync costa €19/mese con tariffa fissa. Non ci sono costi per utente aggiuntivo, ne costi per progetto. L impresa paga, committenti e subappaltatori accedono gratuitamente.',
+            a: 'EdilSync Pro per societa costa €19/mese oppure €190/anno. Il privato resta free. Le societa possono restare free o passare a Pro per sbloccare sponsorship progetto e feature premium societarie.',
           },
           {
-            q: 'C\'e una prova gratuita?',
-            a: 'Si. Puoi usare EdilSync gratuitamente per 30 giorni senza inserire la carta di credito. Alla fine della prova puoi scegliere se continuare o meno.',
+            q: 'Posso iniziare senza carta?',
+            a: 'Non usiamo una prova separata. Puoi iniziare senza carta con un account personale o con una societa free e passare a Pro quando ti serve sponsorship o premium societario.',
           },
           {
             q: 'Posso cancellare quando voglio?',
@@ -48,7 +48,7 @@ const contentByLocale = {
           },
           {
             q: 'I miei committenti devono pagare?',
-            a: 'No. Committenti e subappaltatori accedono alla piattaforma completamente gratis. Solo l impresa contractor paga l abbonamento.',
+            a: 'No. Il homeowner resta free. Anche subappaltatori e professionisti possono entrare gratis nei progetti a cui vengono invitati. Le feature premium di progetto dipendono dalla sponsorship attiva di una societa paid.',
           },
         ],
       },
@@ -93,8 +93,8 @@ const contentByLocale = {
     ],
     finalTitle: 'Pronto a portare ordine nel tuo cantiere?',
     finalText: 'Smetti di perdere tempo tra chat, email e telefonate. Inizia oggi con EdilSync e vedi la differenza dal primo giorno.',
-    finalCta: 'Inizia Gratis per 30 Giorni',
-    finalNote: 'Nessuna carta di credito - Setup in 2 minuti - Cancella quando vuoi',
+    finalCta: 'Apri EdilSync',
+    finalNote: 'Account personale o societa - Nessuna carta per iniziare - Upgrade quando serve',
   },
   en: {
     seoTitle: 'FAQ',
@@ -125,11 +125,11 @@ const contentByLocale = {
         items: [
           {
             q: 'How much does EdilSync cost?',
-            a: 'EdilSync costs €19/month with a fixed rate. There are no extra per-user fees and no per-project fees. The contractor company pays, while clients and subcontractors access for free.',
+            a: 'EdilSync Pro for companies costs €19/month or €190/year. Private owners remain free. Companies can stay free or upgrade to Pro to unlock project sponsorship and company premium capabilities.',
           },
           {
-            q: 'Is there a free trial?',
-            a: 'Yes. You can use EdilSync free for 30 days without entering a credit card. At the end of the trial, you decide whether to continue.',
+            q: 'Can I get started without a card?',
+            a: 'There is no separate trial tier. You can get started without a card using a personal account or a free company, then upgrade to Pro when you need sponsorship or company premium.',
           },
           {
             q: 'Can I cancel anytime?',
@@ -137,7 +137,7 @@ const contentByLocale = {
           },
           {
             q: 'Do my owners need to pay?',
-            a: 'No. Clients and subcontractors can use the platform completely free. Only the contractor company pays for the subscription.',
+            a: 'No. The homeowner remains free. Subcontractors and professionals can also join invited projects for free. Premium project capabilities depend on an active sponsorship from a paid company.',
           },
         ],
       },
@@ -182,8 +182,8 @@ const contentByLocale = {
     ],
     finalTitle: 'Ready to bring order to your construction site?',
     finalText: 'Stop wasting time across chats, emails, and calls. Start with EdilSync today and feel the difference from day one.',
-    finalCta: 'Start 30-Day Free Trial',
-    finalNote: 'No credit card - 2-minute setup - Cancel anytime',
+    finalCta: 'Open EdilSync',
+    finalNote: 'Personal or company account - No card required to start - Upgrade when needed',
   },
 };
 

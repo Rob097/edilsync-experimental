@@ -16,7 +16,7 @@ const contentByLocale = {
     titleHighlight: 'Ogni accordo e provato.',
     subtitle:
       'Nel settore edile, i margini sono del 3-5%. Una sola disputa non documentata puo azzerare il profitto di un intero progetto. EdilSync ti protegge automaticamente, senza lavoro extra.',
-    cta: 'Inizia Gratis',
+    cta: 'Crea account azienda',
     note: 'Funziona per contractor, committenti, subappaltatori e professionisti.',
     scenarioLabel: 'Il scenario tipico',
     scenarioQuote:
@@ -78,8 +78,8 @@ const contentByLocale = {
     finalTitle: 'Pronto a portare ordine nel tuo cantiere?',
     finalText:
       'Smetti di perdere tempo tra chat, email e telefonate. Inizia oggi con EdilSync e vedi la differenza dal primo giorno.',
-    finalCta: 'Inizia Gratis per 30 Giorni',
-    finalNote: 'Nessuna carta di credito - Setup in 2 minuti - Cancella quando vuoi',
+    finalCta: 'Crea account azienda',
+    finalNote: 'Societa free o Pro - Nessuna carta per iniziare - Upgrade quando serve',
   },
   en: {
     seoTitle: 'Dispute Protection',
@@ -90,7 +90,7 @@ const contentByLocale = {
     titleHighlight: 'Every agreement is provable.',
     subtitle:
       'In construction, margins are often 3-5%. One undocumented dispute can erase profit on an entire project. EdilSync protects you automatically, without extra admin work.',
-    cta: 'Start Free',
+    cta: 'Create company account',
     note: 'Built for contractors, owners, subcontractors, and technical professionals.',
     scenarioLabel: 'Typical scenario',
     scenarioQuote:
@@ -152,8 +152,8 @@ const contentByLocale = {
     finalTitle: 'Ready to bring order to your construction site?',
     finalText:
       'Stop wasting time between chats, emails, and phone calls. Start with EdilSync today and feel the difference from day one.',
-    finalCta: 'Start 30-Day Free Trial',
-    finalNote: 'No credit card - 2-minute setup - Cancel anytime',
+    finalCta: 'Create company account',
+    finalNote: 'Free or Pro company - No card required to start - Upgrade when needed',
   },
 };
 

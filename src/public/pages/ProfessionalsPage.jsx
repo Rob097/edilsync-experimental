@@ -22,7 +22,7 @@ const contentByLocale = {
     title: 'Il tuo spazio di lavoro condiviso con impresa e committente',
     subtitle:
       'Architetti, ingegneri, geometri e designer. Ogni progettista ha un ruolo chiave nel cantiere - EdilSync lo rende strutturato.',
-    ctaTop: 'Inizia Gratis',
+    ctaTop: 'Apri account gratis',
     rolesTitle: 'Per ogni figura professionale',
     roles: [
       {
@@ -82,8 +82,8 @@ const contentByLocale = {
     finalTitle: 'Pronto a portare ordine nel tuo cantiere?',
     finalText:
       'Smetti di perdere tempo tra chat, email e telefonate. Inizia oggi con EdilSync e vedi la differenza dal primo giorno.',
-    finalCta: 'Inizia Gratis per 30 Giorni',
-    finalNote: 'Nessuna carta di credito · Setup in 2 minuti · Cancella quando vuoi',
+    finalCta: 'Apri account gratis',
+    finalNote: 'Account unico · Accesso gratuito nei progetti invitati · Collaborazione immediata',
   },
   en: {
     seoTitle: 'For Technical Professionals',
@@ -93,7 +93,7 @@ const contentByLocale = {
     title: 'Your shared workspace with contractor and owner',
     subtitle:
       'Architects, engineers, surveyors, and designers. Every technical professional has a key role on site - EdilSync makes it structured.',
-    ctaTop: 'Start Free',
+    ctaTop: 'Open free account',
     rolesTitle: 'For every professional profile',
     roles: [
       {
@@ -152,8 +152,8 @@ const contentByLocale = {
     ],
     finalTitle: 'Ready to bring order to your construction site?',
     finalText: 'Stop wasting time across chats, emails, and calls. Start today with EdilSync and feel the difference from day one.',
-    finalCta: 'Start 30-Day Free Trial',
-    finalNote: 'No credit card · 2-minute setup · Cancel anytime',
+    finalCta: 'Open free account',
+    finalNote: 'Single account · Free access on invited projects · Fast collaboration',
   },
 };
 

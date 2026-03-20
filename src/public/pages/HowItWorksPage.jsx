@@ -22,12 +22,12 @@ const contentByLocale = {
     badge: 'Come funziona',
     title: 'Da zero a cantiere coordinato in pochi minuti',
     subtitle: 'EdilSync e progettato per funzionare dal primo giorno, senza formazione e senza setup complessi.',
-    ctaTop: 'Inizia Gratis',
+    ctaTop: 'Crea account gratis',
     steps: [
       {
         number: '01',
         title: 'Crea il tuo account',
-        text: 'Registrati in 2 minuti. Nessuna carta di credito, 30 giorni di prova gratuita. Scegli se operare come privato o come azienda.',
+        text: 'Registrati in 2 minuti. Nessuna carta per iniziare. Scegli se operare come privato o come societa.',
         note: 'Ogni persona ha un unico account e puo operare in piu contesti - come committente, come membro di una societa o come professionista. Un solo login per tutto.',
         icon: UserPlus,
       },
@@ -49,7 +49,7 @@ const contentByLocale = {
         number: '04',
         title: 'Invita i partecipanti',
         text: 'Invita il committente, i subappaltatori e i professionisti via email. Ognuno vede solo cio che gli compete, con permessi adeguati al ruolo.',
-        note: 'Committenti e subappaltatori accedono gratuitamente. Ricevono un invito via email, accettano e sono subito operativi senza bisogno di formazione.',
+        note: 'Il homeowner entra gratis. Subappaltatori e professionisti entrano gratis nei progetti a cui sono invitati. Le feature premium progettuali si sbloccano quando una societa paid sponsorizza il progetto.',
         icon: Users,
       },
       {
@@ -70,8 +70,8 @@ const contentByLocale = {
     finalTitle: 'Pronto a portare ordine nel tuo cantiere?',
     finalText:
       'Smetti di perdere tempo tra chat, email e telefonate. Inizia oggi con EdilSync e vedi la differenza dal primo giorno.',
-    finalCta: 'Inizia Gratis per 30 Giorni',
-    finalNote: 'Nessuna carta di credito · Setup in 2 minuti · Cancella quando vuoi',
+    finalCta: 'Crea account gratis',
+    finalNote: 'Account personale o societa · Setup in 2 minuti · Upgrade quando serve',
   },
   en: {
     seoTitle: 'How EdilSync works',
@@ -80,12 +80,12 @@ const contentByLocale = {
     badge: 'How it works',
     title: 'From zero to a coordinated jobsite in minutes',
     subtitle: 'EdilSync is designed to work from day one, with no heavy training and no complex setup.',
-    ctaTop: 'Start Free',
+    ctaTop: 'Create free account',
     steps: [
       {
         number: '01',
         title: 'Create your account',
-        text: 'Sign up in 2 minutes. No credit card required, 30-day free trial. Choose whether to operate as an individual or company.',
+        text: 'Sign up in 2 minutes. No card required to get started. Choose whether to operate as an individual or company.',
         note: 'Each person has one account and can operate in multiple contexts - as owner, company member, or professional. One login for everything.',
         icon: UserPlus,
       },
@@ -107,7 +107,7 @@ const contentByLocale = {
         number: '04',
         title: 'Invite participants',
         text: 'Invite owners, subcontractors, and professionals by email. Each participant sees only relevant scope with role-based permissions.',
-        note: 'Owners and subcontractors join for free. They receive an email invite, accept, and become immediately operational.',
+        note: 'The homeowner joins free. Subcontractors and professionals can join invited projects for free. Premium project capabilities unlock when a paid company sponsors the project.',
         icon: Users,
       },
       {
@@ -127,8 +127,8 @@ const contentByLocale = {
     ],
     finalTitle: 'Ready to bring order to your construction site?',
     finalText: 'Stop wasting time across chats, emails, and calls. Start with EdilSync today and feel the difference from day one.',
-    finalCta: 'Start 30-Day Free Trial',
-    finalNote: 'No credit card · 2-minute setup · Cancel anytime',
+    finalCta: 'Create free account',
+    finalNote: 'Personal or company account · 2-minute setup · Upgrade when needed',
   },
 };
 

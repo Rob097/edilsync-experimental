@@ -16,8 +16,8 @@ const contentByLocale = {
     titleHighlight: 'Senza chiamare.',
     subtitle:
       'Stai investendo una somma importante nella tua casa o nel tuo immobile. Hai il diritto - e la possibilita - di avere visibilita completa su ogni fase del cantiere, in tempo reale.',
-    note: 'Accesso completamente gratuito per i committenti',
-    cta: 'Inizia Gratis',
+    note: 'Accesso gratuito per homeowner invitato o owner del progetto',
+    cta: 'Apri account gratis',
     quote:
       '"Ho speso €65.000 per ristrutturare l appartamento. Per tre mesi ho chiamato il contractor ogni due giorni per sapere a che punto erano. Mi sentivo fastidioso, ma non avevo altra scelta."',
     quoteAuthor: 'Simona',
@@ -67,8 +67,8 @@ const contentByLocale = {
     finalTitle: 'Pronto a portare ordine nel tuo cantiere?',
     finalText:
       'Smetti di perdere tempo tra chat, email e telefonate. Inizia oggi con EdilSync e vedi la differenza dal primo giorno.',
-    finalCta: 'Inizia Gratis per 30 Giorni',
-    finalNote: 'Nessuna carta di credito - Setup in 2 minuti - Cancella quando vuoi',
+    finalCta: 'Apri account gratis',
+    finalNote: 'Accesso guidato · Nessuna carta per iniziare · Collaborazione immediata',
   },
   en: {
     seoTitle: 'Client Transparency',
@@ -79,8 +79,8 @@ const contentByLocale = {
     titleHighlight: 'Without calling.',
     subtitle:
       'You are investing serious money in your home or property. You should have full visibility on each project phase, in real time.',
-    note: 'Completely free access for homeowners',
-    cta: 'Start Free',
+    note: 'Free access for invited or owning homeowner',
+    cta: 'Open free account',
     quote:
       '"I spent €65,000 to renovate my apartment. For three months I called the contractor every two days just to understand progress. I felt annoying, but I had no alternative."',
     quoteAuthor: 'Simona',
@@ -129,8 +129,8 @@ const contentByLocale = {
     ],
     finalTitle: 'Ready to bring order to your construction site?',
     finalText: 'Stop wasting time across chats, emails, and calls. Start with EdilSync today and see the difference from day one.',
-    finalCta: 'Start 30-Day Free Trial',
-    finalNote: 'No credit card - 2-minute setup - Cancel anytime',
+    finalCta: 'Open free account',
+    finalNote: 'Guided access · No card required to start · Fast collaboration',
   },
 };
 
