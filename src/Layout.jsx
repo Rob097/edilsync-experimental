@@ -31,8 +31,7 @@ import {
   LogOut,
   Calendar,
   Bell,
-  HardHat,
-  Sparkles
+  HardHat
 } from "lucide-react";
 import ContextSwitcher from '@/components/context/ContextSwitcher';
 import MessagingNotifications from '@/components/messaging/MessagingNotifications';
@@ -140,11 +139,6 @@ export default function Layout({ children, currentPageName }) {
     }
   };
 
-  const switchToEssentialMode = () => {
-    setSwitchModeTarget(UI_MODES.ESSENTIAL);
-    setSwitchDialogOpen(true);
-  };
-
   const switchToOperationalMode = () => {
     setSwitchModeTarget(UI_MODES.OPERATIONAL);
     setSwitchDialogOpen(true);
@@ -156,20 +150,14 @@ export default function Layout({ children, currentPageName }) {
     setUiMode(switchModeTarget);
     setSwitchDialogOpen(false);
     setSwitchModeTarget(null);
-    navigate(switchModeTarget === UI_MODES.OPERATIONAL ? '/operativa' : '/essenziale');
+    navigate('/operativa');
   };
 
-  const switchDialogTitle = switchModeTarget === UI_MODES.OPERATIONAL
-    ? t('operationalMode.switchDialogTitle')
-    : t('essentialMode.switchDialogTitle');
+  const switchDialogTitle = t('operationalMode.switchDialogTitle');
 
-  const switchDialogDescription = switchModeTarget === UI_MODES.OPERATIONAL
-    ? t('operationalMode.switchDialogDescription')
-    : t('essentialMode.switchDialogDescription');
+  const switchDialogDescription = t('operationalMode.switchDialogDescription');
 
-  const switchDialogConfirm = switchModeTarget === UI_MODES.OPERATIONAL
-    ? t('operationalMode.switchDialogConfirm')
-    : t('essentialMode.switchDialogConfirm');
+  const switchDialogConfirm = t('operationalMode.switchDialogConfirm');
 
   const getInitials = (name) => {
     if (!name) return 'U';
@@ -269,10 +257,6 @@ export default function Layout({ children, currentPageName }) {
                       <Settings className="h-4 w-4 mr-2" />
                       {t('navigation.settings')}
                     </Link>
-                  </DropdownMenuItem>
-                  <DropdownMenuItem onClick={switchToEssentialMode} className="cursor-pointer" data-tour="essential-mode-switch">
-                    <Sparkles className="h-4 w-4 mr-2" />
-                    {t('essentialMode.switchMenuItem')}
                   </DropdownMenuItem>
                   {currentContext === 'company' && (
                     <DropdownMenuItem onClick={switchToOperationalMode} className="cursor-pointer">

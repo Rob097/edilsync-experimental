@@ -39,4 +39,4 @@
     - [X] Phase 6 - Stripe checkout / portal / webhook
     - [X] Phase 7 - Downgrade behavior e invisibilita premium
     - [X] Phase 8 - Allineamento sito pubblico
-    - [ ] Phase 9 - Cleanup finale modalita e hardening
+    - [X] Phase 9 - Cleanup finale modalita e hardening

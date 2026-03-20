@@ -163,7 +163,7 @@ const contentByLocale = {
         colorClass: 'bg-indigo-500/10 text-indigo-600',
         cards: [
           {
-            title: 'Modalita Completa',
+            title: 'Workspace normale',
             icon: Layers,
             description:
               'Superficie completa con dashboard, progetti, calendario, aziende, notifiche e impostazioni per gestione avanzata.',
@@ -175,10 +175,10 @@ const contentByLocale = {
               'Interfaccia mobile-first per il cantiere: clock-in/out rapido, task di oggi, upload foto e chat compatta.',
           },
           {
-            title: 'Modalita Essenziale',
+            title: 'Accesso contestuale per ruolo',
             icon: Zap,
             description:
-              'Vista semplificata e compatta: notifiche, messaggi, attivita del giorno, milestone, documenti e richieste.',
+              'La stessa piattaforma adatta visibilita e azioni in base a contesto attivo, ruolo societa e ruolo progetto, senza superfici duplicate.',
           },
         ],
       },
@@ -324,7 +324,7 @@ const contentByLocale = {
         colorClass: 'bg-indigo-500/10 text-indigo-600',
         cards: [
           {
-            title: 'Complete Mode',
+            title: 'Normal workspace',
             icon: Layers,
             description:
               'Full workspace with dashboards, projects, calendar, companies, notifications, and settings for advanced management.',
@@ -336,10 +336,10 @@ const contentByLocale = {
               'Mobile-first interface for field teams with quick clock-in/out, daily tasks, photo uploads, and compact chat.',
           },
           {
-            title: 'Essential Mode',
+            title: 'Contextual role access',
             icon: Zap,
             description:
-              'Simplified compact view for fast access to notifications, messages, daily activities, milestones, documents, and requests.',
+              'The same platform adapts visibility and actions based on active context, company role, and project role without duplicating surfaces.',
           },
         ],
       },

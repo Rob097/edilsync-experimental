@@ -58,11 +58,6 @@ export default function OperativeLayout() {
     navigate('/');
   };
 
-  const switchToEssential = () => {
-    setUiMode(UI_MODES.ESSENTIAL);
-    navigate('/essenziale');
-  };
-
   const goToProject = (projectId) => {
     setMenuOpen(false);
     navigate(`/operativa/progetto/${projectId}`);
@@ -149,16 +144,10 @@ export default function OperativeLayout() {
               <Card className="border-[#ef6144]/20">
                 <CardContent className="p-4 space-y-3">
                   <h3 className="text-sm font-semibold text-gray-900">{t('operational.menuModes')}</h3>
-                  <div className="grid grid-cols-2 gap-2">
-                    <Button variant="outline" className="border-[#ef6144]/30 text-[#ef6144]" onClick={switchToNormal}>
-                      <Monitor className="h-4 w-4 mr-2" />
-                      {t('operationalMode.fullModeLabel')}
-                    </Button>
-                    <Button variant="outline" className="border-[#ef6144]/30 text-[#ef6144]" onClick={switchToEssential}>
-                      <HardHat className="h-4 w-4 mr-2" />
-                      {t('operationalMode.essentialModeLabel')}
-                    </Button>
-                  </div>
+                  <Button variant="outline" className="w-full border-[#ef6144]/30 text-[#ef6144]" onClick={switchToNormal}>
+                    <Monitor className="h-4 w-4 mr-2" />
+                    {t('operationalMode.fullModeLabel')}
+                  </Button>
                 </CardContent>
               </Card>
 

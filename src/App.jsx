@@ -8,7 +8,6 @@ import PageNotFound from './lib/PageNotFound';
 import { AuthProvider, useAuth } from '@/lib/AuthContext';
 import UserNotRegisteredError from '@/components/UserNotRegisteredError';
 import AuthScreen from '@/components/auth/AuthScreen';
-import EssentialAppRouter from '@/essential/EssentialAppRouter.jsx';
 import OperativeAppRouter from '@/operativa/OperativeAppRouter.jsx';
 import PublicSiteRouter from '@/public/PublicSiteRouter';
 import WebAdminRouter from '@/web-admin/WebAdminRouter';
@@ -55,7 +54,7 @@ const AuthenticatedAppRoutes = () => {
 
   return (
     <Routes>
-      <Route path="essenziale/*" element={<EssentialAppRouter />} />
+      <Route path="essenziale/*" element={<Navigate to="/app" replace />} />
       <Route path="operativa/*" element={<OperativeAppRouter />} />
       <Route index element={
         <LayoutWrapper currentPageName={mainPageKey}>
@@ -85,7 +84,7 @@ function App() {
     <QueryClientProvider client={queryClientInstance}>
       <Router>
         <Routes>
-          <Route path="/essenziale/*" element={<Navigate to="/app/essenziale" replace />} />
+          <Route path="/essenziale/*" element={<Navigate to="/app" replace />} />
           <Route path="/operativa/*" element={<Navigate to="/app/operativa" replace />} />
           <Route
             path="/app/*"

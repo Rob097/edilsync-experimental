@@ -67,8 +67,8 @@ export const getOnboardingTour = (language = 'it') => {
         },
         {
           target: '[data-tour="user-menu-trigger"]',
-          title: 'Modalità Essenziale',
-          content: 'Apri questo menu e usa “Modalità Essenziale” per passare a un\'interfaccia più semplice e veloce, ideale quando sei in cantiere.',
+          title: 'Modalità Operativa',
+          content: 'Apri questo menu e usa “Modalità Operativa” per passare a un\'interfaccia mobile-first più rapida, pensata per il lavoro in cantiere.',
           placement: 'left',
           padding: 8,
         },
@@ -149,8 +149,8 @@ export const getOnboardingTour = (language = 'it') => {
       },
       {
         target: '[data-tour="user-menu-trigger"]',
-        title: 'Essential Mode',
-        content: 'Open this menu and use “Essential Mode” to switch to a simpler, faster interface designed for on-site work.',
+        title: 'Operational Mode',
+        content: 'Open this menu and use “Operational Mode” to switch to a faster mobile-first interface designed for on-site work.',
         placement: 'left',
         padding: 8,
       },
