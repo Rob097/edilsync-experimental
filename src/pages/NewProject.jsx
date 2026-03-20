@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
 import { appClient } from '@/api/appClient';
@@ -9,7 +9,6 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { ArrowLeft, Loader2 } from "lucide-react";
 import ContextBadge from '@/components/context/ContextBadge';
@@ -68,68 +67,8 @@ export default function NewProject() {
 
   const createProjectMutation = useMutation({
     mutationFn: async (data) => {
-      const { my_role, homeowner_email, ...projectData } = data;
-      
-      // Create project
-      const project = await appClient.entities.Project.create({
-        ...projectData,
-        owner_type: currentContext,
-        owner_company_id: currentContext === 'company' ? user?.active_company_id : null,
-        owner_user_id: user?.id,
-      });
-
-      // Create participant for project creator (homeowner or contractor)
-      const creatorParticipant = await appClient.entities.ProjectParticipant.create({
-        project_id: project.id,
-        participant_type: currentContext,
-        user_id: currentContext === 'personal' ? user?.id : null,
-        user_email: user?.email,
-        company_id: currentContext === 'company' ? user?.active_company_id : null,
-        project_role: my_role,
-        status: 'active',
-        can_invite: true,
-      });
-
-      // Create General channel for project
-      const channel = await appClient.entities.Channel.create({
-        project_id: project.id,
-        name: 'General',
-        type: 'general',
-        description: 'Canale generale per comunicazioni all\'interno del progetto',
-        created_by_email: user?.email,
-      });
-
-      // Add creator as channel member
-      await appClient.entities.ChannelMember.create({
-        channel_id: channel.id,
-        project_id: project.id,
-        participant_id: creatorParticipant.id,
-        user_email: user?.email,
-        company_id: currentContext === 'company' ? user?.active_company_id : null,
-        last_read_at: new Date().toISOString(),
-      });
-
-      // Immediately update user access arrays (so RLS works without waiting for automation)
-      const currentProjectIds = user?.project_ids || [];
-      await appClient.auth.updateMe({
-        project_ids: [...new Set([...currentProjectIds, project.id])],
-      });
-
-      // If contractor, invite homeowner
-      if (my_role === 'contractor' && homeowner_email) {
-        await appClient.entities.ProjectParticipant.create({
-          project_id: project.id,
-          participant_type: 'personal',
-          user_id: null,
-          user_email: homeowner_email,
-          company_id: null,
-          project_role: 'homeowner',
-          status: 'invited',
-          can_invite: true,
-        });
-      }
-
-      return project;
+      const result = await appClient.functions.invoke('createProjectWithContext', data);
+      return result.project;
     },
     onSuccess: async (project) => {
       await queryClient.invalidateQueries(['projects']);

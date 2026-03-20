@@ -37,54 +37,14 @@ export default function InviteMemberDialog({ open, onOpenChange, companyId }) {
 
   const inviteMutation = useMutation({
     mutationFn: async () => {
-      const member = await appClient.entities.CompanyMember.create({
+      const result = await appClient.functions.invoke('inviteCompanyMemberWithValidation', {
         company_id: companyId,
         user_email: email,
-        role: role,
+        role,
         profession: companyMemberRole,
         company_member_role: companyMemberRole,
-        status: 'invited',
       });
-
-      // Find General channel for this company
-      const channels = await appClient.entities.Channel.filter({ 
-        company_id: companyId, 
-        type: 'company',
-        name: 'General'
-      });
-
-      if (channels.length > 0) {
-        const generalChannel = channels[0];
-        // Add member to General channel
-        await appClient.entities.ChannelMember.create({
-          channel_id: generalChannel.id,
-          project_id: null,
-          participant_id: member.id,
-          user_email: email,
-          company_id: companyId,
-          last_read_at: new Date().toISOString(),
-        });
-      }
-
-      // Send notification/email via backend function
-      await appClient.functions.invoke('sendNotificationOrEmail', {
-        action_type: 'company_invite',
-        recipient_email: email,
-        context_type: 'company',
-        context_company_id: companyId,
-        notification_data: {
-          type: 'company_invite',
-          title: 'Invito a nuova società',
-          message: `Sei stato invitato a far parte della società "${company?.name}" con ruolo ${role === 'admin' ? 'amministratore' : 'membro'}`,
-          related_event_id: companyId,
-        },
-        email_data: {
-          subject: `Invito a nuova società: ${company?.name}`,
-          body: `Ciao,\n\nSei stato invitato a far parte della società "${company?.name}" con ruolo ${role === 'admin' ? 'amministratore' : 'membro'}.\n\nAccedi all'applicazione per accettare l'invito.\n\nCordiali saluti,\nIl team EdilSync`,
-        },
-      });
-
-      return member;
+      return result.member;
     },
     onSuccess: () => {
       queryClient.invalidateQueries(['companyMembers', companyId]);

@@ -58,12 +58,6 @@ export default function InviteParticipantDialog({
     queryFn: () => appClient.auth.me(),
   });
 
-  const { data: companyMemberships = [] } = useQuery({
-    queryKey: ['userCompanyMemberships', user?.email],
-    queryFn: () => appClient.entities.CompanyMember.filter({ user_email: user?.email, status: 'active' }),
-    enabled: !!user?.email,
-  });
-
   const { data: project } = useQuery({
     queryKey: ['project', projectId],
     queryFn: async () => {
@@ -75,122 +69,15 @@ export default function InviteParticipantDialog({
 
   const inviteMutation = useMutation({
     mutationFn: async () => {
-      // Security check: If inviting as company, user must be admin of that company
-      if (participantType === 'company' && selectedCompanyId) {
-        const membership = companyMemberships.find(m => m.company_id === selectedCompanyId);
-        if (!membership || membership.role !== 'admin') {
-          throw new Error('Solo gli amministratori della società possono invitare partecipanti a nome della società');
-        }
-      }
-
-      const participantData = {
+      const result = await appClient.functions.invoke('inviteProjectParticipantWithValidation', {
         project_id: projectId,
         participant_type: participantType,
         project_role: projectRole,
-        status: 'invited',
-        can_invite: projectRole === 'contractor', // Contractors can invite subcontractors
-      };
-
-      if (participantType === 'company') {
-        participantData.company_id = selectedCompanyId;
-      } else {
-        participantData.user_email = email;
-        // Try to find user_id
-        const users = await appClient.entities.User.list();
-        const foundUser = users.find(u => u.email === email);
-        if (foundUser) {
-          participantData.user_id = foundUser.id;
-        }
-      }
-
-      // If current user is a contractor, mark this as a subcontractor invite
-      if (currentUserParticipation?.project_role === 'contractor') {
-        participantData.invited_by_company_id = currentUserParticipation.company_id;
-      }
-
-      const participant = await appClient.entities.ProjectParticipant.create(participantData);
-
-      // Find General channel for this project
-      const channels = await appClient.entities.Channel.filter({ 
-        project_id: projectId, 
-        type: 'general',
-        name: 'General'
+        company_id: participantType === 'company' ? selectedCompanyId : null,
+        user_email: participantType === 'personal' ? email : null,
       });
 
-      if (channels.length > 0) {
-        const generalChannel = channels[0];
-        // Add participant to General channel
-        await appClient.entities.ChannelMember.create({
-          channel_id: generalChannel.id,
-          project_id: projectId,
-          participant_id: participant.id,
-          user_email: participantType === 'personal' ? email : null,
-          company_id: participantType === 'company' ? selectedCompanyId : null,
-          last_read_at: new Date().toISOString(),
-        });
-      }
-
-      // Send notification/email via backend function
-      if (participantType === 'company') {
-        const companyMembers = await appClient.entities.CompanyMember.filter({ 
-          company_id: selectedCompanyId, 
-          status: 'active',
-          role: 'admin'
-        });
-        
-        const company = allCompanies.find(c => c.id === selectedCompanyId);
-        
-        // Send notifications to company admins only
-        for (const member of companyMembers) {
-          await appClient.functions.invoke('sendNotificationOrEmail', {
-            action_type: 'project_invite',
-            recipient_email: member.user_email,
-            context_type: 'company',
-            context_company_id: selectedCompanyId,
-            notification_data: {
-              type: 'project_invite',
-              title: 'Invito a nuovo progetto',
-              message: `La tua società è stata invitata al progetto "${project?.name}" con ruolo ${projectRole}`,
-              related_event_id: projectId,
-            },
-            email_data: null, // No email to individual members
-          });
-        }
-        
-        // Send email only to company email address if exists
-        if (company?.email) {
-          await appClient.functions.invoke('sendNotificationOrEmail', {
-            action_type: 'project_invite',
-            recipient_email: company.email,
-            context_type: 'company',
-            context_company_id: selectedCompanyId,
-            skip_preferences_check: true, // Skip preferences check for company email
-            notification_data: null, // No notification to company email
-            email_data: {
-              subject: `Invito a nuovo progetto: ${project?.name}`,
-              body: `Gentile ${company?.name},\n\nLa vostra società è stata invitata al progetto "${project?.name}" con ruolo ${projectRole}.\n\nI membri della società riceveranno una notifica nell'applicazione.\n\nCordiali saluti,\nIl team EdilSync`,
-            },
-          });
-        }
-      } else {
-        await appClient.functions.invoke('sendNotificationOrEmail', {
-          action_type: 'project_invite',
-          recipient_email: email,
-          context_type: 'personal',
-          notification_data: {
-            type: 'project_invite',
-            title: 'Invito a nuovo progetto',
-            message: `Sei stato invitato al progetto "${project?.name}" con ruolo ${projectRole}`,
-            related_event_id: projectId,
-          },
-          email_data: {
-            subject: `Invito a nuovo progetto: ${project?.name}`,
-            body: `Ciao,\n\nSei stato invitato al progetto "${project?.name}" con ruolo ${projectRole}.\n\nAccedi all'applicazione per visualizzare i dettagli del progetto.\n\nCordiali saluti,\nIl team EdilSync`,
-          },
-        });
-      }
-
-      return participant;
+      return result.participant;
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['projectParticipants', projectId] });

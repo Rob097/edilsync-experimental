@@ -35,49 +35,8 @@ export default function NewCompany() {
 
   const createCompanyMutation = useMutation({
     mutationFn: async (data) => {
-      // Create company
-      const company = await appClient.entities.Company.create(data);
-
-      // Add current user as admin
-      const companyMember = await appClient.entities.CompanyMember.create({
-        company_id: company.id,
-        user_id: user?.id,
-        user_email: user?.email,
-        role: 'admin',
-        profession: 'owner_admin',
-        company_member_role: 'owner_admin',
-        status: 'active',
-      });
-
-      // Create General channel for company
-      const channel = await appClient.entities.Channel.create({
-        project_id: null,
-        company_id: company.id,
-        name: 'General',
-        type: 'company',
-        description: 'Canale generale per comunicazioni all\'interno della società',
-        created_by_email: user?.email,
-      });
-
-      // Add current user as channel member
-      await appClient.entities.ChannelMember.create({
-        channel_id: channel.id,
-        project_id: null,
-        participant_id: companyMember.id,
-        user_email: user?.email,
-        company_id: company.id,
-        last_read_at: new Date().toISOString(),
-      });
-
-      // Immediately update user access arrays (so RLS works without waiting for automation)
-      const currentCompanyIds = user?.company_ids || [];
-      const currentAdminIds = user?.admin_company_ids || [];
-      await appClient.auth.updateMe({
-        company_ids: [...new Set([...currentCompanyIds, company.id])],
-        admin_company_ids: [...new Set([...currentAdminIds, company.id])],
-      });
-
-      return company;
+      const result = await appClient.functions.invoke('createCompanyWithInitialization', data);
+      return result.company;
     },
     onSuccess: (company) => {
       queryClient.invalidateQueries(['companies']);

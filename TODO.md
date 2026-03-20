@@ -33,7 +33,7 @@
     - [X] Phase 0 - Freeze the contract (`public/Docs/edilsync_pricing_phase0_contract.md`)
     - [X] Phase 1 - Schema piani / sponsorship / feature rules
     - [X] Phase 2 - Backend authorization e capability resolution
-    - [ ] Phase 3 - Migrazione write sensibili FE -> BE
+    - [X] Phase 3 - Migrazione write sensibili FE -> BE
     - [ ] Phase 4 - Gating frontend in modalita normale
     - [ ] Phase 5 - Billing UX societa + sponsor UX progetto
     - [ ] Phase 6 - Stripe checkout / portal / webhook
