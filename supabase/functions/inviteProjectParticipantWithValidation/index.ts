@@ -64,6 +64,11 @@ Deno.serve(async (req) => {
 
     if (projectError) throw projectError;
 
+    const isBlockedForSponsorLoss = Boolean((await adminClient.rpc(
+      "is_project_blocked_for_sponsor_loss",
+      { target_project_id: projectId },
+    )).data);
+
     const currentContext = appUser.active_context || "personal";
     const activeCompanyId = appUser.active_company_id || null;
 
@@ -99,6 +104,10 @@ Deno.serve(async (req) => {
     const canInvite = Boolean(currentUserParticipation.can_invite || currentUserParticipation.project_role === "homeowner");
     if (!canInvite) {
       return jsonResponse({ error: "You do not have permission to invite participants in this project" }, 403);
+    }
+
+    if (isBlockedForSponsorLoss && participantType !== "company") {
+      return jsonResponse({ error: "A blocked project can invite only companies until sponsorship is restored" }, 403);
     }
 
     if (currentUserParticipation.project_role === "contractor" && projectRole !== "subcontractor") {
@@ -152,7 +161,7 @@ Deno.serve(async (req) => {
         && project.owner_company_id
         && !(await adminClient.rpc("is_company_paid", { target_company_id: project.owner_company_id })).data;
 
-      if (!isSponsored && ownerIsFreeCompany && project.owner_company_id === currentUserParticipation.company_id) {
+      if (!isBlockedForSponsorLoss && !isSponsored && ownerIsFreeCompany && project.owner_company_id === currentUserParticipation.company_id) {
         return jsonResponse({ error: "A free company-owned non-sponsored project can invite only the homeowner" }, 403);
       }
 

@@ -10,6 +10,18 @@ const DEFAULT_FEATURE_ACCESS = {
   config: {},
 };
 
+const DEFAULT_PROJECT_PRICING_STATUS = {
+  project_id: null,
+  status: 'unsponsored',
+  is_sponsored: false,
+  sponsor_company_id: null,
+  has_sponsorship_history: false,
+  has_other_unsponsored_owned_project: false,
+  premium_visibility_mode: 'visible_locked',
+  can_only_invite_companies: false,
+  reason_code: null,
+};
+
 const toFeatureMap = (featureKeys = [], results = []) => {
   const map = {};
   featureKeys.forEach((featureKey, index) => {
@@ -29,6 +41,8 @@ export const isFeatureAccessible = (featureAccess) => {
 export const isFeatureFullyEnabled = (featureAccess) => featureAccess?.access_level === 'enabled';
 
 export const isFeatureLimited = (featureAccess) => featureAccess?.access_level === 'limited';
+
+export const isProjectBlockedForSponsorLoss = (projectPricingStatus) => projectPricingStatus?.status === 'blocked_for_sponsor_loss';
 
 const useScopedFeatureAccess = ({ scopeType, scopeId, featureKeys = [], enabled = true }) => {
   const normalizedFeatureKeys = useMemo(
@@ -77,3 +91,30 @@ export const useCompanyFeatureAccess = (companyId, featureKeys = [], options = {
   featureKeys,
   enabled: options.enabled ?? true,
 });
+
+export const useProjectPricingStatus = (projectId, options = {}) => {
+  const query = useQuery({
+    queryKey: ['projectPricingStatus', projectId],
+    queryFn: async () => {
+      if (!projectId) {
+        return DEFAULT_PROJECT_PRICING_STATUS;
+      }
+
+      const result = await appClient.rpc('resolve_project_pricing_status', {
+        target_project_id: projectId,
+      });
+
+      return {
+        ...DEFAULT_PROJECT_PRICING_STATUS,
+        ...(result || {}),
+      };
+    },
+    enabled: (options.enabled ?? true) && !!projectId,
+    staleTime: 60 * 1000,
+  });
+
+  return {
+    ...query,
+    projectPricingStatus: query.data || DEFAULT_PROJECT_PRICING_STATUS,
+  };
+};

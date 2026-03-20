@@ -33,6 +33,7 @@ import { Skeleton } from '@/components/ui/skeleton.jsx';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { toast } from '@/components/ui/use-toast';
 import { isPaidCompanySubscription, normalizeCompanySubscription } from '@/lib/subscriptions';
+import { isProjectBlockedForSponsorLoss, useProjectPricingStatus } from '@/hooks/useFeatureAccess';
 
 export default function ProjectSponsorshipCard({
   projectId,
@@ -51,6 +52,8 @@ export default function ProjectSponsorshipCard({
   const [sponsorDialogOpen, setSponsorDialogOpen] = useState(false);
   const [selectedSponsorCompanyId, setSelectedSponsorCompanyId] = useState('');
   const [endDialogOpen, setEndDialogOpen] = useState(false);
+
+  const { projectPricingStatus } = useProjectPricingStatus(projectId, { enabled: !!projectId });
 
   const { data: activeSponsorship, isLoading: sponsorshipLoading } = useQuery({
     queryKey: ['projectSponsorship', projectId],
@@ -147,14 +150,17 @@ export default function ProjectSponsorshipCard({
     ));
   }, [paidSponsorCandidates, user?.active_company_id]);
 
-  const sponsorCompany = companies.find((company) => company.id === activeSponsorship?.sponsor_company_id) || sponsorCompanyRecord || null;
-  const canEndCurrentSponsorship = Boolean(activeSponsorship?.sponsor_company_id && adminCompanyIds.includes(activeSponsorship.sponsor_company_id));
+  const effectiveActiveSponsorship = projectPricingStatus?.status === 'sponsored' ? activeSponsorship : null;
+  const isBlockedProject = isProjectBlockedForSponsorLoss(projectPricingStatus);
+  const sponsorCompany = companies.find((company) => company.id === effectiveActiveSponsorship?.sponsor_company_id) || sponsorCompanyRecord || null;
+  const canEndCurrentSponsorship = Boolean(effectiveActiveSponsorship?.sponsor_company_id && adminCompanyIds.includes(effectiveActiveSponsorship.sponsor_company_id));
   const preferredUpgradeCompany = freeSponsorCandidates.find((company) => company.id === user?.active_company_id) || freeSponsorCandidates[0] || null;
 
   const invalidateProjectAccess = async (sponsorCompanyId = null) => {
     await Promise.all([
       queryClient.invalidateQueries({ queryKey: ['projectSponsorship', projectId] }),
       queryClient.invalidateQueries({ queryKey: ['featureAccess', 'project', projectId] }),
+      queryClient.invalidateQueries({ queryKey: ['projectPricingStatus', projectId] }),
       sponsorCompanyId
         ? queryClient.invalidateQueries({ queryKey: ['companySponsoredProjects', sponsorCompanyId] })
         : Promise.resolve(),
@@ -189,18 +195,18 @@ export default function ProjectSponsorshipCard({
   });
 
   const endSponsorshipMutation = useMutation({
-    mutationFn: async () => appClient.entities.ProjectSponsorship.update(activeSponsorship.id, {
+    mutationFn: async () => appClient.entities.ProjectSponsorship.update(effectiveActiveSponsorship.id, {
       status: 'ended',
       ended_at: new Date().toISOString(),
     }),
     onSuccess: async () => {
-      await invalidateProjectAccess(activeSponsorship?.sponsor_company_id || null);
+      await invalidateProjectAccess(effectiveActiveSponsorship?.sponsor_company_id || null);
       setEndDialogOpen(false);
       toast({
         title: tr('Sponsorship terminata', 'Sponsorship ended'),
         description: tr(
-          'Le feature premium di progetto tornano immediatamente bloccate finche non arriva una nuova sponsorship.',
-          'Premium project features are immediately locked again until a new sponsorship is activated.',
+          'Il progetto perde subito l entitlement premium. Se esiste gia un altro progetto owned non sponsorizzato, entra nello stato bloccato finche non rientra uno sponsor.',
+          'The project immediately loses premium entitlement. If there is already another owned unsponsored project, it enters the blocked state until a sponsor comes back.',
         ),
       });
     },
@@ -219,8 +225,8 @@ export default function ProjectSponsorshipCard({
     navigate(createPageUrl('CompanyDetail') + `?id=${preferredUpgradeCompany.id}&tab=billing`);
   };
 
-  const startedAtLabel = activeSponsorship?.started_at
-    ? format(new Date(activeSponsorship.started_at), 'd MMM yyyy', { locale: dateLocale })
+  const startedAtLabel = effectiveActiveSponsorship?.started_at
+    ? format(new Date(effectiveActiveSponsorship.started_at), 'd MMM yyyy', { locale: dateLocale })
     : null;
 
   if (sponsorshipLoading) {
@@ -248,23 +254,32 @@ export default function ProjectSponsorshipCard({
               </TooltipProvider>
             </div>
             <p className="mt-1 text-sm text-gray-500">
-              {activeSponsorship
+              {effectiveActiveSponsorship
                 ? tr(
                   'Il progetto e sbloccato a livello premium per tutti i partecipanti.',
                   'The project is premium-unlocked for all participants.',
                 )
+                : isBlockedProject
+                  ? tr(
+                    'Il progetto ha perso lo sponsor mentre l owner ha gia un altro progetto non sponsorizzato. Le superfici premium ora diventano invisibili e resta disponibile solo il recupero sponsor.',
+                    'The project lost its sponsor while the owner already has another unsponsored project. Premium surfaces are now hidden and only sponsor recovery remains available.',
+                  )
                 : tr(
                   'Il progetto sta usando il set di feature free finche una societa paid partecipante non lo sponsorizza.',
                   'The project is using the free feature set until a paid participant company sponsors it.',
                 )}
             </p>
           </div>
-          <Badge className={activeSponsorship ? 'bg-[#ef6144] text-white' : 'bg-slate-100 text-slate-700'}>
-            {activeSponsorship ? tr('Progetto sponsorizzato', 'Sponsored project') : tr('Progetto non sponsorizzato', 'Unsponsored project')}
+          <Badge className={effectiveActiveSponsorship ? 'bg-[#ef6144] text-white' : (isBlockedProject ? 'bg-red-100 text-red-700' : 'bg-slate-100 text-slate-700')}>
+            {effectiveActiveSponsorship
+              ? tr('Progetto sponsorizzato', 'Sponsored project')
+              : isBlockedProject
+                ? tr('Bloccato per perdita sponsor', 'Blocked for sponsor loss')
+                : tr('Progetto non sponsorizzato', 'Unsponsored project')}
           </Badge>
         </CardHeader>
         <CardContent className="space-y-4">
-          {activeSponsorship ? (
+          {effectiveActiveSponsorship ? (
             <div className="rounded-xl border bg-[#ef6144]/5 p-4">
               <div className="flex items-start gap-3">
                 <div className="mt-0.5 flex h-10 w-10 items-center justify-center rounded-full bg-white shadow-sm">
@@ -272,13 +287,28 @@ export default function ProjectSponsorshipCard({
                 </div>
                 <div>
                   <p className="font-semibold text-slate-900">
-                    {tr('Sponsorizzato da', 'Sponsored by')} {sponsorCompany?.name || activeSponsorship.sponsor_company_id}
+                    {tr('Sponsorizzato da', 'Sponsored by')} {sponsorCompany?.name || effectiveActiveSponsorship.sponsor_company_id}
                   </p>
                   <p className="mt-1 text-sm text-slate-600">
                     {tr('Attivo dal', 'Active since')} {startedAtLabel}
                   </p>
                 </div>
               </div>
+            </div>
+          ) : isBlockedProject ? (
+            <div className="rounded-xl border border-red-200 bg-red-50 p-4 text-sm text-red-900">
+              <p className="font-medium">
+                {tr(
+                  'Questo progetto non puo continuare come semplice progetto free: prima deve rientrare una societa sponsor.',
+                  'This project cannot continue as a normal free project: a sponsor company must come back first.',
+                )}
+              </p>
+              <p className="mt-2 text-red-800">
+                {tr(
+                  'Sono consentite solo le azioni necessarie al recupero sponsorship, inclusi gli inviti verso societa che possano entrare e sponsorizzare.',
+                  'Only sponsor-recovery actions are allowed, including invitations to companies that can join and sponsor the project.',
+                )}
+              </p>
             </div>
           ) : (
             <div className="rounded-xl border border-dashed p-4 text-sm text-slate-600">
@@ -289,7 +319,7 @@ export default function ProjectSponsorshipCard({
             </div>
           )}
 
-          {!activeSponsorship && paidSponsorCandidates.length > 0 ? (
+          {!effectiveActiveSponsorship && paidSponsorCandidates.length > 0 ? (
             <div className="space-y-3 rounded-xl border bg-slate-50 p-4">
               <p className="text-sm text-slate-700">
                 {tr(
@@ -309,7 +339,7 @@ export default function ProjectSponsorshipCard({
             </div>
           ) : null}
 
-          {!activeSponsorship && paidSponsorCandidates.length === 0 && preferredUpgradeCompany ? (
+          {!effectiveActiveSponsorship && paidSponsorCandidates.length === 0 && preferredUpgradeCompany ? (
             <div className="space-y-3 rounded-xl border bg-slate-50 p-4">
               <p className="text-sm text-slate-700">
                 {tr(
@@ -323,7 +353,7 @@ export default function ProjectSponsorshipCard({
             </div>
           ) : null}
 
-          {activeSponsorship && canEndCurrentSponsorship ? (
+          {effectiveActiveSponsorship && canEndCurrentSponsorship ? (
             <div className="flex flex-wrap gap-3">
               <Button variant="outline" onClick={() => setEndDialogOpen(true)}>
                 {tr('Termina sponsorship', 'End sponsorship')}
@@ -414,8 +444,8 @@ export default function ProjectSponsorshipCard({
             <AlertDialogTitle>{tr('Terminare la sponsorship?', 'End sponsorship?')}</AlertDialogTitle>
             <AlertDialogDescription>
               {tr(
-                'Il progetto perdera subito le feature premium progettuali. I dati premium resteranno nel database ma torneranno visibili solo con una nuova sponsorship.',
-                'The project will immediately lose premium project features. Premium data will stay in the database and become visible again only after a new sponsorship.',
+                'Il progetto perdera subito le feature premium progettuali. Se l owner ha gia un altro progetto non sponsorizzato, il progetto entrera nello stato bloccato finche non arrivera una nuova sponsorship.',
+                'The project will immediately lose premium project features. If the owner already has another unsponsored project, the project will enter the blocked state until a new sponsorship arrives.',
               )}
             </AlertDialogDescription>
           </AlertDialogHeader>

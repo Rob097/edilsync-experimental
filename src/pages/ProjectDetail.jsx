@@ -49,7 +49,7 @@ import { getProjectFinancialPermissions } from '@/lib/financePermissions';
 import { useTour } from '@/components/tour/TourProvider';
 import { getFinanceSectionTour } from '@/components/tour/tours/financeTour';
 import FeatureGateCard from '@/components/ui/FeatureGateCard';
-import { isFeatureAccessible, isFeatureFullyEnabled, useProjectFeatureAccess } from '@/hooks/useFeatureAccess';
+import { isFeatureAccessible, isFeatureFullyEnabled, isProjectBlockedForSponsorLoss, useProjectFeatureAccess, useProjectPricingStatus } from '@/hooks/useFeatureAccess';
 
 const statusConfig = {
   planning: { color: 'bg-blue-100 text-blue-700' },
@@ -220,6 +220,7 @@ export default function ProjectDetail() {
     'project_documents',
     'project_finance',
   ], { enabled: !!projectId && isActiveParticipant });
+  const { projectPricingStatus } = useProjectPricingStatus(projectId, { enabled: !!projectId && isActiveParticipant });
 
   const milestonesFeatureAccess = projectFeatureMap.project_milestones;
   const projectChatFeatureAccess = projectFeatureMap.project_chat;
@@ -227,13 +228,24 @@ export default function ProjectDetail() {
   const projectFinanceFeatureAccess = projectFeatureMap.project_finance;
 
   const canUseMilestones = isFeatureAccessible(milestonesFeatureAccess);
+  const isBlockedProject = isProjectBlockedForSponsorLoss(projectPricingStatus);
   const showMilestonesPlanGate = isActiveParticipant && milestonesFeatureAccess?.access_level === 'disabled';
   const chatAccessMode = isFeatureFullyEnabled(projectChatFeatureAccess) ? 'full' : 'general_only';
   const canCreateProjectChannels = isFeatureFullyEnabled(projectChatFeatureAccess);
   const financeFeatureEnabled = isFeatureAccessible(projectFinanceFeatureAccess);
   const showFinancePlanGate = isActiveParticipant && projectFinanceFeatureAccess?.access_level === 'disabled';
   const canViewFinanceSection = financeFeatureEnabled && financialPermissions.canViewSection;
-  const shouldShowFinanceButton = showFinancePlanGate || canViewFinanceSection;
+  const shouldShowFinanceButton = !isBlockedProject && (showFinancePlanGate || canViewFinanceSection);
+
+  useEffect(() => {
+    if (!isBlockedProject) return;
+    if (activeTab !== 'info') {
+      setActiveTab('info');
+    }
+    if (infoSection !== 'participants') {
+      setInfoSection('participants');
+    }
+  }, [activeTab, infoSection, isBlockedProject]);
 
   useEffect(() => {
     if (infoSection === 'finance' && !shouldShowFinanceButton) {
@@ -539,21 +551,26 @@ export default function ProjectDetail() {
         }, 100);
       }}>
         <TabsList className="mb-4 flex-wrap h-auto">
+          {!isBlockedProject ? (
           <TabsTrigger value="cantiere" className="flex items-center gap-2">
             <Activity className="h-4 w-4" />
             {t('projectDetail.tabs.overview')}
           </TabsTrigger>
+          ) : null}
+          {!isBlockedProject ? (
           <TabsTrigger value="lavori" className="flex items-center gap-2">
             <CheckCircle2 className="h-4 w-4" />
             {t('projectDetail.tabs.tasks')}
           </TabsTrigger>
+          ) : null}
           <TabsTrigger value="info" className="flex items-center gap-2">
             <Users className="h-4 w-4" />
-            {t('projectDetail.tabs.info')}
+            {isBlockedProject ? tr('Recupero sponsor', 'Sponsor recovery') : t('projectDetail.tabs.info')}
           </TabsTrigger>
         </TabsList>
 
         {/* CANTIERE TAB - Panoramica e Feed */}
+        {!isBlockedProject ? (
         <TabsContent value="cantiere" className="space-y-6">
           <ProjectOverview 
             projectId={projectId}
@@ -577,8 +594,10 @@ export default function ProjectDetail() {
             }}
           />
         </TabsContent>
+        ) : null}
 
         {/* LAVORI TAB - Task e Change Requests */}
+        {!isBlockedProject ? (
         <TabsContent value="lavori" className="space-y-6">
           {/* Section selector */}
           <div className="flex gap-2 flex-wrap">
@@ -760,11 +779,34 @@ export default function ProjectDetail() {
             </div>
           )}
         </TabsContent>
+        ) : null}
 
         {/* Info & TEAM TAB */}
         <TabsContent value="info" className="space-y-6">
+          {isBlockedProject ? (
+            <Card className="border-red-200 bg-red-50">
+              <CardContent className="p-4">
+                <div className="flex items-start gap-3">
+                  <AlertCircle className="mt-0.5 h-5 w-5 flex-shrink-0 text-red-600" />
+                  <div>
+                    <h3 className="font-semibold text-red-900">
+                      {tr('Progetto bloccato per perdita sponsor', 'Project blocked after sponsor loss')}
+                    </h3>
+                    <p className="mt-1 text-sm text-red-800">
+                      {tr(
+                        'Le aree premium sono state nascoste e il progetto non puo essere usato come normale progetto free. Da qui puoi solo gestire i partecipanti e invitare societa che possano riportare una sponsorship valida.',
+                        'Premium areas are now hidden and the project cannot be used as a normal free project. From here you can only manage participants and invite companies that can restore a valid sponsorship.',
+                      )}
+                    </p>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          ) : null}
+
           {/* Section selector */}
           <div className="flex gap-2 flex-wrap">
+            {!isBlockedProject ? (
             <Button
                variant={infoSection === 'all' ? 'default' : 'outline'}
                onClick={() => {
@@ -783,6 +825,8 @@ export default function ProjectDetail() {
              >
                {t('projectDetail.sections.viewAll')}
              </Button>
+            ) : null}
+             {!isBlockedProject ? (
              <Button
                variant={infoSection === 'chat' ? 'default' : 'outline'}
                onClick={() => {
@@ -801,6 +845,8 @@ export default function ProjectDetail() {
              >
                {t('projectDetail.sections.messaging')}
              </Button>
+             ) : null}
+             {!isBlockedProject ? (
              <Button
                variant={infoSection === 'documents' ? 'default' : 'outline'}
                onClick={() => {
@@ -819,6 +865,7 @@ export default function ProjectDetail() {
              >
                {t('projectDetail.sections.documents')}
              </Button>
+             ) : null}
              {shouldShowFinanceButton ? (
                <Button
                  variant={infoSection === 'finance' ? 'default' : 'outline'}
@@ -840,7 +887,7 @@ export default function ProjectDetail() {
                </Button>
              ) : null}
              <Button
-               variant={infoSection === 'participants' ? 'default' : 'outline'}
+               variant={infoSection === 'participants' || isBlockedProject ? 'default' : 'outline'}
                onClick={() => {
                  setInfoSection('participants');
                  setTimeout(() => {
@@ -853,14 +900,14 @@ export default function ProjectDetail() {
                    }
                  }, 100);
                }}
-               className={infoSection === 'participants' ? 'bg-[#ef6144] hover:bg-[#d9553a]' : ''}
+               className={infoSection === 'participants' || isBlockedProject ? 'bg-[#ef6144] hover:bg-[#d9553a]' : ''}
              >
-               {t('projectDetail.sections.participants')}
+               {isBlockedProject ? tr('Partecipanti e sponsor', 'Participants and sponsor') : t('projectDetail.sections.participants')}
              </Button>
           </div>
 
           {/* Chat Section */}
-          {(infoSection === 'all' || infoSection === 'chat') && (
+          {!isBlockedProject && (infoSection === 'all' || infoSection === 'chat') && (
             <div id="section-chat">
               <h3 className="text-lg font-semibold mb-4">{t('projectDetail.sections.messaging')}</h3>
               <ProjectMessaging
@@ -885,7 +932,7 @@ export default function ProjectDetail() {
           )}
 
           {/* Documents Section */}
-          {(infoSection === 'all' || infoSection === 'documents') && (
+          {!isBlockedProject && (infoSection === 'all' || infoSection === 'documents') && (
             <Card id="section-documents">
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
@@ -906,7 +953,7 @@ export default function ProjectDetail() {
             </Card>
           )}
 
-          {shouldShowFinanceButton && (infoSection === 'all' || infoSection === 'finance') && (
+          {shouldShowFinanceButton && !isBlockedProject && (infoSection === 'all' || infoSection === 'finance') && (
             <div id="section-finance" className={infoSection === 'all' ? 'border-t pt-6' : ''}>
               <div className="flex items-center justify-between mb-4">
                 <h3 className="text-lg font-semibold flex items-center gap-2">
@@ -960,7 +1007,7 @@ export default function ProjectDetail() {
                     className="bg-[#ef6144] hover:bg-[#d9553a]"
                   >
                     <UserPlus className="h-4 w-4 mr-2" />
-                    {t('projectDetail.invite')}
+                    {isBlockedProject ? tr('Invita società sponsor', 'Invite sponsor company') : t('projectDetail.invite')}
                   </Button>
                 )}
               </CardHeader>
@@ -1016,7 +1063,7 @@ export default function ProjectDetail() {
       }
 
       {/* Quick Action FAB - positioned next to Assistant button */}
-      {isActiveParticipant && (
+      {isActiveParticipant && !isBlockedProject && (
         <button
           onClick={() => setQuickActionOpen(!quickActionOpen)}
           className="fixed bottom-6 right-24 w-14 h-14 rounded-full bg-gray-700 hover:bg-gray-600 text-white shadow-lg flex items-center justify-center z-50 transition-transform hover:scale-110"
@@ -1026,7 +1073,7 @@ export default function ProjectDetail() {
       )}
 
       {/* Quick Action Menu */}
-      {quickActionOpen && (
+      {quickActionOpen && !isBlockedProject && (
         <div className="fixed bottom-24 right-24 bg-white rounded-lg shadow-xl border p-2 z-50 min-w-[200px]">
           <button
             onClick={() => {
@@ -1068,6 +1115,7 @@ export default function ProjectDetail() {
         onOpenChange={setInviteDialogOpen}
         projectId={projectId}
         currentUserParticipation={userParticipation}
+        projectPricingStatus={projectPricingStatus}
       />
 
       <EditProjectDialog

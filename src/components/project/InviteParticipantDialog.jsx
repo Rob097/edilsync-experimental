@@ -23,12 +23,14 @@ import {
   isCompanyTypeCompatibleWithProjectRole,
 } from '@/lib/domainRoles';
 import { isPaidCompanySubscription, normalizeCompanySubscription } from '@/lib/subscriptions';
+import { isProjectBlockedForSponsorLoss, useProjectPricingStatus } from '@/hooks/useFeatureAccess';
 
 export default function InviteParticipantDialog({ 
   open, 
   onOpenChange, 
   projectId,
-  currentUserParticipation 
+  currentUserParticipation,
+  projectPricingStatus: projectPricingStatusProp,
 }) {
   const { t, currentLanguage } = useLanguage();
   const tr = (itText, enText) => (currentLanguage === 'it' ? itText : enText);
@@ -38,6 +40,12 @@ export default function InviteParticipantDialog({
   const [email, setEmail] = useState('');
   const [selectedCompanyId, setSelectedCompanyId] = useState('');
   const [projectRole, setProjectRole] = useState('');
+
+  const { projectPricingStatus: fetchedProjectPricingStatus } = useProjectPricingStatus(projectId, {
+    enabled: open && !!projectId,
+  });
+  const projectPricingStatus = projectPricingStatusProp || fetchedProjectPricingStatus;
+  const projectIsBlockedForSponsorLoss = isProjectBlockedForSponsorLoss(projectPricingStatus);
 
   const roleDescriptions = {
     contractor: t('inviteParticipantDialog.contractorDesc'),
@@ -61,7 +69,7 @@ export default function InviteParticipantDialog({
       const records = await appClient.entities.ProjectSponsorship.filter({ project_id: projectId, status: 'active' });
       return records[0] || null;
     },
-    enabled: !!projectId,
+    enabled: !!projectId && !projectIsBlockedForSponsorLoss,
   });
 
   const { data: selectedCompanySubscription } = useQuery({
@@ -102,6 +110,12 @@ export default function InviteParticipantDialog({
     setProjectRole('');
   };
 
+  useEffect(() => {
+    if (projectIsBlockedForSponsorLoss && participantType !== 'company') {
+      setParticipantType('company');
+    }
+  }, [participantType, projectIsBlockedForSponsorLoss]);
+
   const handleSubmit = (e) => {
     e.preventDefault();
     inviteMutation.mutate();
@@ -141,12 +155,23 @@ export default function InviteParticipantDialog({
     !isCompanyTypeCompatibleWithProjectRole(selectedCompanyType, projectRole);
 
   const inviteContextNotice = useMemo(() => {
+    if (projectIsBlockedForSponsorLoss) {
+      return {
+        title: tr('Progetto bloccato per perdita sponsor', 'Project blocked after sponsor loss'),
+        description: tr(
+          'Questo progetto puo invitare solo societa finche non rientra una sponsorship valida. Le superfici premium restano invisibili fino al recupero sponsor.',
+          'This project can invite only companies until a valid sponsorship returns. Premium surfaces stay hidden until sponsor recovery.',
+        ),
+        className: 'border-red-200 bg-red-50 text-red-900',
+      };
+    }
+
     if (participantType !== 'company' || !selectedCompanyId) {
       return null;
     }
 
     const companyIsPaid = isPaidCompanySubscription(selectedCompanySubscription);
-    const projectIsSponsored = Boolean(activeProjectSponsorship);
+    const projectIsSponsored = projectPricingStatus?.status === 'sponsored' || Boolean(activeProjectSponsorship);
 
     if (projectIsSponsored && !companyIsPaid) {
       return {
@@ -182,7 +207,7 @@ export default function InviteParticipantDialog({
     }
 
     return null;
-  }, [activeProjectSponsorship, participantType, selectedCompanyId, selectedCompanySubscription, currentLanguage]);
+  }, [activeProjectSponsorship, currentLanguage, participantType, projectIsBlockedForSponsorLoss, projectPricingStatus?.status, selectedCompanyId, selectedCompanySubscription]);
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -201,7 +226,7 @@ export default function InviteParticipantDialog({
             <RadioGroup 
               value={participantType} 
               onValueChange={setParticipantType}
-              className="grid grid-cols-2 gap-3"
+              className={`grid gap-3 ${projectIsBlockedForSponsorLoss ? 'grid-cols-1' : 'grid-cols-2'}`}
             >
               <div>
                 <RadioGroupItem value="company" id="company" className="peer sr-only" />
@@ -213,16 +238,18 @@ export default function InviteParticipantDialog({
                     <span className="font-medium">{t('inviteParticipantDialog.company')}</span>
                   </Label>
                 </div>
-                <div>
-                  <RadioGroupItem value="personal" id="personal" className="peer sr-only" />
-                  <Label
-                    htmlFor="personal"
-                    className="flex flex-col items-center justify-center rounded-lg border-2 border-gray-200 p-4 cursor-pointer hover:bg-gray-50 peer-data-[state=checked]:border-[#ef6144] peer-data-[state=checked]:bg-[#ef6144]/5"
-                  >
-                    <User className="h-6 w-6 mb-2 text-gray-500" />
-                    <span className="font-medium">{t('inviteParticipantDialog.person')}</span>
-                  </Label>
-              </div>
+                {!projectIsBlockedForSponsorLoss ? (
+                  <div>
+                    <RadioGroupItem value="personal" id="personal" className="peer sr-only" />
+                    <Label
+                      htmlFor="personal"
+                      className="flex flex-col items-center justify-center rounded-lg border-2 border-gray-200 p-4 cursor-pointer hover:bg-gray-50 peer-data-[state=checked]:border-[#ef6144] peer-data-[state=checked]:bg-[#ef6144]/5"
+                    >
+                      <User className="h-6 w-6 mb-2 text-gray-500" />
+                      <span className="font-medium">{t('inviteParticipantDialog.person')}</span>
+                    </Label>
+                </div>
+                ) : null}
             </RadioGroup>
           </div>
 
