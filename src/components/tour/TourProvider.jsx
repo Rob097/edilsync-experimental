@@ -37,8 +37,6 @@ export default function TourProvider({ children }) {
     projects_dismissed: false,
     companies_completed: false,
     companies_dismissed: false,
-    essential_onboarding_completed: false,
-    essential_onboarding_dismissed: false,
   };
 
   const startTour = (tourId, steps, options = {}) => {

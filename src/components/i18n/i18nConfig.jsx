@@ -52,12 +52,6 @@ const itTranslations = {
     "logout": "Esci",
     "systemDashboard": "Dashboard di Sistema"
   },
-  "essentialMode": {
-    "switchMenuItem": "Modalità Essenziale",
-    "switchDialogTitle": "Passare alla modalità Essenziale?",
-    "switchDialogDescription": "Passerai a un'interfaccia semplificata pensata per operazioni rapide in cantiere.",
-    "switchDialogConfirm": "Conferma"
-  },
   "operationalMode": {
     "switchMenuItem": "Modalità Operativa",
     "switchDialogTitle": "Passare alla modalità Operativa?",
@@ -67,8 +61,7 @@ const itTranslations = {
     "companyRequiredTitle": "Seleziona un contesto aziendale",
     "companyRequiredDescription": "La modalità Operativa è disponibile solo nel contesto aziendale.",
     "backToNormal": "Normale",
-    "fullModeLabel": "Completa",
-    "essentialModeLabel": "Essenziale"
+    "fullModeLabel": "Completa"
   },
   "header": {
     "notifications": "Notifiche",
@@ -875,12 +868,6 @@ const enTranslations = {
     "logout": "Logout",
     "systemDashboard": "System Dashboard"
   },
-  "essentialMode": {
-    "switchMenuItem": "Essential Mode",
-    "switchDialogTitle": "Switch to Essential mode?",
-    "switchDialogDescription": "You will switch to a simplified interface designed for quick on-site operations.",
-    "switchDialogConfirm": "Confirm"
-  },
   "operationalMode": {
     "switchMenuItem": "Operational Mode",
     "switchDialogTitle": "Switch to Operational mode?",
@@ -890,8 +877,7 @@ const enTranslations = {
     "companyRequiredTitle": "Select a company context",
     "companyRequiredDescription": "Operational mode is available only in company context.",
     "backToNormal": "Normal",
-    "fullModeLabel": "Full",
-    "essentialModeLabel": "Essential"
+    "fullModeLabel": "Full"
   },
   "header": {
     "notifications": "Notifications",

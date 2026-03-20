@@ -9,7 +9,7 @@ In questa fase interveniamo solo sulla **modalita normale**.
 Restano fuori:
 
 - adattamento della modalita operativa
-- refactor / rimozione della modalita essenziale
+- refactor / rimozione della superficie legacy
 
 ---
 

@@ -22,11 +22,8 @@ const hotDataDefaults = {
 [
 	['notifications'],
 	['allNotifications'],
-	['essentialAllNotifications'],
 	['messages'],
 	['recentMessages'],
-	['essentialMessages'],
-	['essentialRecentMessages'],
 ].forEach((queryKey) => {
 	queryClientInstance.setQueryDefaults(queryKey, hotDataDefaults);
 });

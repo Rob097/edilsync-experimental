@@ -9,7 +9,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { HardHat, Monitor, Menu, X, Building2, Briefcase } from 'lucide-react';
 import { useLanguage } from '@/components/i18n/useLanguage';
-import { setUiMode, UI_MODES } from '@/essential/essential-mode';
+import { setUiMode, UI_MODES } from '@/lib/ui-mode';
 import { useOperativeData } from './useOperativeData';
 import LanguageSelector from '@/components/language/LanguageSelector';
 

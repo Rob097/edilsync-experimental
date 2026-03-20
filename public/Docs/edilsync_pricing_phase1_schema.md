@@ -235,6 +235,6 @@ In questa fase non vengono ancora implementati:
 - sponsor card in UI
 - downgrade behavior applicativo
 - modalita operativa
-- rimozione modalita essenziale
+- rimozione superficie legacy
 
 Questi aspetti verranno affrontati nelle fasi successive sopra descritte.

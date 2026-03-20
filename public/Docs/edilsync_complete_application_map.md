@@ -506,29 +506,7 @@ Navigazione principale:
 - Settings
 - SystemDashboard per admin
 
-### 11.2 Modalita essenziale (`/essenziale`)
-
-E una versione semplificata, piu orientata a priorita e informazioni essenziali.
-
-Comprende:
-
-- home essenziale con conteggio notifiche non lette e messaggi non letti
-- elenco progetti essenziale
-- explorer progetto essenziale
-- societa essenziali
-- calendario essenziale
-- creazione rapida di progetto o societa
-
-Il project explorer essenziale concentra il progetto in 6 sezioni:
-
-- messaggi
-- attivita
-- milestone
-- documenti
-- richieste
-- dispute
-
-### 11.3 Modalita operativa (`/operativa`)
+### 11.2 Modalita operativa (`/operativa`)
 
 E la superficie mobile-first e orientata alla produttivita quotidiana di cantiere.
 
@@ -590,7 +568,6 @@ Esistono tour guidati per:
 - onboarding generale
 - progetti
 - societa
-- modalita essenziale
 - finance
 
 Lo stato completato/dismissed e salvato nel profilo utente.
@@ -1354,35 +1331,14 @@ Questa modalita e cruciale per l'uso sul campo e rende EdilSync piu vicino a un 
 
 ---
 
-## 28. Modalita Essenziale: Esperienza Sintetica e di Priorita
+## 28. Modalita supportate
 
-La modalita essenziale comprime il sistema per renderlo leggibile a colpo d'occhio.
+Le superfici attive dell'applicazione sono due:
 
-### 28.1 Home essenziale
+- modalita normale
+- modalita operativa
 
-Mostra:
-
-- numero notifiche non lette
-- numero messaggi non letti
-- riepilogo di oggi con eventi e task rilevanti
-- conteggio progetti del contesto
-- conteggio societa nel contesto personale
-- prossimo evento
-
-### 28.2 Explorer progetto essenziale
-
-E una shell a sezioni che permette di aprire direttamente:
-
-- messaggi
-- attivita
-- milestone
-- documenti
-- richieste
-- dispute
-
-### 28.3 Valore
-
-E utile per:
+La vecchia superficie semplificata non fa piu parte del prodotto attivo e non e piu presente nel repository applicativo.
 
 - utenti meno tecnici
 - stakeholder che vogliono poche scelte e molta chiarezza
@@ -1590,7 +1546,6 @@ Questo e un punto chiave per la futura comunicazione pubblica: EdilSync non ha m
 - calendario ed eventi
 - notifiche in-app ed email
 - timbrature societarie
-- modalita essenziale
 - modalita operativa
 - dashboard di sistema
 
@@ -1618,7 +1573,7 @@ Le sue caratteristiche distintive sono:
 - collaborazione strutturata, non solo chat libera
 - documentazione e tracciabilita native
 - gestione di varianti e dispute come parti centrali del processo
-- superficie multipla: completa, essenziale e operativa
+- superficie multipla: normale e operativa
 - collegamento tra operativita di cantiere e controllo economico
 
 In termini di posizionamento, EdilSync si presta bene a essere raccontato come:

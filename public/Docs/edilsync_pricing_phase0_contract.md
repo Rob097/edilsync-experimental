@@ -12,7 +12,7 @@ Da questo momento:
 - backend, frontend, Stripe e sito pubblico dovranno allinearsi a questo documento
 - in questa prima implementazione si lavora **solo nella modalita normale**
 - la modalita operativa verra adattata in una fase finale dedicata
-- la modalita essenziale verra rimossa in uno step successivo separato
+- la superficie legacy verra rimossa in uno step successivo separato
 
 ---
 
@@ -350,7 +350,7 @@ La cancellazione dati puo avvenire solo in eventuali flussi espliciti di elimina
 Questi temi vengono esplicitamente rimandati:
 
 - adattamento modalita operativa
-- rimozione modalita essenziale
+- rimozione superficie legacy
 - cap di storage
 - complessita fiscale / VAT internazionale
 - piani paid multipli

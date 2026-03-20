@@ -42,7 +42,7 @@ import AssistantFloatingButton from '@/components/assistant/AssistantFloatingBut
 import LanguageSelector from '@/components/language/LanguageSelector';
 import TourProvider from '@/components/tour/TourProvider';
 import TourOverlay from '@/components/tour/TourOverlay';
-import { setUiMode, UI_MODES } from '@/essential/essential-mode';
+import { setUiMode, UI_MODES } from '@/lib/ui-mode';
 import {
   Dialog,
   DialogContent,

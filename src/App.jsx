@@ -54,7 +54,6 @@ const AuthenticatedAppRoutes = () => {
 
   return (
     <Routes>
-      <Route path="essenziale/*" element={<Navigate to="/app" replace />} />
       <Route path="operativa/*" element={<OperativeAppRouter />} />
       <Route index element={
         <LayoutWrapper currentPageName={mainPageKey}>
@@ -84,7 +83,6 @@ function App() {
     <QueryClientProvider client={queryClientInstance}>
       <Router>
         <Routes>
-          <Route path="/essenziale/*" element={<Navigate to="/app" replace />} />
           <Route path="/operativa/*" element={<Navigate to="/app/operativa" replace />} />
           <Route
             path="/app/*"
