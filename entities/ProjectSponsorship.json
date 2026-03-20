@@ -1,0 +1,110 @@
+{
+  "name": "ProjectSponsorship",
+  "type": "object",
+  "properties": {
+    "project_id": {
+      "type": "string",
+      "description": "Sponsored project id"
+    },
+    "sponsor_company_id": {
+      "type": "string",
+      "description": "Sponsor company id"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "active",
+        "ended"
+      ],
+      "default": "active",
+      "description": "Sponsorship lifecycle status"
+    },
+    "started_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Sponsorship start"
+    },
+    "ended_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Sponsorship end"
+    },
+    "activation_source": {
+      "type": "string",
+      "enum": [
+        "manual",
+        "project_creation",
+        "system"
+      ],
+      "default": "manual",
+      "description": "How the sponsorship was activated"
+    }
+  },
+  "required": [
+    "project_id",
+    "sponsor_company_id"
+  ],
+  "rls": {
+    "create": {
+      "$or": [
+        {
+          "sponsor_company_id": {
+            "$in": "{{user.data.admin_company_ids}}"
+          }
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    },
+    "read": {
+      "$or": [
+        {
+          "project_id": {
+            "$in": "{{user.data.project_ids}}"
+          }
+        },
+        {
+          "sponsor_company_id": {
+            "$in": "{{user.data.admin_company_ids}}"
+          }
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    },
+    "update": {
+      "$or": [
+        {
+          "sponsor_company_id": {
+            "$in": "{{user.data.admin_company_ids}}"
+          }
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    },
+    "delete": {
+      "$or": [
+        {
+          "sponsor_company_id": {
+            "$in": "{{user.data.admin_company_ids}}"
+          }
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    }
+  }
+}

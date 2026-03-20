@@ -1,0 +1,50 @@
+{
+  "name": "PlanFeatureRule",
+  "type": "object",
+  "properties": {
+    "plan_code": {
+      "type": "string",
+      "description": "Plan identifier"
+    },
+    "feature_key": {
+      "type": "string",
+      "description": "Feature key linked to AppFeature"
+    },
+    "access_level": {
+      "type": "string",
+      "enum": [
+        "enabled",
+        "disabled",
+        "limited"
+      ],
+      "description": "Feature availability for the plan"
+    },
+    "config_json": {
+      "type": "object",
+      "description": "Optional plan-specific configuration payload"
+    }
+  },
+  "required": [
+    "plan_code",
+    "feature_key",
+    "access_level"
+  ],
+  "rls": {
+    "create": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "read": true,
+    "update": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "delete": {
+      "user_condition": {
+        "role": "admin"
+      }
+    }
+  }
+}

@@ -1,0 +1,138 @@
+{
+  "name": "CompanySubscription",
+  "type": "object",
+  "properties": {
+    "company_id": {
+      "type": "string",
+      "description": "Company owning the subscription"
+    },
+    "plan_code": {
+      "type": "string",
+      "description": "Current plan code"
+    },
+    "billing_status": {
+      "type": "string",
+      "enum": [
+        "free",
+        "active",
+        "incomplete",
+        "past_due",
+        "canceled",
+        "unpaid"
+      ],
+      "description": "Current billing lifecycle status"
+    },
+    "billing_cycle": {
+      "type": "string",
+      "enum": [
+        "monthly",
+        "yearly"
+      ],
+      "description": "Billing cycle for paid subscriptions"
+    },
+    "currency": {
+      "type": "string",
+      "default": "EUR",
+      "description": "Billing currency"
+    },
+    "stripe_customer_id": {
+      "type": "string",
+      "description": "Stripe customer id"
+    },
+    "stripe_subscription_id": {
+      "type": "string",
+      "description": "Stripe subscription id"
+    },
+    "stripe_product_id": {
+      "type": "string",
+      "description": "Stripe product id"
+    },
+    "stripe_price_id": {
+      "type": "string",
+      "description": "Stripe price id"
+    },
+    "current_period_start": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Current billing period start"
+    },
+    "current_period_end": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Current billing period end"
+    },
+    "cancel_at_period_end": {
+      "type": "boolean",
+      "default": false,
+      "description": "Whether the subscription should end at period close"
+    },
+    "canceled_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Cancellation timestamp if any"
+    }
+  },
+  "required": [
+    "company_id",
+    "plan_code",
+    "billing_status"
+  ],
+  "rls": {
+    "create": {
+      "$or": [
+        {
+          "company_id": {
+            "$in": "{{user.data.admin_company_ids}}"
+          }
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    },
+    "read": {
+      "$or": [
+        {
+          "company_id": {
+            "$in": "{{user.data.admin_company_ids}}"
+          }
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    },
+    "update": {
+      "$or": [
+        {
+          "company_id": {
+            "$in": "{{user.data.admin_company_ids}}"
+          }
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    },
+    "delete": {
+      "$or": [
+        {
+          "company_id": {
+            "$in": "{{user.data.admin_company_ids}}"
+          }
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    }
+  }
+}
