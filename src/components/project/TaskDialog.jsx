@@ -21,7 +21,7 @@ import { getUserDisplayNameByEmail } from '@/lib/userDisplay';
 import { createDisputeFromTask } from '@/lib/disputeFromTask';
 import { notifyTaskBlockedResponsible } from '@/lib/taskBlockNotifications';
 
-export default function TaskDialog({ open, onOpenChange, task, projectId }) {
+export default function TaskDialog({ open, onOpenChange, task, projectId, showMilestoneField = true }) {
   const { t, currentLanguage } = useLanguage();
   const tr = (itText, enText) => currentLanguage === 'it' ? itText : enText;
   const queryClient = useQueryClient();
@@ -62,7 +62,7 @@ export default function TaskDialog({ open, onOpenChange, task, projectId }) {
   const { data: milestones = [] } = useQuery({
     queryKey: ['milestones', projectId],
     queryFn: () => appClient.entities.Milestone.filter({ project_id: projectId }),
-    enabled: !!projectId,
+    enabled: !!projectId && showMilestoneField,
   });
 
   const { data: companies = [] } = useQuery({
@@ -412,6 +412,7 @@ export default function TaskDialog({ open, onOpenChange, task, projectId }) {
               />
             </div>
 
+            {showMilestoneField && (
             <div className="space-y-2">
               <Label htmlFor="milestone">{t('taskDialog.milestone')}</Label>
               <Select
@@ -431,6 +432,7 @@ export default function TaskDialog({ open, onOpenChange, task, projectId }) {
                 </SelectContent>
               </Select>
             </div>
+            )}
           </div>
 
           {task ? (

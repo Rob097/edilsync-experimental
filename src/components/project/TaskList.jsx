@@ -14,7 +14,7 @@ import TaskBoard from './TaskBoard';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useLanguage } from '@/components/i18n/useLanguage';
 
-export default function TaskList({ projectId, canEdit, filterMilestoneId }) {
+export default function TaskList({ projectId, canEdit, filterMilestoneId, showMilestoneFilter = true }) {
   const { currentLanguage } = useLanguage();
   const tr = (itText, enText) => currentLanguage === 'it' ? itText : enText;
   const dateLocale = currentLanguage === 'it' ? it : enUS;
@@ -38,7 +38,7 @@ export default function TaskList({ projectId, canEdit, filterMilestoneId }) {
   const { data: milestones = [] } = useQuery({
     queryKey: ['milestones', projectId],
     queryFn: () => appClient.entities.Milestone.filter({ project_id: projectId }),
-    enabled: !!projectId,
+    enabled: !!projectId && showMilestoneFilter,
   });
 
   useEffect(() => {
@@ -104,7 +104,7 @@ export default function TaskList({ projectId, canEdit, filterMilestoneId }) {
         </CardHeader>
         <CardContent>
           {/* Milestone Filter */}
-          {milestones.length > 0 && (
+          {showMilestoneFilter && milestones.length > 0 && (
             <div className="mb-4 flex items-center gap-2">
               <Flag className="h-4 w-4 text-gray-500" />
               <Select value={selectedMilestoneId} onValueChange={setSelectedMilestoneId}>
@@ -139,6 +139,7 @@ export default function TaskList({ projectId, canEdit, filterMilestoneId }) {
               canEdit={canEdit}
               onTaskCreate={handleCreate}
               filteredTasks={sortedTasks}
+              showMilestoneField={showMilestoneFilter}
             />
           ) : isLoading ? (
             <div className="space-y-3">
@@ -215,6 +216,7 @@ export default function TaskList({ projectId, canEdit, filterMilestoneId }) {
         onOpenChange={setDialogOpen}
         task={selectedTask}
         projectId={projectId}
+        showMilestoneField={showMilestoneFilter}
       />
     </>
   );

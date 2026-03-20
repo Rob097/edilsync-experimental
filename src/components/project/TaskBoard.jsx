@@ -21,7 +21,7 @@ import { getUserDisplayNameByEmail } from '@/lib/userDisplay';
 import { createDisputeFromTask } from '@/lib/disputeFromTask';
 import { notifyTaskBlockedResponsible } from '@/lib/taskBlockNotifications';
 
-export default function TaskBoard({ projectId, canEdit, onTaskCreate, filteredTasks }) {
+export default function TaskBoard({ projectId, canEdit, onTaskCreate, filteredTasks, showMilestoneField = true }) {
   const { currentLanguage, t } = useLanguage();
   const tr = (itText, enText) => currentLanguage === 'it' ? itText : enText;
   const dateLocale = currentLanguage === 'it' ? it : enUS;
@@ -369,6 +369,7 @@ export default function TaskBoard({ projectId, canEdit, onTaskCreate, filteredTa
         onOpenChange={setDialogOpen}
         task={selectedTask}
         projectId={projectId}
+        showMilestoneField={showMilestoneField}
       />
 
       <Dialog open={blockDialogOpen} onOpenChange={(open) => {

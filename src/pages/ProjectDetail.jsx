@@ -47,6 +47,8 @@ import { getUserDisplayNameByEmail } from '@/lib/userDisplay';
 import { getProjectFinancialPermissions } from '@/lib/financePermissions';
 import { useTour } from '@/components/tour/TourProvider';
 import { getFinanceSectionTour } from '@/components/tour/tours/financeTour';
+import FeatureGateCard from '@/components/ui/FeatureGateCard';
+import { isFeatureAccessible, isFeatureFullyEnabled, useProjectFeatureAccess } from '@/hooks/useFeatureAccess';
 
 const statusConfig = {
   planning: { color: 'bg-blue-100 text-blue-700' },
@@ -211,12 +213,32 @@ export default function ProjectDetail() {
     projectRole: userParticipation?.project_role,
     companyRole: currentCompanyMembership?.role,
   });
+  const { featureMap: projectFeatureMap } = useProjectFeatureAccess(projectId, [
+    'project_milestones',
+    'project_chat',
+    'project_documents',
+    'project_finance',
+  ], { enabled: !!projectId && isActiveParticipant });
+
+  const milestonesFeatureAccess = projectFeatureMap.project_milestones;
+  const projectChatFeatureAccess = projectFeatureMap.project_chat;
+  const projectDocumentsFeatureAccess = projectFeatureMap.project_documents;
+  const projectFinanceFeatureAccess = projectFeatureMap.project_finance;
+
+  const canUseMilestones = isFeatureAccessible(milestonesFeatureAccess);
+  const showMilestonesPlanGate = isActiveParticipant && milestonesFeatureAccess?.access_level === 'disabled';
+  const chatAccessMode = isFeatureFullyEnabled(projectChatFeatureAccess) ? 'full' : 'general_only';
+  const canCreateProjectChannels = isFeatureFullyEnabled(projectChatFeatureAccess);
+  const financeFeatureEnabled = isFeatureAccessible(projectFinanceFeatureAccess);
+  const showFinancePlanGate = isActiveParticipant && projectFinanceFeatureAccess?.access_level === 'disabled';
+  const canViewFinanceSection = financeFeatureEnabled && financialPermissions.canViewSection;
+  const shouldShowFinanceButton = showFinancePlanGate || canViewFinanceSection;
 
   useEffect(() => {
-    if (infoSection === 'finance' && !financialPermissions.canViewSection) {
+    if (infoSection === 'finance' && !shouldShowFinanceButton) {
       setInfoSection('all');
     }
-  }, [infoSection, financialPermissions.canViewSection]);
+  }, [infoSection, shouldShowFinanceButton]);
 
   // Start project tour when viewing project detail
   const shouldStartProjectTour = user && 
@@ -653,6 +675,7 @@ export default function ProjectDetail() {
                 projectId={projectId} 
                 canEdit={canEditTasks} 
                 filterMilestoneId={taskFilterMilestoneId}
+                showMilestoneFilter={canUseMilestones}
               />
             </div>
           )}
@@ -680,22 +703,33 @@ export default function ProjectDetail() {
               <div className="flex items-center justify-between mb-4">
                 <h3 className="text-lg font-semibold">{t('projectDetail.sections.milestones')}</h3>
               </div>
-              <MilestoneList 
-                projectId={projectId}
-                project={project}
-                canEdit={canEditTasks}
-                onNavigateToTasks={(milestoneId) => {
-                  setTaskFilterMilestoneId(milestoneId);
-                  setActiveTab('lavori');
-                  setLavoriSection('tasks');
-                  setTimeout(() => {
-                    const tasksSection = document.getElementById('section-tasks');
-                    if (tasksSection) {
-                      tasksSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                    }
-                  }, 100);
-                }}
-              />
+              {showMilestonesPlanGate ? (
+                <FeatureGateCard
+                  title={tr('Milestone premium', 'Premium milestones')}
+                  description={tr(
+                    'Le milestone sono disponibili nei progetti sponsorizzati. In un progetto free questa sezione resta visibile ma bloccata.',
+                    'Milestones are available on sponsored projects. On a free project this section stays visible but locked.',
+                  )}
+                  badgeLabel={tr('Progetto sponsorizzato', 'Sponsored project')}
+                />
+              ) : (
+                <MilestoneList 
+                  projectId={projectId}
+                  project={project}
+                  canEdit={canEditTasks}
+                  onNavigateToTasks={(milestoneId) => {
+                    setTaskFilterMilestoneId(milestoneId);
+                    setActiveTab('lavori');
+                    setLavoriSection('tasks');
+                    setTimeout(() => {
+                      const tasksSection = document.getElementById('section-tasks');
+                      if (tasksSection) {
+                        tasksSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                      }
+                    }, 100);
+                  }}
+                />
+              )}
             </div>
           )}
 
@@ -776,7 +810,7 @@ export default function ProjectDetail() {
              >
                {t('projectDetail.sections.documents')}
              </Button>
-             {financialPermissions.canViewSection ? (
+             {shouldShowFinanceButton ? (
                <Button
                  variant={infoSection === 'finance' ? 'default' : 'outline'}
                  onClick={() => {
@@ -825,6 +859,9 @@ export default function ProjectDetail() {
                 currentUser={user}
                 activeCompanyId={user?.active_company_id}
                 participants={activeParticipants}
+                canCreateChannels={canCreateProjectChannels}
+                channelAccessMode={chatAccessMode}
+                allowMilestoneMentions={canUseMilestones}
                 onNavigate={(type, id) => {
                   if (type === 'task') {
                     navigateToSection('lavori', 'tasks', `task-${id}`);
@@ -854,38 +891,52 @@ export default function ProjectDetail() {
                   currentUserEmail={user?.email}
                   uploadDialogOpen={documentUploadOpen}
                   onUploadDialogChange={setDocumentUploadOpen}
+                  featureAccess={projectDocumentsFeatureAccess}
                 />
               </CardContent>
             </Card>
           )}
 
-          {financialPermissions.canViewSection && (infoSection === 'all' || infoSection === 'finance') && (
+          {shouldShowFinanceButton && (infoSection === 'all' || infoSection === 'finance') && (
             <div id="section-finance" className={infoSection === 'all' ? 'border-t pt-6' : ''}>
               <div className="flex items-center justify-between mb-4">
                 <h3 className="text-lg font-semibold flex items-center gap-2">
                   <DollarSign className="h-5 w-5 text-[#ef6144]" />
                   {t('finance.sectionTitle')}
                 </h3>
-                <Button
-                  variant="default"
-                  size="sm"
-                  className="bg-[#ef6144] hover:bg-[#d9553a] text-white"
-                  onClick={() => {
-                    const tour = getFinanceSectionTour(currentLanguage, financialPermissions.scope);
-                    startTour(tour.id, tour.steps, { force: true });
-                  }}
-                  data-tour="finance-section-help-button"
-                >
-                  <BookOpen className="h-4 w-4 mr-2" />
-                  {tr('Guida sezione', 'Section guide')}
-                </Button>
+                {canViewFinanceSection ? (
+                  <Button
+                    variant="default"
+                    size="sm"
+                    className="bg-[#ef6144] hover:bg-[#d9553a] text-white"
+                    onClick={() => {
+                      const tour = getFinanceSectionTour(currentLanguage, financialPermissions.scope);
+                      startTour(tour.id, tour.steps, { force: true });
+                    }}
+                    data-tour="finance-section-help-button"
+                  >
+                    <BookOpen className="h-4 w-4 mr-2" />
+                    {tr('Guida sezione', 'Section guide')}
+                  </Button>
+                ) : null}
               </div>
-              <ProjectFinancialSection
-                projectId={projectId}
-                permissions={financialPermissions}
-                user={user}
-                participants={activeParticipants}
-              />
+              {showFinancePlanGate ? (
+                <FeatureGateCard
+                  title={tr('Economia di progetto premium', 'Premium project finance')}
+                  description={tr(
+                    'Budget, costi, SAL e impostazioni finanziarie si sbloccano solo quando il progetto è sponsorizzato da una società paid.',
+                    'Budget, costs, progress statements and financial settings unlock only when the project is sponsored by a paid company.',
+                  )}
+                  badgeLabel={tr('Richiede sponsorship', 'Requires sponsorship')}
+                />
+              ) : (
+                <ProjectFinancialSection
+                  projectId={projectId}
+                  permissions={financialPermissions}
+                  user={user}
+                  participants={activeParticipants}
+                />
+              )}
             </div>
           )}
 

@@ -266,6 +266,12 @@ const functions = {
   },
 };
 
+const rpc = async (name, params = {}) => {
+  const { data, error } = await supabase.rpc(name, params);
+  if (error) throw error;
+  return data;
+};
+
 const absolutizeStorageUrl = (url) => {
   if (!url) return null;
   try {
@@ -418,6 +424,7 @@ export const appClient = {
   entities,
   auth,
   functions,
+  rpc,
   integrations,
   agents,
   appLogs,

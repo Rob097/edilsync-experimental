@@ -23,6 +23,7 @@ export default function MessageInput({
   activeCompanyName,
   participants,
   scopeType = 'project',
+  allowMilestoneMentions = true,
 }) {
   const { t, currentLanguage } = useLanguage();
   const tr = (it, en) => currentLanguage === 'it' ? it : en;
@@ -45,7 +46,7 @@ export default function MessageInput({
   const { data: milestones = [] } = useQuery({
     queryKey: ['milestones', projectId],
     queryFn: () => appClient.entities.Milestone.filter({ project_id: projectId }),
-    enabled: !isCompanyScope && !!projectId && mentionType === 'milestone',
+    enabled: !isCompanyScope && !!projectId && allowMilestoneMentions && mentionType === 'milestone',
   });
 
   const { data: changeRequests = [] } = useQuery({
@@ -280,7 +281,7 @@ export default function MessageInput({
         </Popover>
         )}
 
-        {!isCompanyScope && (
+        {!isCompanyScope && allowMilestoneMentions && (
         <Popover open={showMentions && mentionType === 'milestone'} onOpenChange={(open) => {
           setShowMentions(open);
           if (!open) setMentionType(null);

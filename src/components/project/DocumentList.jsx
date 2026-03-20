@@ -72,6 +72,7 @@ export default function DocumentList({
   currentUserEmail,
   uploadDialogOpen: externalUploadDialog,
   onUploadDialogChange,
+  featureAccess,
 }) {
   const { currentLanguage, t } = useLanguage();
   const tr = (itText, enText) => currentLanguage === 'it' ? itText : enText;
@@ -80,6 +81,8 @@ export default function DocumentList({
   const queryClient = useQueryClient();
   const isCompanyScope = scopeType === 'company';
   const scopeId = isCompanyScope ? companyId : projectId;
+  const featureMode = featureAccess?.config?.mode || null;
+  const isBasicMode = featureAccess?.access_level === 'limited' && ['basic', 'basic_chronological'].includes(featureMode);
   const documentsQueryKey = isCompanyScope ? ['companyDocuments', companyId] : ['projectDocuments', projectId];
   const scopeLabel = isCompanyScope ? tr('società', 'company') : tr('progetto', 'project');
   const [searchQuery, setSearchQuery] = useState('');
@@ -92,6 +95,16 @@ export default function DocumentList({
   const [editingDocument, setEditingDocument] = useState(null);
   const [viewMode, setViewMode] = useState('grid'); // 'list' or 'grid'
   const [openFolder, setOpenFolder] = useState(null); // category name when folder is open
+
+  React.useEffect(() => {
+    if (!isBasicMode) return;
+    setViewMode('list');
+    setOpenFolder(null);
+    setFilterCategory('all');
+    setFilterType('all');
+    setFilterStatus('all');
+    setSortBy('date_desc');
+  }, [isBasicMode]);
 
   const { data: documents = [], isLoading } = useQuery({
     queryKey: documentsQueryKey,
@@ -197,13 +210,15 @@ export default function DocumentList({
     );
   }
 
+  const effectiveViewMode = isBasicMode ? 'list' : viewMode;
+
   return (
     <div className="space-y-4">
       {/* Header with Filters */}
       <div className="flex flex-col gap-3">
         <div className="flex flex-col sm:flex-row gap-3">
           {/* Back button when folder is open */}
-          {openFolder && viewMode === 'grid' && (
+          {openFolder && effectiveViewMode === 'grid' && (
             <Button
               variant="outline"
               onClick={() => setOpenFolder(null)}
@@ -224,31 +239,32 @@ export default function DocumentList({
             />
           </div>
 
-          {/* View toggle */}
-          <div className="flex gap-2">
-            <Button
-              variant={viewMode === 'grid' ? 'default' : 'outline'}
-              size="icon"
-              onClick={() => {
-                setViewMode('grid');
-                setOpenFolder(null);
-              }}
-              title={tr('Vista a griglia', 'Grid view')}
-            >
-              <Grid3x3 className="h-4 w-4" />
-            </Button>
-            <Button
-              variant={viewMode === 'list' ? 'default' : 'outline'}
-              size="icon"
-              onClick={() => {
-                setViewMode('list');
-                setOpenFolder(null);
-              }}
-              title={tr('Vista a lista', 'List view')}
-            >
-              <List className="h-4 w-4" />
-            </Button>
-          </div>
+          {!isBasicMode && (
+            <div className="flex gap-2">
+              <Button
+                variant={viewMode === 'grid' ? 'default' : 'outline'}
+                size="icon"
+                onClick={() => {
+                  setViewMode('grid');
+                  setOpenFolder(null);
+                }}
+                title={tr('Vista a griglia', 'Grid view')}
+              >
+                <Grid3x3 className="h-4 w-4" />
+              </Button>
+              <Button
+                variant={viewMode === 'list' ? 'default' : 'outline'}
+                size="icon"
+                onClick={() => {
+                  setViewMode('list');
+                  setOpenFolder(null);
+                }}
+                title={tr('Vista a lista', 'List view')}
+              >
+                <List className="h-4 w-4" />
+              </Button>
+            </div>
+          )}
 
           {canUpload && (
             <Button 
@@ -265,6 +281,7 @@ export default function DocumentList({
         </div>
         
         {/* Filters */}
+        {!isBasicMode ? (
         <div className="flex flex-wrap gap-2">
           <Select value={filterCategory} onValueChange={setFilterCategory}>
             <SelectTrigger className="w-36">
@@ -319,10 +336,11 @@ export default function DocumentList({
             </SelectContent>
           </Select>
         </div>
+        ) : null}
       </div>
 
       {/* Content based on view mode */}
-      {viewMode === 'grid' && !openFolder ? (
+      {effectiveViewMode === 'grid' && !openFolder ? (
         /* Folder Grid View */
         categoriesWithCounts.length > 0 ? (
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
@@ -358,7 +376,7 @@ export default function DocumentList({
             } : undefined}
           />
         )
-      ) : viewMode === 'grid' && openFolder ? (
+      ) : effectiveViewMode === 'grid' && openFolder ? (
         /* File Grid View (inside folder) */
         folderDocuments.length > 0 ? (
           <>
@@ -479,17 +497,17 @@ export default function DocumentList({
                   <div className="min-w-0 flex-1">
                     <p className="font-medium text-gray-900 truncate">{doc.name}</p>
                     <div className="flex items-center gap-2 text-sm text-gray-500">
-                      {doc.category && (
+                      {!isBasicMode && doc.category && (
                         <span className="bg-gray-100 px-2 py-0.5 rounded text-xs">
                           {categoryLabels[doc.normalized_category] || doc.normalized_category}
                         </span>
                       )}
-                      {doc.document_status && (
+                      {!isBasicMode && doc.document_status && (
                         <span className="bg-orange-50 text-orange-700 px-2 py-0.5 rounded text-xs uppercase">
                           {doc.document_status.replace('_', ' ')}
                         </span>
                       )}
-                      {doc.revision_number && (
+                      {!isBasicMode && doc.revision_number && (
                         <span className="bg-blue-50 text-blue-700 px-2 py-0.5 rounded text-xs">
                           Rev {doc.revision_number}
                         </span>
@@ -503,7 +521,7 @@ export default function DocumentList({
                     {doc.description && (
                       <p className="text-sm text-gray-500 truncate mt-0.5">{doc.description}</p>
                     )}
-                    {(doc.work_area || doc.discipline || doc.project_phase) && (
+                    {!isBasicMode && (doc.work_area || doc.discipline || doc.project_phase) && (
                       <p className="text-xs text-gray-500 truncate mt-0.5">
                         {[doc.work_area, doc.discipline, doc.project_phase].filter(Boolean).join(' • ')}
                       </p>

@@ -33,6 +33,8 @@ import CompanyTimeTrackingSection from '@/components/company/CompanyTimeTracking
 import ProjectMessaging from '@/components/messaging/ProjectMessaging';
 import DocumentList from '@/components/project/DocumentList';
 import { getUserDisplayNameByEmail } from '@/lib/userDisplay';
+import FeatureGateCard from '@/components/ui/FeatureGateCard';
+import { isFeatureAccessible, isFeatureFullyEnabled, useCompanyFeatureAccess } from '@/hooks/useFeatureAccess';
 
 export default function CompanyDetail() {
   const { t, currentLanguage } = useLanguage();
@@ -80,10 +82,23 @@ export default function CompanyDetail() {
     staleTime: 2 * 60 * 1000,
   });
 
+  const { featureMap: companyFeatureMap } = useCompanyFeatureAccess(companyId, [
+    'company_time_tracking',
+    'company_chat',
+    'company_documents',
+  ], { enabled: !!companyId });
+
+  const companyTimeTrackingFeatureAccess = companyFeatureMap.company_time_tracking;
+  const companyChatFeatureAccess = companyFeatureMap.company_chat;
+  const companyDocumentsFeatureAccess = companyFeatureMap.company_documents;
+  const canUseCompanyTimeTracking = isFeatureAccessible(companyTimeTrackingFeatureAccess);
+  const canCreateCompanyChannels = isFeatureFullyEnabled(companyChatFeatureAccess);
+  const companyChatAccessMode = isFeatureFullyEnabled(companyChatFeatureAccess) ? 'full' : 'general_only';
+
   const { data: workSessions = [] } = useQuery({
     queryKey: ['workSessions', companyId],
     queryFn: () => appClient.entities.WorkSession.filter({ company_id: companyId }),
-    enabled: !!companyId,
+    enabled: !!companyId && canUseCompanyTimeTracking,
     staleTime: 30 * 1000,
   });
 
@@ -302,7 +317,7 @@ export default function CompanyDetail() {
             <Card>
               <CardContent className="p-4">
                 <p className="text-sm text-gray-500">{tr('Timbrature aperte', 'Open sessions')}</p>
-                <p className="text-2xl font-bold mt-1">{openSessions.length}</p>
+                <p className="text-2xl font-bold mt-1">{canUseCompanyTimeTracking ? openSessions.length : 'Premium'}</p>
               </CardContent>
             </Card>
           </div>
@@ -371,13 +386,24 @@ export default function CompanyDetail() {
 
           {(operativaSection === 'all' || operativaSection === 'timbrature') && (
             <div id="section-timbrature">
-              <CompanyTimeTrackingSection
-                companyId={companyId}
-                companyName={company.name}
-                currentUser={user}
-                isAdmin={isAdmin}
-                mode="normal"
-              />
+              {canUseCompanyTimeTracking ? (
+                <CompanyTimeTrackingSection
+                  companyId={companyId}
+                  companyName={company.name}
+                  currentUser={user}
+                  isAdmin={isAdmin}
+                  mode="normal"
+                />
+              ) : (
+                <FeatureGateCard
+                  title={tr('Timbrature premium', 'Premium time tracking')}
+                  description={tr(
+                    'Le timbrature societarie fanno parte delle feature premium della società. In piano free la sezione resta visibile ma bloccata.',
+                    'Company time tracking is part of the company premium features. On the free plan the section stays visible but locked.',
+                  )}
+                  badgeLabel={tr('Società paid', 'Paid company')}
+                />
+              )}
             </div>
           )}
 
@@ -390,7 +416,8 @@ export default function CompanyDetail() {
                 currentUser={user}
                 activeCompanyId={companyId}
                 participants={companyChatParticipants}
-                canCreateChannels={isAdmin}
+                canCreateChannels={isAdmin && canCreateCompanyChannels}
+                channelAccessMode={companyChatAccessMode}
               />
             </div>
           )}
@@ -429,6 +456,7 @@ export default function CompanyDetail() {
                 scopeType="company"
                 canUpload={currentUserMembership?.status === 'active'}
                 currentUserEmail={user?.email}
+                featureAccess={companyDocumentsFeatureAccess}
               />
             </div>
           )}

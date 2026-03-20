@@ -19,6 +19,7 @@ export default function ChannelList({
   onSelectChannel,
   participants,
   canCreateChannels = true,
+  channelAccessMode = 'full',
 }) {
   const { currentLanguage } = useLanguage();
   const tr = (it, en) => currentLanguage === 'it' ? it : en;
@@ -69,15 +70,20 @@ export default function ChannelList({
     return !!membership;
   });
 
+  const accessibleChannels = myChannels.filter((channel) => {
+    if (channelAccessMode !== 'general_only') return true;
+    return isCompanyScope ? channel.type === 'company' : channel.type === 'general';
+  });
+
   // Group channels by type
   const generalChannel = isCompanyScope
-    ? myChannels.find((c) => c.type === 'company')
-    : myChannels.find((c) => c.type === 'general');
+    ? accessibleChannels.find((c) => c.type === 'company')
+    : accessibleChannels.find((c) => c.type === 'general');
   const companyChannel = !isCompanyScope
-    ? myChannels.find((c) => c.type === 'company' && c.company_id === activeCompanyId)
+    ? accessibleChannels.find((c) => c.type === 'company' && c.company_id === activeCompanyId)
     : null;
-  const directChannels = myChannels.filter(c => c.type === 'direct');
-  const customChannels = myChannels.filter(c => c.type === 'custom');
+  const directChannels = accessibleChannels.filter(c => c.type === 'direct');
+  const customChannels = accessibleChannels.filter(c => c.type === 'custom');
 
   const getUnreadCount = (channelId) => {
     const membership = channelMembers.find(m => 
@@ -208,7 +214,7 @@ export default function ChannelList({
       )}
 
       {/* Create Channel Button */}
-      {canCreateChannels && customChannels.length === 0 && (
+      {canCreateChannels && channelAccessMode !== 'general_only' && customChannels.length === 0 && (
         <Button
           variant="outline"
           className="w-full"
@@ -219,7 +225,7 @@ export default function ChannelList({
         </Button>
       )}
 
-      {canCreateChannels && (
+      {canCreateChannels && channelAccessMode !== 'general_only' && (
         <CreateChannelDialog
           open={createDialogOpen}
           onOpenChange={setCreateDialogOpen}

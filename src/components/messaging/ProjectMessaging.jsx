@@ -20,6 +20,8 @@ export default function ProjectMessaging({
   participants = [],
   onNavigate,
   canCreateChannels = true,
+  channelAccessMode = 'full',
+  allowMilestoneMentions = true,
 }) {
   const { currentLanguage, t } = useLanguage();
   const tr = (it, en) => (currentLanguage === 'it' ? it : en);
@@ -138,10 +140,15 @@ export default function ProjectMessaging({
     tr,
   ]);
 
+  const accessibleChannels = channels.filter((channel) => {
+    if (channelAccessMode !== 'general_only') return true;
+    return isCompanyScope ? channel.type === 'company' : channel.type === 'general';
+  });
+
   useEffect(() => {
     if (selectedChannelId || channels.length === 0) return;
 
-    const myChannels = channels.filter((channel) => {
+    const myChannels = accessibleChannels.filter((channel) => {
       const membership = channelMembers.find((member) => {
         if (member.channel_id !== channel.id) return false;
         if (member.user_email === currentUser?.email) return true;
@@ -155,9 +162,17 @@ export default function ProjectMessaging({
     if (myChannels.length > 0) {
       setSelectedChannelId(myChannels[0].id);
     }
-  }, [selectedChannelId, channels, channelMembers, currentUser, isCompanyScope, companyId, activeCompanyId]);
+  }, [selectedChannelId, accessibleChannels, channelMembers, currentUser, isCompanyScope, companyId, activeCompanyId]);
 
-  const selectedChannel = channels.find((channel) => channel.id === selectedChannelId);
+  useEffect(() => {
+    if (!selectedChannelId) return;
+    const stillAccessible = accessibleChannels.some((channel) => channel.id === selectedChannelId);
+    if (!stillAccessible) {
+      setSelectedChannelId(accessibleChannels[0]?.id || null);
+    }
+  }, [selectedChannelId, accessibleChannels]);
+
+  const selectedChannel = accessibleChannels.find((channel) => channel.id === selectedChannelId);
   const activeCompany = isCompanyScope
     ? { id: companyId, name: companyName }
     : companies.find((company) => company.id === activeCompanyId);
@@ -184,6 +199,7 @@ export default function ProjectMessaging({
           onSelectChannel={setSelectedChannelId}
           participants={participants}
           canCreateChannels={canCreateChannels}
+          channelAccessMode={channelAccessMode}
         />
       </Card>
 
@@ -254,6 +270,7 @@ export default function ProjectMessaging({
                 activeCompanyName={activeCompany?.name}
                 participants={participants}
                 scopeType={scopeType}
+                allowMilestoneMentions={allowMilestoneMentions}
               />
             </>
           ) : (
@@ -283,6 +300,7 @@ export default function ProjectMessaging({
               }}
               participants={participants}
               canCreateChannels={canCreateChannels}
+              channelAccessMode={channelAccessMode}
             />
           </div>
         </div>
