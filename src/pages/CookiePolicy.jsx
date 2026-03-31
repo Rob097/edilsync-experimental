@@ -1,15 +1,32 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import { Card, CardContent } from "@/components/ui/card";
 import { useLanguage } from '@/components/i18n/useLanguage';
+import usePublicSeo from '@/public/hooks/usePublicSeo';
 
 export default function CookiePolicy() {
   const { currentLanguage } = useLanguage();
   const tr = (itText, enText) => currentLanguage === 'it' ? itText : enText;
+  const title = 'Cookie Policy';
+  const description = tr(
+    'Informativa sull\'uso dei cookie per il funzionamento e il miglioramento del servizio EdilSync.',
+    'Cookie policy for service operation and improvement on EdilSync.',
+  );
+
+  usePublicSeo({
+    title,
+    description,
+    canonicalPath: currentLanguage === 'en' ? '/en/cookie' : '/cookie',
+    locale: currentLanguage,
+    alternateItPath: '/cookie',
+    alternateEnPath: '/en/cookie',
+  });
+
   return (
     <div className="bg-[#f2f4f6] min-h-screen">
       <section className="relative overflow-hidden public-gradient border-b border-[#e5e7eb]">
         <div className="absolute top-8 left-6 h-[52px] w-[52px] rounded-full bg-[#ef6144]/10 blur-[16px]" aria-hidden />
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 pt-14 sm:pt-18 pb-10 text-center">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 pt-14 sm:pt-[4.5rem] pb-10 text-center">
           <p className="section-chip">Legal</p>
           <h1 className="mt-4 text-[38px] sm:text-[50px] font-[780] leading-[1.08] tracking-[-0.02em] text-[#141821]">{tr('Cookie Policy', 'Cookie Policy')}</h1>
           <p className="mt-4 text-[14px] text-[#5b6470]">{tr('Ultimo aggiornamento: 17 febbraio 2026', 'Last updated: February 17, 2026')}</p>
@@ -73,7 +90,7 @@ export default function CookiePolicy() {
           </table>
 
           <h2 className="text-lg font-semibold mt-6 mb-2">{tr('6. Diritti dell\'utente', '6. User rights')}</h2>
-          <p>{tr('Per maggiori informazioni sui diritti relativi al trattamento dei dati, consultare la nostra', 'For more information on data-processing rights, see our')} <a href="/privacy" className="text-[#ef6144] hover:underline">{tr('Informativa sulla Privacy', 'Privacy Policy')}</a>.</p>
+          <p>{tr('Per maggiori informazioni sui diritti relativi al trattamento dei dati, consultare la nostra', 'For more information on data-processing rights, see our')} <Link to="/privacy" className="text-[#ef6144] hover:underline">{tr('Informativa sulla Privacy', 'Privacy Policy')}</Link>.</p>
 
           <h2 className="text-lg font-semibold mt-6 mb-2">{tr('7. Contatti', '7. Contacts')}</h2>
           <p>{tr('Per domande relative ai cookie, scrivere a:', 'For cookie-related questions, write to:')} <strong>info@rdlabs.digital</strong></p>

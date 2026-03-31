@@ -167,6 +167,7 @@ export default function ContractorsPage({ locale = 'it' }) {
         quoteAuthor={copy.quoteAuthor}
         quoteRole={copy.quoteRole}
         quoteInitial="M"
+        noteLabel={locale === 'en' ? 'Field note' : 'Nota dal campo'}
       />
 
       <MarketingBenefitsGrid title={copy.advantagesTitle} items={copy.advantages} />
@@ -176,6 +177,8 @@ export default function ContractorsPage({ locale = 'it' }) {
         items={copy.valueItems}
         costLabel={copy.valueCostLabel}
         costValue={copy.valueCost}
+        eyebrowLabel={locale === 'en' ? 'Operational value' : 'Valore operativo'}
+        introText={locale === 'en' ? 'Each point below translates EdilSync into measurable operational return: less waste, fewer coordination mistakes, and stronger project control.' : 'Ogni punto qui sotto traduce EdilSync in ritorno operativo concreto: meno dispersione, meno errori di coordinamento e più controllo sul progetto.'}
       />
 
       <MarketingFinalCtaSection

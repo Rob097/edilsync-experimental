@@ -47,14 +47,14 @@ export default function CookieBanner() {
             variant="outline"
             size="sm"
             onClick={handleReject}
-            className="flex-1 sm:flex-none"
+            className="h-11 flex-1 sm:flex-none px-4"
           >
             {tr('Solo necessari', 'Only necessary')}
           </Button>
           <Button
             size="sm"
             onClick={handleAccept}
-            className="flex-1 sm:flex-none bg-[#ef6144] hover:bg-[#d9553a]"
+            className="h-11 flex-1 sm:flex-none px-4 bg-[#ef6144] hover:bg-[#d9553a]"
           >
             {tr('Accetta tutti', 'Accept all')}
           </Button>

@@ -14,6 +14,79 @@ export default function HomePage({ locale = 'it' }) {
   const canonicalPath = locale === 'en' ? '/en' : '/';
   const basePrefix = locale === 'en' ? '/en' : '';
 
+  const problemItems = [
+    { icon: MessageSquare, title: t('publicHome.problem.c1t'), description: t('publicHome.problem.c1d') },
+    { icon: Phone, title: t('publicHome.problem.c2t'), description: t('publicHome.problem.c2d') },
+    { icon: FileQuestion, title: t('publicHome.problem.c3t'), description: t('publicHome.problem.c3d') },
+    { icon: Clock3, title: t('publicHome.problem.c4t'), description: t('publicHome.problem.c4d') },
+    { icon: AlertTriangle, title: t('publicHome.problem.c5t'), description: t('publicHome.problem.c5d') },
+    { icon: Users, title: t('publicHome.problem.c6t'), description: t('publicHome.problem.c6d') },
+  ];
+
+  const solutionItems = [
+    { number: '01', title: t('publicHome.solution.s1t'), description: t('publicHome.solution.s1d') },
+    { number: '02', title: t('publicHome.solution.s2t'), description: t('publicHome.solution.s2d') },
+    { number: '03', title: t('publicHome.solution.s3t'), description: t('publicHome.solution.s3d') },
+  ];
+
+  const featureItems = [
+    { icon: ListChecks, title: t('publicHome.features.f1t'), description: t('publicHome.features.f1d') },
+    { icon: Camera, title: t('publicHome.features.f2t'), description: t('publicHome.features.f2d') },
+    { icon: FileText, title: t('publicHome.features.f3t'), description: t('publicHome.features.f3d') },
+    { icon: MessageCircle, title: t('publicHome.features.f4t'), description: t('publicHome.features.f4d') },
+    { icon: CalendarDays, title: t('publicHome.features.f5t'), description: t('publicHome.features.f5d') },
+    { icon: Shield, title: t('publicHome.features.f6t'), description: t('publicHome.features.f6d') },
+    { icon: Wallet, title: t('publicHome.features.f7t'), description: t('publicHome.features.f7d') },
+    { icon: Clock3, title: t('publicHome.features.f8t'), description: t('publicHome.features.f8d') },
+  ];
+
+  const whyItems = [
+    { icon: Shield, title: t('publicHome.why.w1t'), description: t('publicHome.why.w1d') },
+    { icon: MessageSquare, title: t('publicHome.why.w2t'), description: t('publicHome.why.w2d') },
+    { icon: ClipboardList, title: t('publicHome.why.w3t'), description: t('publicHome.why.w3d') },
+    { icon: ArrowRight, title: t('publicHome.why.w4t'), description: t('publicHome.why.w4d') },
+  ];
+
+  const audienceCards = [
+    {
+      name: 'Michele',
+      image: '/images/michele.png',
+      role: t('publicHome.audience.micheleRole'),
+      quote: t('publicHome.audience.micheleQuote'),
+      bullets: [t('publicHome.audience.m1'), t('publicHome.audience.m2'), t('publicHome.audience.m3'), t('publicHome.audience.m4')],
+    },
+    {
+      name: 'Matteo',
+      image: '/images/matteo.png',
+      role: t('publicHome.audience.matteoRole'),
+      quote: t('publicHome.audience.matteoQuote'),
+      bullets: [t('publicHome.audience.t1'), t('publicHome.audience.t2'), t('publicHome.audience.t3'), t('publicHome.audience.t4')],
+    },
+    {
+      name: 'Marco',
+      image: '/images/marco.png',
+      role: t('publicHome.audience.marcoRole'),
+      quote: t('publicHome.audience.marcoQuote'),
+      bullets: [t('publicHome.audience.r1'), t('publicHome.audience.r2'), t('publicHome.audience.r3'), t('publicHome.audience.r4')],
+    },
+  ];
+
+  const pricingBullets = Array.from({ length: 12 }, (_, index) => t(`publicHome.pricing.p${index + 1}`));
+  const featuredProblemItems = problemItems.slice(0, 4);
+  const featuredFeatureItems = featureItems.slice(0, 4);
+  const pricingHighlights = pricingBullets.slice(0, 5);
+  const pricingAccessItems = locale === 'en'
+    ? [
+        'Homeowners and invited collaborators stay free',
+        'Only the company pays when it needs premium company tools',
+        'Sponsored projects unlock advanced shared project areas',
+      ]
+    : [
+        'Committente e invitati restano free',
+        'Paga solo la società quando servono strumenti avanzati',
+        'I progetti sponsorizzati sbloccano le aree premium condivise',
+      ];
+
   const handleLearnMoreClick = (event) => {
     const target = document.getElementById('problema');
     if (!target) return;
@@ -47,315 +120,359 @@ export default function HomePage({ locale = 'it' }) {
   return (
     <>
       <StructuredData id="home-software-app" data={structuredData} />
-      <div ref={rootRef} className="bg-[#f2f4f6]">
-        <section className="relative pt-32 pb-20 md:pt-40 md:pb-32 overflow-hidden bg-[#fcfcfc]">
-          <div data-parallax="slow" className="absolute top-20 left-1/4 w-96 h-96 bg-[#ef6144]/10 rounded-full blur-3xl pointer-events-none" aria-hidden />
-          <div data-parallax="medium" className="absolute bottom-0 right-1/4 w-80 h-80 bg-[#ef6144]/5 rounded-full blur-3xl pointer-events-none" aria-hidden />
-          <div className="max-w-7xl mx-auto px-6 relative">
-            <div className="text-center max-w-4xl mx-auto">
-              <div data-reveal>
-                <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[#fff0eb] text-[#ef6144] text-sm font-inter font-medium mb-6">
-                  <span className="w-2 h-2 rounded-full bg-[#ef6144] animate-pulse" />
-                  {t('publicHome.hero.badge')}
-                </span>
-              </div>
-              <h1 data-reveal className="font-inter font-bold text-4xl md:text-6xl lg:text-7xl leading-tight tracking-tight text-[#141821]">
-              {t('publicHome.hero.titleA')}
-              <br />
-              <span className="text-[#ef6144]">{t('publicHome.hero.titleHighlight')}</span> {t('publicHome.hero.titleB')}
+      <div ref={rootRef} className={PUBLIC_CLASSES.page}>
+        <section className="public-section-shell relative overflow-hidden px-6 pb-20 pt-28 md:pb-28 md:pt-36">
+          <div data-parallax="slow" className="pointer-events-none absolute left-[8%] top-20 h-72 w-72 rounded-full bg-[rgba(239,97,68,0.12)] blur-3xl" aria-hidden />
+          <div data-parallax="medium" className="pointer-events-none absolute bottom-10 right-[12%] h-64 w-64 rounded-full bg-[rgba(196,158,108,0.12)] blur-3xl" aria-hidden />
+          <div className="relative mx-auto grid max-w-7xl gap-14 lg:grid-cols-[minmax(0,1.08fr)_minmax(320px,0.92fr)] lg:items-center">
+            <div className="max-w-2xl">
+              <span data-reveal className="public-eyebrow">
+                {t('publicHome.hero.badge')}
+              </span>
+              <h1 data-reveal className={`${PUBLIC_CLASSES.displayH1} mt-6 max-w-[13ch] text-[var(--public-ink)]`}>
+                {t('publicHome.hero.titleA')} <span className="text-[var(--public-accent)]">{t('publicHome.hero.titleHighlight')}</span> {t('publicHome.hero.titleB')}
               </h1>
-              <p data-reveal className="mt-6 text-lg md:text-xl text-[#5b6470] font-inter leading-relaxed max-w-2xl mx-auto">
+              <p data-reveal className={`${PUBLIC_CLASSES.bodyLead} mt-6 max-w-[62ch]`}>
                 {t('publicHome.hero.subtitle')}
               </p>
-              <div data-reveal className="mt-10 flex flex-col sm:flex-row items-center justify-center gap-4">
-                <Button asChild className="bg-[#ef6144] text-white hover:bg-[#d9553a] h-10 font-inter rounded-full px-8 text-base gap-2 shadow-lg shadow-[rgba(239,97,68,0.25)] hover:shadow-xl hover:shadow-[rgba(239,97,68,0.3)] transition-all">
+              <div data-reveal className="mt-9 flex flex-col gap-3 sm:flex-row sm:items-center">
+                <Button asChild className={`${PUBLIC_CLASSES.primaryCta} h-12 px-7 text-base`}>
                   <Link to="/app">
                     {t('publicHome.hero.ctaPrimary')}
                     <ArrowRight className="h-4 w-4" />
                   </Link>
                 </Button>
-                <Button asChild variant="outline" className="border-[#d6dce4] bg-white hover:bg-[#fff0eb] text-[#141821] h-10 font-inter rounded-full px-8 text-base">
+                <Button asChild variant="outline" className="public-outline-button h-12 rounded-full px-7 text-base">
                   <a href="#problema" onClick={handleLearnMoreClick}>
                     {t('publicHome.hero.ctaSecondary')}
                   </a>
                 </Button>
               </div>
-              <p data-reveal className="mt-4 text-sm text-[#6b7280] font-inter">{t('publicHome.hero.note')}</p>
+              <p data-reveal className="mt-5 max-w-[46ch] text-sm leading-[1.7] text-[var(--public-muted)]/85">
+                {t('publicHome.hero.note')}
+              </p>
+              <div data-reveal className="mt-10 grid gap-3 sm:grid-cols-3">
+                <div className="public-grid-card p-4">
+                  <p className="text-[11px] font-extrabold uppercase tracking-[0.14em] text-[var(--public-accent-dark)]">Allineamento</p>
+                  <p className="mt-2 text-sm leading-[1.6] text-[var(--public-muted)]">Un solo posto per task, foto, varianti e conversazioni di progetto.</p>
+                </div>
+                <div className="public-grid-card p-4">
+                  <p className="text-[11px] font-extrabold uppercase tracking-[0.14em] text-[var(--public-accent-dark)]">Tracciabilità</p>
+                  <p className="mt-2 text-sm leading-[1.6] text-[var(--public-muted)]">Ogni azione diventa evidenza utile per decisioni, SAL e dispute.</p>
+                </div>
+                <div className="public-grid-card p-4">
+                  <p className="text-[11px] font-extrabold uppercase tracking-[0.14em] text-[var(--public-accent-dark)]">Controllo</p>
+                  <p className="mt-2 text-sm leading-[1.6] text-[var(--public-muted)]">Meno chiamate di chiarimento, meno viaggi a vuoto, meno zone grigie.</p>
+                </div>
+              </div>
             </div>
 
-            <div data-reveal className="mt-16 md:mt-20 relative">
-              <div className="relative rounded-2xl overflow-hidden shadow-2xl shadow-[#141821]/10 border border-[#e5e7eb]">
-                <img src="/images/hero-image.png" alt="Interfaccia EdilSync per coordinare cantiere" className="w-full h-auto" />
-                <div className="absolute inset-0 bg-gradient-to-t from-[#f2f4f6]/20 to-transparent pointer-events-none" />
+            <div data-reveal className="lg:justify-self-end">
+              <div className="public-device-frame">
+                <img src="/images/hero-image.png" alt="Interfaccia EdilSync per coordinare il cantiere" className="block w-full border border-white/10 object-cover" />
+                <div className="mt-4 grid gap-3 sm:grid-cols-[1.2fr_0.8fr]">
+                  <div className="public-kpi-card rounded-[24px] p-5">
+                    <p className="text-[11px] font-extrabold uppercase tracking-[0.14em] text-[#f7b7a8]">Feed di cantiere</p>
+                    <p className="mt-3 text-lg font-semibold tracking-[-0.03em] text-[#f8f3ef]">Stato, responsabilita e approvazioni nello stesso flusso operativo.</p>
+                    <p className="mt-3 text-sm leading-[1.65] text-[#ded7d1]/76">Il committente vede avanzamento e decisioni. L’impresa conserva il contesto senza rincorrere chat e allegati.</p>
+                  </div>
+                  <div className="public-grid-card flex flex-col justify-between p-5">
+                    <div>
+                      <p className="text-[11px] font-extrabold uppercase tracking-[0.14em] text-[var(--public-accent-dark)]">Pronto sul campo</p>
+                      <p className="mt-3 text-3xl font-bold tracking-[-0.05em] text-[var(--public-ink)]">3 tap</p>
+                    </div>
+                    <p className="text-sm leading-[1.6] text-[var(--public-muted)]">Per aggiornare stato, allegare una foto o rispondere a una richiesta di variante.</p>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
         </section>
 
-        <section className="bg-[#0f172a] text-white border-y border-[#111827]">
-          <div className="max-w-6xl mx-auto px-4 sm:px-6 py-9 sm:py-10 grid grid-cols-2 md:grid-cols-4 gap-6 sm:gap-8 text-center">
-            <div data-reveal>
-              <p className="text-[34px] sm:text-[36px] leading-none font-extrabold text-[#ef6144]">{t('publicHome.stats.aValue')}</p>
-              <p className="mt-2 text-[12px] sm:text-[13px] text-[#d3dbe6] leading-[1.45] max-w-[220px] mx-auto">{t('publicHome.stats.aLabel')}</p>
+        <section className="bg-[#15171c] px-6 py-8 text-[#f8f3ef] md:py-10">
+          <div className="mx-auto grid max-w-7xl gap-6 sm:grid-cols-2 xl:grid-cols-4 xl:gap-0">
+            {[
+              { value: t('publicHome.stats.aValue'), label: t('publicHome.stats.aLabel') },
+              { value: t('publicHome.stats.bValue'), label: t('publicHome.stats.bLabel') },
+              { value: t('publicHome.stats.cValue'), label: t('publicHome.stats.cLabel') },
+              { value: t('publicHome.stats.dValue'), label: t('publicHome.stats.dLabel') },
+            ].map((item, index) => (
+              <div key={item.label} data-reveal className={`flex flex-col gap-3 ${index > 0 ? 'public-stat-divider xl:pl-8' : ''}`}>
+                <p className="text-[2.5rem] font-bold leading-none tracking-[-0.05em] text-[var(--public-accent)]">{item.value}</p>
+                <p className="max-w-[24ch] text-sm leading-[1.55] text-[#ded7d1]/76">{item.label}</p>
+              </div>
+            ))}
+          </div>
+        </section>
+
+        <section id="problema" className="public-section-shell px-6 py-24 md:py-30">
+          <div className="mx-auto grid max-w-7xl gap-12 lg:grid-cols-[0.88fr_1.12fr] lg:items-start">
+            <div className="max-w-xl lg:sticky lg:top-28">
+              <span data-reveal className="public-eyebrow">{t('publicHome.problem.chip')}</span>
+              <h2 data-reveal className={`${PUBLIC_CLASSES.displayH2} mt-5 max-w-[11ch]`}>
+                {t('publicHome.problem.title')}
+              </h2>
+              <p data-reveal className={`${PUBLIC_CLASSES.bodyLead} mt-5`}>
+                {t('publicHome.problem.subtitle')}
+              </p>
             </div>
-            <div data-reveal>
-              <p className="text-[34px] sm:text-[36px] leading-none font-extrabold text-[#ef6144]">{t('publicHome.stats.bValue')}</p>
-              <p className="mt-2 text-[12px] sm:text-[13px] text-[#d3dbe6] leading-[1.45] max-w-[220px] mx-auto">{t('publicHome.stats.bLabel')}</p>
-            </div>
-            <div data-reveal>
-              <p className="text-[34px] sm:text-[36px] leading-none font-extrabold text-[#ef6144]">{t('publicHome.stats.cValue')}</p>
-              <p className="mt-2 text-[12px] sm:text-[13px] text-[#d3dbe6] leading-[1.45] max-w-[220px] mx-auto">{t('publicHome.stats.cLabel')}</p>
-            </div>
-            <div data-reveal>
-              <p className="text-[34px] sm:text-[36px] leading-none font-extrabold text-[#ef6144]">{t('publicHome.stats.dValue')}</p>
-              <p className="mt-2 text-[12px] sm:text-[13px] text-[#d3dbe6] leading-[1.45] max-w-[220px] mx-auto">{t('publicHome.stats.dLabel')}</p>
+            <div className="grid gap-4 sm:grid-cols-2">
+              {featuredProblemItems.map((item, index) => {
+                const Icon = item.icon;
+                return (
+                  <article
+                    key={item.title}
+                    data-reveal
+                    className="public-grid-card p-6"
+                  >
+                    <div className="flex items-center justify-between gap-4">
+                      <div className={PUBLIC_CLASSES.iconWrap}>
+                        <Icon className={PUBLIC_CLASSES.icon} />
+                      </div>
+                      <span className="text-[11px] font-extrabold uppercase tracking-[0.14em] text-[var(--public-accent-dark)]">Criticita {index + 1}</span>
+                    </div>
+                    <h3 className={`${PUBLIC_CLASSES.sectionH3} mt-5 max-w-[18ch]`}>{item.title}</h3>
+                    <p className={`${PUBLIC_CLASSES.bodySm} mt-3`}>{item.description}</p>
+                  </article>
+                );
+              })}
             </div>
           </div>
         </section>
 
-        <section id="problema" className="py-24 md:py-32 bg-[#fcfcfc]">
-          <div className="max-w-7xl mx-auto px-6">
-            <div className="text-center max-w-3xl mx-auto">
-              <span data-reveal className="inline-block px-4 py-1.5 rounded-full bg-[#ef6144]/10 text-[#ef6144] text-sm font-inter font-medium mb-4">{t('publicHome.problem.chip')}</span>
-              <h2 data-reveal className="font-inter font-bold text-3xl md:text-5xl text-[#141821] tracking-tight">{t('publicHome.problem.title')}</h2>
-              <p data-reveal className="mt-4 text-lg text-[#5b6470] font-inter">{t('publicHome.problem.subtitle')}</p>
+        <section id="come-funziona" className="bg-[rgba(255,250,246,0.8)] px-6 py-24 md:py-32">
+          <div className="mx-auto grid max-w-7xl gap-12 lg:grid-cols-[1.05fr_0.95fr] lg:items-start">
+            <div>
+              <span data-reveal className="public-eyebrow">{t('publicHome.solution.chip')}</span>
+              <h2 data-reveal className={`${PUBLIC_CLASSES.displayH2} mt-5 max-w-[13ch]`}>
+                {t('publicHome.solution.title')}
+              </h2>
+              <p data-reveal className={`${PUBLIC_CLASSES.bodyLead} mt-5 max-w-[58ch]`}>
+                {t('publicHome.solution.subtitle')}
+              </p>
+              <div className="mt-10 space-y-4">
+                {solutionItems.map((item) => (
+                  <article key={item.number} data-reveal className="public-grid-card grid gap-4 p-5 md:grid-cols-[72px_1fr] md:items-start">
+                    <p className="text-5xl font-bold leading-none tracking-[-0.05em] text-[rgba(239,97,68,0.2)]">{item.number}</p>
+                    <div>
+                      <h3 className={PUBLIC_CLASSES.sectionH3}>{item.title}</h3>
+                      <p className={`${PUBLIC_CLASSES.bodyBase} mt-2`}>{item.description}</p>
+                    </div>
+                  </article>
+                ))}
+              </div>
             </div>
-            <div className="mt-16 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              <article data-reveal className="group p-6 rounded-2xl border border-[#e5e7eb] bg-white hover:border-[#ef6144]/30 hover:shadow-lg hover:shadow-[#ef6144]/5 transition-all duration-300">
-                <div className="w-12 h-12 rounded-xl bg-[#ef6144]/10 flex items-center justify-center mb-4 group-hover:bg-[#ef6144]/15 transition-colors"><MessageSquare className="w-6 h-6 text-[#ef6144]" /></div>
-                <h3 className="font-inter font-semibold text-lg text-[#141821]">{t('publicHome.problem.c1t')}</h3>
-                <p className="mt-2 text-sm text-[#5b6470] font-inter leading-relaxed">{t('publicHome.problem.c1d')}</p>
-              </article>
-              <article data-reveal className="group p-6 rounded-2xl border border-[#e5e7eb] bg-white hover:border-[#ef6144]/30 hover:shadow-lg hover:shadow-[#ef6144]/5 transition-all duration-300">
-                <div className="w-12 h-12 rounded-xl bg-[#ef6144]/10 flex items-center justify-center mb-4 group-hover:bg-[#ef6144]/15 transition-colors"><Phone className="w-6 h-6 text-[#ef6144]" /></div>
-                <h3 className="font-inter font-semibold text-lg text-[#141821]">{t('publicHome.problem.c2t')}</h3>
-                <p className="mt-2 text-sm text-[#5b6470] font-inter leading-relaxed">{t('publicHome.problem.c2d')}</p>
-              </article>
-              <article data-reveal className="group p-6 rounded-2xl border border-[#e5e7eb] bg-white hover:border-[#ef6144]/30 hover:shadow-lg hover:shadow-[#ef6144]/5 transition-all duration-300">
-                <div className="w-12 h-12 rounded-xl bg-[#ef6144]/10 flex items-center justify-center mb-4 group-hover:bg-[#ef6144]/15 transition-colors"><FileQuestion className="w-6 h-6 text-[#ef6144]" /></div>
-                <h3 className="font-inter font-semibold text-lg text-[#141821]">{t('publicHome.problem.c3t')}</h3>
-                <p className="mt-2 text-sm text-[#5b6470] font-inter leading-relaxed">{t('publicHome.problem.c3d')}</p>
-              </article>
-              <article data-reveal className="group p-6 rounded-2xl border border-[#e5e7eb] bg-white hover:border-[#ef6144]/30 hover:shadow-lg hover:shadow-[#ef6144]/5 transition-all duration-300">
-                <div className="w-12 h-12 rounded-xl bg-[#ef6144]/10 flex items-center justify-center mb-4 group-hover:bg-[#ef6144]/15 transition-colors"><Clock3 className="w-6 h-6 text-[#ef6144]" /></div>
-                <h3 className="font-inter font-semibold text-lg text-[#141821]">{t('publicHome.problem.c4t')}</h3>
-                <p className="mt-2 text-sm text-[#5b6470] font-inter leading-relaxed">{t('publicHome.problem.c4d')}</p>
-              </article>
-              <article data-reveal className="group p-6 rounded-2xl border border-[#e5e7eb] bg-white hover:border-[#ef6144]/30 hover:shadow-lg hover:shadow-[#ef6144]/5 transition-all duration-300">
-                <div className="w-12 h-12 rounded-xl bg-[#ef6144]/10 flex items-center justify-center mb-4 group-hover:bg-[#ef6144]/15 transition-colors"><AlertTriangle className="w-6 h-6 text-[#ef6144]" /></div>
-                <h3 className="font-inter font-semibold text-lg text-[#141821]">{t('publicHome.problem.c5t')}</h3>
-                <p className="mt-2 text-sm text-[#5b6470] font-inter leading-relaxed">{t('publicHome.problem.c5d')}</p>
-              </article>
-              <article data-reveal className="group p-6 rounded-2xl border border-[#e5e7eb] bg-white hover:border-[#ef6144]/30 hover:shadow-lg hover:shadow-[#ef6144]/5 transition-all duration-300">
-                <div className="w-12 h-12 rounded-xl bg-[#ef6144]/10 flex items-center justify-center mb-4 group-hover:bg-[#ef6144]/15 transition-colors"><Users className="w-6 h-6 text-[#ef6144]" /></div>
-                <h3 className="font-inter font-semibold text-lg text-[#141821]">{t('publicHome.problem.c6t')}</h3>
-                <p className="mt-2 text-sm text-[#5b6470] font-inter leading-relaxed">{t('publicHome.problem.c6d')}</p>
-              </article>
-            </div>
-          </div>
-        </section>
+            <div className="space-y-4" data-reveal>
+              <div className="public-kpi-card rounded-[32px] p-7 md:p-9">
+                <p className="text-[11px] font-extrabold uppercase tracking-[0.14em] text-[#f7b7a8]">Risultato operativo</p>
+                <h3 className="mt-4 text-[clamp(1.9rem,3vw,3.1rem)] font-bold tracking-[-0.05em] leading-[1.02] text-[#f8f3ef]">
+                  Tutti vedono lo stesso cantiere, senza rincorrersi.
+                </h3>
+                <ul className="public-check-list mt-8 space-y-3 text-sm leading-[1.7] text-[#ded7d1]">
+                  <li>Il committente segue avanzamento e decisioni senza telefonate continue.</li>
+                  <li>L’impresa coordina task, prove fotografiche e change request nello stesso flusso.</li>
+                  <li>Il subappaltatore trova solo cio che gli serve, quando gli serve.</li>
+                </ul>
+              </div>
+              <div className="grid gap-4 md:grid-cols-2">
+                {whyItems.slice(0, 2).map((item) => {
+                  const Icon = item.icon;
 
-        <section className="py-24 md:py-32 bg-[#f3f4f680]" id="come-funziona">
-          <div className="max-w-7xl mx-auto px-6">
-            <div className="max-w-4xl mx-auto text-center">
-              <span data-reveal className="inline-block px-4 py-1.5 rounded-full bg-[#fff0eb] text-[#ef6144] text-sm font-inter font-medium mb-4">{t('publicHome.solution.chip')}</span>
-              <h2 data-reveal className="font-inter font-bold text-3xl md:text-5xl text-[#141821] tracking-tight">{t('publicHome.solution.title')}</h2>
-              <p data-reveal className="mt-6 text-lg text-[#5b6470] font-inter max-w-2xl mx-auto">{t('publicHome.solution.subtitle')}</p>
-              <div className="mt-16 grid grid-cols-1 md:grid-cols-3 gap-8" data-reveal>
-                <article className="relative text-left">
-                  <span className="font-inter font-bold text-6xl text-[#ef6144]/20">01</span>
-                  <h3 className="mt-2 font-inter font-semibold text-xl text-[#141821]">{t('publicHome.solution.s1t')}</h3>
-                  <p className="mt-2 text-[#5b6470] font-inter text-sm leading-relaxed">{t('publicHome.solution.s1d')}</p>
-                </article>
-                <article className="relative text-left">
-                  <span className="font-inter font-bold text-6xl text-[#ef6144]/20">02</span>
-                  <h3 className="mt-2 font-inter font-semibold text-xl text-[#141821]">{t('publicHome.solution.s2t')}</h3>
-                  <p className="mt-2 text-[#5b6470] font-inter text-sm leading-relaxed">{t('publicHome.solution.s2d')}</p>
-                </article>
-                <article className="relative text-left">
-                  <span className="font-inter font-bold text-6xl text-[#ef6144]/20">03</span>
-                  <h3 className="mt-2 font-inter font-semibold text-xl text-[#141821]">{t('publicHome.solution.s3t')}</h3>
-                  <p className="mt-2 text-[#5b6470] font-inter text-sm leading-relaxed">{t('publicHome.solution.s3d')}</p>
-                </article>
+                  return (
+                    <article key={item.title} className="public-grid-card p-5">
+                      <div className="flex items-center gap-3">
+                        <div className={PUBLIC_CLASSES.iconWrap}>
+                          <Icon className={PUBLIC_CLASSES.icon} />
+                        </div>
+                        <h3 className={PUBLIC_CLASSES.sectionH3}>{item.title}</h3>
+                      </div>
+                      <p className={`${PUBLIC_CLASSES.bodySm} mt-3`}>{item.description}</p>
+                    </article>
+                  );
+                })}
               </div>
             </div>
           </div>
         </section>
 
-        <section id="features" className="py-24 md:py-32 bg-[#fcfcfc]">
-          <div className="max-w-7xl mx-auto px-6">
-            <div className="text-center max-w-3xl mx-auto">
-              <span data-reveal className="inline-block px-4 py-1.5 rounded-full bg-[#fff0eb] text-[#ef6144] text-sm font-inter font-medium mb-4">{t('publicHome.features.chip')}</span>
-              <h2 data-reveal className="font-inter font-bold text-3xl md:text-5xl text-[#141821] tracking-tight">{t('publicHome.features.title')}</h2>
-              <p data-reveal className="mt-4 text-lg text-[#5b6470] font-inter">{t('publicHome.features.subtitle')}</p>
+        <section id="features" className="public-section-shell px-6 py-24 md:py-32">
+          <div className="mx-auto max-w-7xl">
+            <div className="max-w-3xl">
+              <span data-reveal className="public-eyebrow">{t('publicHome.features.chip')}</span>
+              <h2 data-reveal className={`${PUBLIC_CLASSES.displayH2} mt-5 max-w-[12ch]`}>
+                {t('publicHome.features.title')}
+              </h2>
+              <p data-reveal className={`${PUBLIC_CLASSES.bodyLead} mt-5 max-w-[60ch]`}>
+                {t('publicHome.features.subtitle')}
+              </p>
             </div>
-            <div className="mt-16 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-              <article data-reveal className="group p-6 rounded-2xl border border-[#e5e7eb] bg-white hover:border-[#ef6144]/20 hover:shadow-lg hover:shadow-[#ef6144]/5 transition-all duration-300 hover:-translate-y-1"><div className="w-12 h-12 rounded-xl bg-blue-500/10 text-blue-600 flex items-center justify-center mb-4"><ListChecks className="w-6 h-6" /></div><h3 className="font-inter font-semibold text-base text-[#141821]">{t('publicHome.features.f1t')}</h3><p className="mt-2 text-sm text-[#5b6470] font-inter leading-relaxed">{t('publicHome.features.f1d')}</p></article>
-              <article data-reveal className="group p-6 rounded-2xl border border-[#e5e7eb] bg-white hover:border-[#ef6144]/20 hover:shadow-lg hover:shadow-[#ef6144]/5 transition-all duration-300 hover:-translate-y-1"><div className="w-12 h-12 rounded-xl bg-amber-500/10 text-amber-600 flex items-center justify-center mb-4"><Camera className="w-6 h-6" /></div><h3 className="font-inter font-semibold text-base text-[#141821]">{t('publicHome.features.f2t')}</h3><p className="mt-2 text-sm text-[#5b6470] font-inter leading-relaxed">{t('publicHome.features.f2d')}</p></article>
-              <article data-reveal className="group p-6 rounded-2xl border border-[#e5e7eb] bg-white hover:border-[#ef6144]/20 hover:shadow-lg hover:shadow-[#ef6144]/5 transition-all duration-300 hover:-translate-y-1"><div className="w-12 h-12 rounded-xl bg-emerald-500/10 text-emerald-600 flex items-center justify-center mb-4"><FileText className="w-6 h-6" /></div><h3 className="font-inter font-semibold text-base text-[#141821]">{t('publicHome.features.f3t')}</h3><p className="mt-2 text-sm text-[#5b6470] font-inter leading-relaxed">{t('publicHome.features.f3d')}</p></article>
-              <article data-reveal className="group p-6 rounded-2xl border border-[#e5e7eb] bg-white hover:border-[#ef6144]/20 hover:shadow-lg hover:shadow-[#ef6144]/5 transition-all duration-300 hover:-translate-y-1"><div className="w-12 h-12 rounded-xl bg-purple-500/10 text-purple-600 flex items-center justify-center mb-4"><MessageCircle className="w-6 h-6" /></div><h3 className="font-inter font-semibold text-base text-[#141821]">{t('publicHome.features.f4t')}</h3><p className="mt-2 text-sm text-[#5b6470] font-inter leading-relaxed">{t('publicHome.features.f4d')}</p></article>
-              <article data-reveal className="group p-6 rounded-2xl border border-[#e5e7eb] bg-white hover:border-[#ef6144]/20 hover:shadow-lg hover:shadow-[#ef6144]/5 transition-all duration-300 hover:-translate-y-1"><div className="w-12 h-12 rounded-xl bg-pink-500/10 text-pink-600 flex items-center justify-center mb-4"><CalendarDays className="w-6 h-6" /></div><h3 className="font-inter font-semibold text-base text-[#141821]">{t('publicHome.features.f5t')}</h3><p className="mt-2 text-sm text-[#5b6470] font-inter leading-relaxed">{t('publicHome.features.f5d')}</p></article>
-              <article data-reveal className="group p-6 rounded-2xl border border-[#e5e7eb] bg-white hover:border-[#ef6144]/20 hover:shadow-lg hover:shadow-[#ef6144]/5 transition-all duration-300 hover:-translate-y-1"><div className="w-12 h-12 rounded-xl bg-red-500/10 text-red-600 flex items-center justify-center mb-4"><Shield className="w-6 h-6" /></div><h3 className="font-inter font-semibold text-base text-[#141821]">{t('publicHome.features.f6t')}</h3><p className="mt-2 text-sm text-[#5b6470] font-inter leading-relaxed">{t('publicHome.features.f6d')}</p></article>
-              <article data-reveal className="group p-6 rounded-2xl border border-[#e5e7eb] bg-white hover:border-[#ef6144]/20 hover:shadow-lg hover:shadow-[#ef6144]/5 transition-all duration-300 hover:-translate-y-1"><div className="w-12 h-12 rounded-xl bg-teal-500/10 text-teal-600 flex items-center justify-center mb-4"><Wallet className="w-6 h-6" /></div><h3 className="font-inter font-semibold text-base text-[#141821]">{t('publicHome.features.f7t')}</h3><p className="mt-2 text-sm text-[#5b6470] font-inter leading-relaxed">{t('publicHome.features.f7d')}</p></article>
-              <article data-reveal className="group p-6 rounded-2xl border border-[#e5e7eb] bg-white hover:border-[#ef6144]/20 hover:shadow-lg hover:shadow-[#ef6144]/5 transition-all duration-300 hover:-translate-y-1"><div className="w-12 h-12 rounded-xl bg-indigo-500/10 text-indigo-600 flex items-center justify-center mb-4"><Clock3 className="w-6 h-6" /></div><h3 className="font-inter font-semibold text-base text-[#141821]">{t('publicHome.features.f8t')}</h3><p className="mt-2 text-sm text-[#5b6470] font-inter leading-relaxed">{t('publicHome.features.f8d')}</p></article>
+            <div className="mt-14 grid gap-4 md:grid-cols-2 xl:grid-cols-12">
+              {featuredFeatureItems.map((item, index) => {
+                const Icon = item.icon;
+                const spanClass = index === 0 ? 'xl:col-span-5' : index === 1 ? 'xl:col-span-3' : index === 2 ? 'xl:col-span-4' : 'xl:col-span-6';
+
+                return (
+                  <article key={item.title} data-reveal className={`public-grid-card p-6 ${spanClass}`}>
+                    <div className="flex items-center gap-3">
+                      <div className={PUBLIC_CLASSES.iconWrap}>
+                        <Icon className={PUBLIC_CLASSES.icon} />
+                      </div>
+                      <span className="text-[11px] font-extrabold uppercase tracking-[0.14em] text-[var(--public-accent-dark)]">Modulo</span>
+                    </div>
+                    <h3 className={`${PUBLIC_CLASSES.sectionH3} mt-5`}>{item.title}</h3>
+                    <p className={`${PUBLIC_CLASSES.bodyBase} mt-3`}>{item.description}</p>
+                  </article>
+                );
+              })}
             </div>
-          </div>
-        </section>
-
-        <section className="py-24 md:py-32 bg-[#f3f4f680]">
-          <div className="max-w-7xl mx-auto px-6">
-          <p data-reveal className="section-chip">{t('publicHome.why.chip')}</p>
-          <h2 data-reveal className={`${PUBLIC_CLASSES.displayH2} text-center mt-3`}>{t('publicHome.why.title')}</h2>
-          <div className="mt-10 grid md:grid-cols-2 gap-5">
-            <article data-reveal className="flex gap-5 p-6 rounded-2xl bg-white border border-[#e5e7eb]"><div className="w-12 h-12 rounded-xl bg-[#ef6144]/10 flex-shrink-0 flex items-center justify-center"><Shield className="w-6 h-6 text-[#ef6144]" /></div><div><p className="mt-1 text-[20px] font-[700] text-[#0f172a]">{t('publicHome.why.w1t')}</p><p className="mt-2 text-[14px] leading-[1.68] text-[#526071]">{t('publicHome.why.w1d')}</p></div></article>
-            <article data-reveal className="flex gap-5 p-6 rounded-2xl bg-white border border-[#e5e7eb]"><div className="w-12 h-12 rounded-xl bg-[#ef6144]/10 flex-shrink-0 flex items-center justify-center"><MessageSquare className="w-6 h-6 text-[#ef6144]" /></div><div><p className="mt-1 text-[20px] font-[700] text-[#0f172a]">{t('publicHome.why.w2t')}</p><p className="mt-2 text-[14px] leading-[1.68] text-[#526071]">{t('publicHome.why.w2d')}</p></div></article>
-            <article data-reveal className="flex gap-5 p-6 rounded-2xl bg-white border border-[#e5e7eb]"><div className="w-12 h-12 rounded-xl bg-[#ef6144]/10 flex-shrink-0 flex items-center justify-center"><ClipboardList className="w-6 h-6 text-[#ef6144]" /></div><div><p className="mt-1 text-[20px] font-[700] text-[#0f172a]">{t('publicHome.why.w3t')}</p><p className="mt-2 text-[14px] leading-[1.68] text-[#526071]">{t('publicHome.why.w3d')}</p></div></article>
-            <article data-reveal className="flex gap-5 p-6 rounded-2xl bg-white border border-[#e5e7eb]"><div className="w-12 h-12 rounded-xl bg-[#ef6144]/10 flex-shrink-0 flex items-center justify-center"><ArrowRight className="w-6 h-6 text-[#ef6144]" /></div><div><p className="mt-1 text-[20px] font-[700] text-[#0f172a]">{t('publicHome.why.w4t')}</p><p className="mt-2 text-[14px] leading-[1.68] text-[#526071]">{t('publicHome.why.w4d')}</p></div></article>
-          </div>
-          </div>
-        </section>
-
-        <section id="perchi" className="py-24 md:py-32 bg-[#f3f4f680]">
-          <div className="max-w-7xl mx-auto px-6">
-            <p data-reveal className="section-chip">{t('publicHome.audience.chip')}</p>
-            <h2 data-reveal className={`${PUBLIC_CLASSES.displayH2} max-w-4xl mx-auto text-center mt-3`}>{t('publicHome.audience.title')}</h2>
-            <p data-reveal className={`mt-4 max-w-3xl text-center mx-auto ${PUBLIC_CLASSES.bodyBase}`}>{t('publicHome.audience.subtitle')}</p>
-            <div className="mt-10 grid md:grid-cols-3 gap-5 items-stretch">
-              <article data-reveal className="public-panel p-7 bg-white h-full flex flex-col rounded-2xl border-[#e9edf3] shadow-sm">
-                <div className="flex items-center gap-3">
-                  <img src="/images/michele.png" alt="Michele" className="h-14 w-14 rounded-full border border-[#f8c8bd] object-cover" />
-                  <div>
-                    <p className="text-[17px] font-semibold text-[#0f172a]">Michele</p>
-                    <p className="text-[12px] font-semibold uppercase tracking-[0.09em] text-[#ef6144]">{t('publicHome.audience.micheleRole')}</p>
-                  </div>
-                </div>
-                <blockquote className="mt-4 border-l-2 border-[#ef6144] pl-3 text-[14px] italic leading-[1.64] text-[#6b7280] mb-4">{t('publicHome.audience.micheleQuote')}</blockquote>
-                <p className="mt-4 text-[10px] font-bold uppercase tracking-[0.13em] text-[#ef6144]">{t('publicHome.audience.helpLabel')}</p>
-                <ul className="mt-3 space-y-2.5 text-[#111827] text-[13px] leading-[1.56] flex-1">
-                  <li className="flex items-start gap-2"><ChevronRight className="h-[16px] w-[16px] mt-0.5 text-[#ef6144] shrink-0" /><span>{t('publicHome.audience.m1')}</span></li>
-                  <li className="flex items-start gap-2"><ChevronRight className="h-[16px] w-[16px] mt-0.5 text-[#ef6144] shrink-0" /><span>{t('publicHome.audience.m2')}</span></li>
-                  <li className="flex items-start gap-2"><ChevronRight className="h-[16px] w-[16px] mt-0.5 text-[#ef6144] shrink-0" /><span>{t('publicHome.audience.m3')}</span></li>
-                  <li className="flex items-start gap-2"><ChevronRight className="h-[16px] w-[16px] mt-0.5 text-[#ef6144] shrink-0" /><span>{t('publicHome.audience.m4')}</span></li>
-                </ul>
-              </article>
-
-              <article data-reveal className="public-panel p-7 bg-white h-full flex flex-col rounded-2xl border-[#e9edf3] shadow-sm">
-                <div className="flex items-center gap-3">
-                  <img src="/images/matteo.png" alt="Matteo" className="h-14 w-14 rounded-full border border-[#f8c8bd] object-cover" />
-                  <div>
-                    <p className="text-[17px] font-semibold text-[#0f172a]">Matteo</p>
-                    <p className="text-[12px] font-semibold uppercase tracking-[0.09em] text-[#ef6144]">{t('publicHome.audience.matteoRole')}</p>
-                  </div>
-                </div>
-                <blockquote className="mt-4 border-l-2 border-[#ef6144] pl-3 text-[14px] italic leading-[1.64] text-[#6b7280] mb-4">{t('publicHome.audience.matteoQuote')}</blockquote>
-                <p className="mt-4 text-[10px] font-bold uppercase tracking-[0.13em] text-[#ef6144]">{t('publicHome.audience.helpLabel')}</p>
-                <ul className="mt-3 space-y-2.5 text-[#111827] text-[13px] leading-[1.56] flex-1">
-                  <li className="flex items-start gap-2"><ChevronRight className="h-[16px] w-[16px] mt-0.5 text-[#ef6144] shrink-0" /><span>{t('publicHome.audience.t1')}</span></li>
-                  <li className="flex items-start gap-2"><ChevronRight className="h-[16px] w-[16px] mt-0.5 text-[#ef6144] shrink-0" /><span>{t('publicHome.audience.t2')}</span></li>
-                  <li className="flex items-start gap-2"><ChevronRight className="h-[16px] w-[16px] mt-0.5 text-[#ef6144] shrink-0" /><span>{t('publicHome.audience.t3')}</span></li>
-                  <li className="flex items-start gap-2"><ChevronRight className="h-[16px] w-[16px] mt-0.5 text-[#ef6144] shrink-0" /><span>{t('publicHome.audience.t4')}</span></li>
-                </ul>
-              </article>
-
-              <article data-reveal className="public-panel p-7 bg-white h-full flex flex-col rounded-2xl border-[#e9edf3] shadow-sm">
-                <div className="flex items-center gap-3">
-                  <img src="/images/marco.png" alt="Marco" className="h-14 w-14 rounded-full border border-[#f8c8bd] object-cover" />
-                  <div>
-                    <p className="text-[17px] font-semibold text-[#0f172a]">Marco</p>
-                    <p className="text-[12px] font-semibold uppercase tracking-[0.09em] text-[#ef6144]">{t('publicHome.audience.marcoRole')}</p>
-                  </div>
-                </div>
-                <blockquote className="mt-4 border-l-2 border-[#ef6144] pl-3 text-[14px] italic leading-[1.64] text-[#6b7280] mb-4">{t('publicHome.audience.marcoQuote')}</blockquote>
-                <p className="mt-4 text-[10px] font-bold uppercase tracking-[0.13em] text-[#ef6144]">{t('publicHome.audience.helpLabel')}</p>
-                <ul className="mt-3 space-y-2.5 text-[#111827] text-[13px] leading-[1.56] flex-1">
-                  <li className="flex items-start gap-2"><ChevronRight className="h-[16px] w-[16px] mt-0.5 text-[#ef6144] shrink-0" /><span>{t('publicHome.audience.r1')}</span></li>
-                  <li className="flex items-start gap-2"><ChevronRight className="h-[16px] w-[16px] mt-0.5 text-[#ef6144] shrink-0" /><span>{t('publicHome.audience.r2')}</span></li>
-                  <li className="flex items-start gap-2"><ChevronRight className="h-[16px] w-[16px] mt-0.5 text-[#ef6144] shrink-0" /><span>{t('publicHome.audience.r3')}</span></li>
-                  <li className="flex items-start gap-2"><ChevronRight className="h-[16px] w-[16px] mt-0.5 text-[#ef6144] shrink-0" /><span>{t('publicHome.audience.r4')}</span></li>
-                </ul>
-              </article>
-            </div>
-          </div>
-        </section>
-
-        <section id="prezzi" className="py-24 md:py-32 bg-[#fcfcfc]">
-          <div className="max-w-7xl mx-auto px-6">
-          <p data-reveal className="section-chip">{t('publicHome.pricing.chip')}</p>
-          <div className="text-center max-w-3xl mx-auto" data-reveal>
-            <h2 className={`${PUBLIC_CLASSES.displayH2} mt-3`}>{t('publicHome.pricing.title')}</h2>
-            <p className={`mt-4 ${PUBLIC_CLASSES.bodyLead}`}>{t('publicHome.pricing.subtitle')}</p>
-          </div>
-          <div data-reveal data-price-card className="mt-10 relative bg-white rounded-3xl border-2 border-[#ef6144] shadow-2xl shadow-[#ef6144]/10 overflow-hidden max-w-lg mx-auto">
-            <span className="absolute top-0 right-0 bg-[#ef6144] text-white text-xs font-inter font-semibold px-4 py-1.5 rounded-bl-xl">{t('publicHome.pricing.badge')}</span>
-            <div className="p-8 md:p-10">
-            <p className="text-sm font-medium uppercase tracking-wider text-[#64748b]">{t('publicHome.pricing.plan')}</p>
-            <div className="mt-4 flex items-end gap-1">
-              <p className="text-6xl font-bold leading-none text-[#0f172a]">{t('publicHome.pricing.price')}</p>
-            </div>
-            <p className="mt-3 text-sm text-[#475569]">{t('publicHome.pricing.priceNote')}</p>
-            <div className="mt-6">
-              <Button asChild className="bg-[#ef6144] hover:bg-[#d9553a] text-white rounded-full h-12 px-6 text-base font-semibold shadow-[0_10px_28px_rgba(239,97,68,0.28)] w-full">
-                <Link to="/app">{t('publicHome.pricing.cta')}</Link>
+            <div data-reveal className="mt-8 flex justify-start">
+              <Button asChild variant="outline" className="public-outline-button rounded-full px-6">
+                <Link to={`${basePrefix}/funzionalita`}>
+                  {locale === 'en' ? 'See all features' : 'Vedi tutte le funzionalita'}
+                  <ChevronRight className="h-4 w-4" />
+                </Link>
               </Button>
             </div>
-            <p className="mt-3 text-xs text-center text-[#64748b]">{t('publicHome.pricing.noCard')}</p>
-            <div className="mt-8 pt-8 border-t border-[#e5e7eb]">
-            <p className="text-sm font-semibold text-[#1f2937]">{t('publicHome.pricing.included')}</p>
-            <ul className="mt-4 space-y-2 text-left">
-              <li className="flex gap-2 text-[#334155] text-sm"><Check className="h-4 w-4 mt-1 text-[#ef6144]" /><span>{t('publicHome.pricing.p1')}</span></li>
-              <li className="flex gap-2 text-[#334155] text-sm"><Check className="h-4 w-4 mt-1 text-[#ef6144]" /><span>{t('publicHome.pricing.p2')}</span></li>
-              <li className="flex gap-2 text-[#334155] text-sm"><Check className="h-4 w-4 mt-1 text-[#ef6144]" /><span>{t('publicHome.pricing.p3')}</span></li>
-              <li className="flex gap-2 text-[#334155] text-sm"><Check className="h-4 w-4 mt-1 text-[#ef6144]" /><span>{t('publicHome.pricing.p4')}</span></li>
-              <li className="flex gap-2 text-[#334155] text-sm"><Check className="h-4 w-4 mt-1 text-[#ef6144]" /><span>{t('publicHome.pricing.p5')}</span></li>
-              <li className="flex gap-2 text-[#334155] text-sm"><Check className="h-4 w-4 mt-1 text-[#ef6144]" /><span>{t('publicHome.pricing.p6')}</span></li>
-              <li className="flex gap-2 text-[#334155] text-sm"><Check className="h-4 w-4 mt-1 text-[#ef6144]" /><span>{t('publicHome.pricing.p7')}</span></li>
-              <li className="flex gap-2 text-[#334155] text-sm"><Check className="h-4 w-4 mt-1 text-[#ef6144]" /><span>{t('publicHome.pricing.p8')}</span></li>
-              <li className="flex gap-2 text-[#334155] text-sm"><Check className="h-4 w-4 mt-1 text-[#ef6144]" /><span>{t('publicHome.pricing.p9')}</span></li>
-              <li className="flex gap-2 text-[#334155] text-sm"><Check className="h-4 w-4 mt-1 text-[#ef6144]" /><span>{t('publicHome.pricing.p10')}</span></li>
-              <li className="flex gap-2 text-[#334155] text-sm"><Check className="h-4 w-4 mt-1 text-[#ef6144]" /><span>{t('publicHome.pricing.p11')}</span></li>
-              <li className="flex gap-2 text-[#334155] text-sm"><Check className="h-4 w-4 mt-1 text-[#ef6144]" /><span>{t('publicHome.pricing.p12')}</span></li>
-            </ul>
-            </div>
-          </div>
-          </div>
-          <p data-reveal className="mt-8 text-center text-sm text-[#475569] max-w-2xl mx-auto">
-            <span className="font-semibold text-[#0f172a]">{t('publicHome.pricing.hintStrong')}</span>
-             <span className="text-[#0f172a]">{t('publicHome.pricing.hint')}</span>
-            <br />
-            {t('publicHome.pricing.hintSub')}
-          </p>
-          <div className="mt-10 grid grid-cols-1 md:grid-cols-3 gap-4 max-w-5xl mx-auto">
-            <article data-reveal className="rounded-2xl border border-[#e5e7eb] bg-white p-6 text-left shadow-sm">
-              <p className="text-[11px] font-semibold uppercase tracking-[0.08em] text-[#ef6144]">{t('publicHome.pricing.explainer.freeBadge')}</p>
-              <h3 className="mt-4 text-lg font-semibold text-[#141821]">{t('publicHome.pricing.explainer.freeTitle')}</h3>
-              <p className="mt-2 text-sm leading-relaxed text-[#5b6470]">{t('publicHome.pricing.explainer.freeText')}</p>
-            </article>
-            <article data-reveal className="rounded-2xl border border-[#e5e7eb] bg-white p-6 text-left shadow-sm">
-              <p className="text-[11px] font-semibold uppercase tracking-[0.08em] text-[#ef6144]">{t('publicHome.pricing.explainer.companyBadge')}</p>
-              <h3 className="mt-4 text-lg font-semibold text-[#141821]">{t('publicHome.pricing.explainer.companyTitle')}</h3>
-              <p className="mt-2 text-sm leading-relaxed text-[#5b6470]">{t('publicHome.pricing.explainer.companyText')}</p>
-            </article>
-            <article data-reveal className="rounded-2xl border border-[#e5e7eb] bg-white p-6 text-left shadow-sm">
-              <p className="text-[11px] font-semibold uppercase tracking-[0.08em] text-[#ef6144]">{t('publicHome.pricing.explainer.projectBadge')}</p>
-              <h3 className="mt-4 text-lg font-semibold text-[#141821]">{t('publicHome.pricing.explainer.projectTitle')}</h3>
-              <p className="mt-2 text-sm leading-relaxed text-[#5b6470]">{t('publicHome.pricing.explainer.projectText')}</p>
-            </article>
-          </div>
           </div>
         </section>
 
-        <section className="py-24 md:py-32 bg-[#0b1220] text-white relative overflow-hidden">
-          <div data-parallax="slow" className="absolute top-0 left-1/3 w-96 h-96 bg-[#ef6144]/20 rounded-full blur-3xl pointer-events-none" aria-hidden />
-          <div data-parallax="medium" className="absolute bottom-0 right-1/4 w-80 h-80 bg-[#ef6144]/10 rounded-full blur-3xl pointer-events-none" aria-hidden />
-          <div className="max-w-4xl mx-auto px-6 text-center relative z-10">
-            <h2 data-reveal className={`${PUBLIC_CLASSES.darkDisplayH2} max-w-4xl mx-auto`}>{t('publicHome.final.title')}</h2>
-            <p data-reveal className={`mt-5 ${PUBLIC_CLASSES.darkBodyLead} max-w-3xl`}>{t('publicHome.final.text')}</p>
+        <section id="perchi" className="public-section-shell px-6 py-24 md:py-32">
+          <div className="mx-auto max-w-7xl">
+            <div className="max-w-3xl">
+              <span data-reveal className="public-eyebrow">{t('publicHome.audience.chip')}</span>
+              <h2 data-reveal className={`${PUBLIC_CLASSES.displayH2} mt-5 max-w-[13ch]`}>
+                {t('publicHome.audience.title')}
+              </h2>
+              <p data-reveal className={`${PUBLIC_CLASSES.bodyLead} mt-5 max-w-[58ch]`}>
+                {t('publicHome.audience.subtitle')}
+              </p>
+            </div>
+            <div className="mt-14 grid gap-5 lg:grid-cols-3">
+              {audienceCards.map((card, index) => (
+                <article key={card.name} data-reveal className="public-grid-card flex h-full flex-col p-6">
+                  <div className="flex items-center gap-4">
+                    <img src={card.image} alt={card.name} className="h-16 w-16 rounded-full border border-[rgba(239,97,68,0.22)] object-cover" />
+                    <div>
+                      <p className="text-lg font-semibold tracking-[-0.03em] text-[var(--public-ink)]">{card.name}</p>
+                      <p className="mt-1 text-[11px] font-extrabold uppercase tracking-[0.14em] text-[var(--public-accent-dark)]">{card.role}</p>
+                    </div>
+                  </div>
+                  <blockquote className="mt-5 border-l-2 border-[rgba(239,97,68,0.22)] pl-4 text-[15px] italic leading-[1.7] text-[var(--public-muted)] line-clamp-3">
+                    {card.quote}
+                  </blockquote>
+                  <p className="mt-6 text-[11px] font-extrabold uppercase tracking-[0.14em] text-[var(--public-accent-dark)]">{t('publicHome.audience.helpLabel')}</p>
+                  <ul className="public-check-list mt-4 space-y-3 text-sm leading-[1.7] text-[var(--public-ink)]">
+                    {card.bullets.slice(0, 3).map((bullet) => (
+                      <li key={bullet}>{bullet}</li>
+                    ))}
+                  </ul>
+                </article>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        <section id="prezzi" className="bg-[rgba(255,250,246,0.86)] px-6 py-24 md:py-32">
+          <div className="mx-auto max-w-7xl">
+            <div className="max-w-3xl">
+              <span data-reveal className="public-eyebrow">{t('publicHome.pricing.chip')}</span>
+              <h2 data-reveal className={`${PUBLIC_CLASSES.displayH2} mt-5 max-w-[11ch]`}>
+                {t('publicHome.pricing.title')}
+              </h2>
+              <p data-reveal className={`${PUBLIC_CLASSES.bodyLead} mt-5 max-w-[60ch]`}>
+                {t('publicHome.pricing.subtitle')}
+              </p>
+            </div>
+
+            <div className="mt-14 grid gap-6 xl:grid-cols-[minmax(0,0.95fr)_440px] xl:items-start">
+              <div className="space-y-4 xl:self-start">
+                <article data-reveal className="public-grid-card p-7">
+                  <div className="grid gap-5 md:grid-cols-[0.9fr_1.1fr] md:items-start">
+                    <div>
+                      <p className="text-[11px] font-extrabold uppercase tracking-[0.14em] text-[var(--public-accent-dark)]">
+                        {locale === 'en' ? 'Billing logic' : 'Logica del prezzo'}
+                      </p>
+                      <h3 className="mt-4 text-[clamp(1.5rem,2.5vw,2.3rem)] font-bold tracking-[-0.05em] text-[var(--public-ink)]">
+                        {locale === 'en' ? 'One company plan. Free access for everyone else.' : 'Un piano per la società. Accesso gratuito per tutti gli altri.'}
+                      </h3>
+                    </div>
+                    <div className="space-y-3">
+                      {pricingAccessItems.map((item) => (
+                        <div key={item} className="flex items-start gap-3 rounded-[20px] border border-[var(--public-line)] bg-[rgba(255,248,244,0.72)] p-4">
+                          <Check className="mt-0.5 h-4 w-4 flex-shrink-0 text-[var(--public-accent)]" />
+                          <p className="text-sm leading-[1.65] text-[var(--public-muted)]">{item}</p>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </article>
+
+                <div className="grid gap-4 md:grid-cols-3">
+                  <article data-reveal className="public-grid-card p-5">
+                    <p className="text-[11px] font-extrabold uppercase tracking-[0.14em] text-[var(--public-accent-dark)]">{t('publicHome.pricing.explainer.freeBadge')}</p>
+                    <h3 className={`${PUBLIC_CLASSES.sectionH3} mt-4`}>{t('publicHome.pricing.explainer.freeTitle')}</h3>
+                    <p className={`${PUBLIC_CLASSES.bodySm} mt-3`}>{t('publicHome.pricing.explainer.freeText')}</p>
+                  </article>
+                  <article data-reveal className="public-grid-card p-5">
+                    <p className="text-[11px] font-extrabold uppercase tracking-[0.14em] text-[var(--public-accent-dark)]">{t('publicHome.pricing.explainer.companyBadge')}</p>
+                    <h3 className={`${PUBLIC_CLASSES.sectionH3} mt-4`}>{t('publicHome.pricing.explainer.companyTitle')}</h3>
+                    <p className={`${PUBLIC_CLASSES.bodySm} mt-3`}>{t('publicHome.pricing.explainer.companyText')}</p>
+                  </article>
+                  <article data-reveal className="public-grid-card p-5">
+                    <p className="text-[11px] font-extrabold uppercase tracking-[0.14em] text-[var(--public-accent-dark)]">{t('publicHome.pricing.explainer.projectBadge')}</p>
+                    <h3 className={`${PUBLIC_CLASSES.sectionH3} mt-4`}>{t('publicHome.pricing.explainer.projectTitle')}</h3>
+                    <p className={`${PUBLIC_CLASSES.bodySm} mt-3`}>{t('publicHome.pricing.explainer.projectText')}</p>
+                  </article>
+                </div>
+              </div>
+
+              <div data-reveal data-price-card className="public-grid-card relative overflow-hidden self-start border-[rgba(239,97,68,0.34)] bg-[linear-gradient(180deg,rgba(255,255,255,0.98),rgba(255,243,237,0.98))] p-8 shadow-[0_26px_64px_rgba(223,88,59,0.12)]">
+                <span className="absolute right-0 top-0 rounded-bl-[22px] bg-[var(--public-accent)] px-4 py-2 text-[11px] font-extrabold uppercase tracking-[0.14em] text-white">{t('publicHome.pricing.badge')}</span>
+                <p className="text-[11px] font-extrabold uppercase tracking-[0.14em] text-[var(--public-accent-dark)]">{t('publicHome.pricing.plan')}</p>
+                <div className="mt-5 flex items-end gap-2">
+                  <p className="text-[clamp(3rem,6vw,4.4rem)] font-bold leading-none tracking-[-0.06em] text-[var(--public-ink)]">{t('publicHome.pricing.price')}</p>
+                </div>
+                <p className="mt-4 max-w-[30ch] text-sm leading-[1.7] text-[var(--public-muted)]">{t('publicHome.pricing.priceNote')}</p>
+                <div className="mt-6">
+                  <Button asChild className={`${PUBLIC_CLASSES.primaryCta} h-12 w-full text-base`}>
+                    <Link to="/app">{t('publicHome.pricing.cta')}</Link>
+                  </Button>
+                </div>
+                <p className="mt-3 text-center text-xs leading-[1.6] text-[var(--public-muted)]/85">{t('publicHome.pricing.noCard')}</p>
+                <div className="mt-7 border-t border-[rgba(84,63,54,0.1)] pt-7">
+                  <p className="text-sm font-semibold text-[var(--public-ink)]">{locale === 'en' ? 'What teams usually need first' : 'Cosa serve subito nella pratica'}</p>
+                  <ul className="public-check-list mt-4 space-y-3 text-sm leading-[1.68] text-[var(--public-ink)]">
+                    {pricingHighlights.map((bullet) => (
+                      <li key={bullet}>{bullet}</li>
+                    ))}
+                  </ul>
+                  <div className="mt-5 flex flex-wrap gap-2">
+                    <Link to={`${basePrefix}/prezzi`} className="public-anchor-link text-sm font-semibold">
+                      {locale === 'en' ? 'See full pricing details' : 'Vedi il dettaglio completo dei prezzi'}
+                    </Link>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section className="relative overflow-hidden bg-[#15171c] px-6 py-24 text-white md:py-32">
+          <div data-parallax="slow" className="pointer-events-none absolute left-[18%] top-0 h-80 w-80 rounded-full bg-[rgba(239,97,68,0.18)] blur-3xl" aria-hidden />
+          <div data-parallax="medium" className="pointer-events-none absolute bottom-0 right-[14%] h-72 w-72 rounded-full bg-[rgba(196,158,108,0.14)] blur-3xl" aria-hidden />
+          <div className="relative mx-auto max-w-4xl text-center">
+            <h2 data-reveal className={`${PUBLIC_CLASSES.darkDisplayH2} mx-auto max-w-[13ch]`}>
+              {t('publicHome.final.title')}
+            </h2>
+            <p data-reveal className={`${PUBLIC_CLASSES.darkBodyLead} mt-6 max-w-3xl`}>
+              {t('publicHome.final.text')}
+            </p>
             <div data-reveal className="mt-10 flex justify-center">
-              <Button asChild className="bg-[#ef6144] hover:bg-[#d9553a] text-white rounded-full h-10 px-10 text-base font-semibold shadow-lg shadow-[rgba(239,97,68,0.4)] gap-2">
+              <Button asChild className={PUBLIC_CLASSES.darkPrimaryCta}>
                 <Link to="/app">{t('publicHome.final.ctaPrimary')}</Link>
               </Button>
             </div>
-            <p data-reveal className="mt-4 text-sm text-white/40 font-inter">{t('publicHome.hero.note')}</p>
+            <p data-reveal className={`${PUBLIC_CLASSES.darkNote} mt-5`}>{t('publicHome.hero.note')}</p>
           </div>
         </section>
       </div>

@@ -89,26 +89,31 @@ export default function PublicLayout({ locale = 'it', children }) {
 
   return (
     <I18nextProvider i18n={i18next}>
-      <div className="public-site min-h-screen bg-[#f8f5f3] text-slate-900 flex flex-col">
-        <header className="sticky top-0 z-40 border-b border-white/60 bg-white/75 backdrop-blur-xl shadow-sm shadow-slate-200/40">
-          <div className="max-w-6xl mx-auto px-4 sm:px-6 py-4 flex items-center justify-between gap-4">
-            <Link to={effectiveLocale === 'en' ? '/en' : '/'} className="flex items-center gap-2">
-              <div className="w-9 h-9 rounded-lg bg-[#ef6144] flex items-center justify-center">
+      <div className="public-site min-h-screen flex flex-col">
+        <header className="sticky top-0 z-40 border-b border-[rgba(84,63,54,0.12)] bg-[rgba(247,241,235,0.84)] backdrop-blur-2xl supports-[backdrop-filter]:bg-[rgba(247,241,235,0.74)]">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 py-3.5 flex items-center justify-between gap-4">
+            <Link to={effectiveLocale === 'en' ? '/en' : '/'} className="public-anchor-link flex items-center gap-3">
+              <div className="w-10 h-10 rounded-2xl bg-[linear-gradient(135deg,#ef6144,#d9553a)] flex items-center justify-center shadow-[0_14px_28px_rgba(239,97,68,0.25)]">
                 <HardHat className="h-5 w-5 text-white" />
               </div>
-              <span className="font-semibold text-xl">EdilSync</span>
+              <div>
+                <span className="block font-semibold text-[1.05rem] leading-none">EdilSync</span>
+                <span className="hidden md:block mt-1 text-[10px] font-extrabold uppercase tracking-[0.18em] text-[#7b665e]">
+                  Field-ready coordination
+                </span>
+              </div>
             </Link>
 
-            <div className="hidden lg:flex items-center gap-4">
+            <div className="hidden lg:flex items-center gap-5">
               <NavigationMenu>
                 <NavigationMenuList>
                   {topMenus.map((entry) => (
                     <NavigationMenuItem key={entry.key}>
-                      <NavigationMenuTrigger className="bg-transparent hover:bg-white/80 data-[state=open]:bg-white text-[#4a3d39]">
+                      <NavigationMenuTrigger className="rounded-full bg-transparent px-3.5 text-[13px] font-semibold text-[#4f443e] hover:bg-white/70 hover:text-[#1f1c1a] data-[state=open]:bg-white data-[state=open]:text-[#1f1c1a]">
                         {entry.label}
                       </NavigationMenuTrigger>
                       <NavigationMenuContent>
-                        <div className="w-[760px] rounded-2xl border border-[#e6d7d2] bg-white p-6 shadow-xl">
+                        <div className="w-[780px] rounded-[28px] border border-[rgba(84,63,54,0.14)] bg-[rgba(255,251,247,0.98)] p-6 shadow-[0_30px_80px_rgba(46,33,28,0.14)]">
                           <div className="grid grid-cols-3 gap-4">
                             <div className={`col-span-2 grid gap-4 ${entry.sections.length > 1 ? 'sm:grid-cols-2' : 'sm:grid-cols-1'}`}>
                               {entry.sections.map((section, sectionIndex) => (
@@ -120,7 +125,7 @@ export default function PublicLayout({ locale = 'it', children }) {
                                         <NavigationMenuLink asChild>
                                           <Link
                                             to={item.href}
-                                            className="group block rounded-xl transition p-1.5 hover:bg-[#f7f2f0]"
+                                            className="group block rounded-2xl border border-transparent p-3 transition hover:border-[rgba(239,97,68,0.16)] hover:bg-white"
                                           >
                                             <>
                                               <p className="text-[13px] font-semibold text-[#2a211f] group-hover:text-[#ef6144] inline-flex items-center gap-1.5 leading-tight">
@@ -138,13 +143,13 @@ export default function PublicLayout({ locale = 'it', children }) {
                               ))}
                             </div>
 
-                            <div className="rounded-xl border border-[#edd0c8] bg-[#fdf7f5] text-[#2a211f] self-start h-fit p-[18px]">
+                            <div className="rounded-[24px] border border-[rgba(239,97,68,0.18)] bg-[linear-gradient(180deg,#fff8f5,#fffdfb)] text-[#2a211f] self-start h-fit p-5">
                               <entry.icon className="h-[18px] w-[18px] text-[#ef6144]" />
                               <p className="mt-2.5 text-[17px] leading-tight font-semibold">{entry.featured.title}</p>
-                              <p className="mt-1.5 text-[12px] leading-[1.5] text-[#5e4d47]">{entry.featured.text}</p>
+                              <p className="mt-1.5 text-[12px] leading-[1.6] text-[#5e4d47]">{entry.featured.text}</p>
                               <Link
                                 to={effectiveLocale === 'en' ? '/en/contatti' : '/contatti'}
-                                className="inline-flex items-center gap-1 font-semibold text-[#c55039] mt-3 text-[12px]"
+                                className="inline-flex items-center gap-1 font-semibold text-[#c55039] mt-4 text-[12px]"
                               >
                                 {copy.demo}
                                 <ChevronRight className="h-3.5 w-3.5" />
@@ -159,7 +164,7 @@ export default function PublicLayout({ locale = 'it', children }) {
               </NavigationMenu>
 
               {menu.quickLinks.map((item) => (
-                <Link key={item.href} to={item.href} className="text-sm text-[#4a3d39] hover:text-[#231b19] transition-colors">
+                <Link key={item.href} to={item.href} className="public-nav-link text-[13px] font-semibold">
                   {item.label}
                 </Link>
               ))}
@@ -172,30 +177,30 @@ export default function PublicLayout({ locale = 'it', children }) {
               <Button
                 type="button"
                 variant="outline"
-                className="lg:hidden border-[#d8c4be]"
+                className="public-outline-button lg:hidden rounded-full"
                 onClick={() => setMobileOpen((prev) => !prev)}
                 aria-label={mobileOpen ? aria.closeMenu : aria.openMenu}
               >
                 {mobileOpen ? <X className="h-4 w-4" /> : <Menu className="h-4 w-4" />}
               </Button>
-              <Button asChild variant="outline" className="hidden lg:inline-flex border-[#d8c4be]">
+              <Button asChild variant="outline" className="public-outline-button hidden lg:inline-flex rounded-full px-5">
                 <Link to="/app">{copy.login}</Link>
               </Button>
-              <Button asChild className="hidden lg:inline-flex bg-[#ef6144] hover:bg-[#d9553a] text-white">
+              <Button asChild className="public-primary-button hidden lg:inline-flex rounded-full px-5">
                 <Link to={effectiveLocale === 'en' ? '/en/contatti' : '/contatti'}>{copy.demo}</Link>
               </Button>
             </div>
           </div>
 
           {mobileOpen ? (
-            <div className="lg:hidden border-t border-[#e6d7d2] bg-white">
-              <div className="max-w-6xl mx-auto px-4 sm:px-6 py-4 space-y-3">
+            <div className="lg:hidden border-t border-[rgba(84,63,54,0.12)] bg-[rgba(255,250,246,0.98)]">
+              <div className="max-w-7xl mx-auto px-4 sm:px-6 py-4 space-y-3">
                 <div className="sm:hidden pb-1">
                   <PublicLanguageSelector />
                 </div>
 
                 {topMenus.map((entry) => (
-                  <details key={entry.key} className="group rounded-xl border border-[#eaded9] bg-[#fcf9f8] open:bg-white open:shadow-sm">
+                  <details key={entry.key} className="group rounded-[24px] border border-[rgba(84,63,54,0.12)] bg-[rgba(255,255,255,0.84)] open:bg-white open:shadow-[0_18px_42px_rgba(46,33,28,0.08)]">
                     <summary className="list-none cursor-pointer px-3 py-2.5 flex items-center justify-between">
                       <span className="text-sm font-semibold text-[#261d1a]">{entry.label}</span>
                       <ChevronRight className="h-4 w-4 text-[#8b6f67] transition-transform group-open:rotate-90" />
@@ -207,7 +212,7 @@ export default function PublicLayout({ locale = 'it', children }) {
                           {section.title ? <p className="mb-1 text-[10px] font-semibold uppercase tracking-[0.08em] text-[#8f7a74]">{section.title}</p> : null}
                           <div className="space-y-1.5">
                             {section.links.map((item) => (
-                              <Link key={item.href} to={item.href} className="block rounded-lg border border-[#e8dbd7] px-3 py-2 bg-white">
+                              <Link key={item.href} to={item.href} className="block rounded-2xl border border-[rgba(84,63,54,0.1)] px-3 py-2.5 bg-white">
                                 <p className="text-[13px] font-semibold text-[#2a211f] inline-flex items-center gap-2 leading-tight">
                                   {item.icon ? <item.icon className="h-3.5 w-3.5 text-[#ef6144]" /> : null}
                                   {item.label}
@@ -222,19 +227,19 @@ export default function PublicLayout({ locale = 'it', children }) {
                   </details>
                 ))}
 
-                <div className="pt-2 border-t border-[#eaded9] space-y-2">
+                <div className="pt-2 border-t border-[rgba(84,63,54,0.12)] space-y-2">
                   {menu.quickLinks.map((item) => (
-                    <Link key={item.href} to={item.href} className="block rounded-lg border border-[#e8dbd7] px-3 py-2 text-[13px] font-semibold text-[#2a211f] bg-white">
+                    <Link key={item.href} to={item.href} className="block rounded-2xl border border-[rgba(84,63,54,0.1)] px-3 py-2.5 text-[13px] font-semibold text-[#2a211f] bg-white">
                       {item.label}
                     </Link>
                   ))}
                 </div>
 
                 <div className="pt-1 space-y-2">
-                  <Button asChild variant="outline" className="w-full border-[#d8c4be]">
+                  <Button asChild variant="outline" className="public-outline-button w-full rounded-full">
                     <Link to="/app">{copy.login}</Link>
                   </Button>
-                  <Button asChild className="w-full bg-[#ef6144] hover:bg-[#d9553a] text-white">
+                  <Button asChild className="public-primary-button w-full rounded-full">
                     <Link to={effectiveLocale === 'en' ? '/en/contatti' : '/contatti'}>{copy.demo}</Link>
                   </Button>
                 </div>
@@ -244,7 +249,9 @@ export default function PublicLayout({ locale = 'it', children }) {
         </header>
 
         <main className="flex-1">{children}</main>
-        <Footer />
+        <div className="public-footer-wrap">
+          <Footer />
+        </div>
         <CookieBanner />
       </div>
     </I18nextProvider>

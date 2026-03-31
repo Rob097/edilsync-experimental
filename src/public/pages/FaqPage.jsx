@@ -206,39 +206,39 @@ export default function FaqPage({ locale = 'it' }) {
   });
 
   return (
-    <div ref={rootRef} className="min-h-screen bg-[#fcfcfc] font-inter">
-      <section className="pt-32 pb-16 text-center px-6">
-        <div className="max-w-3xl mx-auto">
-          <span className="inline-block px-4 py-1.5 rounded-full bg-[#fff0eb] text-[#ef6144] text-sm font-medium mb-4" data-reveal>
+    <div ref={rootRef} className={PUBLIC_CLASSES.page}>
+      <section className="public-section-shell pt-32 pb-16 text-center">
+        <div className="mx-auto max-w-3xl">
+          <span className="public-eyebrow" data-reveal>
             {copy.badge}
           </span>
-          <h1 className="font-bold text-4xl md:text-5xl text-[#141821] tracking-tight" data-reveal>
+          <h1 className={`mt-5 ${PUBLIC_CLASSES.displayH1}`} data-reveal>
             {copy.title}
           </h1>
-          <p className="mt-4 text-lg text-[#5b6470]" data-reveal>
+          <p className={`mx-auto mt-5 max-w-2xl ${PUBLIC_CLASSES.bodyLead}`} data-reveal>
             {copy.subtitle}
           </p>
         </div>
       </section>
 
-      <section className="pb-24 px-6 bg-[#fcfcfc]">
-        <div className="max-w-3xl mx-auto space-y-12">
+      <section className="public-section-shell pt-[4.5rem] pb-24 md:pt-20">
+        <div className="mx-auto max-w-4xl space-y-12">
           {copy.groups.map((group, gIndex) => (
             <div key={group.title} data-reveal>
-              <h2 className="font-bold text-xl text-[#141821] mb-4 px-1">{group.title}</h2>
-              <div className="rounded-2xl border border-[#e5e7eb] bg-white px-6">
+              <h2 className="mb-4 px-1 text-xl font-bold tracking-[-0.04em] text-[var(--public-ink)]">{group.title}</h2>
+              <div className="overflow-hidden rounded-[28px] border border-[var(--public-line)] bg-[rgba(255,255,255,0.92)] px-6 shadow-[0_14px_42px_rgba(42,28,23,0.05)]">
                 {group.items.map((item, iIndex) => {
                   const key = `${gIndex}-${iIndex}`;
                   const isOpen = openItem === key;
                   return (
-                    <div key={item.q} className="border-b border-[#e5e7eb] last:border-0">
+                    <div key={item.q} className="border-b border-[var(--public-line)] last:border-0">
                       <button
                         type="button"
                         className="w-full flex items-center justify-between py-5 text-left gap-4"
                         onClick={() => setOpenItem((prev) => (prev === key ? '' : key))}
                       >
-                        <span className="font-semibold text-[#141821]">{item.q}</span>
-                        <ChevronDown className={`w-5 h-5 text-[#6b7280] flex-shrink-0 transition-transform ${isOpen ? 'rotate-180' : ''}`} />
+                        <span className="font-semibold text-[var(--public-ink)]">{item.q}</span>
+                        <ChevronDown className={`h-5 w-5 flex-shrink-0 text-[var(--public-muted)] transition-transform ${isOpen ? 'rotate-180' : ''}`} />
                       </button>
 
                       <div
@@ -247,7 +247,7 @@ export default function FaqPage({ locale = 'it' }) {
                         }`}
                       >
                         <div className="overflow-hidden">
-                          <p className="text-[#5b6470] leading-relaxed text-sm">{item.a}</p>
+                          <p className="text-sm leading-relaxed text-[var(--public-muted)]">{item.a}</p>
                         </div>
                       </div>
                     </div>

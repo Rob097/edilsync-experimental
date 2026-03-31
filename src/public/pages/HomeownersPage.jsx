@@ -173,6 +173,7 @@ export default function HomeownersPage({ locale = 'it' }) {
         quoteAuthor={copy.quoteAuthor}
         quoteRole={copy.quoteRole}
         quoteInitial="L"
+        noteLabel={locale === 'en' ? 'Field note' : 'Nota dal campo'}
       />
 
       <MarketingBenefitsGrid title={copy.advantagesTitle} items={copy.advantages} />
@@ -182,6 +183,8 @@ export default function HomeownersPage({ locale = 'it' }) {
         items={copy.valueItems}
         costLabel={copy.valueCostLabel}
         costValue={copy.valueCost}
+        eyebrowLabel={locale === 'en' ? 'Operational value' : 'Valore operativo'}
+        introText={locale === 'en' ? 'These points show what EdilSync changes in practice for homeowners: fewer blind spots, fewer misunderstandings, and more confidence through the full project.' : 'Questi punti mostrano cosa cambia davvero per il committente: meno zone d’ombra, meno incomprensioni e più serenità lungo tutto il progetto.'}
       />
 
       <MarketingFinalCtaSection

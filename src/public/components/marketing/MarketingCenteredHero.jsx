@@ -11,18 +11,20 @@ export default function MarketingCenteredHero({
   ctaHref,
 }) {
   return (
-    <section className={PUBLIC_CLASSES.centeredHeroSection}>
+    <section className="public-section-shell relative overflow-hidden px-6 pb-16 pt-28 md:pb-20 md:pt-36">
+      <div className="pointer-events-none absolute left-[10%] top-16 h-56 w-56 rounded-full bg-[rgba(239,97,68,0.1)] blur-3xl" aria-hidden />
+      <div className="pointer-events-none absolute right-[12%] top-24 h-48 w-48 rounded-full bg-[rgba(196,158,108,0.1)] blur-3xl" aria-hidden />
       <div className={PUBLIC_CLASSES.centeredHeroContainer}>
-        <span data-reveal className={`${PUBLIC_CLASSES.badge} mb-4`}>
+        <span data-reveal className="public-eyebrow">
           {badge}
         </span>
-        <h1 data-reveal className={`${PUBLIC_CLASSES.displayH1} text-[#141821]`}>
+        <h1 data-reveal className={`${PUBLIC_CLASSES.displayH1} mt-6 text-[var(--public-ink)]`}>
           {title}
         </h1>
-        <p data-reveal className={`mt-4 ${PUBLIC_CLASSES.bodyLead}`}>
+        <p data-reveal className={`mt-5 ${PUBLIC_CLASSES.bodyLead}`}>
           {subtitle}
         </p>
-        {note ? <p data-reveal className="mt-3 text-sm text-[#ef6144] font-semibold">{note}</p> : null}
+        {note ? <p data-reveal className="mt-4 text-sm font-semibold leading-[1.7] text-[var(--public-accent-dark)]">{note}</p> : null}
         {ctaLabel && ctaHref ? (
           <PublicPrimaryCta className="mt-8" to={ctaHref} label={ctaLabel} />
         ) : null}

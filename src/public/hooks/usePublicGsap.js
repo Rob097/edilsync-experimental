@@ -10,6 +10,10 @@ export default function usePublicGsap(rootRef) {
       return undefined;
     }
 
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      return undefined;
+    }
+
     if (!isRegistered) {
       gsap.registerPlugin(ScrollTrigger);
       isRegistered = true;
@@ -97,7 +101,11 @@ export default function usePublicGsap(rootRef) {
     }, rootRef);
 
     const refresh = () => ScrollTrigger.refresh();
-    const refreshSoon = () => window.setTimeout(refresh, 90);
+    let refreshTimer = null;
+    const refreshSoon = () => {
+      window.clearTimeout(refreshTimer);
+      refreshTimer = window.setTimeout(refresh, 90);
+    };
 
     const trackedImages = rootRef.current.querySelectorAll('img');
     trackedImages.forEach((img) => {
@@ -120,6 +128,7 @@ export default function usePublicGsap(rootRef) {
     refreshSoon();
 
     return () => {
+      window.clearTimeout(refreshTimer);
       trackedImages.forEach((img) => {
         img.removeEventListener('load', refreshSoon);
       });

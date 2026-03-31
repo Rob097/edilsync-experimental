@@ -4,6 +4,7 @@ import { useQuery } from '@tanstack/react-query';
 import { Button } from '@/components/ui/button';
 import { contentClient } from '@/public/api/contentClient';
 import { getBlogMetaItems } from '@/public/blogMeta';
+import { PUBLIC_CLASSES } from '@/public/designSystem';
 import usePublicSeo from '@/public/hooks/usePublicSeo';
 import usePublicGsap from '@/public/hooks/usePublicGsap';
 import blogIndexIt from '@/public/i18n/blog-index.it.json';
@@ -38,13 +39,13 @@ export default function BlogIndexPage({ locale = 'it', basePath = '' }) {
   usePublicGsap(rootRef);
 
   return (
-    <div ref={rootRef} className="bg-[#f2f4f6]">
-      <section className="relative overflow-hidden public-gradient border-b border-[#e5e7eb]">
+    <div ref={rootRef} className={PUBLIC_CLASSES.page}>
+      <section className="relative overflow-hidden border-b border-[var(--public-line)] bg-[linear-gradient(180deg,rgba(255,250,246,0.96),rgba(247,241,235,0.82))]">
         <div className="absolute top-8 left-6 h-[52px] w-[52px] rounded-full bg-[#ef6144]/10 blur-[16px]" aria-hidden />
         <div className="max-w-6xl mx-auto px-4 sm:px-6 pt-16 sm:pt-20 pb-12 sm:pb-16 text-center relative">
-          <p data-reveal className="section-chip">{copy.chip}</p>
-          <h1 data-reveal className="mt-4 text-[42px] sm:text-[58px] font-[780] leading-[1.06] tracking-[-0.02em] text-[#141821]">{title}</h1>
-          <p data-reveal className="mt-5 text-[16px] sm:text-[18px] leading-[1.72] text-[#5b6470] max-w-3xl mx-auto">{subtitle}</p>
+          <p data-reveal className="public-eyebrow">{copy.chip}</p>
+          <h1 data-reveal className={`mt-5 ${PUBLIC_CLASSES.displayH1}`}>{title}</h1>
+          <p data-reveal className={`mx-auto mt-5 max-w-3xl ${PUBLIC_CLASSES.bodyLead}`}>{subtitle}</p>
         </div>
       </section>
 
@@ -53,18 +54,18 @@ export default function BlogIndexPage({ locale = 'it', basePath = '' }) {
         {error ? <p className="text-red-600">{copy.loadError}</p> : null}
 
         {!isLoading && !error && posts.length === 0 ? (
-          <div data-reveal className="public-panel bg-white p-6 text-[#526071]">
+          <div data-reveal className="public-grid-card p-6 text-[var(--public-muted)]">
             {copy.empty}
           </div>
         ) : null}
 
         <div className="grid gap-5 md:grid-cols-2 lg:grid-cols-3">
           {posts.map((post) => (
-            <article key={post.id} data-reveal className="public-panel bg-white p-6 min-h-[250px] flex flex-col">
+            <article key={post.id} data-reveal className="public-grid-card flex min-h-[250px] flex-col p-6">
               <p className="text-[11px] uppercase tracking-[0.12em] text-[#ef6144] font-semibold">
                 {post.category?.[`name_${locale}`] || post.category?.name_it || post.category?.name_en || 'Blog'}
               </p>
-              <h2 className="mt-3 text-[22px] font-[700] leading-[1.28] text-[#0f172a]">
+              <h2 className="mt-3 text-[22px] font-[700] leading-[1.28] text-[var(--public-ink)]">
                 <Link to={`${basePath}/blog/${post.slug}`} className="hover:text-[#ef6144] transition-colors">
                   {pickLocalized(post, locale, 'title')}
                 </Link>
@@ -78,7 +79,7 @@ export default function BlogIndexPage({ locale = 'it', basePath = '' }) {
                   ))}
                 </div>
               ) : null}
-              <p className="mt-3 text-[14px] leading-[1.72] text-[#526071] flex-1">{pickLocalized(post, locale, 'excerpt')}</p>
+              <p className="mt-3 flex-1 text-[14px] leading-[1.72] text-[var(--public-muted)]">{pickLocalized(post, locale, 'excerpt')}</p>
               <Link to={`${basePath}/blog/${post.slug}`} className="mt-4 text-[13px] font-semibold text-[#ef6144] hover:text-[#d9553a]">
                 {copy.readArticle}
               </Link>

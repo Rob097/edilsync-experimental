@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/button';
 import usePublicSeo from '@/public/hooks/usePublicSeo';
 import usePublicGsap from '@/public/hooks/usePublicGsap';
 import { PUBLIC_CLASSES } from '@/public/designSystem';
+import MarketingFinalCtaSection from '@/public/components/marketing/MarketingFinalCtaSection';
 
 const contentByLocale = {
   it: {
@@ -95,6 +96,10 @@ const contentByLocale = {
     faqFooterFaq: 'Vai alla pagina FAQ completa',
     faqFooterAnd: 'o',
     faqFooterContact: 'contattaci',
+    finalTitle: 'Vuoi capire se Pro ha senso per la tua impresa?',
+    finalText: 'Parti free, guarda come lavora il team e passa a Pro quando vuoi attivare sponsorship, strumenti avanzati e controllo piu strutturato.',
+    finalCta: 'Parla con noi',
+    finalNote: 'Piano semplice · Nessun setup complesso · Upgrade quando serve',
   },
   en: {
     seoTitle: 'Pricing',
@@ -184,6 +189,10 @@ const contentByLocale = {
     faqFooterFaq: 'Go to full FAQ page',
     faqFooterAnd: 'or',
     faqFooterContact: 'contact us',
+    finalTitle: 'Want to see whether Pro fits your company?',
+    finalText: 'Start free, validate the workflow with your team, then upgrade when you need sponsorship, premium tools, and tighter control.',
+    finalCta: 'Talk to us',
+    finalNote: 'Simple plan · No heavy setup · Upgrade when needed',
   },
 };
 
@@ -205,151 +214,185 @@ export default function PricingPage({ locale = 'it' }) {
   });
 
   return (
-    <div ref={rootRef} className="min-h-screen bg-[#fcfcfc] font-inter">
-      <section className="pt-32 pb-16 text-center px-6">
-        <div className="max-w-3xl mx-auto">
-          <span className="inline-block px-4 py-1.5 rounded-full bg-[#fff0eb] text-[#ef6144] text-sm font-medium mb-4" data-reveal>
+    <div ref={rootRef} className={PUBLIC_CLASSES.page}>
+      <section className="public-section-shell pt-32 pb-14 md:pb-[4.5rem]">
+        <div className="mx-auto max-w-3xl px-4 sm:px-6 text-center">
+          <span className="public-eyebrow" data-reveal>
             {copy.badge}
           </span>
-          <h1 className="font-bold text-4xl md:text-5xl text-[#141821] tracking-tight" data-reveal>
+          <h1 className={`mt-5 ${PUBLIC_CLASSES.displayH1}`} data-reveal>
             {copy.title}
           </h1>
-          <p className="mt-4 text-lg text-[#5b6470]" data-reveal>
+          <p className={`mx-auto mt-5 max-w-2xl ${PUBLIC_CLASSES.bodyLead}`} data-reveal>
             {copy.subtitle}
           </p>
         </div>
       </section>
 
-      <section className="pb-20 px-6 bg-[#fcfcfc]">
-        <div className="max-w-lg mx-auto">
-          <div className="relative bg-white rounded-3xl border-2 border-[#ef6144] shadow-2xl shadow-[#ef6144]/10 overflow-hidden" data-reveal>
-            <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-[#ef6144]/60 via-[#ef6144] to-[#ef6144]/60" />
-            <div className="p-8 md:p-10">
-              <div className="flex items-start justify-between mb-2 gap-3">
+      <section className="public-section-shell pt-[4.5rem] pb-[4.5rem] md:pt-20 md:pb-20">
+        <div className="mx-auto grid max-w-6xl px-4 sm:px-6 gap-8 xl:grid-cols-[minmax(0,0.92fr)_minmax(390px,0.78fr)] xl:items-start">
+          <div className="space-y-4 xl:self-start" data-reveal>
+            <article className="public-grid-card p-7 md:p-8">
+              <div className="grid gap-5 md:grid-cols-[0.9fr_1.1fr] md:items-start">
                 <div>
-                  <h2 className="font-bold text-2xl text-[#141821]">{copy.planName}</h2>
-                  <p className="text-[#6b7280] text-sm mt-1">{copy.planDesc}</p>
+                  <p className="text-[11px] font-bold uppercase tracking-[0.14em] text-[var(--public-accent-dark)]">
+                    {locale === 'en' ? 'Pricing structure' : 'Struttura del prezzo'}
+                  </p>
+                  <h2 className="mt-4 text-[clamp(1.55rem,2.4vw,2.3rem)] font-bold leading-[1.02] tracking-[-0.045em] text-[var(--public-ink)]">
+                    {locale === 'en' ? 'Simple to explain on day one.' : 'Semplice da spiegare gia dal primo giorno.'}
+                  </h2>
+                  <p className="mt-4 text-sm leading-relaxed text-[var(--public-muted)]">
+                    {locale === 'en'
+                      ? 'EdilSync does not charge every person on the project. The company upgrades when it needs premium company tools and project sponsorship.'
+                      : 'EdilSync non fa pagare ogni persona del progetto. La società passa a Pro quando le servono strumenti avanzati per l’impresa e la sponsorship del progetto.'}
+                  </p>
                 </div>
-                <span className="px-3 py-1 rounded-full bg-[#ef6144]/10 text-[#ef6144] text-xs font-semibold whitespace-nowrap">
+                <div className="space-y-3">
+                  {copy.legendItems.map((item) => (
+                    <article key={item.title} className="rounded-[22px] border border-[var(--public-line)] bg-[rgba(255,248,244,0.75)] p-4">
+                      <p className="text-[11px] font-bold uppercase tracking-[0.14em] text-[var(--public-accent-dark)]">{item.badge}</p>
+                      <h3 className="mt-3 text-base font-semibold tracking-[-0.03em] text-[var(--public-ink)]">{item.title}</h3>
+                      <p className="mt-2 text-sm leading-relaxed text-[var(--public-muted)]">{item.text}</p>
+                    </article>
+                  ))}
+                </div>
+              </div>
+            </article>
+          </div>
+
+          <div className="relative self-start overflow-hidden rounded-[32px] border border-[rgba(239,97,68,0.26)] bg-[linear-gradient(180deg,rgba(255,255,255,0.98),rgba(255,246,240,0.96))] shadow-[0_26px_70px_rgba(53,36,30,0.12)]" data-reveal>
+            <div className="absolute inset-x-0 top-0 h-1 bg-[linear-gradient(90deg,rgba(239,97,68,0.35),rgba(239,97,68,1),rgba(239,97,68,0.35))]" />
+            <div className="p-8 md:p-10">
+              <div className="flex items-start justify-between gap-3">
+                <div>
+                  <p className="text-[11px] font-bold uppercase tracking-[0.14em] text-[var(--public-accent-dark)]">{locale === 'en' ? 'Company plan' : 'Piano società'}</p>
+                  <h2 className="mt-3 text-3xl font-bold tracking-[-0.05em] text-[var(--public-ink)]">{copy.planName}</h2>
+                  <p className="mt-2 text-sm text-[var(--public-muted)]">{copy.planDesc}</p>
+                </div>
+                <span className="rounded-full border border-[rgba(239,97,68,0.16)] bg-[rgba(255,240,232,0.88)] px-3 py-1 text-xs font-semibold text-[var(--public-accent-dark)]">
                   {copy.trialBadge}
                 </span>
               </div>
 
-              <div className="mt-6 flex items-end gap-2">
-                <span className="font-bold text-6xl text-[#141821] leading-none">{copy.price}</span>
-                <span className="text-[#6b7280] mb-2">{copy.priceSuffix}</span>
+              <div className="mt-8 flex items-end gap-2">
+                <span className="text-6xl font-bold leading-none tracking-[-0.06em] text-[var(--public-ink)]">{copy.price}</span>
+                <span className="mb-2 text-[var(--public-muted)]">{copy.priceSuffix}</span>
               </div>
-              <p className="text-xs text-[#6b7280] mt-1">{copy.priceNote}</p>
+              <p className="mt-2 text-xs text-[var(--public-muted)]">{copy.priceNote}</p>
 
-              <Button asChild className="bg-[#ef6144] text-white hover:bg-[#d9553a] px-8 w-full mt-8 rounded-full h-12 gap-2 shadow-lg shadow-[rgba(239,97,68,0.25)] text-base font-semibold">
+              <Button asChild className="mt-8 h-12 w-full gap-2 rounded-full bg-[linear-gradient(135deg,#ef6144,#d9553a)] px-8 text-base font-semibold text-white shadow-[0_20px_44px_rgba(223,88,59,0.28)] hover:bg-[linear-gradient(135deg,#e55a3d,#c94d35)]">
                 <Link to="/app">
                   {copy.cta}
                   <ArrowRight className="h-4 w-4" />
                 </Link>
               </Button>
 
-              <p className="text-center text-xs text-[#6b7280] mt-3">{copy.noCard}</p>
+              <p className="mt-3 text-center text-xs text-[var(--public-muted)]">{copy.noCard}</p>
 
-              <div className="mt-8 pt-8 border-t border-[#e5e7eb]">
-                <p className="text-xs font-semibold text-[#6b7280] uppercase tracking-wide mb-4">{copy.includedLabel}</p>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
-                  {copy.includedItems.map((item) => (
+              <div className="mt-8 border-t border-[var(--public-line)] pt-8">
+                <p className="mb-4 text-xs font-semibold uppercase tracking-[0.12em] text-[var(--public-muted)]">{copy.includedLabel}</p>
+                <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+                  {copy.includedItems.slice(0, 6).map((item) => (
                     <div key={item} className="flex items-start gap-2">
-                      <CircleCheck className="w-4 h-4 text-[#ef6144] mt-0.5 flex-shrink-0" />
-                      <span className="text-sm text-[#5b6470]">{item}</span>
+                      <CircleCheck className="mt-0.5 h-4 w-4 flex-shrink-0 text-[var(--public-accent)]" />
+                      <span className="text-sm text-[var(--public-muted)]">{item}</span>
                     </div>
                   ))}
                 </div>
+                <p className="mt-4 text-xs leading-relaxed text-[var(--public-muted)]">
+                  {locale === 'en'
+                    ? 'The rest of the advanced project capabilities unlock as soon as a Pro company sponsors the project.'
+                    : 'Le altre aree avanzate di progetto si attivano non appena una società Pro sponsorizza il progetto.'}
+                </p>
               </div>
             </div>
           </div>
         </div>
       </section>
 
-      <section className="pb-20 px-6 bg-[#fcfcfc]">
-        <div className="max-w-6xl mx-auto" data-reveal>
-          <div className="text-center max-w-3xl mx-auto">
-            <h2 className="font-bold text-2xl text-[#141821]">{copy.legendTitle}</h2>
+      <section className="public-section-shell py-[4.5rem] md:py-20">
+        <div className="mx-auto grid max-w-6xl px-4 sm:px-6 gap-8 xl:grid-cols-[minmax(0,0.95fr)_minmax(0,1.05fr)] xl:items-start" data-reveal>
+          <div>
+            <div className="mb-5 flex h-12 w-12 items-center justify-center rounded-2xl bg-[rgba(239,97,68,0.12)]">
+              <Users className="h-6 w-6 text-[var(--public-accent)]" />
+            </div>
+            <h2 className={PUBLIC_CLASSES.sectionH2}>{copy.freeAccessTitle}</h2>
+            <p className={`mt-4 max-w-xl ${PUBLIC_CLASSES.bodyBase}`}>{copy.freeAccessText}</p>
           </div>
-          <div className="mt-8 grid grid-cols-1 md:grid-cols-3 gap-4">
-            {copy.legendItems.map((item) => (
-              <article key={item.title} className="rounded-2xl border border-[#e5e7eb] bg-white p-6 shadow-sm">
-                <p className="text-[11px] font-semibold uppercase tracking-[0.08em] text-[#ef6144]">{item.badge}</p>
-                <h3 className="mt-4 font-semibold text-lg text-[#141821]">{item.title}</h3>
-                <p className="mt-2 text-sm leading-relaxed text-[#5b6470]">{item.text}</p>
-              </article>
-            ))}
-          </div>
-        </div>
-      </section>
 
-      <section className="py-16 bg-[#f3f4f680] px-6">
-        <div className="max-w-4xl mx-auto text-center" data-reveal>
-          <div className="w-12 h-12 rounded-xl bg-[#ef6144]/10 flex items-center justify-center mx-auto mb-5">
-            <Users className="w-6 h-6 text-[#ef6144]" />
-          </div>
-          <h2 className="font-bold text-2xl text-[#141821]">{copy.freeAccessTitle}</h2>
-          <p className="mt-3 text-[#5b6470] max-w-xl mx-auto">{copy.freeAccessText}</p>
-
-          <div className="mt-8 grid grid-cols-1 md:grid-cols-3 gap-4">
-            {copy.roles.map((role) => (
-              <div key={role.label} className="p-5 rounded-2xl bg-white border border-[#e5e7eb]">
-                <p className="font-semibold text-[#141821]">{role.label}</p>
-                <p className="font-bold text-xl text-[#ef6144] mt-1">{role.value}</p>
-                <p className="text-xs text-[#6b7280] mt-1">{role.note}</p>
+          <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
+            {copy.roles.map((role, index) => (
+              <div key={role.label} className="public-grid-card p-6">
+                <p className="font-semibold text-[var(--public-ink)]">{role.label}</p>
+                <p className="mt-2 text-xl font-bold text-[var(--public-accent)]">{role.value}</p>
+                <p className="mt-2 text-xs leading-relaxed text-[var(--public-muted)]">{role.note}</p>
               </div>
             ))}
           </div>
         </div>
       </section>
 
-      <section className="py-16 px-6 bg-[#fcfcfc]">
-        <div className="max-w-3xl mx-auto text-center" data-reveal>
-          <h2 className="font-bold text-2xl text-[#141821] mb-8">{copy.worthTitle}</h2>
-          <div className="space-y-3 text-left">
-            {copy.worthItems.map((item) => (
-              <div key={item} className="flex items-start gap-3 p-4 rounded-xl bg-white border border-[#e5e7eb]">
-                <CircleCheck className="w-5 h-5 text-[#ef6144] mt-0.5 flex-shrink-0" />
-                <p className="text-sm text-[#5b6470]">{item}</p>
-              </div>
-            ))}
+      <section className="public-section-shell py-[4.5rem] md:py-20">
+        <div className="mx-auto max-w-6xl px-4 sm:px-6" data-reveal>
+          <div className="max-w-2xl">
+            <span className="public-eyebrow">{locale === 'en' ? 'Upgrade logic' : 'Quando passare a Pro'}</span>
+            <h2 className={`mt-5 ${PUBLIC_CLASSES.sectionH2}`}>{copy.worthTitle}</h2>
           </div>
-        </div>
-      </section>
-
-      <section className="py-16 bg-[#f3f4f680] px-6">
-        <div className="max-w-3xl mx-auto">
-          <div className="text-center mb-10" data-reveal>
-            <h2 className="font-bold text-2xl text-[#141821]">{copy.faqTitle}</h2>
-          </div>
-
-          <div className="rounded-2xl border border-[#e5e7eb] bg-white overflow-hidden divide-y divide-[#e5e7eb]">
-            {copy.faqs.map((faq) => (
-              <div key={faq.q} className="px-6 py-5" data-reveal>
+          <div className="mt-8 grid gap-4 md:grid-cols-2 xl:grid-cols-12">
+            {copy.worthItems.map((item, index) => (
+              <div key={item} className={`public-grid-card p-5 ${index === 0 ? 'md:col-span-2 xl:col-span-7' : index === 1 ? 'xl:col-span-5' : index === 2 ? 'xl:col-span-5' : 'xl:col-span-7'}`}>
                 <div className="flex items-start gap-3">
-                  <CircleHelp className="w-4 h-4 text-[#ef6144] mt-0.5 flex-shrink-0" />
+                  <CircleCheck className="mt-0.5 h-5 w-5 flex-shrink-0 text-[var(--public-accent)]" />
+                  <p className="text-sm leading-relaxed text-[var(--public-muted)]">{item}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section className="public-section-shell py-[4.5rem] md:py-20">
+        <div className="mx-auto max-w-3xl px-4 sm:px-6">
+          <div className="mb-10 text-center" data-reveal>
+            <span className="public-eyebrow">{locale === 'en' ? 'Pricing FAQ' : 'Domande sui prezzi'}</span>
+            <h2 className={`mt-5 ${PUBLIC_CLASSES.sectionH2}`}>{copy.faqTitle}</h2>
+          </div>
+
+          <div className="overflow-hidden rounded-[28px] border border-[var(--public-line)] bg-[rgba(255,255,255,0.9)] divide-y divide-[var(--public-line)] shadow-[0_14px_42px_rgba(42,28,23,0.05)]">
+            {copy.faqs.map((faq) => (
+              <div key={faq.q} className="px-6 py-5 md:px-7" data-reveal>
+                <div className="flex items-start gap-3">
+                  <CircleHelp className="mt-0.5 h-4 w-4 flex-shrink-0 text-[var(--public-accent)]" />
                   <div>
-                    <p className="font-semibold text-sm text-[#141821]">{faq.q}</p>
-                    <p className="mt-1.5 text-sm text-[#5b6470]">{faq.a}</p>
+                    <p className="text-sm font-semibold text-[var(--public-ink)]">{faq.q}</p>
+                    <p className="mt-2 text-sm leading-relaxed text-[var(--public-muted)]">{faq.a}</p>
                   </div>
                 </div>
               </div>
             ))}
           </div>
 
-          <p className="mt-6 text-center text-sm text-[#6b7280]" data-reveal>
+          <p className="mt-6 text-center text-sm text-[var(--public-muted)]" data-reveal>
             {copy.faqFooterStart}{' '}
-            <Link className="text-[#ef6144] hover:underline" to={`${basePath}/faq`}>
+            <Link className="text-[var(--public-accent)] hover:underline" to={`${basePath}/faq`}>
               {copy.faqFooterFaq}
             </Link>{' '}
             {copy.faqFooterAnd}{' '}
-            <Link className="text-[#ef6144] hover:underline" to={`${basePath}/contatti`}>
+            <Link className="text-[var(--public-accent)] hover:underline" to={`${basePath}/contatti`}>
               {copy.faqFooterContact}
             </Link>
             .
           </p>
         </div>
       </section>
+
+      <MarketingFinalCtaSection
+        title={copy.finalTitle}
+        text={copy.finalText}
+        ctaLabel={copy.finalCta}
+        ctaHref={`${basePath}/contatti`}
+        note={copy.finalNote}
+      />
     </div>
   );
 }

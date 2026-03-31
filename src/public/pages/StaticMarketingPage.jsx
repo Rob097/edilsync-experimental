@@ -403,65 +403,70 @@ export default function StaticMarketingPage({ pageKey, locale = 'it' }) {
   return (
     <>
       {faqData ? <StructuredData id={`faq-jsonld-${locale}`} data={faqData} /> : null}
-      <div ref={rootRef} className="bg-[#f2f4f6]">
-        <section className="relative overflow-hidden public-gradient border-b border-[#e5e7eb]">
-          <div className="absolute top-8 left-6 h-[52px] w-[52px] rounded-full bg-[#ef6144]/10 blur-[16px]" aria-hidden />
-          <div className="absolute top-24 left-20 h-[34px] w-[34px] rounded-full bg-[#ef6144]/6 blur-[12px]" aria-hidden />
-          <div className="max-w-6xl mx-auto px-4 sm:px-6 py-16 sm:py-22 grid gap-8 lg:grid-cols-12 items-center">
-            <div className="lg:col-span-6">
-              <div data-reveal className="inline-flex items-center rounded-full border border-[#f6c6bb] bg-[#fff0eb] px-3 py-1">
-                <p className="kicker">{page.eyebrow}</p>
+      <div ref={rootRef} className={PUBLIC_CLASSES.page}>
+        <section className="public-section-shell relative overflow-hidden px-6 pb-16 pt-28 md:pb-20 md:pt-36">
+          <div className="pointer-events-none absolute left-[8%] top-20 h-64 w-64 rounded-full bg-[rgba(239,97,68,0.1)] blur-3xl" aria-hidden />
+          <div className="pointer-events-none absolute right-[10%] top-24 h-56 w-56 rounded-full bg-[rgba(196,158,108,0.1)] blur-3xl" aria-hidden />
+          <div className="max-w-7xl mx-auto grid gap-10 lg:grid-cols-[minmax(0,1.02fr)_minmax(300px,0.98fr)] items-center">
+            <div>
+              <div data-reveal className="public-eyebrow">
+                {page.eyebrow}
               </div>
-              <h1 data-reveal className="mt-4 text-[42px] sm:text-[58px] font-[780] leading-[1.04] tracking-[-0.02em] text-[#141821] max-w-5xl">{page.title}</h1>
-              <p data-reveal className="mt-5 text-[16px] sm:text-[18px] leading-[1.72] text-[#5b6470] max-w-3xl">{page.subtitle}</p>
+              <h1 data-reveal className={`${PUBLIC_CLASSES.displayH1} mt-6 max-w-[13ch] text-[var(--public-ink)]`}>{page.title}</h1>
+              <p data-reveal className={`mt-5 max-w-[60ch] ${PUBLIC_CLASSES.bodyLead}`}>{page.subtitle}</p>
               <div data-reveal className="mt-8 flex flex-wrap gap-3">
-                <Button asChild className="bg-[#ef6144] hover:bg-[#d9553a] text-white rounded-full h-10 px-6 text-[13px] font-semibold shadow-[0_8px_24px_rgba(239,97,68,0.28)]">
+                <Button asChild className={`${PUBLIC_CLASSES.primaryCta} h-11 px-6 text-[13px]`}>
                   <Link to={page.primaryCta.href}>{page.primaryCta.label}</Link>
                 </Button>
-                <Button asChild variant="ghost" className="text-[#2f3b48] hover:bg-[#ffffff] rounded-full h-10 px-4 text-[13px] font-medium">
+                <Button asChild variant="ghost" className="public-outline-button rounded-full h-11 px-5 text-[13px] font-medium text-[var(--public-ink)]">
                   <Link to={page.secondaryCta.href}>{page.secondaryCta.label}</Link>
                 </Button>
               </div>
             </div>
-            <div className="lg:col-span-6" data-reveal>
-              <div className="public-panel p-3 bg-white shadow-[0_20px_46px_rgba(15,23,42,0.12)]">
-                <img src={visualByPage[pageKey] || '/images/public-hero-board.svg'} alt="Visual EdilSync" className="w-full rounded-xl" />
+            <div data-reveal>
+              <div className="public-device-frame">
+                <img src={visualByPage[pageKey] || '/images/public-hero-board.svg'} alt="Visual EdilSync" className="w-full object-cover border border-white/10" />
+                <div className="mt-4 public-grid-card p-4">
+                  <p className="text-[11px] font-extrabold uppercase tracking-[0.14em] text-[var(--public-accent-dark)]">
+                    {locale === 'en' ? 'Operational context' : 'Contesto operativo'}
+                  </p>
+                  <p className="mt-2 text-sm leading-[1.65] text-[var(--public-muted)]">
+                    {locale === 'en'
+                      ? 'Designed to explain field coordination clearly, not to simulate a generic SaaS brochure.'
+                      : 'Pensato per spiegare il coordinamento di cantiere con chiarezza, non per sembrare una brochure SaaS generica.'}
+                  </p>
+                </div>
               </div>
-              <p className="mt-3 text-sm text-[#6b7280] italic">
-                {locale === 'en'
-                  ? 'Built for operational clarity, not generic software demos.'
-                  : 'Pensato per chiarezza operativa reale, non per demo software generiche.'}
-              </p>
             </div>
           </div>
         </section>
 
         {page.challenges?.length ? (
-          <section className="max-w-6xl mx-auto px-4 sm:px-6 py-16 sm:py-20">
-            <p data-reveal className="section-chip">{locale === 'en' ? 'Challenges' : 'Criticita'}</p>
-            <h2 data-reveal className="mt-3 text-[34px] sm:text-[42px] font-[760] leading-[1.1] text-[#141821]">
+          <section className="max-w-7xl mx-auto px-6 py-16 md:py-24">
+            <p data-reveal className="public-eyebrow">{locale === 'en' ? 'Challenges' : 'Criticita principali'}</p>
+            <h2 data-reveal className={`mt-5 max-w-[12ch] ${PUBLIC_CLASSES.displayH2}`}>
               {locale === 'en' ? 'Critical challenges to solve first' : 'Criticita da risolvere prima'}
             </h2>
-            <ul className="mt-8 grid gap-4 md:grid-cols-2">
+            <ul className="mt-10 grid gap-4 md:grid-cols-2 xl:grid-cols-3">
               {page.challenges.map((item) => (
-                <li data-reveal key={item} className="public-panel bg-white p-5 text-[#526071] leading-[1.7]">{item}</li>
+                <li data-reveal key={item} className="public-grid-card p-6 text-[var(--public-muted)] leading-[1.7]">{item}</li>
               ))}
             </ul>
           </section>
         ) : null}
 
         {page.modules?.length ? (
-          <section className="border-y border-[#e8edf3] bg-[#fbfdff]">
-            <div className="max-w-6xl mx-auto px-4 sm:px-6 py-16 sm:py-20">
-              <p data-reveal className="section-chip">{locale === 'en' ? 'Capabilities' : 'Capacita'}</p>
-              <h2 data-reveal className="mt-3 text-[34px] sm:text-[42px] font-[760] leading-[1.1] text-[#141821]">
+          <section className="bg-[rgba(243,236,229,0.76)]">
+            <div className="max-w-7xl mx-auto px-6 py-16 md:py-24">
+              <p data-reveal className="public-eyebrow">{locale === 'en' ? 'Capabilities' : 'Capacita operative'}</p>
+              <h2 data-reveal className={`mt-5 max-w-[11ch] ${PUBLIC_CLASSES.displayH2}`}>
                 {locale === 'en' ? 'How EdilSync responds' : 'Come risponde EdilSync'}
               </h2>
-              <div className="mt-8 grid gap-5 md:grid-cols-2">
-                {page.modules.map((item) => (
-                  <article data-reveal key={item.title} className="public-panel bg-white p-6 min-h-[170px]">
-                    <h3 className="text-[22px] font-[700] leading-[1.25] text-[#0f172a]">{item.title}</h3>
-                    <p className="mt-3 text-[14px] leading-[1.72] text-[#526071]">{item.text}</p>
+              <div className="mt-10 grid gap-4 md:grid-cols-2 xl:grid-cols-12">
+                {page.modules.map((item, index) => (
+                  <article data-reveal key={item.title} className={`public-grid-card p-6 ${index % 3 === 0 ? 'xl:col-span-5' : index % 3 === 1 ? 'xl:col-span-3' : 'xl:col-span-4'}`}>
+                    <h3 className="text-[22px] font-[700] leading-[1.25] tracking-[-0.03em] text-[var(--public-ink)]">{item.title}</h3>
+                    <p className="mt-3 text-[14px] leading-[1.72] text-[var(--public-muted)]">{item.text}</p>
                   </article>
                 ))}
               </div>
@@ -470,15 +475,15 @@ export default function StaticMarketingPage({ pageKey, locale = 'it' }) {
         ) : null}
 
         {page.workflow?.length ? (
-          <section className="max-w-6xl mx-auto px-4 sm:px-6 py-16 sm:py-20">
-            <p data-reveal className="section-chip">{locale === 'en' ? 'Workflow' : 'Workflow'}</p>
-            <h2 data-reveal className="mt-3 text-[34px] sm:text-[42px] font-[760] leading-[1.1] text-[#141821]">
+          <section className="max-w-7xl mx-auto px-6 py-16 md:py-24">
+            <p data-reveal className="public-eyebrow">{locale === 'en' ? 'Workflow' : 'Flusso operativo'}</p>
+            <h2 data-reveal className={`mt-5 max-w-[11ch] ${PUBLIC_CLASSES.displayH2}`}>
               {locale === 'en' ? 'Execution flow' : 'Flusso operativo'}
             </h2>
-            <ol className="mt-8 grid gap-4 md:grid-cols-2">
+            <ol className="mt-10 grid gap-4 md:grid-cols-2">
               {page.workflow.map((item, index) => (
-                <li data-reveal key={item} className="public-panel bg-white p-5 flex gap-3 text-[#526071] leading-[1.68]">
-                  <span className="mt-0.5 inline-flex h-7 min-w-7 items-center justify-center rounded-full border border-[#f6c6bb] text-xs font-semibold text-[#ef6144] bg-[#fff3ef]">
+                <li data-reveal key={item} className="public-grid-card flex gap-3 p-5 text-[var(--public-muted)] leading-[1.68]">
+                  <span className="mt-0.5 inline-flex h-8 min-w-8 items-center justify-center rounded-full border border-[rgba(239,97,68,0.18)] bg-[rgba(255,243,239,0.92)] text-xs font-semibold text-[var(--public-accent)]">
                     {index + 1}
                   </span>
                   <p>{item}</p>
@@ -489,12 +494,12 @@ export default function StaticMarketingPage({ pageKey, locale = 'it' }) {
         ) : null}
 
         {page.outcomes?.length ? (
-          <section className="border-y border-[#111827] bg-[#0f172a] text-white">
-            <div className="max-w-6xl mx-auto px-4 sm:px-6 py-16 sm:py-20">
-              <h2 data-reveal className="text-[34px] sm:text-[42px] font-[760] leading-[1.1]">{locale === 'en' ? 'Expected outcomes' : 'Risultati attesi'}</h2>
-              <ul className="mt-8 grid gap-4 md:grid-cols-2">
+          <section className="border-y border-[#111827] bg-[#15171c] text-white">
+            <div className="max-w-7xl mx-auto px-6 py-16 md:py-24">
+              <h2 data-reveal className={`${PUBLIC_CLASSES.darkDisplayH2} max-w-[11ch]`}>{locale === 'en' ? 'Expected outcomes' : 'Risultati attesi'}</h2>
+              <ul className="mt-10 grid gap-4 md:grid-cols-2">
                 {page.outcomes.map((item) => (
-                  <li data-reveal key={item} className="public-panel border-[#1f2937] bg-[#111827] p-5 inline-flex items-start gap-2 text-[#d3dbe6]"><span className="mt-2 h-1.5 w-1.5 rounded-full bg-[#ef6144]" />{item}</li>
+                  <li data-reveal key={item} className="public-kpi-card rounded-[24px] p-5 inline-flex items-start gap-3 text-[#d3dbe6]"><span className="mt-2 h-2 w-2 rounded-full bg-[#ef6144]" />{item}</li>
                 ))}
               </ul>
             </div>
@@ -502,22 +507,22 @@ export default function StaticMarketingPage({ pageKey, locale = 'it' }) {
         ) : null}
 
         {page.faq?.length ? (
-          <section className="max-w-6xl mx-auto px-4 sm:px-6 py-16 sm:py-20">
-            <p data-reveal className="section-chip">FAQ</p>
-            <h2 data-reveal className="mt-3 text-[34px] sm:text-[42px] font-[760] leading-[1.1] text-[#141821]">FAQ</h2>
+          <section className="max-w-7xl mx-auto px-6 py-16 md:py-24">
+            <p data-reveal className="public-eyebrow">FAQ</p>
+            <h2 data-reveal className={`mt-5 ${PUBLIC_CLASSES.displayH2}`}>FAQ</h2>
             <div className="mt-6 space-y-3">
               {page.faq.map((item) => (
-                <details data-reveal key={item.q} className="public-panel bg-white p-5">
+                <details data-reveal key={item.q} className="public-grid-card p-5">
                   <summary className="cursor-pointer font-semibold text-[#0f172a]">{item.q}</summary>
-                  <p className="mt-2 text-[#526071] leading-[1.7]">{item.a}</p>
+                  <p className="mt-3 text-[var(--public-muted)] leading-[1.7]">{item.a}</p>
                 </details>
               ))}
             </div>
           </section>
         ) : null}
 
-        <section className="border-y border-[#e8edf3] bg-[#0b1220] text-white relative overflow-hidden">
-          <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(239,97,68,0.25),transparent_50%)]" aria-hidden />
+        <section className="border-y border-[#e8edf3] bg-[#15171c] text-white relative overflow-hidden">
+          <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(239,97,68,0.2),transparent_52%)]" aria-hidden />
           <div className="max-w-6xl mx-auto px-4 sm:px-6 py-16 sm:py-20 text-center">
             <h2 data-reveal className="text-[38px] sm:text-[52px] font-[780] leading-[1.08] max-w-4xl mx-auto tracking-[-0.018em]">
               {locale === 'en' ? 'Ready to evaluate EdilSync on your real workflow?' : 'Vuoi valutare EdilSync sul tuo flusso reale?'}

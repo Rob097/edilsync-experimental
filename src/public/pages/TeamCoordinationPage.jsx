@@ -214,20 +214,20 @@ export default function TeamCoordinationPage({ locale = 'it' }) {
   });
 
   return (
-    <div ref={rootRef} className="min-h-screen bg-[#fcfcfc] font-inter">
-      <section className="pt-32 pb-20 text-center px-6">
-        <div className="max-w-4xl mx-auto">
-          <span className="inline-block px-4 py-1.5 rounded-full bg-[#fff0eb] text-[#ef6144] text-sm font-medium mb-4" data-reveal>
+    <div ref={rootRef} className={PUBLIC_CLASSES.page}>
+      <section className="public-section-shell pt-32 pb-[4.5rem] md:pb-[5.5rem] text-center">
+        <div className="mx-auto max-w-4xl px-4 sm:px-6">
+          <span className="public-eyebrow" data-reveal>
             {copy.badge}
           </span>
-          <h1 className="font-bold text-4xl md:text-6xl text-[#141821] tracking-tight leading-tight" data-reveal>
-            {copy.title} <span className="text-[#ef6144]">{copy.titleHighlight}</span>
+          <h1 className={`mt-5 ${PUBLIC_CLASSES.displayH1}`} data-reveal>
+            {copy.title} <span className="text-[var(--public-accent)]">{copy.titleHighlight}</span>
           </h1>
-          <p className="mt-5 text-lg text-[#5b6470] leading-relaxed max-w-2xl mx-auto" data-reveal>
+          <p className={`mx-auto mt-5 max-w-2xl ${PUBLIC_CLASSES.bodyLead}`} data-reveal>
             {copy.subtitle}
           </p>
           <div className="mt-8" data-reveal>
-            <Button asChild className="bg-[#ef6144] text-white hover:bg-[#d9553a] h-10 rounded-full px-8 gap-2 shadow-lg shadow-[rgba(239,97,68,0.25)]">
+            <Button asChild className="h-11 rounded-full bg-[linear-gradient(135deg,#ef6144,#d9553a)] px-8 text-white shadow-[0_20px_44px_rgba(223,88,59,0.28)] hover:bg-[linear-gradient(135deg,#e55a3d,#c94d35)]">
               <Link to="/app">
                 {copy.cta}
                 <ArrowRight className="h-4 w-4" />
@@ -237,62 +237,64 @@ export default function TeamCoordinationPage({ locale = 'it' }) {
         </div>
       </section>
 
-      <section className="py-16 bg-[#f3f4f680] px-6">
-        <div className="max-w-4xl mx-auto">
-          <h2 className="font-bold text-2xl text-[#141821] text-center mb-8" data-reveal>
+      <section className="public-section-shell py-[4.5rem] md:py-20">
+        <div className="mx-auto max-w-5xl px-4 sm:px-6">
+          <h2 className={`mb-8 text-center ${PUBLIC_CLASSES.sectionH2}`} data-reveal>
             {copy.stakeholdersTitle}
           </h2>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+          <div className="grid grid-cols-2 gap-4 md:grid-cols-4">
             {copy.stakeholders.map((item) => (
-              <div key={item.role} className="p-5 rounded-2xl bg-white border border-[#e5e7eb] text-center" data-reveal>
+              <div key={item.role} className="public-grid-card p-5 text-center" data-reveal>
                 <span className={`inline-block px-3 py-1 rounded-full text-xs font-semibold mb-3 ${item.roleClass}`}>{item.role}</span>
-                <p className="text-xs text-[#5b6470] leading-relaxed">{item.text}</p>
+                <p className="text-xs leading-relaxed text-[var(--public-muted)]">{item.text}</p>
               </div>
             ))}
           </div>
         </div>
       </section>
 
-      <section className="py-20 px-6 bg-[#fcfcfc]">
-        <div className="max-w-5xl mx-auto">
-          <div className="text-center mb-12" data-reveal>
-            <h2 className="font-bold text-3xl text-[#141821] tracking-tight">{copy.problemsTitle}</h2>
+      <section className="public-section-shell py-[4.5rem] md:py-[5.5rem]">
+        <div className="mx-auto max-w-6xl px-4 sm:px-6">
+          <div className="mb-12 text-center" data-reveal>
+            <span className="public-eyebrow">{locale === 'en' ? 'Common failure points' : 'Punti di rottura'}</span>
+            <h2 className={`mt-5 ${PUBLIC_CLASSES.sectionH2}`}>{copy.problemsTitle}</h2>
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+          <div className="grid grid-cols-1 gap-5 md:grid-cols-2">
             {copy.problems.map((problem) => (
-              <div key={problem.title} className="p-6 rounded-2xl bg-white border border-[#e5e7eb] border-l-4 border-l-red-400" data-reveal>
-                <h3 className="font-semibold text-[#141821] mb-2">{problem.title}</h3>
-                <p className="text-sm text-[#5b6470] leading-relaxed">{problem.text}</p>
+              <div key={problem.title} className="rounded-[24px] border border-[rgba(196,77,53,0.15)] bg-[linear-gradient(180deg,rgba(255,255,255,0.96),rgba(255,247,245,0.92))] p-6 shadow-[0_14px_34px_rgba(42,28,23,0.05)]" data-reveal>
+                <h3 className="mb-2 text-lg font-semibold text-[var(--public-ink)]">{problem.title}</h3>
+                <p className="text-sm leading-relaxed text-[var(--public-muted)]">{problem.text}</p>
               </div>
             ))}
           </div>
         </div>
       </section>
 
-      <section className="py-20 bg-[#f3f4f680] px-6">
-        <div className="max-w-7xl mx-auto">
-          <div className="text-center mb-12" data-reveal>
-            <h2 className="font-bold text-3xl text-[#141821] tracking-tight">{copy.alignmentTitle}</h2>
+      <section className="public-section-shell py-[4.5rem] md:py-[5.5rem]">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6">
+          <div className="mb-12 text-center" data-reveal>
+            <span className="public-eyebrow">{locale === 'en' ? 'Alignment engine' : 'Motore di allineamento'}</span>
+            <h2 className={`mt-5 ${PUBLIC_CLASSES.sectionH2}`}>{copy.alignmentTitle}</h2>
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {copy.alignment.map((item) => (
-              <div key={item.title} className="p-6 rounded-2xl bg-white border border-[#e5e7eb] hover:border-[#ef6144]/20 hover:shadow-lg transition-all" data-reveal>
-                <div className="w-11 h-11 rounded-xl bg-[#ef6144]/10 flex items-center justify-center mb-4">
-                  <item.icon className="w-5 h-5 text-[#ef6144]" />
+          <div className="grid grid-cols-1 gap-5 md:grid-cols-2 xl:grid-cols-12">
+            {copy.alignment.map((item, index) => (
+              <div key={item.title} className={`p-6 ${PUBLIC_CLASSES.card} ${PUBLIC_CLASSES.cardHover} ${index === 0 ? 'xl:col-span-5' : index === 1 ? 'xl:col-span-3' : index === 2 ? 'xl:col-span-4' : index === 3 ? 'xl:col-span-4' : index === 4 ? 'xl:col-span-3' : 'xl:col-span-5'}`} data-reveal>
+                <div className="mb-4 flex h-11 w-11 items-center justify-center rounded-2xl bg-[rgba(239,97,68,0.12)]">
+                  <item.icon className="h-5 w-5 text-[var(--public-accent)]" />
                 </div>
-                <h3 className="font-semibold text-[#141821]">{item.title}</h3>
-                <p className="mt-2 text-sm text-[#5b6470] leading-relaxed">{item.text}</p>
+                <h3 className={PUBLIC_CLASSES.sectionH3}>{item.title}</h3>
+                <p className="mt-2 text-sm leading-relaxed text-[var(--public-muted)]">{item.text}</p>
               </div>
             ))}
           </div>
         </div>
       </section>
 
-      <section className="py-20 px-6 bg-[#fcfcfc]">
-        <div className="max-w-2xl mx-auto text-center" data-reveal>
-          <Quote className="w-10 h-10 text-[#ef6144]/20 mx-auto mb-6" />
-          <p className="text-xl text-[#141821] font-medium leading-relaxed">"{copy.citation}"</p>
-          <p className="mt-4 text-sm text-[#6b7280]">{copy.citationSource}</p>
+      <section className="public-section-shell py-[4.5rem] md:py-20">
+        <div className="public-grid-card mx-auto max-w-3xl px-4 sm:px-6 p-8 text-center" data-reveal>
+          <Quote className="mx-auto mb-6 h-10 w-10 text-[var(--public-accent)]/20" />
+          <p className="text-xl font-medium leading-relaxed text-[var(--public-ink)]">"{copy.citation}"</p>
+          <p className="mt-4 text-sm text-[var(--public-muted)]">{copy.citationSource}</p>
         </div>
       </section>
 

@@ -145,26 +145,37 @@ export default function SubcontractorsPage({ locale = 'it' }) {
 
   return (
     <div ref={rootRef} className={PUBLIC_CLASSES.page}>
-      <section className="pt-32 pb-20 px-6 bg-[#fcfcfc]">
-        <div className="max-w-5xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
-          <div data-reveal>
-            <span className={`${PUBLIC_CLASSES.badge} mb-4`}>{copy.badge}</span>
-            <h1 className={`${PUBLIC_CLASSES.displayH1} text-[#141821]`}>
-              {copy.titleA} <span className="text-[#ef6144]">{copy.titleB}</span> {copy.titleC}
-            </h1>
-            <p className={`mt-5 ${PUBLIC_CLASSES.bodyLead}`}>{copy.subtitle}</p>
-            <p className="mt-3 text-sm text-[#ef6144] font-semibold">{`✓ ${copy.note}`}</p>
-            <PublicPrimaryCta className="mt-6" to="/app" label={copy.ctaTop} />
+      <section className="public-section-shell pt-32 pb-[4.5rem] md:pb-24">
+        <div className="mx-auto grid max-w-6xl px-4 sm:px-6 gap-10 lg:grid-cols-[minmax(0,1.04fr)_minmax(320px,0.96fr)] lg:items-center">
+          <div className="relative overflow-hidden rounded-[32px] border border-[var(--public-line)] bg-[linear-gradient(135deg,rgba(255,255,255,0.95),rgba(255,246,240,0.88))] p-8 shadow-[0_30px_80px_rgba(37,25,20,0.08)] md:p-10" data-reveal>
+            <div className="absolute -left-12 top-8 h-36 w-36 rounded-full bg-[rgba(239,97,68,0.14)] blur-3xl" aria-hidden />
+            <div className="relative">
+              <span className="public-eyebrow">{copy.badge}</span>
+              <h1 className={`mt-5 ${PUBLIC_CLASSES.displayH1}`}>
+                {copy.titleA} <span className="text-[var(--public-accent)]">{copy.titleB}</span> {copy.titleC}
+              </h1>
+              <p className={`mt-6 max-w-2xl ${PUBLIC_CLASSES.bodyLead}`}>{copy.subtitle}</p>
+              <div className="mt-8 flex flex-wrap items-center gap-4">
+                <PublicPrimaryCta to="/app" label={copy.ctaTop} />
+                <p className="rounded-full border border-[rgba(239,97,68,0.18)] bg-[rgba(255,240,232,0.82)] px-4 py-2 text-sm font-semibold text-[var(--public-accent-dark)]">
+                  {copy.note}
+                </p>
+              </div>
+            </div>
           </div>
 
-          <div data-reveal>
-            <div className={`${PUBLIC_CLASSES.card} p-8`}>
-              <Quote className="w-8 h-8 text-[#ef6144]/30 mb-4" />
-              <p className="text-[#141821] font-medium leading-relaxed">"{copy.quote}"</p>
-              <div className="mt-6 flex items-center gap-3">
-                <div className="w-10 h-10 rounded-full bg-[#ef6144]/10 flex items-center justify-center font-bold text-[#ef6144]">M</div>
+          <div className="public-device-frame self-start p-5 md:p-6" data-reveal>
+            <div className="rounded-[28px] border border-white/60 bg-[linear-gradient(180deg,rgba(255,255,255,0.96),rgba(255,247,242,0.92))] p-7 shadow-[0_18px_50px_rgba(52,35,29,0.1)]">
+              <div className="flex items-center justify-between text-[11px] font-bold uppercase tracking-[0.14em] text-[var(--public-accent-dark)]">
+                <span>{locale === 'en' ? 'Field story' : 'Storia dal campo'}</span>
+                <span>EdilSync</span>
+              </div>
+              <Quote className="mt-8 h-8 w-8 text-[var(--public-accent)]/30" />
+              <p className="mt-4 text-[1.04rem] font-medium leading-8 text-[var(--public-ink)]">"{copy.quote}"</p>
+              <div className="mt-8 flex items-center gap-3 border-t border-[var(--public-line)] pt-5">
+                <div className="flex h-10 w-10 items-center justify-center rounded-full bg-[rgba(239,97,68,0.1)] font-bold text-[var(--public-accent)]">M</div>
                 <div>
-                  <p className="font-semibold text-sm text-[#141821]">{copy.quoteAuthor}</p>
+                  <p className="text-sm font-semibold text-[var(--public-ink)]">{copy.quoteAuthor}</p>
                   <p className={PUBLIC_CLASSES.bodyXsMuted}>{copy.quoteRole}</p>
                 </div>
               </div>
@@ -173,15 +184,22 @@ export default function SubcontractorsPage({ locale = 'it' }) {
         </div>
       </section>
 
-      <section className="py-20 bg-[#f3f4f680] px-6">
-        <div className="max-w-7xl mx-auto">
-          <h2 className={`${PUBLIC_CLASSES.sectionH2} text-center mb-12`}>{copy.benefitsTitle}</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {copy.benefits.map((item) => {
+      <section className="public-section-shell py-[4.5rem] md:py-[5.5rem]">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6">
+          <div className="max-w-2xl" data-reveal>
+            <span className="public-eyebrow">{locale === 'en' ? 'Subcontractor flow' : 'Flusso subappalto'}</span>
+            <h2 className={`mt-5 ${PUBLIC_CLASSES.sectionH2}`}>{copy.benefitsTitle}</h2>
+          </div>
+          <div className="mt-8 grid grid-cols-1 gap-5 md:grid-cols-2 xl:grid-cols-12">
+            {copy.benefits.map((item, index) => {
               const Icon = item.icon;
 
               return (
-                <article key={item.title} data-reveal className={`p-6 ${PUBLIC_CLASSES.card} ${PUBLIC_CLASSES.cardHover}`}>
+                <article
+                  key={item.title}
+                  data-reveal
+                  className={`p-6 ${PUBLIC_CLASSES.card} ${PUBLIC_CLASSES.cardHover} ${index === 0 ? 'xl:col-span-5' : index === 1 ? 'xl:col-span-3' : index === 2 ? 'xl:col-span-4' : index === 3 ? 'xl:col-span-4' : index === 4 ? 'xl:col-span-5' : 'xl:col-span-3'}`}
+                >
                   <div className={`${PUBLIC_CLASSES.iconWrap} mb-4`}>
                     <Icon className={PUBLIC_CLASSES.icon} />
                   </div>

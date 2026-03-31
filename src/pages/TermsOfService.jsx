@@ -1,15 +1,31 @@
 import React from 'react';
 import { Card, CardContent } from "@/components/ui/card";
 import { useLanguage } from '@/components/i18n/useLanguage';
+import usePublicSeo from '@/public/hooks/usePublicSeo';
 
 export default function TermsOfService() {
   const { currentLanguage } = useLanguage();
   const tr = (itText, enText) => currentLanguage === 'it' ? itText : enText;
+  const title = tr('Termini di Servizio', 'Terms of Service');
+  const description = tr(
+    'Termini e condizioni che regolano l\'uso della piattaforma EdilSync.',
+    'Terms and conditions that govern the use of the EdilSync platform.',
+  );
+
+  usePublicSeo({
+    title,
+    description,
+    canonicalPath: currentLanguage === 'en' ? '/en/termini' : '/termini',
+    locale: currentLanguage,
+    alternateItPath: '/termini',
+    alternateEnPath: '/en/termini',
+  });
+
   return (
     <div className="bg-[#f2f4f6] min-h-screen">
       <section className="relative overflow-hidden public-gradient border-b border-[#e5e7eb]">
         <div className="absolute top-8 left-6 h-[52px] w-[52px] rounded-full bg-[#ef6144]/10 blur-[16px]" aria-hidden />
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 pt-14 sm:pt-18 pb-10 text-center">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 pt-14 sm:pt-[4.5rem] pb-10 text-center">
           <p className="section-chip">Legal</p>
           <h1 className="mt-4 text-[38px] sm:text-[50px] font-[780] leading-[1.08] tracking-[-0.02em] text-[#141821]">{tr('Termini e Condizioni di Servizio', 'Terms and Conditions of Service')}</h1>
           <p className="mt-4 text-[14px] text-[#5b6470]">{tr('Ultimo aggiornamento: 17 febbraio 2026', 'Last updated: February 17, 2026')}</p>

@@ -3,16 +3,16 @@ import { PUBLIC_CLASSES } from '@/public/designSystem';
 
 export default function MarketingStepTimeline({ steps }) {
   return (
-    <section className="pb-24 px-6">
-      <div className="max-w-4xl mx-auto space-y-6">
-        {steps.map((step) => {
+    <section className="px-6 pb-24 md:pb-32">
+      <div className="max-w-5xl mx-auto px-4 sm:px-6 space-y-4">
+        {steps.map((step, index) => {
           const Icon = step.icon;
 
           return (
             <article
               key={step.number}
               data-reveal
-              className={`flex gap-6 p-6 md:p-8 ${PUBLIC_CLASSES.card} ${PUBLIC_CLASSES.cardHover}`}
+              className={`grid gap-5 p-6 md:grid-cols-[92px_1fr] md:p-8 ${PUBLIC_CLASSES.card} ${PUBLIC_CLASSES.cardHover} ${index % 2 === 1 ? 'md:translate-x-8' : ''}`}
             >
               <div className="flex-shrink-0">
                 <span className={PUBLIC_CLASSES.cardStepNumber}>{step.number}</span>

@@ -5,6 +5,7 @@ import ReactMarkdown from 'react-markdown';
 import { Button } from '@/components/ui/button';
 import { getBlogMetaItems } from '@/public/blogMeta';
 import { contentClient } from '@/public/api/contentClient';
+import { PUBLIC_CLASSES } from '@/public/designSystem';
 import usePublicSeo from '@/public/hooks/usePublicSeo';
 import StructuredData from '@/public/seo/StructuredData';
 import usePublicGsap from '@/public/hooks/usePublicGsap';
@@ -77,16 +78,16 @@ export default function BlogPostPage({ locale = 'it', basePath = '' }) {
   };
 
   return (
-    <div ref={rootRef} className="bg-[#f2f4f6]">
+    <div ref={rootRef} className={PUBLIC_CLASSES.page}>
       <StructuredData id={`blog-post-jsonld-${post.id}`} data={blogStructuredData} />
 
-      <section className="relative overflow-hidden public-gradient border-b border-[#e5e7eb]">
+      <section className="relative overflow-hidden border-b border-[var(--public-line)] bg-[linear-gradient(180deg,rgba(255,250,246,0.96),rgba(247,241,235,0.82))]">
         <div className="absolute top-8 left-6 h-[52px] w-[52px] rounded-full bg-[#ef6144]/10 blur-[16px]" aria-hidden />
         <div className="max-w-4xl mx-auto px-4 sm:px-6 pt-16 sm:pt-20 pb-12 sm:pb-14">
           <Link data-reveal className="text-[13px] font-semibold text-[#ef6144] hover:text-[#d9553a]" to={`${basePath}/blog`}>
             {copy.backToBlog}
           </Link>
-          <h1 data-reveal className="mt-4 text-[40px] sm:text-[56px] font-[780] leading-[1.06] tracking-[-0.02em] text-[#141821]">{title}</h1>
+          <h1 data-reveal className={`mt-5 ${PUBLIC_CLASSES.displayH1}`}>{title}</h1>
           {metaItems.length > 0 ? (
             <div data-reveal className="mt-4 flex flex-wrap items-center gap-x-4 gap-y-2 text-[13px] font-medium text-[#6b7280]">
               {metaItems.map((item) => (
@@ -96,12 +97,12 @@ export default function BlogPostPage({ locale = 'it', basePath = '' }) {
               ))}
             </div>
           ) : null}
-          {excerpt ? <p data-reveal className="mt-5 text-[16px] sm:text-[18px] leading-[1.72] text-[#5b6470]">{excerpt}</p> : null}
+          {excerpt ? <p data-reveal className={`mt-5 ${PUBLIC_CLASSES.bodyLead}`}>{excerpt}</p> : null}
         </div>
       </section>
 
       <article className="max-w-4xl mx-auto px-4 sm:px-6 py-12 sm:py-16">
-        <div data-reveal className="public-panel bg-white p-6 sm:p-9">
+        <div data-reveal className="public-grid-card p-6 sm:p-9">
           <div className="blog-markdown max-w-none">
             <ReactMarkdown>{content || ''}</ReactMarkdown>
           </div>
