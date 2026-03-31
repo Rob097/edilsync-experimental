@@ -12,16 +12,18 @@ import usePublicGsap from '@/public/hooks/usePublicGsap';
 import { PUBLIC_CLASSES } from '@/public/designSystem';
 import PublicPrimaryCta from '@/public/components/marketing/PublicPrimaryCta';
 import MarketingFinalCtaSection from '@/public/components/marketing/MarketingFinalCtaSection';
+import EntitlementHint from '@/public/components/marketing/EntitlementHint';
 
 const contentByLocale = {
   it: {
     seoTitle: 'Per i Professionisti Tecnici',
     seoDescription:
-      'Pagina dedicata ai professionisti tecnici: spazio condiviso con impresa e committente, gestione documentale avanzata e coordinamento strutturato.',
+      'Pagina dedicata ai professionisti tecnici: accesso gratuito ai progetti invitati, con gestione documentale avanzata e coordinamento strutturato nei progetti sponsorizzati.',
     badge: 'Per i Professionisti Tecnici',
     title: 'Il tuo spazio di lavoro condiviso con impresa e committente',
     subtitle:
-      'Architetti, ingegneri, geometri e designer. Ogni progettista ha un ruolo chiave nel cantiere - EdilSync lo rende strutturato.',
+      'Architetti, ingegneri, geometri e designer. Entri gratis nei progetti in cui vieni invitato e, quando il progetto è sponsorizzato, lavori con documenti avanzati, milestone e chat contestuale completa.',
+    note: 'Accesso gratuito nei progetti invitati. Gli strumenti avanzati di progetto si attivano nei progetti sponsorizzati.',
     ctaTop: 'Apri account gratis',
     rolesTitle: 'Per ogni figura professionale',
     roles: [
@@ -46,7 +48,7 @@ const contentByLocale = {
         text: 'Accedi al progetto nel tuo contesto, vedi i documenti rilevanti e comunica con tutte le parti senza dover gestire accessi multipli.',
       },
     ],
-    featuresTitle: 'Funzionalita pensate per i professionisti',
+    featuresTitle: 'Funzionalità pensate per i professionisti',
     features: [
       {
         title: 'Viewer BIM integrato',
@@ -55,8 +57,9 @@ const contentByLocale = {
       },
       {
         title: 'Gestione documentale avanzata',
-        text: 'Disciplina, fase, stato, revisioni, tag. Ogni documento ha i metadati giusti per essere trovato e gestito correttamente.',
+        text: 'Nei progetti sponsorizzati, disciplina, fase, stato, revisioni e tag tengono ogni documento ricercabile, verificabile e gestito correttamente.',
         icon: FileText,
+        badge: 'Progetto sponsorizzato',
       },
       {
         title: 'Calendario condiviso',
@@ -65,12 +68,13 @@ const contentByLocale = {
       },
       {
         title: 'Chat di progetto strutturata',
-        text: 'Messaggi con riferimenti a documenti, task e milestone. Non piu email infinite per ogni aggiornamento.',
+        text: 'Nei progetti sponsorizzati, i messaggi possono riferirsi a documenti, task e milestone. Non più email infinite per ogni aggiornamento.',
         icon: MessageCircle,
+        badge: 'Progetto sponsorizzato',
       },
       {
         title: 'Accesso contestuale',
-        text: 'Il tuo profilo professionista ti permette di lavorare su piu progetti con ruoli diversi. Un solo account per tutto.',
+        text: 'Il tuo profilo professionista ti permette di lavorare su più progetti con ruoli diversi. Un solo account per tutto.',
         icon: Layers,
       },
       {
@@ -83,16 +87,17 @@ const contentByLocale = {
     finalText:
       'Smetti di perdere tempo tra chat, email e telefonate. Inizia oggi con EdilSync e vedi la differenza dal primo giorno.',
     finalCta: 'Apri account gratis',
-    finalNote: 'Account unico · Accesso gratuito nei progetti invitati · Collaborazione immediata',
+    finalNote: 'Account unico · Accesso gratuito nei progetti invitati · Strumenti avanzati nei progetti sponsorizzati',
   },
   en: {
     seoTitle: 'For Technical Professionals',
     seoDescription:
-      'Dedicated page for technical professionals: shared workspace with contractors and owners, advanced document management, and structured coordination.',
+      'Dedicated page for technical professionals: free access on invited projects, with advanced document management and structured coordination on sponsored projects.',
     badge: 'For Technical Professionals',
     title: 'Your shared workspace with contractor and owner',
     subtitle:
-      'Architects, engineers, surveyors, and designers. Every technical professional has a key role on site - EdilSync makes it structured.',
+      'Architects, engineers, surveyors, and designers. You join invited projects for free and, when the project is sponsored, work with advanced documents, milestones, and fully contextual chat.',
+    note: 'Free access on invited projects. Premium project surfaces unlock on sponsored projects.',
     ctaTop: 'Open free account',
     rolesTitle: 'For every professional profile',
     roles: [
@@ -126,8 +131,9 @@ const contentByLocale = {
       },
       {
         title: 'Advanced document management',
-        text: 'Discipline, phase, status, revisions, tags. Every document gets the right metadata to stay searchable and auditable.',
+        text: 'On sponsored projects, discipline, phase, status, revisions, and tags keep every document searchable, auditable, and easy to manage.',
         icon: FileText,
+        badge: 'Sponsored project',
       },
       {
         title: 'Shared calendar',
@@ -136,8 +142,9 @@ const contentByLocale = {
       },
       {
         title: 'Structured project chat',
-        text: 'Messages linked to docs, tasks, and milestones. No more endless email threads for each update.',
+        text: 'On sponsored projects, messages can link to docs, tasks, and milestones. No more endless email threads for each update.',
         icon: MessageCircle,
+        badge: 'Sponsored project',
       },
       {
         title: 'Contextual access',
@@ -153,7 +160,7 @@ const contentByLocale = {
     finalTitle: 'Ready to bring order to your construction site?',
     finalText: 'Stop wasting time across chats, emails, and calls. Start today with EdilSync and feel the difference from day one.',
     finalCta: 'Open free account',
-    finalNote: 'Single account · Free access on invited projects · Fast collaboration',
+    finalNote: 'Single account · Free access on invited projects · Premium on sponsored projects',
   },
 };
 
@@ -187,6 +194,9 @@ export default function ProfessionalsPage({ locale = 'it' }) {
           <p data-reveal className={`mt-4 ${PUBLIC_CLASSES.bodyLead}`}>
             {copy.subtitle}
           </p>
+          <p data-reveal className="mt-3 text-sm text-[#ef6144] font-semibold">
+            {copy.note}
+          </p>
           <PublicPrimaryCta className="mt-8" to="/app" label={copy.ctaTop} />
         </div>
       </section>
@@ -213,7 +223,8 @@ export default function ProfessionalsPage({ locale = 'it' }) {
               const Icon = item.icon;
 
               return (
-                <article key={item.title} data-reveal className={`p-6 ${PUBLIC_CLASSES.card} ${PUBLIC_CLASSES.cardHover}`}>
+                <article key={item.title} data-reveal className={`relative p-6 ${PUBLIC_CLASSES.card} ${PUBLIC_CLASSES.cardHover}`}>
+                  <EntitlementHint label={item.badge} className="absolute right-4 top-4" />
                   <div className={`${PUBLIC_CLASSES.iconWrap} mb-4`}>
                     <Icon className={PUBLIC_CLASSES.icon} />
                   </div>

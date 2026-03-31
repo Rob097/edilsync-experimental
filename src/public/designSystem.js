@@ -32,6 +32,7 @@ export const PUBLIC_CLASSES = {
   sectionContainer: 'max-w-7xl mx-auto',
   sectionTitle: 'font-bold text-2xl md:text-3xl text-[#141821]',
   badge: 'inline-block px-4 py-1.5 rounded-full border border-[#f6c6bb] bg-[#fff0eb] text-[#ef6144] text-sm font-medium',
+  entitlementPill: 'inline-flex items-center rounded-full border border-[#f6c6bb] bg-[#fff0eb] px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.08em] text-[#ef6144]',
   primaryCta:
     'inline-flex items-center justify-center whitespace-nowrap text-sm font-medium transition-colors bg-[#ef6144] text-white hover:bg-[#d9553a] h-10 rounded-full px-8 gap-2 shadow-lg shadow-[rgba(239,97,68,0.25)]',
   card: 'bg-white rounded-2xl border border-[#e5e7eb]',

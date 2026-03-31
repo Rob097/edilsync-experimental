@@ -9,25 +9,25 @@ import { PUBLIC_CLASSES } from '@/public/designSystem';
 const contentByLocale = {
   it: {
     seoTitle: 'FAQ',
-    seoDescription: 'Domande frequenti su EdilSync: piattaforma, prezzi, funzionalita, permessi, sicurezza e supporto.',
+    seoDescription: 'Domande frequenti su EdilSync: piattaforma, prezzi, funzionalità, permessi, sicurezza e supporto.',
     badge: 'FAQ',
     title: 'Domande frequenti',
-    subtitle: 'Trova risposta alle domande piu comuni su EdilSync.',
+    subtitle: 'Trova risposta alle domande più comuni su EdilSync.',
     groups: [
       {
         title: 'Generale',
         items: [
           {
             q: 'Cos\'e EdilSync?',
-            a: 'EdilSync e una piattaforma SaaS per il coordinamento di cantieri edili e ristrutturazioni. Unisce committenti, imprese, subappaltatori e professionisti in un unico spazio condiviso, con ruoli e permessi contestuali adattati a ogni progetto.',
+            a: 'EdilSync è una piattaforma per il coordinamento di cantieri edili e ristrutturazioni. Unisce committenti, imprese, subappaltatori e professionisti in un unico spazio condiviso, con ruoli e permessi contestuali adattati a ogni progetto.',
           },
           {
-            q: 'EdilSync e adatto anche per piccole imprese?',
-            a: 'Assolutamente si. EdilSync e progettato specificamente per imprese edili sotto €1M di fatturato annuo che gestiscono 8-12 ristrutturazioni residenziali. L interfaccia e semplice, mobile-first e non richiede formazione.',
+            q: 'EdilSync è adatto anche per piccole imprese?',
+            a: 'Assolutamente sì. EdilSync è progettato specificamente per imprese edili sotto €1M di fatturato annuo che gestiscono 8-12 ristrutturazioni residenziali. L’interfaccia è semplice, mobile-first e non richiede formazione.',
           },
           {
-            q: 'In che lingue e disponibile EdilSync?',
-            a: 'EdilSync e disponibile in italiano e in inglese. La lingua e selezionabile dal menu utente in qualsiasi momento.',
+            q: 'In che lingue è disponibile EdilSync?',
+            a: 'EdilSync è disponibile in italiano e in inglese. La lingua è selezionabile dal menu utente in qualsiasi momento.',
           },
         ],
       },
@@ -36,44 +36,44 @@ const contentByLocale = {
         items: [
           {
             q: 'Quanto costa EdilSync?',
-            a: 'EdilSync Pro per societa costa €19/mese oppure €190/anno. Il privato resta free. Le societa possono restare free o passare a Pro per sbloccare sponsorship progetto e feature premium societarie.',
+            a: 'EdilSync Pro per società costa €19/mese oppure €190/anno. Il privato resta free. Le società possono restare free o passare a Pro per sbloccare la sponsorship del progetto e gli strumenti avanzati dell’impresa.',
           },
           {
             q: 'Posso iniziare senza carta?',
-            a: 'Non usiamo una prova separata. Puoi iniziare senza carta con un account personale o con una societa free e passare a Pro quando ti serve sponsorship o premium societario.',
+            a: 'Non usiamo una prova separata. Puoi iniziare senza carta con un account personale o con una società free e passare a Pro quando ti serve la sponsorship o strumenti in più per l’impresa.',
           },
           {
             q: 'Posso cancellare quando voglio?',
-            a: 'Si, puoi cancellare l abbonamento in qualsiasi momento direttamente dalle impostazioni. Non ci sono penali ne costi nascosti.',
+            a: 'Sì, puoi cancellare l’abbonamento in qualsiasi momento direttamente dalle impostazioni. Non ci sono penali né costi nascosti.',
           },
           {
             q: 'I miei committenti devono pagare?',
-            a: 'No. Il homeowner resta free. Anche subappaltatori e professionisti possono entrare gratis nei progetti a cui vengono invitati. Le feature premium di progetto dipendono dalla sponsorship attiva di una societa paid.',
+            a: 'No. Il committente resta free. Anche subappaltatori e professionisti possono entrare gratis nei progetti a cui vengono invitati. Gli strumenti avanzati di progetto dipendono dalla sponsorship attiva di una società paid.',
           },
         ],
       },
       {
-        title: 'Funzionalita',
+        title: 'Funzionalità',
         items: [
           {
             q: 'Posso usare EdilSync sul cantiere con il telefono?',
-            a: 'Si, EdilSync e mobile-first. C e una modalita operativa dedicata all uso sul campo, pensata per operai, capicantiere e chiunque lavori on-site. Upload foto, clock-in/out e aggiornamenti task in pochi tap.',
+            a: 'Sì, EdilSync è mobile-first. C’è una modalità operativa dedicata all’uso sul campo, pensata per operai, capicantiere e chiunque lavori on-site. Upload foto, clock-in/out e aggiornamenti task in pochi tap.',
           },
           {
             q: 'Come funzionano i permessi? Tutti vedono tutto?',
-            a: 'No. EdilSync ha un sistema di permessi contestuale a 4 livelli: ruolo applicativo, contesto attivo (personale o aziendale), ruolo nella societa e ruolo nel progetto. Ogni persona vede solo cio che e rilevante per il suo ruolo nel progetto specifico.',
+            a: 'No. EdilSync ha un sistema di permessi contestuale a 4 livelli: ruolo applicativo, contesto attivo (personale o aziendale), ruolo nella società e ruolo nel progetto. Ogni persona vede solo ciò che è rilevante per il suo ruolo nel progetto specifico.',
           },
           {
             q: 'Posso gestire i subappalti a catena?',
-            a: 'Si. EdilSync supporta nativamente subappalti multipli. Un contractor puo invitare subappaltatori, che a loro volta possono avere il proprio team. I permessi e l accesso sono controllati a ogni livello.',
+            a: 'Sì. EdilSync supporta nativamente subappalti multipli. Un contractor può invitare subappaltatori, che a loro volta possono avere il proprio team. I permessi e l’accesso sono controllati a ogni livello.',
           },
           {
             q: 'E possibile visualizzare file BIM o modelli 3D?',
-            a: 'Si. EdilSync supporta IFC, GLB e GLTF. C e un viewer in-app per IFC con parsing diretto, e un viewer 3D basato su Three.js per GLB/GLTF con camera orbitale e fit automatico.',
+            a: 'Sì. EdilSync supporta IFC, GLB e GLTF. C’è un viewer in-app per IFC con parsing diretto, e un viewer 3D basato su Three.js per GLB/GLTF con camera orbitale e fit automatico.',
           },
           {
             q: 'Come funzionano le dispute?',
-            a: 'Il modulo dispute permette di formalizzare conflitti su scope, costi, ritardi, qualita o pagamenti. Ogni disputa ha una timeline eventi, puo avere prove allegate, commenti, note di risoluzione e notifiche agli stakeholder. Tutto e documentato e immutabile.',
+            a: 'Il modulo dispute permette di formalizzare conflitti su scope, costi, ritardi, qualità o pagamenti. Ogni disputa ha una timeline eventi, può avere prove allegate, commenti, note di risoluzione e notifiche agli stakeholder. Tutto è documentato e immutabile.',
           },
         ],
       },
@@ -82,11 +82,11 @@ const contentByLocale = {
         items: [
           {
             q: 'I miei dati sono al sicuro?',
-            a: 'Si. EdilSync utilizza infrastruttura cloud con Row Level Security (RLS) su ogni operazione dati. L accesso ai dati e costruito su insiemi utente sincronizzati automaticamente da membership e partecipazioni.',
+            a: 'Sì. EdilSync utilizza infrastruttura cloud con Row Level Security (RLS) su ogni operazione dati. L’accesso ai dati è costruito su insiemi utente sincronizzati automaticamente da membership e partecipazioni.',
           },
           {
-            q: 'Chi puo vedere i miei progetti?',
-            a: 'Solo le persone che hai invitato come partecipanti al progetto. Ogni utente vede solo i progetti in cui e partecipante attivo, e solo le sezioni adeguate al proprio ruolo nel progetto.',
+            q: 'Chi può vedere i miei progetti?',
+            a: 'Solo le persone che hai invitato come partecipanti al progetto. Ogni utente vede solo i progetti in cui è partecipante attivo, e solo le sezioni adeguate al proprio ruolo nel progetto.',
           },
         ],
       },
@@ -94,7 +94,7 @@ const contentByLocale = {
     finalTitle: 'Pronto a portare ordine nel tuo cantiere?',
     finalText: 'Smetti di perdere tempo tra chat, email e telefonate. Inizia oggi con EdilSync e vedi la differenza dal primo giorno.',
     finalCta: 'Apri EdilSync',
-    finalNote: 'Account personale o societa - Nessuna carta per iniziare - Upgrade quando serve',
+    finalNote: 'Account personale o società - Nessuna carta per iniziare - Upgrade quando serve',
   },
   en: {
     seoTitle: 'FAQ',

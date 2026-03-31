@@ -24,11 +24,11 @@ const contentByLocale = {
     titleB: 'dove e quando',
     titleC: 'essere in cantiere.',
     subtitle:
-      'Gestire 3-5 cantieri contemporaneamente e una sfida di coordinamento. EdilSync ti da il contesto giusto per ogni progetto senza confusione.',
+      'Gestire 3-5 cantieri contemporaneamente è una sfida di coordinamento. EdilSync ti dà il contesto giusto per ogni progetto senza confusione.',
     note: 'Accesso gratuito nei progetti in cui vieni invitato',
     ctaTop: 'Apri account gratis',
     quote:
-      'Arrivo in cantiere e il lavoro precedente non e finito. Un altro viaggio a vuoto. €150 di costo, zero fatturato. E nessuno mi aveva avvisato.',
+      'Arrivo in cantiere e il lavoro precedente non è finito. Un altro viaggio a vuoto. 150 euro di costo, zero fatturato. E nessuno mi aveva avvisato.',
     quoteAuthor: 'Marco',
     quoteRole: 'Elettricista, 5 cantieri attivi',
     benefitsTitle: 'I vantaggi per chi lavora in subappalto',
@@ -40,7 +40,7 @@ const contentByLocale = {
       },
       {
         title: 'Solo i tuoi task',
-        text: 'Vedi esclusivamente i task e le attivita rilevanti per il tuo lavoro. Nessuna informazione superflua, solo cio che ti serve.',
+        text: 'Vedi esclusivamente i task e le attività rilevanti per il tuo lavoro. Nessuna informazione superflua, solo ciò che ti serve.',
         icon: ListChecks,
       },
       {
@@ -55,12 +55,12 @@ const contentByLocale = {
       },
       {
         title: 'Accesso contestuale',
-        text: 'Entri nel progetto solo quando sei stato invitato, con accesso limitato a cio che e rilevante per il tuo scope di lavoro.',
+        text: 'Entri nel progetto solo quando sei stato invitato, con accesso limitato a ciò che è rilevante per il tuo ambito di lavoro.',
         icon: Navigation,
       },
       {
         title: 'Accesso gratuito su invito',
-        text: 'Come subappaltatore, entri gratis nei progetti a cui vieni invitato. Se il progetto e sponsorizzato, sblocchi anche le feature premium progettuali disponibili in quel progetto.',
+        text: 'Come subappaltatore, entri gratis nei progetti a cui vieni invitato. Se il progetto è sponsorizzato, sblocchi anche gli strumenti avanzati disponibili in quel progetto.',
         icon: ArrowRight,
       },
     ],

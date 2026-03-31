@@ -6,6 +6,7 @@ export default function MarketingCenteredHero({
   badge,
   title,
   subtitle,
+  note,
   ctaLabel,
   ctaHref,
 }) {
@@ -21,6 +22,7 @@ export default function MarketingCenteredHero({
         <p data-reveal className={`mt-4 ${PUBLIC_CLASSES.bodyLead}`}>
           {subtitle}
         </p>
+        {note ? <p data-reveal className="mt-3 text-sm text-[#ef6144] font-semibold">{note}</p> : null}
         {ctaLabel && ctaHref ? (
           <PublicPrimaryCta className="mt-8" to={ctaHref} label={ctaLabel} />
         ) : null}

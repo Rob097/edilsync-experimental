@@ -5,33 +5,34 @@ import { Button } from '@/components/ui/button';
 import usePublicSeo from '@/public/hooks/usePublicSeo';
 import usePublicGsap from '@/public/hooks/usePublicGsap';
 import { PUBLIC_CLASSES } from '@/public/designSystem';
+import EntitlementHint from '@/public/components/marketing/EntitlementHint';
 
 const contentByLocale = {
   it: {
     seoTitle: 'Trasparenza Committente',
     seoDescription:
-      'Segui il cantiere in tempo reale senza chiamare: feed progetto, notifiche utili, milestone chiare e trasparenza su costi e varianti.',
+      'Segui il cantiere in tempo reale senza chiamare: feed progetto, notifiche utili e, nei progetti sponsorizzati, milestone chiare e trasparenza su costi e varianti.',
     badge: 'Trasparenza del Cantiere',
     title: 'Sai sempre cosa succede.',
     titleHighlight: 'Senza chiamare.',
     subtitle:
-      'Stai investendo una somma importante nella tua casa o nel tuo immobile. Hai il diritto - e la possibilita - di avere visibilita completa su ogni fase del cantiere, in tempo reale.',
-    note: 'Accesso gratuito per homeowner invitato o owner del progetto',
+      'Stai investendo una somma importante nella tua casa o nel tuo immobile. Hai visibilità sul cantiere in tempo reale e, quando il progetto è sponsorizzato, hai anche strumenti in più per seguire tempi, costi e decisioni.',
+    note: 'Committente sempre gratis. Milestone, costi approvati e chat strutturata si attivano nei progetti sponsorizzati.',
     cta: 'Apri account gratis',
     quote:
-      '"Ho speso €65.000 per ristrutturare l appartamento. Per tre mesi ho chiamato il contractor ogni due giorni per sapere a che punto erano. Mi sentivo fastidioso, ma non avevo altra scelta."',
+      '"Ho speso €65.000 per ristrutturare l’appartamento. Per tre mesi ho chiamato il contractor ogni due giorni per sapere a che punto erano. Mi sentivo fastidiosa, ma non avevo altra scelta."',
     quoteAuthor: 'Simona',
     quoteRole: 'Committente, Milano - prima di EdilSync',
     compareTitle: 'Prima e dopo EdilSync',
     compareRows: [
-      ['Chiami il contractor per sapere a che punto e il lavoro', 'Apri l app e vedi il feed aggiornato'],
-      ['Non sai se una variante aumentera il costo finale', 'Ogni modifica arriva con impatto su costi e tempi'],
-      ['Il ritardo e colpa mia anche se stavi aspettando il materiale', 'La causa del ritardo e sempre documentata'],
-      ['Non capisci il SAL che ti hanno mandato', 'Lo stato di avanzamento e visibile in tempo reale'],
-      ['Fai un sopralluogo non annunciato perche non ti fidi', 'Hai visibilita piena senza dover disturbare nessuno'],
+      ['Chiami il contractor per sapere a che punto è il lavoro', 'Apri l’app e vedi il feed aggiornato'],
+      ['Non sai se una variante aumenterà il costo finale', 'Ogni modifica arriva con impatto su costi e tempi'],
+      ['Il ritardo è colpa mia anche se stavi aspettando il materiale', 'La causa del ritardo è sempre documentata'],
+      ['Non capisci il SAL che ti hanno mandato', 'Lo stato di avanzamento è visibile in tempo reale'],
+      ['Fai un sopralluogo non annunciato perché non ti fidi', 'Hai visibilità piena senza dover disturbare nessuno'],
     ],
-    featuresTitle: 'Tutto cio che vedi come committente',
-    featuresSubtitle: 'Visibilita totale, senza interferire con il lavoro dell impresa.',
+    featuresTitle: 'Tutto ciò che vedi come committente',
+    featuresSubtitle: 'Visibilità immediata sul progetto, con strumenti in più che si attivano quando una società Pro sponsorizza il progetto.',
     features: [
       {
         title: 'Feed del progetto in tempo reale',
@@ -40,7 +41,7 @@ const contentByLocale = {
       },
       {
         title: 'Notifiche proattive',
-        text: 'Quando succede qualcosa di rilevante, ricevi una notifica. Niente piu ansia da cosa stara succedendo in cantiere.',
+        text: 'Quando succede qualcosa di rilevante, ricevi una notifica. Niente più ansia da cosa starà succedendo in cantiere.',
         icon: Bell,
       },
       {
@@ -50,18 +51,21 @@ const contentByLocale = {
       },
       {
         title: 'Milestone e scadenze chiare',
-        text: 'La timeline del progetto e condivisa. Sai quando aspettarti ogni fase completata e ricevi un avviso se qualcosa e in ritardo, con la causa documentata.',
+        text: 'Nei progetti sponsorizzati, la timeline del progetto è condivisa con milestone e scadenze chiare. Sai quando aspettarti ogni fase completata e ricevi un avviso se qualcosa è in ritardo, con la causa documentata.',
         icon: CalendarDays,
+        badge: 'Progetto sponsorizzato',
       },
       {
         title: 'Trasparenza economica',
-        text: 'Vedi il budget, i costi approvati e lo stato avanzamento lavori. Le varianti arrivano come change request formali con impatto su costi e tempistiche.',
+        text: 'Nei progetti sponsorizzati, vedi budget, costi approvati e stato avanzamento lavori. Le varianti arrivano come change request formali con impatto su costi e tempistiche.',
         icon: Wallet,
+        badge: 'Progetto sponsorizzato',
       },
       {
-        title: 'Canale diretto con l impresa',
-        text: 'La chat di progetto mantiene tutta la comunicazione nel contesto giusto, collegata a task e documenti specifici. Fine alle email perse e ai messaggi senza risposta.',
+        title: 'Canale diretto con l’impresa',
+        text: 'Nei progetti sponsorizzati, la chat di progetto mantiene tutta la comunicazione nel contesto giusto, collegata a task e documenti specifici. Fine alle email perse e ai messaggi senza risposta.',
         icon: MessageCircle,
+        badge: 'Progetto sponsorizzato',
       },
     ],
     finalTitle: 'Pronto a portare ordine nel tuo cantiere?',
@@ -73,13 +77,13 @@ const contentByLocale = {
   en: {
     seoTitle: 'Client Transparency',
     seoDescription:
-      'Follow your project in real time without constant calls: live feed, meaningful alerts, clear milestones, and visibility on costs and changes.',
+      'Follow your project in real time without constant calls: live feed, meaningful alerts and, on sponsored projects, clear milestones and visibility on costs and changes.',
     badge: 'Jobsite Transparency',
     title: 'Always know what is happening.',
     titleHighlight: 'Without calling.',
     subtitle:
-      'You are investing serious money in your home or property. You should have full visibility on each project phase, in real time.',
-    note: 'Free access for invited or owning homeowner',
+      'You are investing serious money in your home or property. You get real-time visibility on the jobsite and, when the project is sponsored, access to premium coordination and financial transparency areas.',
+    note: 'Homeowners always stay free. Milestones, approved costs, and structured chat unlock on sponsored projects.',
     cta: 'Open free account',
     quote:
       '"I spent €65,000 to renovate my apartment. For three months I called the contractor every two days just to understand progress. I felt annoying, but I had no alternative."',
@@ -94,7 +98,7 @@ const contentByLocale = {
       ['You do surprise site visits because you do not trust updates', 'You get full visibility without disturbing anyone'],
     ],
     featuresTitle: 'Everything you can see as a homeowner',
-    featuresSubtitle: 'Total visibility without interfering with contractor operations.',
+    featuresSubtitle: 'Immediate project visibility, with premium areas enabled when a Pro company sponsors the project.',
     features: [
       {
         title: 'Real-time project feed',
@@ -113,18 +117,21 @@ const contentByLocale = {
       },
       {
         title: 'Clear milestones and deadlines',
-        text: 'The project timeline is shared. You know what to expect and receive alerts if something slips, with documented cause.',
+        text: 'On sponsored projects, the shared timeline includes clear milestones and deadlines. You know what to expect and receive alerts if something slips, with documented cause.',
         icon: CalendarDays,
+        badge: 'Sponsored project',
       },
       {
         title: 'Financial transparency',
-        text: 'See budget, approved costs, and progress status. Scope changes arrive as formal change requests with explicit impact.',
+        text: 'On sponsored projects, you can see budget, approved costs, and progress status. Scope changes arrive as formal change requests with explicit impact.',
         icon: Wallet,
+        badge: 'Sponsored project',
       },
       {
         title: 'Direct project channel',
-        text: 'Project chat keeps communication in context, linked to tasks and documents. No more lost emails or scattered messages.',
+        text: 'On sponsored projects, project chat keeps communication in context, linked to tasks and documents. No more lost emails or scattered messages.',
         icon: MessageCircle,
+        badge: 'Sponsored project',
       },
     ],
     finalTitle: 'Ready to bring order to your construction site?',
@@ -217,7 +224,8 @@ export default function TransparencyPage({ locale = 'it' }) {
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {copy.features.map((item) => (
-              <div key={item.title} className="p-6 rounded-2xl bg-white border border-[#e5e7eb] hover:border-[#ef6144]/20 hover:shadow-lg transition-all" data-reveal>
+              <div key={item.title} className="relative p-6 rounded-2xl bg-white border border-[#e5e7eb] hover:border-[#ef6144]/20 hover:shadow-lg transition-all" data-reveal>
+                <EntitlementHint label={item.badge} className="absolute right-4 top-4" />
                 <div className="w-11 h-11 rounded-xl bg-[#ef6144]/10 flex items-center justify-center mb-4">
                   <item.icon className="w-5 h-5 text-[#ef6144]" />
                 </div>

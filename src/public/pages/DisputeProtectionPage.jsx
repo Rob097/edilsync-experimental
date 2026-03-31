@@ -12,43 +12,43 @@ const contentByLocale = {
     seoDescription:
       'Riduci le dispute in cantiere con prove contestuali, change request tracciate e comunicazione strutturata in un unico spazio.',
     badge: 'Protezione dalle Dispute',
-    title: 'Ogni parola e scritta.',
-    titleHighlight: 'Ogni accordo e provato.',
+    title: 'Ogni parola è scritta.',
+    titleHighlight: 'Ogni accordo è provato.',
     subtitle:
-      'Nel settore edile, i margini sono del 3-5%. Una sola disputa non documentata puo azzerare il profitto di un intero progetto. EdilSync ti protegge automaticamente, senza lavoro extra.',
+      'Nel settore edile, i margini sono del 3-5%. Una sola disputa non documentata può azzerare il profitto di un intero progetto. EdilSync ti protegge automaticamente, senza lavoro extra.',
     cta: 'Crea account azienda',
     note: 'Funziona per contractor, committenti, subappaltatori e professionisti.',
-    scenarioLabel: 'Il scenario tipico',
+    scenarioLabel: 'Lo scenario tipico',
     scenarioQuote:
-      '"Ho perso €4.200 su un progetto da €28.000 per una disputa su due stanze che erano gia incluse secondo il cliente. Non avevo niente di scritto. Avevo solo la mia parola."',
+      '"Ho perso €4.200 su un progetto da €28.000 per una disputa su due stanze che erano già incluse secondo il cliente. Non avevo niente di scritto. Avevo solo la mia parola."',
     scenarioAuthor: 'Giuseppe',
     scenarioRole: 'Contractor, Torino - prima di EdilSync',
-    issuesTitle: 'Le dispute piu frequenti - e come le elimini',
+    issuesTitle: 'Le dispute più frequenti - e come le elimini',
     issuesSubtitle: 'Ogni scenario che hai vissuto ha una risposta documentale precisa.',
     issues: [
       {
         title: '"Pensavo fosse incluso nel preventivo"',
-        text: 'Le change request documentano ogni variante con impatto su costi e tempi. Il committente approva o rifiuta. Tutto time-stamped, tutto immutabile.',
+        text: 'Le change request documentano ogni variante con impatto su costi e tempi. Il committente approva o rifiuta. Tutto con data e ora, tutto immutabile.',
         icon: FileText,
       },
       {
         title: '"Non sapevo che fossi io in ritardo"',
-        text: 'I task bloccati registrano nome del responsabile e data. Se il ritardo e causato da una scelta del committente, e scritto nero su bianco.',
+        text: 'I task bloccati registrano nome del responsabile e data. Se il ritardo è causato da una scelta del committente, è scritto nero su bianco.',
         icon: Clock3,
       },
       {
-        title: '"Quella foto non prova niente, era gia cosi"',
-        text: 'Le foto sono time-stamped e associate al task specifico. Lo stato iniziale e finale di ogni area e documentato automaticamente.',
+        title: '"Quella foto non prova niente, era già così"',
+        text: 'Le foto sono associate al task specifico con data e ora. Lo stato iniziale e finale di ogni area è documentato automaticamente.',
         icon: Camera,
       },
       {
-        title: '"Ma me l avevi detto per telefono"',
+        title: '"Ma me l’avevi detto per telefono"',
         text: 'Tutta la comunicazione avviene in-app con riferimenti strutturati. Nessuna conversazione rilevante finisce su WhatsApp o email personale.',
         icon: Scale,
       },
     ],
     flowTitle: 'Come funziona la protezione',
-    flowSubtitle: 'Non e un modulo extra da compilare. E il risultato del tuo lavoro quotidiano.',
+    flowSubtitle: 'Non è un modulo extra da compilare. È il risultato del tuo lavoro quotidiano.',
     flowSteps: [
       {
         title: 'Le tue azioni diventano prove',
@@ -56,11 +56,11 @@ const contentByLocale = {
       },
       {
         title: 'Le varianti sono formalizzate',
-        text: 'Quando il committente chiede una modifica, si apre una change request con descrizione, impatto economico e impatto sulle tempistiche. L approvazione e digitale e immutabile.',
+        text: 'Quando il committente chiede una modifica, si apre una change request con descrizione, impatto economico e impatto sulle tempistiche. L’approvazione è digitale e immutabile.',
       },
       {
         title: 'I ritardi hanno un nome',
-        text: 'I task possono essere marcati come bloccati con la causa e il responsabile. Se stai aspettando una decisione del committente, questo e documentato con data e ora.',
+        text: 'I task possono essere marcati come bloccati con la causa e il responsabile. Se stai aspettando una decisione del committente, questo è documentato con data e ora.',
       },
       {
         title: 'Le dispute sono gestite formalmente',
@@ -69,7 +69,7 @@ const contentByLocale = {
     ],
     roiTitle: 'Una disputa evitata vale mesi di abbonamento',
     roiText:
-      'La disputa media in cantiere costa tra €200 e €000 tra tempo, rilavorazioni e margine perso. EdilSync costa €19 al mese. Il ROI si calcola da solo.',
+      'Una disputa media in cantiere costa tra 200 e 2.000 euro tra tempo, rilavorazioni e margine perso. EdilSync costa 19 euro al mese. Il ritorno si calcola da solo.',
     roiCards: [
       { value: '€300', label: 'Costo medio di una disputa piccola' },
       { value: '€19/mese', label: 'Costo di EdilSync' },
@@ -79,7 +79,7 @@ const contentByLocale = {
     finalText:
       'Smetti di perdere tempo tra chat, email e telefonate. Inizia oggi con EdilSync e vedi la differenza dal primo giorno.',
     finalCta: 'Crea account azienda',
-    finalNote: 'Societa free o Pro - Nessuna carta per iniziare - Upgrade quando serve',
+    finalNote: 'Società free o Pro - Nessuna carta per iniziare - Upgrade quando serve',
   },
   en: {
     seoTitle: 'Dispute Protection',

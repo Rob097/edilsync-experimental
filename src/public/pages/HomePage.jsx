@@ -324,6 +324,23 @@ export default function HomePage({ locale = 'it' }) {
             <br />
             {t('publicHome.pricing.hintSub')}
           </p>
+          <div className="mt-10 grid grid-cols-1 md:grid-cols-3 gap-4 max-w-5xl mx-auto">
+            <article data-reveal className="rounded-2xl border border-[#e5e7eb] bg-white p-6 text-left shadow-sm">
+              <p className="text-[11px] font-semibold uppercase tracking-[0.08em] text-[#ef6144]">{t('publicHome.pricing.explainer.freeBadge')}</p>
+              <h3 className="mt-4 text-lg font-semibold text-[#141821]">{t('publicHome.pricing.explainer.freeTitle')}</h3>
+              <p className="mt-2 text-sm leading-relaxed text-[#5b6470]">{t('publicHome.pricing.explainer.freeText')}</p>
+            </article>
+            <article data-reveal className="rounded-2xl border border-[#e5e7eb] bg-white p-6 text-left shadow-sm">
+              <p className="text-[11px] font-semibold uppercase tracking-[0.08em] text-[#ef6144]">{t('publicHome.pricing.explainer.companyBadge')}</p>
+              <h3 className="mt-4 text-lg font-semibold text-[#141821]">{t('publicHome.pricing.explainer.companyTitle')}</h3>
+              <p className="mt-2 text-sm leading-relaxed text-[#5b6470]">{t('publicHome.pricing.explainer.companyText')}</p>
+            </article>
+            <article data-reveal className="rounded-2xl border border-[#e5e7eb] bg-white p-6 text-left shadow-sm">
+              <p className="text-[11px] font-semibold uppercase tracking-[0.08em] text-[#ef6144]">{t('publicHome.pricing.explainer.projectBadge')}</p>
+              <h3 className="mt-4 text-lg font-semibold text-[#141821]">{t('publicHome.pricing.explainer.projectTitle')}</h3>
+              <p className="mt-2 text-sm leading-relaxed text-[#5b6470]">{t('publicHome.pricing.explainer.projectText')}</p>
+            </article>
+          </div>
           </div>
         </section>
 

@@ -21,27 +21,32 @@ import usePublicSeo from '@/public/hooks/usePublicSeo';
 import usePublicGsap from '@/public/hooks/usePublicGsap';
 import { PUBLIC_CLASSES } from '@/public/designSystem';
 import MarketingCenteredHero from '@/public/components/marketing/MarketingCenteredHero';
+import EntitlementHint from '@/public/components/marketing/EntitlementHint';
 
 const contentByLocale = {
   it: {
-    seoTitle: 'Funzionalita EdilSync',
+    seoTitle: 'Funzionalità EdilSync',
     seoDescription:
-      'Tutte le funzionalita EdilSync per coordinare progetti, comunicazione, documentazione, operativita e protezione in cantiere.',
-    badge: 'Funzionalita',
+      'Tutte le funzionalità EdilSync per coordinare progetti, comunicazione, documentazione, operatività e protezione in cantiere, distinguendo tra strumenti avanzati dell’impresa e strumenti avanzati del progetto sponsorizzato.',
+    badge: 'Funzionalità',
     title: "Tutto in un'unica piattaforma",
     subtitle:
       'Non moduli separati, ma un ecosistema interconnesso che copre ogni aspetto del coordinamento di cantiere - dalla prima foto fino al SAL finale.',
+    note:
+      'Privati e collaboratori invitati restano free. Gli strumenti avanzati dell’impresa appartengono alla società Pro; milestone, controllo economico, documenti avanzati e chat progettuale completa si attivano nei progetti sponsorizzati.',
     sections: [
       {
         title: 'Gestione Progetti',
         icon: Layers,
         colorClass: 'bg-blue-500/10 text-blue-600',
+        note: 'Le funzioni più avanzate di progetto qui descritte si attivano nei progetti sponsorizzati.',
         cards: [
           {
             title: 'Task e Milestone',
             icon: ListChecks,
+            badge: 'Progetto sponsorizzato',
             description:
-              'Organizza il lavoro per fasi, stanze e milestone. Ogni task ha stato, scadenza, assegnatario e puo essere bloccato con responsabilita taggata. Vista board e lista disponibili.',
+              'Organizza il lavoro per fasi, stanze e milestone. Ogni task ha stato, scadenza, assegnatario e può essere bloccato con responsabilità taggata. Vista board e lista disponibili.',
           },
           {
             title: 'Change Request / Varianti',
@@ -61,12 +66,14 @@ const contentByLocale = {
         title: 'Comunicazione',
         icon: MessageCircle,
         colorClass: 'bg-purple-500/10 text-purple-600',
+        note: 'Chat e notifiche restano contestuali; i riferimenti avanzati di progetto si espandono nei progetti sponsorizzati.',
         cards: [
           {
             title: 'Chat Contestuale',
             icon: MessageCircle,
+            badge: 'Progetto sponsorizzato',
             description:
-              'Messaggi di progetto e di societa con riferimenti strutturati a task, milestone, documenti e change request. I riferimenti sono badge cliccabili.',
+              'Messaggi di progetto e di società con riferimenti strutturati a task, milestone, documenti e change request. I riferimenti sono badge cliccabili.',
           },
           {
             title: 'Notifiche Intelligenti',
@@ -86,6 +93,7 @@ const contentByLocale = {
         title: 'Documentazione',
         icon: Camera,
         colorClass: 'bg-amber-500/10 text-amber-600',
+        note: 'La documentazione più strutturata e la collaborazione tecnica completa si esprimono nei progetti sponsorizzati.',
         cards: [
           {
             title: 'Documentazione Fotografica',
@@ -96,6 +104,7 @@ const contentByLocale = {
           {
             title: 'Gestione Documenti Avanzata',
             icon: FileText,
+            badge: 'Progetto sponsorizzato',
             description:
               'Upload, anteprima, download, commenti, revisioni e categorizzazione. Metadati tecnici avanzati: disciplina, fase, stato documento, tag.',
           },
@@ -108,15 +117,17 @@ const contentByLocale = {
         ],
       },
       {
-        title: 'Finanza e Operativita',
+        title: 'Finanza e Operatività',
         icon: Wallet,
         colorClass: 'bg-emerald-500/10 text-emerald-600',
+        note: 'Timbrature societarie appartengono alla società Pro; controllo economico e operatività di progetto dipendono dalla sponsorship attiva.',
         cards: [
           {
             title: 'Controllo Economico',
             icon: Wallet,
+            badge: 'Progetto sponsorizzato',
             description:
-              'Budget, costi, tariffe e progress statement. Permessi granulari e visibilita per ruolo su forecast, extra approvati e contestazioni.',
+              'Budget, costi, tariffe e progress statement. Permessi granulari e visibilità per ruolo su forecast, extra approvati e contestazioni.',
           },
           {
             title: 'Timbrature e Presenze',
@@ -141,13 +152,13 @@ const contentByLocale = {
             title: 'Gestione Dispute',
             icon: ShieldCheck,
             description:
-              'Formalizza conflitti su scope, costi, ritardi, qualita e pagamenti. Timeline eventi, prove allegate e note di risoluzione.',
+              'Formalizza conflitti su scope, costi, ritardi, qualità e pagamenti. Timeline eventi, prove allegate e note di risoluzione.',
           },
           {
             title: 'Permessi Contestuali',
             icon: LockKeyhole,
             description:
-              'Livelli di permesso su applicazione, contesto attivo, ruolo societa e ruolo progetto. Tutto relazionale e tracciabile.',
+              'Livelli di permesso su applicazione, contesto attivo, ruolo società e ruolo progetto. Tutto relazionale e tracciabile.',
           },
           {
             title: 'Documentazione Automatica',
@@ -158,18 +169,19 @@ const contentByLocale = {
         ],
       },
       {
-        title: "Modalita d'Uso",
+        title: "Modalità d'Uso",
         icon: Smartphone,
         colorClass: 'bg-indigo-500/10 text-indigo-600',
+        note: 'La modalità operativa rispetta gli stessi permessi e le stesse abilitazioni dell’area completa.',
         cards: [
           {
-            title: 'Workspace normale',
+            title: 'Area completa',
             icon: Layers,
             description:
-              'Superficie completa con dashboard, progetti, calendario, aziende, notifiche e impostazioni per gestione avanzata.',
+              'Area completa con dashboard, progetti, calendario, aziende, notifiche e impostazioni per la gestione quotidiana e amministrativa.',
           },
           {
-            title: 'Modalita Operativa',
+            title: 'Modalità Operativa',
             icon: Smartphone,
             description:
               'Interfaccia mobile-first per il cantiere: clock-in/out rapido, task di oggi, upload foto e chat compatta.',
@@ -178,7 +190,7 @@ const contentByLocale = {
             title: 'Accesso contestuale per ruolo',
             icon: Zap,
             description:
-              'La stessa piattaforma adatta visibilita e azioni in base a contesto attivo, ruolo societa e ruolo progetto, senza superfici duplicate.',
+              'La stessa piattaforma adatta visibilità e azioni in base al contesto attivo, al ruolo in impresa e al ruolo nel progetto, senza creare doppioni inutili.',
           },
         ],
       },
@@ -187,20 +199,24 @@ const contentByLocale = {
   en: {
     seoTitle: 'EdilSync Features',
     seoDescription:
-      'All EdilSync features for project coordination, communication, documentation, field operations, and dispute protection.',
+      'All EdilSync features for project coordination, communication, documentation, field operations, and dispute protection, with a clear split between company premium and sponsored-project premium.',
     badge: 'Features',
     title: 'Everything in one platform',
     subtitle:
       'Not separate modules, but one connected ecosystem covering every layer of construction coordination from first photo to final progress statement.',
+    note:
+      'Private owners and invited collaborators remain free. Company premium belongs to the Pro company; milestones, financial control, advanced documents, and full project chat unlock on sponsored projects.',
     sections: [
       {
         title: 'Project Management',
         icon: Layers,
         colorClass: 'bg-blue-500/10 text-blue-600',
+        note: 'The premium project surfaces described here unlock on sponsored projects.',
         cards: [
           {
             title: 'Tasks and Milestones',
             icon: ListChecks,
+            badge: 'Sponsored project',
             description:
               'Organize execution by phases, rooms, and milestones. Each task has status, due date, owner, and optional blocked accountability. Board and list views included.',
           },
@@ -222,10 +238,12 @@ const contentByLocale = {
         title: 'Communication',
         icon: MessageCircle,
         colorClass: 'bg-purple-500/10 text-purple-600',
+        note: 'Chat and notifications stay contextual; advanced project references expand on sponsored projects.',
         cards: [
           {
             title: 'Contextual Chat',
             icon: MessageCircle,
+            badge: 'Sponsored project',
             description:
               'Project and company messages linked to tasks, milestones, documents, and change requests through structured clickable references.',
           },
@@ -247,6 +265,7 @@ const contentByLocale = {
         title: 'Documentation',
         icon: Camera,
         colorClass: 'bg-amber-500/10 text-amber-600',
+        note: 'Advanced document workflows and full technical collaboration are strongest on sponsored projects.',
         cards: [
           {
             title: 'Photo Documentation',
@@ -257,6 +276,7 @@ const contentByLocale = {
           {
             title: 'Advanced Document Management',
             icon: FileText,
+            badge: 'Sponsored project',
             description:
               'Upload, preview, download, comments, revisions, and categorization with advanced metadata for discipline, phase, and status.',
           },
@@ -272,10 +292,12 @@ const contentByLocale = {
         title: 'Finance and Operations',
         icon: Wallet,
         colorClass: 'bg-emerald-500/10 text-emerald-600',
+        note: 'Company attendance belongs to the Pro company; project financial control and project operations depend on active sponsorship.',
         cards: [
           {
             title: 'Financial Control',
             icon: Wallet,
+            badge: 'Sponsored project',
             description:
               'Budgets, costs, labor rates, and progress statements with role-based visibility on forecasts, approved extras, and contested items.',
           },
@@ -322,6 +344,7 @@ const contentByLocale = {
         title: 'Usage Modes',
         icon: Smartphone,
         colorClass: 'bg-indigo-500/10 text-indigo-600',
+        note: 'Operative mode follows the same permissions and entitlement logic as the full workspace.',
         cards: [
           {
             title: 'Normal workspace',
@@ -365,7 +388,7 @@ export default function FeaturesPage({ locale = 'it' }) {
 
   return (
     <div ref={rootRef} className={PUBLIC_CLASSES.page}>
-      <MarketingCenteredHero badge={copy.badge} title={copy.title} subtitle={copy.subtitle} />
+      <MarketingCenteredHero badge={copy.badge} title={copy.title} subtitle={copy.subtitle} note={copy.note} />
 
       <section className="pb-32 px-6">
         <div className={`${PUBLIC_CLASSES.sectionContainer} space-y-24`}>
@@ -378,7 +401,10 @@ export default function FeaturesPage({ locale = 'it' }) {
                   <div className={`w-10 h-10 rounded-xl ${section.colorClass} flex items-center justify-center`}>
                     <SectionIcon className="w-5 h-5" />
                   </div>
-                  <h2 className={PUBLIC_CLASSES.sectionTitle}>{section.title}</h2>
+                  <div>
+                    <h2 className={PUBLIC_CLASSES.sectionTitle}>{section.title}</h2>
+                    {section.note ? <p className="mt-2 text-sm text-[#7d8897]">{section.note}</p> : null}
+                  </div>
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -389,8 +415,9 @@ export default function FeaturesPage({ locale = 'it' }) {
                       <article
                         key={card.title}
                         data-reveal
-                        className={`p-6 ${PUBLIC_CLASSES.card} ${PUBLIC_CLASSES.cardHover}`}
+                        className={`relative p-6 ${PUBLIC_CLASSES.card} ${PUBLIC_CLASSES.cardHover}`}
                       >
+                        <EntitlementHint label={card.badge} className="absolute right-4 top-4" />
                         <div className={`w-11 h-11 rounded-xl ${section.colorClass} flex items-center justify-center mb-4`}>
                           <CardIcon className="w-5 h-5" />
                         </div>

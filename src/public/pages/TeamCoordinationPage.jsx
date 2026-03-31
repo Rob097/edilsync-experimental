@@ -15,7 +15,7 @@ const contentByLocale = {
     title: 'Un cantiere ha 4-8 attori.',
     titleHighlight: 'Tutti devono essere allineati.',
     subtitle:
-      'Contractor, committente, subappaltatori, architetti. Ognuno ha il suo calendario, le sue priorita, i suoi strumenti. EdilSync li allinea in un unico spazio condiviso.',
+      'Contractor, committente, subappaltatori, architetti. Ognuno ha il suo calendario, le sue priorità, i suoi strumenti. EdilSync li allinea in un unico spazio condiviso.',
     cta: 'Apri EdilSync',
     stakeholdersTitle: 'Chi coordini con EdilSync',
     stakeholders: [
@@ -27,7 +27,7 @@ const contentByLocale = {
       {
         role: 'Committente',
         roleClass: 'bg-amber-500/10 text-amber-600',
-        text: 'Visibilita in tempo reale, approva change request, comunica con l impresa.',
+        text: 'Visibilità in tempo reale, approva change request, comunica con l’impresa.',
       },
       {
         role: 'Subappaltatore',
@@ -44,11 +44,11 @@ const contentByLocale = {
     problems: [
       {
         title: 'Doppia prenotazione degli spazi',
-        text: 'L elettricista e il piastrellista devono lavorare nello stesso bagno lo stesso giorno. Nessuno lo sapeva.',
+        text: 'L’elettricista e il piastrellista devono lavorare nello stesso bagno lo stesso giorno. Nessuno lo sapeva.',
       },
       {
         title: 'Subappaltatore che arriva a vuoto',
-        text: 'Il lavoro preparatorio non e finito. L idraulico ha fatto 60km per niente. Nessuno lo aveva avvisato.',
+        text: 'Il lavoro preparatorio non è finito. L’idraulico ha fatto 60 km per niente. Nessuno lo aveva avvisato.',
       },
       {
         title: 'Decisione bloccante non escalata',
@@ -56,14 +56,14 @@ const contentByLocale = {
       },
       {
         title: 'Task assegnato alla persona sbagliata',
-        text: 'Il task impermeabilizzazione terrazza finisce al muratore invece che allo specialista. Si scopre a lavori iniziati.',
+        text: 'Il task di impermeabilizzazione della terrazza finisce al muratore invece che allo specialista. Lo si scopre a lavori iniziati.',
       },
     ],
     alignmentTitle: 'Come EdilSync allinea tutti',
     alignment: [
       {
-        title: 'Task assegnati con responsabilita chiare',
-        text: 'Ogni task ha un assegnatario, una scadenza e uno stato. Chi deve fare cosa e scritto, nessuna ambiguita.',
+        title: 'Task assegnati con responsabilità chiare',
+        text: 'Ogni task ha un assegnatario, una scadenza e uno stato. Chi deve fare cosa è scritto, senza ambiguità.',
         icon: ListChecks,
       },
       {
@@ -73,33 +73,33 @@ const contentByLocale = {
       },
       {
         title: 'Comunicazione contestuale',
-        text: 'I messaggi sono agganciati ai task e ai documenti. Non piu chat generiche dove le informazioni si perdono.',
+        text: 'I messaggi sono agganciati ai task e ai documenti. Non più chat generiche dove le informazioni si perdono.',
         icon: MessageCircle,
       },
       {
         title: 'Notifiche attive per ogni stakeholder',
-        text: 'Ogni persona riceve le notifiche rilevanti per il proprio ruolo. Nessuno puo dire non sapevo.',
+        text: 'Ogni persona riceve le notifiche rilevanti per il proprio ruolo. Nessuno può dire: non sapevo.',
         icon: Bell,
       },
       {
-        title: 'Visibilita per ruolo',
-        text: 'Ognuno vede solo cio che e rilevante per il proprio ruolo nel progetto specifico.',
+        title: 'Visibilità per ruolo',
+        text: 'Ognuno vede solo ciò che è rilevante per il proprio ruolo nel progetto specifico.',
         icon: Navigation,
       },
       {
         title: 'Feed di progetto condiviso',
-        text: 'Un unico feed cronologico con tutto cio che succede nel cantiere. Tutti allineati.',
+        text: 'Un unico feed cronologico con tutto ciò che succede nel cantiere. Tutti allineati.',
         icon: Zap,
       },
     ],
     citation:
-      'La comunicazione frammentata costa al settore edile $31 miliardi all anno. Non perche le persone non vogliano comunicare, ma perche non hanno gli strumenti giusti per farlo.',
+      'La comunicazione frammentata costa al settore edile 31 miliardi di dollari all’anno. Non perché le persone non vogliano comunicare, ma perché non hanno gli strumenti giusti per farlo.',
     citationSource: 'FMI Corporation, Construction Industry Report',
     finalTitle: 'Pronto a portare ordine nel tuo cantiere?',
     finalText:
       'Smetti di perdere tempo tra chat, email e telefonate. Inizia oggi con EdilSync e vedi la differenza dal primo giorno.',
     finalCta: 'Apri EdilSync',
-    finalNote: 'Account personale o societa - Nessuna carta per iniziare - Upgrade quando serve',
+    finalNote: 'Account personale o società - Nessuna carta per iniziare - Upgrade quando serve',
   },
   en: {
     seoTitle: 'Team Coordination',

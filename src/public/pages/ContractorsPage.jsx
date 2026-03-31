@@ -12,22 +12,23 @@ const contentByLocale = {
   it: {
     seoTitle: 'Per i Contractor',
     seoDescription:
-      'Pagina dedicata ai contractor: protezione margini, documentazione automatica, coordinamento subappalti e controllo finanziario.',
+      'Pagina dedicata ai contractor: società free o Pro, protezione margini, documentazione automatica, coordinamento subappalti e strumenti avanzati di progetto tramite sponsorship.',
     badge: 'Per i Contractor',
     titleA: 'Proteggi i tuoi margini.',
     titleB: 'Ogni giorno.',
     subtitle:
-      'Con margini del 3-5%, una sola disputa non documentata puo azzerare il profitto di un intero progetto. EdilSync ti protegge automaticamente mentre lavori.',
+      'Con margini del 3-5%, una sola disputa non documentata può azzerare il profitto di un intero progetto. La società può partire free e passare a Pro quando servono strumenti avanzati per l’impresa e la possibilità di sponsorizzare i progetti.',
+    note: 'Società free o Pro. Gli strumenti avanzati di progetto si attivano sui progetti sponsorizzati.',
     ctaTop: 'Crea account azienda',
     quote:
-      'Non sono io in ritardo - sto aspettando che il cliente scelga le piastrelle da tre settimane. Ma quando lascia una recensione negativa, indovina di chi e la colpa?',
+      'Non sono io in ritardo: sto aspettando che il cliente scelga le piastrelle da tre settimane. Ma quando lascia una recensione negativa, indovina di chi è la colpa?',
     quoteAuthor: 'Michele',
     quoteRole: 'Contractor, 18 anni di esperienza',
     advantagesTitle: 'I vantaggi concreti per la tua impresa',
     advantages: [
       {
         title: 'Proteggiti dalle dispute',
-        text: "Ogni variante e documentata con change request firmata. Stop alle discussioni 'pensavo fosse incluso' che erodono i tuoi margini.",
+        text: "Ogni variante è documentata con change request firmata. Stop alle discussioni 'pensavo fosse incluso' che erodono i tuoi margini.",
         icon: Shield,
       },
       {
@@ -41,8 +42,8 @@ const contentByLocale = {
         icon: Users,
       },
       {
-        title: 'Tracciabilita totale',
-        text: 'Chi ha detto cosa, quando, in quale progetto. Ogni azione e registrata. Protezione legale integrata nel lavoro quotidiano.',
+        title: 'Tracciabilità totale',
+        text: 'Chi ha detto cosa, quando, in quale progetto. Ogni azione è registrata. Protezione legale integrata nel lavoro quotidiano.',
         icon: FileText,
       },
       {
@@ -52,7 +53,7 @@ const contentByLocale = {
       },
       {
         title: 'Mobile-first, davvero',
-        text: 'La modalita operativa e pensata per chi lavora sul campo. Upload foto in 3 tap, clock-in/out rapido, task del giorno sempre visibili.',
+        text: 'La modalità operativa è pensata per chi lavora sul campo. Upload foto in 3 tap, clock-in/out rapido, task del giorno sempre visibili.',
         icon: Smartphone,
       },
     ],
@@ -64,22 +65,23 @@ const contentByLocale = {
       'Una recensione negativa evitata = valore incalcolabile',
     ],
     valueCostLabel: 'Il costo:',
-    valueCost: '€19/mese',
+    valueCost: '€19/mese per società Pro',
     finalTitle: 'Pronto a portare ordine nel tuo cantiere?',
     finalText:
       'Smetti di perdere tempo tra chat, email e telefonate. Inizia oggi con EdilSync e vedi la differenza dal primo giorno.',
     finalCta: 'Crea account azienda',
-    finalNote: 'Societa free o Pro · Nessuna carta per iniziare · Upgrade quando serve',
+    finalNote: 'Società free o Pro · Nessuna carta per iniziare · Upgrade quando serve',
   },
   en: {
     seoTitle: 'For Contractors',
     seoDescription:
-      'Dedicated contractor page: margin protection, automatic documentation, subcontractor coordination, and financial control.',
+      'Dedicated contractor page: free or Pro company plans, margin protection, automatic documentation, subcontractor coordination, and project premium through sponsorship.',
     badge: 'For Contractors',
     titleA: 'Protect your margin.',
     titleB: 'Every day.',
     subtitle:
-      'With 3-5% margins, one undocumented dispute can erase profit on an entire project. EdilSync protects your operations automatically while you work.',
+      'With 3-5% margins, one undocumented dispute can erase profit on an entire project. Your company can start free and upgrade to Pro when you need company premium and project sponsorship.',
+    note: 'Free or Pro company. Premium project features activate on sponsored projects.',
     ctaTop: 'Create company account',
     quote:
       'I am not late - I am waiting for the client to choose the tiles for three weeks. But when they leave a bad review, guess who gets blamed?',
@@ -126,7 +128,7 @@ const contentByLocale = {
       'One avoided negative review = priceless value',
     ],
     valueCostLabel: 'Cost:',
-    valueCost: '€19/month',
+    valueCost: '€19/month for a Pro company',
     finalTitle: 'Ready to bring order to your construction site?',
     finalText: 'Stop wasting time across chats, emails, and calls. Start today with EdilSync and feel the difference from day one.',
     finalCta: 'Create company account',
@@ -158,6 +160,7 @@ export default function ContractorsPage({ locale = 'it' }) {
         title={copy.titleA}
         titleHighlight={copy.titleB}
         subtitle={copy.subtitle}
+        note={copy.note}
         ctaLabel={copy.ctaTop}
         ctaHref="/app"
         quote={copy.quote}

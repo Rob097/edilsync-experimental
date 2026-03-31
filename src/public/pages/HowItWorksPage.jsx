@@ -18,44 +18,44 @@ const contentByLocale = {
   it: {
     seoTitle: 'Come funziona EdilSync',
     seoDescription:
-      'Da zero a cantiere coordinato in pochi minuti: onboarding, progetto, inviti, operativita e controllo finale in un unico flusso.',
+      'Da zero a cantiere coordinato in pochi minuti: onboarding, progetto, inviti, operatività e controllo finale in un unico flusso.',
     badge: 'Come funziona',
     title: 'Da zero a cantiere coordinato in pochi minuti',
-    subtitle: 'EdilSync e progettato per funzionare dal primo giorno, senza formazione e senza setup complessi.',
+    subtitle: 'EdilSync è progettato per funzionare dal primo giorno, senza formazione e senza setup complessi.',
     ctaTop: 'Crea account gratis',
     steps: [
       {
         number: '01',
         title: 'Crea il tuo account',
-        text: 'Registrati in 2 minuti. Nessuna carta per iniziare. Scegli se operare come privato o come societa.',
-        note: 'Ogni persona ha un unico account e puo operare in piu contesti - come committente, come membro di una societa o come professionista. Un solo login per tutto.',
+        text: 'Registrati in 2 minuti. Nessuna carta per iniziare. Scegli se operare come privato o come società.',
+        note: 'Ogni persona ha un unico account e può operare in più contesti: come committente, come membro di una società o come professionista. Un solo login per tutto.',
         icon: UserPlus,
       },
       {
         number: '02',
-        title: 'Crea la tua societa',
+        title: 'Crea la tua società',
         text: 'Registra la tua impresa su EdilSync. Aggiungi i tuoi collaboratori, assegna ruoli operativi e crea il canale di comunicazione interno.',
-        note: "La societa e l'unita operativa del cantiere. Puoi avere project manager, capicantiere, operai, backoffice - ognuno con permessi adeguati al proprio ruolo.",
+        note: "La società è l'unità operativa del cantiere. Puoi avere project manager, capicantiere, operai, backoffice: ognuno con permessi adeguati al proprio ruolo.",
         icon: Building2,
       },
       {
         number: '03',
         title: 'Crea il progetto',
         text: 'Apri un nuovo cantiere su EdilSync. Aggiungi indirizzo, date, descrizione e la prima documentazione fotografica dello stato iniziale.',
-        note: 'Il progetto e il contenitore di tutte le relazioni: committente, contractor, subappaltatori, professionisti, documenti, task, chat e finanza.',
+        note: 'Il progetto è il contenitore di tutte le relazioni: committente, contractor, subappaltatori, professionisti, documenti, task, chat e finanza.',
         icon: FolderOpen,
       },
       {
         number: '04',
         title: 'Invita i partecipanti',
-        text: 'Invita il committente, i subappaltatori e i professionisti via email. Ognuno vede solo cio che gli compete, con permessi adeguati al ruolo.',
-        note: 'Il homeowner entra gratis. Subappaltatori e professionisti entrano gratis nei progetti a cui sono invitati. Le feature premium progettuali si sbloccano quando una societa paid sponsorizza il progetto.',
+        text: 'Invita il committente, i subappaltatori e i professionisti via email. Ognuno vede solo ciò che gli compete, con permessi adeguati al ruolo.',
+        note: 'Il committente entra gratis. Subappaltatori e professionisti entrano gratis nei progetti a cui sono invitati. Gli strumenti avanzati di progetto si attivano quando una società paid sponsorizza il progetto.',
         icon: Users,
       },
       {
         number: '05',
         title: 'Lavora e documenta',
-        text: 'Task, foto, messaggi, varianti, scadenze - ogni azione diventa automaticamente documentazione tracciabile nel feed del progetto.',
+        text: 'Task, foto, messaggi, varianti, scadenze: ogni azione diventa automaticamente documentazione tracciabile nel feed del progetto.',
         note: "Non devi scrivere aggiornamenti. Le tue azioni quotidiane diventano il diario di cantiere. Il committente vede lo stesso feed in tempo reale.",
         icon: CircleCheck,
       },
@@ -71,7 +71,7 @@ const contentByLocale = {
     finalText:
       'Smetti di perdere tempo tra chat, email e telefonate. Inizia oggi con EdilSync e vedi la differenza dal primo giorno.',
     finalCta: 'Crea account gratis',
-    finalNote: 'Account personale o societa · Setup in 2 minuti · Upgrade quando serve',
+    finalNote: 'Account personale o società · Setup in 2 minuti · Upgrade quando serve',
   },
   en: {
     seoTitle: 'How EdilSync works',

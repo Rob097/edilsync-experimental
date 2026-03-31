@@ -4,68 +4,87 @@ import { ArrowRight, CircleCheck, CircleHelp, Users } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import usePublicSeo from '@/public/hooks/usePublicSeo';
 import usePublicGsap from '@/public/hooks/usePublicGsap';
+import { PUBLIC_CLASSES } from '@/public/designSystem';
 
 const contentByLocale = {
   it: {
     seoTitle: 'Prezzi',
     seoDescription:
-      'Prezzi chiari per societa e progetti: piano societa free o paid, sponsorship progetto e accesso gratuito per homeowner e collaboratori invitati.',
+      'Prezzi chiari per società e progetti: piano società free o paid, sponsorship progetto e accesso gratuito per committente e collaboratori invitati.',
     badge: 'Prezzi',
-    title: 'Prezzi chiari per societa e progetti.',
-    subtitle: 'Il premium societario appartiene alla societa. Il premium di progetto si sblocca tramite sponsorship attiva.',
-    planName: 'EdilSync Pro per societa',
-    planDesc: 'Per sbloccare premium societario e sponsorship progetto',
+    title: 'Prezzi chiari per società e progetti.',
+    subtitle: 'Gli strumenti avanzati dell’impresa appartengono alla società Pro. Quelli di progetto si attivano con una sponsorship attiva.',
+    planName: 'EdilSync Pro per società',
+    planDesc: 'Per avere strumenti avanzati per l’impresa e sponsorizzare i progetti',
     trialBadge: '€190/anno disponibile',
     price: '€19',
     priceSuffix: '/mese',
     priceNote: 'Oppure €190/anno - IVA esclusa - Cancella quando vuoi',
-    cta: 'Crea account societa',
+    legendTitle: 'Come funziona davvero il prezzo',
+    legendItems: [
+      {
+        badge: 'Sempre free',
+        title: 'Privati e invitati',
+        text: 'Il committente resta free. Anche subappaltatori e professionisti partecipano gratis ai progetti in cui vengono invitati.',
+      },
+      {
+        badge: 'Società Pro',
+        title: 'Chi paga',
+        text: 'Paga solo la società che sceglie il piano Pro: ha strumenti avanzati per l’impresa, un’area operativa più completa e la possibilità di sponsorizzare i progetti.',
+      },
+      {
+        badge: 'Progetto sponsorizzato',
+        title: 'Cosa si sblocca',
+        text: 'Milestone, economia, dispute, documenti avanzati e chat progettuale completa si attivano sul singolo progetto sponsorizzato.',
+      },
+    ],
+    cta: 'Crea account società',
     noCard: 'Nessuna carta richiesta per iniziare',
-    includedLabel: 'Con EdilSync Pro sblocchi',
+    includedLabel: 'Con EdilSync Pro hai',
     includedItems: [
       'Timbrature societarie',
-      'Chat societa multi-canale',
-      'Documenti societa completi',
+      'Chat società multi-canale',
+      'Documenti società completi',
       'Sponsorship del progetto',
       'Milestone nei progetti sponsorizzati',
       'Economia di progetto nei progetti sponsorizzati',
       'Chat progetto avanzata nei progetti sponsorizzati',
       'Documenti progetto avanzati nei progetti sponsorizzati',
-      'Workspace operativo premium della societa',
+      'Area operativa avanzata per l’impresa',
       'Fatturazione e gestione abbonamento',
     ],
     freeAccessTitle: 'Chi entra gratis e cosa resta free',
     freeAccessText:
-      'Il privato resta free. Le societa possono restare free o passare a Pro. Homeowner, subappaltatori e professionisti entrano gratis nei progetti a cui sono invitati; le feature premium progettuali dipendono dalla sponsorship attiva.',
+      'Il privato resta gratis. Le società possono restare free o passare a Pro. Committente, subappaltatori e professionisti entrano gratis nei progetti a cui sono invitati; gli strumenti avanzati di progetto dipendono dalla sponsorship attiva.',
     roles: [
-      { label: 'Privato / homeowner', value: 'Gratis', note: 'Puoi avere 1 progetto non sponsorizzato alla volta' },
-      { label: 'Societa free', value: 'Gratis', note: 'Partecipa ai progetti e puo avere 1 progetto owner non sponsorizzato alla volta' },
-      { label: 'Societa paid', value: '€19/mese o €190/anno', note: 'Sponsorizza i progetti e sblocca il premium societario' },
+      { label: 'Privato / committente', value: 'Gratis', note: 'Puoi avere 1 progetto non sponsorizzato alla volta' },
+      { label: 'Società free', value: 'Gratis', note: 'Partecipa ai progetti e può avere 1 progetto owner non sponsorizzato alla volta' },
+      { label: 'Società Pro', value: '€19/mese o €190/anno', note: 'Sponsorizza i progetti e attiva gli strumenti avanzati dell’impresa' },
     ],
     worthTitle: 'Quando ha senso passare a Pro',
     worthItems: [
-      'Vuoi sponsorizzare un progetto e sbloccare milestone, economia, chat e documenti premium per tutti i partecipanti',
-      'Ti servono timbrature e feature premium della societa',
-      'Gestisci piu progetti e vuoi evitare che il coordinamento resti bloccato nella modalita free',
+      'Vuoi sponsorizzare un progetto e attivare milestone, economia, chat e documenti avanzati per tutti i partecipanti',
+      'Ti servono timbrature e altri strumenti avanzati per l’impresa',
+      'Gestisci più progetti e vuoi evitare che il coordinamento resti bloccato nella modalità free',
       'Una sola disputa evitata o un solo viaggio a vuoto risparmiato copre facilmente il costo del piano',
     ],
     faqTitle: 'Domande sui prezzi',
     faqs: [
       {
-        q: 'Il homeowner deve pagare?',
-        a: 'No. Il homeowner resta free. Anche subappaltatori e professionisti possono entrare gratis nei progetti a cui vengono invitati.',
+        q: 'Il committente deve pagare?',
+        a: 'No. Il committente resta free. Anche subappaltatori e professionisti possono entrare gratis nei progetti a cui vengono invitati.',
       },
       {
         q: 'Posso cancellare quando voglio?',
-        a: 'Si, senza penali ne costi nascosti. Cancelli dalle impostazioni in qualsiasi momento.',
+        a: 'Sì, senza penali né costi nascosti. Cancelli dalle impostazioni in qualsiasi momento.',
       },
       {
         q: 'Cosa succede ai dati se cancello?',
-        a: 'I dati restano nel sistema, ma le aree premium societarie e progettuali diventano non accessibili finche non riattivi un piano paid o una sponsorship valida.',
+        a: 'I dati restano nel sistema, ma le aree avanzate dell’impresa e del progetto non sono più accessibili finché non riattivi un piano Pro o una sponsorship valida.',
       },
       {
-        q: 'C e un contratto a lungo termine?',
-        a: 'No. EdilSync e mese per mese, puoi cancellare in qualsiasi momento.',
+        q: 'C’è un contratto a lungo termine?',
+        a: 'No. EdilSync è mese per mese, puoi cancellare in qualsiasi momento.',
       },
       {
         q: 'Esiste un piano per agenzie o grandi imprese?',
@@ -90,6 +109,24 @@ const contentByLocale = {
     price: '€19',
     priceSuffix: '/month',
     priceNote: 'Or €190/year - VAT excluded - Cancel anytime',
+    legendTitle: 'How billing actually works',
+    legendItems: [
+      {
+        badge: 'Always free',
+        title: 'Owners and invitees',
+        text: 'Homeowners stay free. Subcontractors and professionals also join invited projects for free.',
+      },
+      {
+        badge: 'Pro company',
+        title: 'Who pays',
+        text: 'Only the company that wants the Pro plan pays: it unlocks company premium, the premium operative workspace, and the ability to sponsor projects.',
+      },
+      {
+        badge: 'Sponsored project',
+        title: 'What unlocks',
+        text: 'Milestones, finance, disputes, advanced documents, and full project chat activate on each sponsored project.',
+      },
+    ],
     cta: 'Create company account',
     noCard: 'No card required to get started',
     includedLabel: 'EdilSync Pro unlocks',
@@ -225,6 +262,23 @@ export default function PricingPage({ locale = 'it' }) {
                 </div>
               </div>
             </div>
+          </div>
+        </div>
+      </section>
+
+      <section className="pb-20 px-6 bg-[#fcfcfc]">
+        <div className="max-w-6xl mx-auto" data-reveal>
+          <div className="text-center max-w-3xl mx-auto">
+            <h2 className="font-bold text-2xl text-[#141821]">{copy.legendTitle}</h2>
+          </div>
+          <div className="mt-8 grid grid-cols-1 md:grid-cols-3 gap-4">
+            {copy.legendItems.map((item) => (
+              <article key={item.title} className="rounded-2xl border border-[#e5e7eb] bg-white p-6 shadow-sm">
+                <p className="text-[11px] font-semibold uppercase tracking-[0.08em] text-[#ef6144]">{item.badge}</p>
+                <h3 className="mt-4 font-semibold text-lg text-[#141821]">{item.title}</h3>
+                <p className="mt-2 text-sm leading-relaxed text-[#5b6470]">{item.text}</p>
+              </article>
+            ))}
           </div>
         </div>
       </section>
