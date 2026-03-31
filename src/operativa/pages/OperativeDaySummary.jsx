@@ -46,7 +46,7 @@ export default function OperativeDaySummary() {
   return (
     <div className="space-y-4">
       <div className="sticky top-16 z-20 bg-gray-100 pb-2">
-        <Button variant="outline" className="w-full" onClick={() => navigate('/operativa')}>
+        <Button variant="outline" className="w-full" onClick={() => navigate('/app/operativa')}>
           Torna alla home
         </Button>
       </div>
@@ -77,7 +77,7 @@ export default function OperativeDaySummary() {
               <button
                 key={task.id}
                 type="button"
-                onClick={() => navigate(`/operativa/progetto/${task.project_id}`)}
+                onClick={() => navigate(`/app/operativa/progetto/${task.project_id}`)}
                 className="w-full text-left rounded-lg border border-[#ef6144]/20 p-3"
               >
                 <p className="font-medium text-gray-900">{task.title}</p>

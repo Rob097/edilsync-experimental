@@ -15,7 +15,7 @@ export default function OperativeAppRouter() {
         <Route path="/societa" element={<OperativeCompanyWorkspace />} />
         <Route path="/progetto/:projectId" element={<OperativeProjectWorkspace />} />
       </Route>
-      <Route path="*" element={<Navigate to="/operativa" replace />} />
+      <Route path="*" element={<Navigate to="/app/operativa" replace />} />
     </Routes>
   );
 }

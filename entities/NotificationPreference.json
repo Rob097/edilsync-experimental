@@ -32,6 +32,39 @@
             }
           }
         },
+        "company_plan_activated": {
+          "type": "object",
+          "properties": {
+            "notification": {
+              "type": "boolean"
+            },
+            "email": {
+              "type": "boolean"
+            }
+          }
+        },
+        "company_plan_changed": {
+          "type": "object",
+          "properties": {
+            "notification": {
+              "type": "boolean"
+            },
+            "email": {
+              "type": "boolean"
+            }
+          }
+        },
+        "company_plan_canceled": {
+          "type": "object",
+          "properties": {
+            "notification": {
+              "type": "boolean"
+            },
+            "email": {
+              "type": "boolean"
+            }
+          }
+        },
         "task_assigned": {
           "type": "object",
           "properties": {
@@ -132,6 +165,28 @@
           }
         },
         "document_comment": {
+          "type": "object",
+          "properties": {
+            "notification": {
+              "type": "boolean"
+            },
+            "email": {
+              "type": "boolean"
+            }
+          }
+        },
+        "project_sponsorship_activated": {
+          "type": "object",
+          "properties": {
+            "notification": {
+              "type": "boolean"
+            },
+            "email": {
+              "type": "boolean"
+            }
+          }
+        },
+        "project_sponsorship_revoked": {
           "type": "object",
           "properties": {
             "notification": {

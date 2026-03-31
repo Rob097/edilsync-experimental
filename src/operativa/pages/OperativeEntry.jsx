@@ -23,7 +23,7 @@ export default function OperativeEntry() {
     if (isLoading) return;
     if (!currentCompany) return;
     if (contextProjects.length === 1) {
-      navigate(`/operativa/progetto/${contextProjects[0].id}`, { replace: true });
+      navigate(`/app/operativa/progetto/${contextProjects[0].id}`, { replace: true });
     }
   }, [isLoading, currentCompany, contextProjects, navigate]);
 
@@ -72,7 +72,7 @@ export default function OperativeEntry() {
         <CardContent className="space-y-3">
           <Button
             className="w-full bg-[#ef6144] hover:bg-[#d9553a] h-12"
-            onClick={() => navigate('/operativa/riepilogo')}
+            onClick={() => navigate('/app/operativa/riepilogo')}
           >
             <CalendarClock className="h-4 w-4 mr-2" />
             {t('operational.daySummary')}
@@ -80,7 +80,7 @@ export default function OperativeEntry() {
           <Button
             variant="outline"
             className="w-full border-[#ef6144]/30 text-[#ef6144] hover:bg-[#ef6144]/10 h-12"
-            onClick={() => navigate('/operativa/societa')}
+            onClick={() => navigate('/app/operativa/societa')}
           >
             <Building2 className="h-4 w-4 mr-2" />
             Società
@@ -99,7 +99,7 @@ export default function OperativeEntry() {
                 key={project.id}
                 variant="outline"
                 className="w-full justify-start border-[#ef6144]/30 text-[#ef6144] hover:bg-[#ef6144]/10"
-                onClick={() => navigate(`/operativa/progetto/${project.id}`)}
+                onClick={() => navigate(`/app/operativa/progetto/${project.id}`)}
               >
                 <Briefcase className="h-4 w-4 mr-2" />
                 {project.name}

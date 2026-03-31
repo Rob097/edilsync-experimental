@@ -150,7 +150,7 @@ export default function Layout({ children, currentPageName }) {
     setUiMode(switchModeTarget);
     setSwitchDialogOpen(false);
     setSwitchModeTarget(null);
-    navigate('/operativa');
+    navigate('/app/operativa');
   };
 
   const switchDialogTitle = t('operationalMode.switchDialogTitle');

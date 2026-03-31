@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { format } from 'date-fns';
@@ -6,19 +6,22 @@ import { it, enUS } from 'date-fns/locale';
 import { appClient } from '@/api/appClient';
 import { useOperativeData } from '@/operativa/useOperativeData';
 import { useLanguage } from '@/components/i18n/useLanguage';
+import { createPageUrl } from '@/utils';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
-import { Calendar, MessageSquare, ListTodo, Plus, Clock, FileText, MapPin, User, Building2, Menu, UploadCloud, Loader2, ChevronDown, FolderTree, History, ShieldAlert } from 'lucide-react';
+import { Calendar, MessageSquare, ListTodo, Plus, Clock, FileText, MapPin, User, Building2, Menu, UploadCloud, Loader2, ChevronDown, FolderTree, History, ShieldAlert, DollarSign } from 'lucide-react';
 import ChannelList from '@/components/messaging/ChannelList';
 import MessageList from '@/components/messaging/MessageList';
 import MessageInput from '@/components/messaging/MessageInput';
 import DisputeCaseList from '@/components/project/DisputeCaseList';
-import DisputeCreateDialog from '@/components/project/DisputeCreateDialog';
+import FeatureGateCard from '@/components/ui/FeatureGateCard';
+import { isFeatureAccessible, isFeatureFullyEnabled, isProjectBlockedForSponsorLoss, useProjectFeatureAccess, useProjectPricingStatus } from '@/hooks/useFeatureAccess';
+import { setUiMode, UI_MODES } from '@/lib/ui-mode';
 import { getUserDisplayNameByEmail } from '@/lib/userDisplay';
 
 const tabs = ['today', 'work', 'docs', 'chat'];
@@ -54,8 +57,9 @@ export default function OperativeProjectWorkspace() {
   const [chatShowChannels, setChatShowChannels] = useState(true);
   const [selectedChannelId, setSelectedChannelId] = useState(null);
   const [focusedMessageId, setFocusedMessageId] = useState(null);
-  const [disputeQuickOpen, setDisputeQuickOpen] = useState(false);
+  const [redirectCreateTarget, setRedirectCreateTarget] = useState(null);
   const { currentLanguage, t } = useLanguage();
+  const tr = (itText, enText) => (currentLanguage === 'it' ? itText : enText);
   const dateLocale = currentLanguage === 'it' ? it : enUS;
 
   const {
@@ -68,7 +72,24 @@ export default function OperativeProjectWorkspace() {
     isLoading,
   } = useOperativeData();
 
+  const { featureMap: projectFeatureMap } = useProjectFeatureAccess(projectId, [
+    'project_milestones',
+    'project_chat',
+    'project_documents',
+  ], { enabled: !!projectId });
+  const { projectPricingStatus } = useProjectPricingStatus(projectId, { enabled: !!projectId });
+
   const project = contextProjects.find((entry) => entry.id === projectId);
+  const milestonesFeatureAccess = projectFeatureMap.project_milestones;
+  const projectChatFeatureAccess = projectFeatureMap.project_chat;
+  const projectDocumentsFeatureAccess = projectFeatureMap.project_documents;
+  const canUseMilestones = isFeatureAccessible(milestonesFeatureAccess);
+  const showMilestonesPlanGate = milestonesFeatureAccess?.access_level === 'disabled';
+  const canUseProjectDocuments = isFeatureAccessible(projectDocumentsFeatureAccess);
+  const canCreateProjectChannels = isFeatureFullyEnabled(projectChatFeatureAccess);
+  const chatAccessMode = isFeatureFullyEnabled(projectChatFeatureAccess) ? 'full' : 'general_only';
+  const isGeneralOnlyChat = chatAccessMode === 'general_only';
+  const isBlockedProject = isProjectBlockedForSponsorLoss(projectPricingStatus);
 
   const { data: participants = [] } = useQuery({
     queryKey: ['operativeProjectParticipants', projectId],
@@ -91,6 +112,16 @@ export default function OperativeProjectWorkspace() {
     queryFn: () => appClient.entities.Company.list(),
     staleTime: 5 * 60 * 1000,
   });
+
+  const sponsorCompany = projectPricingStatus?.sponsor_company_id
+    ? allCompanies.find((company) => company.id === projectPricingStatus.sponsor_company_id) || null
+    : null;
+  const sponsorshipLabel = projectPricingStatus?.status === 'sponsored'
+    ? tr(
+      `Sponsorizzato da ${sponsorCompany?.name || projectPricingStatus.sponsor_company_id}`,
+      `Sponsored by ${sponsorCompany?.name || projectPricingStatus.sponsor_company_id}`,
+    )
+    : tr('Non sponsorizzato', 'Unsponsored');
 
   const { data: milestones = [] } = useQuery({
     queryKey: ['milestones', projectId],
@@ -249,8 +280,15 @@ export default function OperativeProjectWorkspace() {
     && participant.status === 'active');
 
   const canRespondToChange = contextParticipation?.project_role === 'homeowner' || project?.owner_user_id === user?.id;
+  const canCreateTaskFromFullMode = !!contextParticipation && !isBlockedProject;
+  const canCreateChangeFromFullMode = canRespondToChange && !isBlockedProject;
+  const canCreateDisputeFromFullMode = !!contextParticipation && !isBlockedProject;
 
-  const selectedChannel = channels.find((channel) => channel.id === selectedChannelId) || null;
+  const generalChannel = isGeneralOnlyChat
+    ? channels.find((channel) => channel.type === 'general') || null
+    : null;
+
+  const selectedChannel = channels.find((channel) => channel.id === selectedChannelId) || generalChannel || null;
 
   const homeownerParticipant = participants.find((participant) => participant.project_role === 'homeowner');
 
@@ -358,10 +396,46 @@ export default function OperativeProjectWorkspace() {
     setActiveTab('docs');
   };
 
-  const openQuickDispute = () => {
+  const createRedirectMap = {
+    task: {
+      label: tr('attività', 'task'),
+      title: tr('Nuova attività', 'New task'),
+      section: 'tasks',
+      create: 'task',
+    },
+    change: {
+      label: tr('richiesta di modifica', 'change request'),
+      title: tr('Nuova richiesta di modifica', 'New change request'),
+      section: 'changes',
+      create: 'change',
+    },
+    dispute: {
+      label: tr('disputa', 'dispute'),
+      title: tr('Nuova disputa', 'New dispute'),
+      section: 'disputes',
+      create: 'dispute',
+    },
+  };
+
+  const openCreateRedirect = (targetKey) => {
     setQuickOpen(false);
-    setDisputeQuickOpen(true);
-    setActiveTab('work');
+    setRedirectCreateTarget(targetKey);
+  };
+
+  const confirmCreateRedirect = () => {
+    const target = redirectCreateTarget ? createRedirectMap[redirectCreateTarget] : null;
+    if (!target || !projectId) return;
+
+    const params = new URLSearchParams({
+      id: projectId,
+      tab: 'lavori',
+      section: target.section,
+      create: target.create,
+    });
+
+    setUiMode(UI_MODES.NORMAL);
+    setRedirectCreateTarget(null);
+    navigate(`${createPageUrl('ProjectDetail')}?${params.toString()}`);
   };
 
   const handleChannelSelection = (channelId) => {
@@ -369,6 +443,15 @@ export default function OperativeProjectWorkspace() {
     setChatShowChannels(false);
     setFocusedMessageId(null);
   };
+
+  useEffect(() => {
+    if (!isGeneralOnlyChat) return;
+    setChatShowChannels(false);
+    if (generalChannel?.id && selectedChannelId !== generalChannel.id) {
+      setSelectedChannelId(generalChannel.id);
+      setFocusedMessageId(null);
+    }
+  }, [isGeneralOnlyChat, generalChannel?.id, selectedChannelId]);
 
   const openGoogleMaps = (address) => {
     if (!address) return;
@@ -449,7 +532,7 @@ export default function OperativeProjectWorkspace() {
       <Card className="border-[#ef6144]/20">
         <CardContent className="p-4 space-y-3">
           <p className="text-sm text-gray-600">{t('operational.projectNotAvailable')}</p>
-          <Button className="w-full" onClick={() => navigate('/operativa')}>{t('operational.backToSelection')}</Button>
+          <Button className="w-full" onClick={() => navigate('/app/operativa')}>{t('operational.backToSelection')}</Button>
         </CardContent>
       </Card>
     );
@@ -457,6 +540,12 @@ export default function OperativeProjectWorkspace() {
 
   return (
     <div className="space-y-3 pb-24">
+      <div className="sticky top-16 z-20 bg-gray-100 pb-2">
+        <Button variant="outline" className="w-full" onClick={() => navigate('/app/operativa')}>
+          Torna alla home
+        </Button>
+      </div>
+
       <Card className="border-[#ef6144]/20">
         <CardContent className="p-0">
           <button
@@ -493,7 +582,7 @@ export default function OperativeProjectWorkspace() {
                 {t('operational.viewDetails')}
               </Button>
               {contextProjects.length > 1 && (
-                <Button variant="outline" className="w-full" onClick={() => navigate('/operativa')}>
+                <Button variant="outline" className="w-full" onClick={() => navigate('/app/operativa')}>
                   {t('operational.changeProject')}
                 </Button>
               )}
@@ -547,26 +636,38 @@ export default function OperativeProjectWorkspace() {
                 </AccordionContent>
               </AccordionItem>
 
-              {orderedMilestones.length > 0 && (
+              {(orderedMilestones.length > 0 || showMilestonesPlanGate) && (
                 <AccordionItem value="milestones">
                   <AccordionTrigger>{t('operational.milestones')}</AccordionTrigger>
                   <AccordionContent className="space-y-2">
-                    {orderedMilestones.map((milestone) => (
-                      <button
-                        key={milestone.id}
-                        type="button"
-                        onClick={() => openEntityDetails('milestone', milestone)}
-                        className="w-full text-left rounded-lg border border-[#ef6144]/20 p-2"
-                      >
-                        <p className="font-medium text-gray-900 text-sm">{milestone.title}</p>
-                        <p className="text-xs text-gray-500 mt-1">
-                          {milestone.start_date ? format(new Date(`${milestone.start_date}T00:00:00`), 'dd MMM yyyy', { locale: dateLocale }) : '-'}
-                          {' - '}
-                          {milestone.target_date ? format(new Date(`${milestone.target_date}T00:00:00`), 'dd MMM yyyy', { locale: dateLocale }) : '-'}
-                        </p>
-                        <Badge className="mt-2 bg-[#ef6144]/10 text-[#ef6144]">{milestoneStatusLabel(milestone.status)}</Badge>
-                      </button>
-                    ))}
+                      {showMilestonesPlanGate ? (
+                        <FeatureGateCard
+                          compact
+                          title={tr('Milestone premium', 'Premium milestones')}
+                          description={tr(
+                            'Le milestone sono disponibili solo nei progetti sponsorizzati.',
+                            'Milestones are available only on sponsored projects.',
+                          )}
+                          badgeLabel={tr('Progetto sponsorizzato', 'Sponsored project')}
+                        />
+                      ) : orderedMilestones.length > 0 ? (
+                        orderedMilestones.map((milestone) => (
+                          <button
+                            key={milestone.id}
+                            type="button"
+                            onClick={() => openEntityDetails('milestone', milestone)}
+                            className="w-full text-left rounded-lg border border-[#ef6144]/20 p-2"
+                          >
+                            <p className="font-medium text-gray-900 text-sm">{milestone.title}</p>
+                            <p className="text-xs text-gray-500 mt-1">
+                              {milestone.start_date ? format(new Date(`${milestone.start_date}T00:00:00`), 'dd MMM yyyy', { locale: dateLocale }) : '-'}
+                              {' - '}
+                              {milestone.target_date ? format(new Date(`${milestone.target_date}T00:00:00`), 'dd MMM yyyy', { locale: dateLocale }) : '-'}
+                            </p>
+                            <Badge className="mt-2 bg-[#ef6144]/10 text-[#ef6144]">{milestoneStatusLabel(milestone.status)}</Badge>
+                          </button>
+                        ))
+                      ) : <p className="text-sm text-gray-600">{t('milestones.noMilestones')}</p>}
                   </AccordionContent>
                 </AccordionItem>
               )}
@@ -574,6 +675,12 @@ export default function OperativeProjectWorkspace() {
               <AccordionItem value="tasks">
                 <AccordionTrigger>{t('operational.tasksSection')}</AccordionTrigger>
                 <AccordionContent className="space-y-2">
+                  {canCreateTaskFromFullMode && (
+                    <Button size="sm" variant="outline" className="w-full" onClick={() => openCreateRedirect('task')}>
+                      <Plus className="h-4 w-4 mr-2" />
+                      {tr('Crea in modalità completa', 'Create in full mode')}
+                    </Button>
+                  )}
                   {upcomingOrInProgressTasks.length > 0 ? upcomingOrInProgressTasks.map((task) => (
                     <div key={task.id} className="rounded-lg border border-[#ef6144]/20 p-2 space-y-2">
                       <div className="flex justify-between gap-2 items-start">
@@ -591,6 +698,12 @@ export default function OperativeProjectWorkspace() {
               <AccordionItem value="changes">
                 <AccordionTrigger>{t('operational.changeRequests')}</AccordionTrigger>
                 <AccordionContent className="space-y-2">
+                  {canCreateChangeFromFullMode && (
+                    <Button size="sm" variant="outline" className="w-full" onClick={() => openCreateRedirect('change')}>
+                      <Plus className="h-4 w-4 mr-2" />
+                      {tr('Crea in modalità completa', 'Create in full mode')}
+                    </Button>
+                  )}
                   {changeRequests.length > 0 ? changeRequests.map((request) => (
                     <div key={request.id} className="rounded-lg border border-[#ef6144]/20 p-2 space-y-2">
                       <button
@@ -613,11 +726,17 @@ export default function OperativeProjectWorkspace() {
               <AccordionItem value="disputes">
                 <AccordionTrigger>{t('disputes.title')}</AccordionTrigger>
                 <AccordionContent className="space-y-2">
+                  {canCreateDisputeFromFullMode && (
+                    <Button size="sm" variant="outline" className="w-full" onClick={() => openCreateRedirect('dispute')}>
+                      <Plus className="h-4 w-4 mr-2" />
+                      {tr('Crea in modalità completa', 'Create in full mode')}
+                    </Button>
+                  )}
                   <DisputeCaseList
                     projectId={projectId}
                     currentUser={user}
                     currentParticipant={contextParticipation}
-                    canCreate={!!contextParticipation}
+                    canCreate={false}
                     canRespond={!!contextParticipation}
                   />
                 </AccordionContent>
@@ -645,72 +764,84 @@ export default function OperativeProjectWorkspace() {
       )}
 
       {activeTab === 'docs' && (
-        <Card className="border-[#ef6144]/20">
-          <CardHeader>
-            <CardTitle className="text-base">{t('operational.docsSection')}</CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-2 max-h-[48vh] overflow-y-auto">
-            <p className="text-xs text-gray-500">{t('operational.docsOrderedInfo')}</p>
-            <div className="grid grid-cols-2 gap-2">
-              <Button
-                variant={docsView === 'chronological' ? 'default' : 'outline'}
-                className={docsView === 'chronological' ? 'bg-[#ef6144] hover:bg-[#d9553a]' : ''}
-                onClick={() => setDocsView('chronological')}
-              >
-                <History className="h-4 w-4 mr-2" />
-                {t('operational.docsChronological')}
+        canUseProjectDocuments ? (
+          <Card className="border-[#ef6144]/20">
+            <CardHeader>
+              <CardTitle className="text-base">{t('operational.docsSection')}</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-2 max-h-[48vh] overflow-y-auto">
+              <p className="text-xs text-gray-500">{t('operational.docsOrderedInfo')}</p>
+              <div className="grid grid-cols-2 gap-2">
+                <Button
+                  variant={docsView === 'chronological' ? 'default' : 'outline'}
+                  className={docsView === 'chronological' ? 'bg-[#ef6144] hover:bg-[#d9553a]' : ''}
+                  onClick={() => setDocsView('chronological')}
+                >
+                  <History className="h-4 w-4 mr-2" />
+                  {t('operational.docsChronological')}
+                </Button>
+                <Button
+                  variant={docsView === 'explorer' ? 'default' : 'outline'}
+                  className={docsView === 'explorer' ? 'bg-[#ef6144] hover:bg-[#d9553a]' : ''}
+                  onClick={() => setDocsView('explorer')}
+                >
+                  <FolderTree className="h-4 w-4 mr-2" />
+                  {t('operational.docsExplorer')}
+                </Button>
+              </div>
+              <Button className="w-full bg-[#ef6144] hover:bg-[#d9553a]" onClick={() => setUploadOpen(true)}>
+                <UploadCloud className="h-4 w-4 mr-2" />
+                {t('operational.addPhoto')}
               </Button>
-              <Button
-                variant={docsView === 'explorer' ? 'default' : 'outline'}
-                className={docsView === 'explorer' ? 'bg-[#ef6144] hover:bg-[#d9553a]' : ''}
-                onClick={() => setDocsView('explorer')}
-              >
-                <FolderTree className="h-4 w-4 mr-2" />
-                {t('operational.docsExplorer')}
-              </Button>
-            </div>
-            <Button className="w-full bg-[#ef6144] hover:bg-[#d9553a]" onClick={() => setUploadOpen(true)}>
-              <UploadCloud className="h-4 w-4 mr-2" />
-              {t('operational.addPhoto')}
-            </Button>
-            {projectDocuments.length > 0 ? (
-              docsView === 'chronological' ? (
-                documentsChronological.map((document) => (
-                  <div key={document.id} className="rounded-lg border border-[#ef6144]/20 p-3">
-                    <p className="font-medium text-gray-900">{document.name}</p>
-                    <p className="text-xs text-gray-500 mt-1">
-                      {format(new Date(document.created_date), 'dd MMM yyyy HH:mm', { locale: dateLocale })}
-                      {' • '}
-                      {documentCategoryLabel(document.category)}
-                    </p>
-                    <Button size="sm" variant="outline" className="mt-2" onClick={() => openDocumentFile(document)}>
-                      {t('operational.openFile')}
-                    </Button>
-                  </div>
-                ))
-              ) : (
-                <Accordion type="multiple" className="w-full">
-                  {Object.entries(docsByCategory).map(([category, docs]) => (
-                    <AccordionItem key={category} value={`cat-${category}`}>
-                      <AccordionTrigger>{`${documentCategoryLabel(category)} (${docs.length})`}</AccordionTrigger>
-                      <AccordionContent className="space-y-2 max-h-[26vh] overflow-y-auto">
-                        {docs.map((document) => (
-                          <div key={document.id} className="rounded-lg border border-[#ef6144]/20 p-3">
-                            <p className="font-medium text-gray-900">{document.name}</p>
-                            <p className="text-xs text-gray-500 mt-1">{format(new Date(document.created_date), 'dd MMM yyyy HH:mm', { locale: dateLocale })}</p>
-                            <Button size="sm" variant="outline" className="mt-2" onClick={() => openDocumentFile(document)}>
-                              {t('operational.openFile')}
-                            </Button>
-                          </div>
-                        ))}
-                      </AccordionContent>
-                    </AccordionItem>
-                  ))}
-                </Accordion>
-              )
-            ) : <p className="text-sm text-gray-600">{t('documents.noDocuments')}</p>}
-          </CardContent>
-        </Card>
+              {projectDocuments.length > 0 ? (
+                docsView === 'chronological' ? (
+                  documentsChronological.map((document) => (
+                    <div key={document.id} className="rounded-lg border border-[#ef6144]/20 p-3">
+                      <p className="font-medium text-gray-900">{document.name}</p>
+                      <p className="text-xs text-gray-500 mt-1">
+                        {format(new Date(document.created_date), 'dd MMM yyyy HH:mm', { locale: dateLocale })}
+                        {' • '}
+                        {documentCategoryLabel(document.category)}
+                      </p>
+                      <Button size="sm" variant="outline" className="mt-2" onClick={() => openDocumentFile(document)}>
+                        {t('operational.openFile')}
+                      </Button>
+                    </div>
+                  ))
+                ) : (
+                  <Accordion type="multiple" className="w-full">
+                    {Object.entries(docsByCategory).map(([category, docs]) => (
+                      <AccordionItem key={category} value={`cat-${category}`}>
+                        <AccordionTrigger>{`${documentCategoryLabel(category)} (${docs.length})`}</AccordionTrigger>
+                        <AccordionContent className="space-y-2 max-h-[26vh] overflow-y-auto">
+                          {docs.map((document) => (
+                            <div key={document.id} className="rounded-lg border border-[#ef6144]/20 p-3">
+                              <p className="font-medium text-gray-900">{document.name}</p>
+                              <p className="text-xs text-gray-500 mt-1">{format(new Date(document.created_date), 'dd MMM yyyy HH:mm', { locale: dateLocale })}</p>
+                              <Button size="sm" variant="outline" className="mt-2" onClick={() => openDocumentFile(document)}>
+                                {t('operational.openFile')}
+                              </Button>
+                            </div>
+                          ))}
+                        </AccordionContent>
+                      </AccordionItem>
+                    ))}
+                  </Accordion>
+                )
+              ) : <p className="text-sm text-gray-600">{t('documents.noDocuments')}</p>}
+            </CardContent>
+          </Card>
+        ) : (
+          <FeatureGateCard
+            compact
+            title={tr('Documenti premium', 'Premium documents')}
+            description={tr(
+              'I documenti avanzati del progetto si sbloccano solo quando il progetto è sponsorizzato.',
+              'Advanced project documents unlock only when the project is sponsored.',
+            )}
+            badgeLabel={tr('Richiede sponsorship', 'Requires sponsorship')}
+          />
+        )
       )}
 
       {activeTab === 'chat' && (
@@ -719,12 +850,14 @@ export default function OperativeProjectWorkspace() {
             <div className="min-w-0">
               <p className="text-sm font-semibold text-gray-900 truncate">{selectedChannel?.name || t('operational.channels')}</p>
             </div>
-            <Button variant="ghost" size="icon" onClick={() => setChatShowChannels((prev) => !prev)}>
-              <Menu className="h-5 w-5" />
-            </Button>
+            {!isGeneralOnlyChat && (
+              <Button variant="ghost" size="icon" onClick={() => setChatShowChannels((prev) => !prev)}>
+                <Menu className="h-5 w-5" />
+              </Button>
+            )}
           </div>
 
-          {chatShowChannels || !selectedChannelId ? (
+          {!isGeneralOnlyChat && (chatShowChannels || !selectedChannelId) ? (
             <div className="p-3 overflow-y-auto">
               <ChannelList
                 scopeType="project"
@@ -735,6 +868,8 @@ export default function OperativeProjectWorkspace() {
                 selectedChannelId={selectedChannelId}
                 onSelectChannel={handleChannelSelection}
                 participants={activeParticipants}
+                canCreateChannels={canCreateProjectChannels}
+                channelAccessMode={chatAccessMode}
               />
             </div>
           ) : (
@@ -754,6 +889,7 @@ export default function OperativeProjectWorkspace() {
                 activeCompanyId={activeCompanyId}
                 activeCompanyName={currentCompany?.name}
                 participants={activeParticipants}
+                allowMilestoneMentions={canUseMilestones && !isGeneralOnlyChat}
               />
             </>
           )}
@@ -792,45 +928,83 @@ export default function OperativeProjectWorkspace() {
         <DialogContent>
           <DialogHeader>
             <DialogTitle>{t('operational.quickActions')}</DialogTitle>
+            <DialogDescription>
+              {tr('Azioni rapide disponibili in modalità operativa.', 'Quick actions available in operational mode.')}
+            </DialogDescription>
           </DialogHeader>
           <div className="space-y-2">
             <Button className="w-full" variant="outline" onClick={() => { setQuickOpen(false); setActiveTab('chat'); }}>
               <MessageSquare className="h-4 w-4 mr-2" />
               {t('operational.openChat')}
             </Button>
-            <Button className="w-full" variant="outline" onClick={openQuickPhoto}>
+            <Button className="w-full" variant="outline" onClick={openQuickPhoto} disabled={!canUseProjectDocuments}>
               <UploadCloud className="h-4 w-4 mr-2" />
               {t('operational.addPhoto')}
             </Button>
-            <Button className="w-full" variant="outline" onClick={openQuickDocument}>
+            <Button className="w-full" variant="outline" onClick={openQuickDocument} disabled={!canUseProjectDocuments}>
               <FileText className="h-4 w-4 mr-2" />
               {t('operational.addDocument')}
             </Button>
-            <Button className="w-full" variant="outline" onClick={openQuickDispute}>
+            <Button className="w-full" variant="outline" onClick={() => openCreateRedirect('task')} disabled={!canCreateTaskFromFullMode}>
+              <ListTodo className="h-4 w-4 mr-2" />
+              {tr('Nuova attività', 'New task')}
+            </Button>
+            <Button className="w-full" variant="outline" onClick={() => openCreateRedirect('change')} disabled={!canCreateChangeFromFullMode}>
+              <DollarSign className="h-4 w-4 mr-2" />
+              {tr('Nuova richiesta', 'New change request')}
+            </Button>
+            <Button className="w-full" variant="outline" onClick={() => openCreateRedirect('dispute')} disabled={!canCreateDisputeFromFullMode}>
               <ShieldAlert className="h-4 w-4 mr-2" />
-              {t('operational.openDispute')}
+              {tr('Nuova disputa', 'New dispute')}
             </Button>
           </div>
         </DialogContent>
       </Dialog>
 
-      <DisputeCreateDialog
-        open={disputeQuickOpen}
-        onOpenChange={setDisputeQuickOpen}
-        projectId={projectId}
-        currentParticipant={contextParticipation}
-      />
+      <Dialog open={!!redirectCreateTarget} onOpenChange={(open) => { if (!open) setRedirectCreateTarget(null); }}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>{tr('Passare alla modalità completa?', 'Switch to full mode?')}</DialogTitle>
+            <DialogDescription>
+              {redirectCreateTarget ? tr(
+                `La creazione di questa ${createRedirectMap[redirectCreateTarget].label} è disponibile solo nella modalità completa.`,
+                `Creating this ${createRedirectMap[redirectCreateTarget].label} is available only in full mode.`,
+              ) : ''}
+            </DialogDescription>
+          </DialogHeader>
+          <div className="space-y-4 text-sm text-gray-700">
+            <p>
+              {tr(
+                'Si aprirà direttamente il modulo corretto. Potrai tornare alla modalità operativa dal menu utente.',
+                'The correct form will open directly. You can return to operational mode from the user menu.',
+              )}
+            </p>
+            <div className="flex gap-2">
+              <Button variant="outline" className="flex-1" onClick={() => setRedirectCreateTarget(null)}>
+                {tr('Annulla', 'Cancel')}
+              </Button>
+              <Button className="flex-1 bg-[#ef6144] hover:bg-[#d9553a]" onClick={confirmCreateRedirect}>
+                {tr('Continua', 'Continue')}
+              </Button>
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
 
       <Dialog open={projectDetailsOpen} onOpenChange={setProjectDetailsOpen}>
         <DialogContent className="max-h-[80vh] overflow-y-auto">
           <DialogHeader>
             <DialogTitle>{t('operational.projectDetails')}</DialogTitle>
+            <DialogDescription>
+              {tr('Dettagli sintetici del progetto corrente in modalità operativa.', 'Summary details for the current project in operational mode.')}
+            </DialogDescription>
           </DialogHeader>
           <div className="space-y-4 text-sm">
             <div className="rounded-lg border border-[#ef6144]/20 p-3 space-y-2">
               <p><strong>{t('newProject.projectName')}:</strong> {project.name || '-'}</p>
               <p><strong>{t('newProject.description')}:</strong> {project.description || '-'}</p>
               <p><strong>{t('operational.homeowner')}:</strong> {homeownerLabel}</p>
+              <p><strong>{tr('Sponsorship', 'Sponsorship')}:</strong> {sponsorshipLabel}</p>
               <p><strong>{t('newProject.siteAddress')}:</strong> {project.address ? <a href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(project.address)}`} target="_blank" rel="noopener noreferrer" className="text-[#ef6144] underline underline-offset-2">{project.address}</a> : '-'}</p>
               <p><strong>{t('tasks.status')}:</strong> {projectStatusLabel}</p>
               <p><strong>{t('projectDetail.startDate')}:</strong> {project.start_date ? format(new Date(`${project.start_date}T00:00:00`), 'dd MMM yyyy', { locale: dateLocale }) : '-'}</p>
@@ -863,6 +1037,9 @@ export default function OperativeProjectWorkspace() {
                selectedEntity?.type === 'change_request' ? t('operational.changeRequests') :
                selectedEntity?.type === 'event' ? t('operational.calendarEvents') : t('operational.details')}
             </DialogTitle>
+            <DialogDescription>
+              {tr('Dettaglio dell elemento selezionato.', 'Details for the selected item.')}
+            </DialogDescription>
           </DialogHeader>
           {selectedEntity?.entity ? (
             <div className="space-y-3 text-sm">
@@ -916,6 +1093,9 @@ export default function OperativeProjectWorkspace() {
         <DialogContent>
           <DialogHeader>
             <DialogTitle>{t('operational.uploadTitle')}</DialogTitle>
+            <DialogDescription>
+              {tr('Carica un file nel progetto corrente dalla modalità operativa.', 'Upload a file to the current project from operational mode.')}
+            </DialogDescription>
           </DialogHeader>
           <div className="space-y-3">
             <Input type="file" accept="image/*,.pdf,.doc,.docx,.xls,.xlsx,.txt,.csv,.dwg,.dxf,.ifc,.glb,.gltf,.zip,.rar" onChange={(event) => setUploadFile(event.target.files?.[0] || null)} />

@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { format } from 'date-fns';
@@ -17,6 +17,8 @@ import ChannelList from '@/components/messaging/ChannelList';
 import MessageList from '@/components/messaging/MessageList';
 import MessageInput from '@/components/messaging/MessageInput';
 import CompanyTimeTrackingSection from '@/components/company/CompanyTimeTrackingSection';
+import FeatureGateCard from '@/components/ui/FeatureGateCard';
+import { isFeatureAccessible, isFeatureFullyEnabled, useCompanyFeatureAccess } from '@/hooks/useFeatureAccess';
 import { getUserDisplayNameByEmail } from '@/lib/userDisplay';
 
 const tabs = ['timbrature', 'docs', 'chat'];
@@ -36,7 +38,7 @@ export default function OperativeCompanyWorkspace() {
     isLoading,
   } = useOperativeData();
 
-  const [activeTab, setActiveTab] = useState('timbrature');
+  const [activeTab, setActiveTab] = useState(null);
   const [docsView, setDocsView] = useState('chronological');
   const [uploadOpen, setUploadOpen] = useState(false);
   const [uploadFile, setUploadFile] = useState(null);
@@ -47,7 +49,21 @@ export default function OperativeCompanyWorkspace() {
 
   const currentMembership = companyMemberships.find((entry) => entry.company_id === activeCompanyId);
   const isCompanyAdmin = currentMembership?.role === 'admin';
-  const canUpload = currentMembership?.status === 'active';
+  const { featureMap: companyFeatureMap, isLoading: isCompanyFeatureAccessLoading } = useCompanyFeatureAccess(activeCompanyId, [
+    'company_time_tracking',
+    'company_chat',
+    'company_documents',
+  ], { enabled: !!activeCompanyId });
+
+  const companyTimeTrackingFeatureAccess = companyFeatureMap.company_time_tracking;
+  const companyChatFeatureAccess = companyFeatureMap.company_chat;
+  const companyDocumentsFeatureAccess = companyFeatureMap.company_documents;
+  const canUseCompanyTimeTracking = isFeatureAccessible(companyTimeTrackingFeatureAccess);
+  const canCreateCompanyChannels = isFeatureFullyEnabled(companyChatFeatureAccess);
+  const companyChatAccessMode = isFeatureFullyEnabled(companyChatFeatureAccess) ? 'full' : 'general_only';
+  const isGeneralOnlyChat = companyChatAccessMode === 'general_only';
+  const canUseCompanyDocuments = isFeatureAccessible(companyDocumentsFeatureAccess);
+  const canUpload = currentMembership?.status === 'active' && canUseCompanyDocuments;
 
   const { data: companyMembers = [] } = useQuery({
     queryKey: ['companyMembers', activeCompanyId],
@@ -88,7 +104,11 @@ export default function OperativeCompanyWorkspace() {
     [companyMembers, activeCompanyId, allUsers],
   );
 
-  const selectedChannel = channels.find((channel) => channel.id === selectedChannelId) || null;
+  const generalChannel = isGeneralOnlyChat
+    ? channels.find((channel) => channel.type === 'company') || null
+    : null;
+
+  const selectedChannel = channels.find((channel) => channel.id === selectedChannelId) || generalChannel || null;
 
   const documentsChronological = [...companyDocuments].sort((first, second) => new Date(second.created_date) - new Date(first.created_date));
 
@@ -130,6 +150,19 @@ export default function OperativeCompanyWorkspace() {
     setChatShowChannels(false);
   };
 
+  useEffect(() => {
+    if (activeTab !== null || isCompanyFeatureAccessLoading) return;
+    setActiveTab(canUseCompanyTimeTracking ? 'timbrature' : 'docs');
+  }, [activeTab, isCompanyFeatureAccessLoading, canUseCompanyTimeTracking]);
+
+  useEffect(() => {
+    if (!isGeneralOnlyChat) return;
+    setChatShowChannels(false);
+    if (generalChannel?.id && selectedChannelId !== generalChannel.id) {
+      setSelectedChannelId(generalChannel.id);
+    }
+  }, [isGeneralOnlyChat, generalChannel?.id, selectedChannelId]);
+
   const documentCategoryLabel = (category) => {
     const map = {
       photo: t('operational.photo'),
@@ -144,12 +177,16 @@ export default function OperativeCompanyWorkspace() {
     return <div className="text-sm text-gray-600">{t('common.loading')}</div>;
   }
 
+  if (activeTab === null) {
+    return <div className="text-sm text-gray-600">{t('common.loading')}</div>;
+  }
+
   if (!activeCompanyId || !currentCompany) {
     return (
       <Card className="border-[#ef6144]/20">
         <CardContent className="p-4 space-y-3">
           <p className="text-sm text-gray-600">{tr('Nessuna società attiva nel contesto operativo.', 'No active company in operational context.')}</p>
-          <Button className="w-full" onClick={() => navigate('/operativa')}>{t('operational.backToSelection')}</Button>
+          <Button className="w-full" onClick={() => navigate('/app/operativa')}>{t('operational.backToSelection')}</Button>
         </CardContent>
       </Card>
     );
@@ -158,7 +195,7 @@ export default function OperativeCompanyWorkspace() {
   return (
     <div className="space-y-3 pb-24">
       <div className="sticky top-16 z-20 bg-gray-100 pb-2">
-        <Button variant="outline" className="w-full" onClick={() => navigate('/operativa')}>
+        <Button variant="outline" className="w-full" onClick={() => navigate('/app/operativa')}>
           Torna alla home
         </Button>
       </div>
@@ -170,82 +207,106 @@ export default function OperativeCompanyWorkspace() {
       </Card>
 
       {activeTab === 'timbrature' && (
-        <CompanyTimeTrackingSection
-          companyId={activeCompanyId}
-          companyName={currentCompany.name}
-          currentUser={user}
-          isAdmin={isCompanyAdmin}
-          mode="operational"
-        />
+        canUseCompanyTimeTracking ? (
+          <CompanyTimeTrackingSection
+            companyId={activeCompanyId}
+            companyName={currentCompany.name}
+            currentUser={user}
+            isAdmin={isCompanyAdmin}
+            mode="operational"
+          />
+        ) : (
+          <FeatureGateCard
+            compact
+            title={tr('Timbrature premium', 'Premium time tracking')}
+            description={tr(
+              'Le timbrature societarie sono disponibili solo con le funzioni premium della società.',
+              'Company time tracking is available only with the company premium features.',
+            )}
+            badgeLabel={tr('Società Pro', 'Pro company')}
+          />
+        )
       )}
 
       {activeTab === 'docs' && (
-        <Card className="border-[#ef6144]/20">
-          <CardHeader>
-            <CardTitle className="text-base">{tr('Documenti società', 'Company documents')}</CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-2 max-h-[58vh] overflow-y-auto">
-            <p className="text-xs text-gray-500">{t('operational.docsOrderedInfo')}</p>
-            <div className="grid grid-cols-2 gap-2">
-              <Button
-                variant={docsView === 'chronological' ? 'default' : 'outline'}
-                className={docsView === 'chronological' ? 'bg-[#ef6144] hover:bg-[#d9553a]' : ''}
-                onClick={() => setDocsView('chronological')}
-              >
-                <History className="h-4 w-4 mr-2" />
-                {t('operational.docsChronological')}
+        canUseCompanyDocuments ? (
+          <Card className="border-[#ef6144]/20">
+            <CardHeader>
+              <CardTitle className="text-base">{tr('Documenti società', 'Company documents')}</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-2 max-h-[58vh] overflow-y-auto">
+              <p className="text-xs text-gray-500">{t('operational.docsOrderedInfo')}</p>
+              <div className="grid grid-cols-2 gap-2">
+                <Button
+                  variant={docsView === 'chronological' ? 'default' : 'outline'}
+                  className={docsView === 'chronological' ? 'bg-[#ef6144] hover:bg-[#d9553a]' : ''}
+                  onClick={() => setDocsView('chronological')}
+                >
+                  <History className="h-4 w-4 mr-2" />
+                  {t('operational.docsChronological')}
+                </Button>
+                <Button
+                  variant={docsView === 'explorer' ? 'default' : 'outline'}
+                  className={docsView === 'explorer' ? 'bg-[#ef6144] hover:bg-[#d9553a]' : ''}
+                  onClick={() => setDocsView('explorer')}
+                >
+                  <FolderTree className="h-4 w-4 mr-2" />
+                  {t('operational.docsExplorer')}
+                </Button>
+              </div>
+              <Button className="w-full bg-[#ef6144] hover:bg-[#d9553a]" onClick={() => setUploadOpen(true)} disabled={!canUpload}>
+                <UploadCloud className="h-4 w-4 mr-2" />
+                {t('operational.addPhoto')}
               </Button>
-              <Button
-                variant={docsView === 'explorer' ? 'default' : 'outline'}
-                className={docsView === 'explorer' ? 'bg-[#ef6144] hover:bg-[#d9553a]' : ''}
-                onClick={() => setDocsView('explorer')}
-              >
-                <FolderTree className="h-4 w-4 mr-2" />
-                {t('operational.docsExplorer')}
-              </Button>
-            </div>
-            <Button className="w-full bg-[#ef6144] hover:bg-[#d9553a]" onClick={() => setUploadOpen(true)} disabled={!canUpload}>
-              <UploadCloud className="h-4 w-4 mr-2" />
-              {t('operational.addPhoto')}
-            </Button>
-            {companyDocuments.length > 0 ? (
-              docsView === 'chronological' ? (
-                documentsChronological.map((document) => (
-                  <div key={document.id} className="rounded-lg border border-[#ef6144]/20 p-3">
-                    <p className="font-medium text-gray-900">{document.name}</p>
-                    <p className="text-xs text-gray-500 mt-1">
-                      {format(new Date(document.created_date), 'dd MMM yyyy HH:mm', { locale: dateLocale })}
-                      {' • '}
-                      {documentCategoryLabel(document.category)}
-                    </p>
-                    <Button size="sm" variant="outline" className="mt-2" onClick={() => window.open(document.file_url, '_blank', 'noopener,noreferrer')}>
-                      {t('operational.openFile')}
-                    </Button>
-                  </div>
-                ))
-              ) : (
-                <Accordion type="multiple" className="w-full">
-                  {Object.entries(docsByCategory).map(([category, docs]) => (
-                    <AccordionItem key={category} value={`cat-${category}`}>
-                      <AccordionTrigger>{`${documentCategoryLabel(category)} (${docs.length})`}</AccordionTrigger>
-                      <AccordionContent className="space-y-2 max-h-[30vh] overflow-y-auto">
-                        {docs.map((document) => (
-                          <div key={document.id} className="rounded-lg border border-[#ef6144]/20 p-3">
-                            <p className="font-medium text-gray-900">{document.name}</p>
-                            <p className="text-xs text-gray-500 mt-1">{format(new Date(document.created_date), 'dd MMM yyyy HH:mm', { locale: dateLocale })}</p>
-                            <Button size="sm" variant="outline" className="mt-2" onClick={() => window.open(document.file_url, '_blank', 'noopener,noreferrer')}>
-                              {t('operational.openFile')}
-                            </Button>
-                          </div>
-                        ))}
-                      </AccordionContent>
-                    </AccordionItem>
-                  ))}
-                </Accordion>
-              )
-            ) : <p className="text-sm text-gray-600">{t('documents.noDocuments')}</p>}
-          </CardContent>
-        </Card>
+              {companyDocuments.length > 0 ? (
+                docsView === 'chronological' ? (
+                  documentsChronological.map((document) => (
+                    <div key={document.id} className="rounded-lg border border-[#ef6144]/20 p-3">
+                      <p className="font-medium text-gray-900">{document.name}</p>
+                      <p className="text-xs text-gray-500 mt-1">
+                        {format(new Date(document.created_date), 'dd MMM yyyy HH:mm', { locale: dateLocale })}
+                        {' • '}
+                        {documentCategoryLabel(document.category)}
+                      </p>
+                      <Button size="sm" variant="outline" className="mt-2" onClick={() => window.open(document.file_url, '_blank', 'noopener,noreferrer')}>
+                        {t('operational.openFile')}
+                      </Button>
+                    </div>
+                  ))
+                ) : (
+                  <Accordion type="multiple" className="w-full">
+                    {Object.entries(docsByCategory).map(([category, docs]) => (
+                      <AccordionItem key={category} value={`cat-${category}`}>
+                        <AccordionTrigger>{`${documentCategoryLabel(category)} (${docs.length})`}</AccordionTrigger>
+                        <AccordionContent className="space-y-2 max-h-[30vh] overflow-y-auto">
+                          {docs.map((document) => (
+                            <div key={document.id} className="rounded-lg border border-[#ef6144]/20 p-3">
+                              <p className="font-medium text-gray-900">{document.name}</p>
+                              <p className="text-xs text-gray-500 mt-1">{format(new Date(document.created_date), 'dd MMM yyyy HH:mm', { locale: dateLocale })}</p>
+                              <Button size="sm" variant="outline" className="mt-2" onClick={() => window.open(document.file_url, '_blank', 'noopener,noreferrer')}>
+                                {t('operational.openFile')}
+                              </Button>
+                            </div>
+                          ))}
+                        </AccordionContent>
+                      </AccordionItem>
+                    ))}
+                  </Accordion>
+                )
+              ) : <p className="text-sm text-gray-600">{t('documents.noDocuments')}</p>}
+            </CardContent>
+          </Card>
+        ) : (
+          <FeatureGateCard
+            compact
+            title={tr('Documenti premium', 'Premium documents')}
+            description={tr(
+              'I documenti della società sono disponibili solo con le funzioni premium della società.',
+              'Company documents are available only with the company premium features.',
+            )}
+            badgeLabel={tr('Società Pro', 'Pro company')}
+          />
+        )
       )}
 
       {activeTab === 'chat' && (
@@ -254,12 +315,14 @@ export default function OperativeCompanyWorkspace() {
             <div className="min-w-0">
               <p className="text-sm font-semibold text-gray-900 truncate">{selectedChannel?.name || tr('Canali società', 'Company channels')}</p>
             </div>
-            <Button variant="ghost" size="icon" onClick={() => setChatShowChannels((prev) => !prev)}>
-              <Menu className="h-5 w-5" />
-            </Button>
+            {!isGeneralOnlyChat && (
+              <Button variant="ghost" size="icon" onClick={() => setChatShowChannels((prev) => !prev)}>
+                <Menu className="h-5 w-5" />
+              </Button>
+            )}
           </div>
 
-          {chatShowChannels || !selectedChannelId ? (
+          {!isGeneralOnlyChat && (chatShowChannels || !selectedChannelId) ? (
             <div className="p-3 overflow-y-auto">
               <ChannelList
                 scopeType="company"
@@ -270,7 +333,8 @@ export default function OperativeCompanyWorkspace() {
                 selectedChannelId={selectedChannelId}
                 onSelectChannel={handleChannelSelection}
                 participants={companyParticipants}
-                canCreateChannels={isCompanyAdmin}
+                canCreateChannels={isCompanyAdmin && canCreateCompanyChannels}
+                channelAccessMode={companyChatAccessMode}
               />
             </div>
           ) : (

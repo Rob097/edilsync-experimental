@@ -34,6 +34,8 @@ export default function ProjectMessaging({
   const [initialized, setInitialized] = useState(false);
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [membersDialogOpen, setMembersDialogOpen] = useState(false);
+  const isGeneralOnlyMode = channelAccessMode === 'general_only';
+  const effectiveAllowMilestoneMentions = allowMilestoneMentions && !isGeneralOnlyMode;
 
   const { data: channels = [], isLoading: channelsLoading } = useQuery({
     queryKey: ['channels', scopeType, scopeId],
@@ -145,6 +147,10 @@ export default function ProjectMessaging({
     return isCompanyScope ? channel.type === 'company' : channel.type === 'general';
   });
 
+  const generalOnlyChannel = isGeneralOnlyMode
+    ? accessibleChannels.find((channel) => (isCompanyScope ? channel.type === 'company' : channel.type === 'general')) || null
+    : null;
+
   useEffect(() => {
     if (selectedChannelId || channels.length === 0) return;
 
@@ -172,7 +178,15 @@ export default function ProjectMessaging({
     }
   }, [selectedChannelId, accessibleChannels]);
 
-  const selectedChannel = accessibleChannels.find((channel) => channel.id === selectedChannelId);
+  useEffect(() => {
+    if (!isGeneralOnlyMode) return;
+    setSidebarOpen(false);
+    if (generalOnlyChannel?.id && selectedChannelId !== generalOnlyChannel.id) {
+      setSelectedChannelId(generalOnlyChannel.id);
+    }
+  }, [isGeneralOnlyMode, generalOnlyChannel?.id, selectedChannelId]);
+
+  const selectedChannel = accessibleChannels.find((channel) => channel.id === selectedChannelId) || generalOnlyChannel;
   const activeCompany = isCompanyScope
     ? { id: companyId, name: companyName }
     : companies.find((company) => company.id === activeCompanyId);
@@ -187,21 +201,23 @@ export default function ProjectMessaging({
 
   return (
     <div className="flex gap-4 h-[80vh] md:h-[600px]">
-      <Card className="hidden md:flex md:col-span-1 p-4 overflow-y-auto w-64">
-        <ChannelList
-          scopeType={scopeType}
-          scopeId={scopeId}
-          projectId={projectId}
-          companyId={companyId}
-          currentUserEmail={currentUser.email}
-          activeCompanyId={activeCompanyId}
-          selectedChannelId={selectedChannelId}
-          onSelectChannel={setSelectedChannelId}
-          participants={participants}
-          canCreateChannels={canCreateChannels}
-          channelAccessMode={channelAccessMode}
-        />
-      </Card>
+      {!isGeneralOnlyMode && (
+        <Card className="hidden md:flex md:col-span-1 p-4 overflow-y-auto w-64">
+          <ChannelList
+            scopeType={scopeType}
+            scopeId={scopeId}
+            projectId={projectId}
+            companyId={companyId}
+            currentUserEmail={currentUser.email}
+            activeCompanyId={activeCompanyId}
+            selectedChannelId={selectedChannelId}
+            onSelectChannel={setSelectedChannelId}
+            participants={participants}
+            canCreateChannels={canCreateChannels}
+            channelAccessMode={channelAccessMode}
+          />
+        </Card>
+      )}
 
       <div className="relative flex-1 min-w-0">
         <Card className="flex-1 h-full flex flex-col overflow-hidden">
@@ -222,9 +238,11 @@ export default function ProjectMessaging({
                   <Users className="h-5 w-5" />
                 </Button>
               )}
-              <Button variant="ghost" size="icon" onClick={() => setSidebarOpen(true)}>
-                <Menu className="h-5 w-5" />
-              </Button>
+              {!isGeneralOnlyMode && (
+                <Button variant="ghost" size="icon" onClick={() => setSidebarOpen(true)}>
+                  <Menu className="h-5 w-5" />
+                </Button>
+              )}
             </div>
           </div>
 
@@ -270,7 +288,7 @@ export default function ProjectMessaging({
                 activeCompanyName={activeCompany?.name}
                 participants={participants}
                 scopeType={scopeType}
-                allowMilestoneMentions={allowMilestoneMentions}
+                allowMilestoneMentions={effectiveAllowMilestoneMentions}
               />
             </>
           ) : (
@@ -280,32 +298,34 @@ export default function ProjectMessaging({
           )}
         </Card>
 
-        <div
-          className={`absolute inset-y-0 left-0 z-20 w-64 bg-white border-r shadow-xl transform transition-transform duration-200 md:hidden ${
-            sidebarOpen ? 'translate-x-0' : '-translate-x-full'
-          }`}
-        >
-          <div className="p-4 overflow-y-auto h-full">
-            <ChannelList
-              scopeType={scopeType}
-              scopeId={scopeId}
-              projectId={projectId}
-              companyId={companyId}
-              currentUserEmail={currentUser.email}
-              activeCompanyId={activeCompanyId}
-              selectedChannelId={selectedChannelId}
-              onSelectChannel={(channelId) => {
-                setSelectedChannelId(channelId);
-                setSidebarOpen(false);
-              }}
-              participants={participants}
-              canCreateChannels={canCreateChannels}
-              channelAccessMode={channelAccessMode}
-            />
+        {!isGeneralOnlyMode && (
+          <div
+            className={`absolute inset-y-0 left-0 z-20 w-64 bg-white border-r shadow-xl transform transition-transform duration-200 md:hidden ${
+              sidebarOpen ? 'translate-x-0' : '-translate-x-full'
+            }`}
+          >
+            <div className="p-4 overflow-y-auto h-full">
+              <ChannelList
+                scopeType={scopeType}
+                scopeId={scopeId}
+                projectId={projectId}
+                companyId={companyId}
+                currentUserEmail={currentUser.email}
+                activeCompanyId={activeCompanyId}
+                selectedChannelId={selectedChannelId}
+                onSelectChannel={(channelId) => {
+                  setSelectedChannelId(channelId);
+                  setSidebarOpen(false);
+                }}
+                participants={participants}
+                canCreateChannels={canCreateChannels}
+                channelAccessMode={channelAccessMode}
+              />
+            </div>
           </div>
-        </div>
+        )}
 
-        {sidebarOpen && (
+        {sidebarOpen && !isGeneralOnlyMode && (
           <button
             type="button"
             className="absolute inset-0 z-10 bg-black/20 md:hidden"

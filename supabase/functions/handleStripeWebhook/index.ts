@@ -83,16 +83,26 @@ async function handleStripeEvent(event) {
       });
 
       const explicitCompanyId = session.metadata?.company_id || session.client_reference_id || null;
-      await syncCompanySubscriptionFromStripeSubscription(subscription, explicitCompanyId);
+      await syncCompanySubscriptionFromStripeSubscription(subscription, explicitCompanyId, undefined, event.type);
       return;
     }
 
     case "customer.subscription.created":
     case "customer.subscription.updated":
     case "customer.subscription.deleted": {
-      const subscription = event.data.object;
-      const explicitCompanyId = subscription.metadata?.company_id || null;
-      await syncCompanySubscriptionFromStripeSubscription(subscription, explicitCompanyId);
+      const eventSubscription = event.data.object;
+      const explicitCompanyId = eventSubscription.metadata?.company_id || null;
+
+      if (event.type === "customer.subscription.deleted") {
+        await syncCompanySubscriptionFromStripeSubscription(eventSubscription, explicitCompanyId, undefined, event.type);
+        return;
+      }
+
+      const latestSubscription = await stripe.subscriptions.retrieve(String(eventSubscription.id), {
+        expand: ["items.data.price"],
+      });
+
+      await syncCompanySubscriptionFromStripeSubscription(latestSubscription, explicitCompanyId, undefined, event.type);
       return;
     }
 
@@ -113,7 +123,14 @@ async function handleStripeEvent(event) {
         expand: ["items.data.price"],
       });
 
-      await syncCompanySubscriptionFromStripeSubscription(subscription, explicitCompanyId);
+      const firstLine = invoice.lines?.data?.[0] || null;
+      const currentPeriodStart = firstLine?.period?.start ? new Date(firstLine.period.start * 1000).toISOString() : null;
+      const currentPeriodEnd = firstLine?.period?.end ? new Date(firstLine.period.end * 1000).toISOString() : null;
+
+      await syncCompanySubscriptionFromStripeSubscription(subscription, explicitCompanyId, {
+        currentPeriodStart,
+        currentPeriodEnd,
+      }, event.type);
       return;
     }
 

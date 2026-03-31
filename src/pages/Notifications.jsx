@@ -13,6 +13,8 @@ import {
   Calendar, 
   Check,
   CheckCheck,
+  CreditCard,
+  ShieldCheck,
   X,
   AlertTriangle
 } from "lucide-react";
@@ -30,6 +32,11 @@ const typeIcons = {
   dispute_opened: AlertTriangle,
   dispute_status_changed: AlertTriangle,
   dispute_commented: AlertTriangle,
+  company_plan_activated: CreditCard,
+  company_plan_changed: CreditCard,
+  company_plan_canceled: CreditCard,
+  project_sponsorship_activated: ShieldCheck,
+  project_sponsorship_revoked: ShieldCheck,
 };
 
 const typeColors = {
@@ -42,6 +49,11 @@ const typeColors = {
   dispute_opened: 'bg-red-100 text-red-700',
   dispute_status_changed: 'bg-purple-100 text-purple-700',
   dispute_commented: 'bg-orange-100 text-orange-700',
+  company_plan_activated: 'bg-emerald-100 text-emerald-700',
+  company_plan_changed: 'bg-blue-100 text-blue-700',
+  company_plan_canceled: 'bg-amber-100 text-amber-700',
+  project_sponsorship_activated: 'bg-emerald-100 text-emerald-700',
+  project_sponsorship_revoked: 'bg-red-100 text-red-700',
 };
 
 const DIRECT_PROJECT_NOTIFICATION_TYPES = new Set([
@@ -50,6 +62,8 @@ const DIRECT_PROJECT_NOTIFICATION_TYPES = new Set([
   'dispute_status_changed',
   'dispute_commented',
   'task_status_changed',
+  'project_sponsorship_activated',
+  'project_sponsorship_revoked',
 ]);
 
 const EVENT_BASED_NOTIFICATION_TYPES = new Set([
@@ -215,6 +229,21 @@ export default function Notifications() {
       case 'dispute_commented':
         navigate(createPageUrl('ProjectDetail') + `?id=${notification.related_event_id}&tab=lavori&section=disputes`);
         break;
+
+      case 'project_sponsorship_activated':
+      case 'project_sponsorship_revoked':
+        navigate(createPageUrl('ProjectDetail') + `?id=${notification.related_event_id}`);
+        break;
+
+      case 'company_plan_activated':
+      case 'company_plan_changed':
+      case 'company_plan_canceled': {
+        const companyId = notification.context_company_id || notification.related_event_id;
+        if (companyId) {
+          navigate(createPageUrl('CompanyDetail') + `?id=${companyId}&tab=billing`);
+        }
+        break;
+      }
       
       default:
         // No specific navigation

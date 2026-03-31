@@ -14,7 +14,7 @@ import TaskBoard from './TaskBoard';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useLanguage } from '@/components/i18n/useLanguage';
 
-export default function TaskList({ projectId, canEdit, filterMilestoneId, showMilestoneFilter = true }) {
+export default function TaskList({ projectId, canEdit, filterMilestoneId, showMilestoneFilter = true, createDialogOpen, onCreateDialogChange }) {
   const { currentLanguage } = useLanguage();
   const tr = (itText, enText) => currentLanguage === 'it' ? itText : enText;
   const dateLocale = currentLanguage === 'it' ? it : enUS;
@@ -54,8 +54,14 @@ export default function TaskList({ projectId, canEdit, filterMilestoneId, showMi
 
   const handleCreate = () => {
     setSelectedTask(null);
+    if (typeof onCreateDialogChange === 'function') {
+      onCreateDialogChange(true);
+      return;
+    }
     setDialogOpen(true);
   };
+
+  const effectiveDialogOpen = dialogOpen || Boolean(createDialogOpen);
 
   const filteredTasks = selectedMilestoneId === 'all' 
     ? tasks 
@@ -212,8 +218,14 @@ export default function TaskList({ projectId, canEdit, filterMilestoneId, showMi
       </Card>
 
       <TaskDialog
-        open={dialogOpen}
-        onOpenChange={setDialogOpen}
+        open={effectiveDialogOpen}
+        onOpenChange={(open) => {
+          setDialogOpen(open && !!selectedTask);
+          if (!open) {
+            setSelectedTask(null);
+          }
+          onCreateDialogChange?.(open);
+        }}
         task={selectedTask}
         projectId={projectId}
         showMilestoneField={showMilestoneFilter}

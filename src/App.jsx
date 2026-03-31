@@ -3,7 +3,7 @@ import { QueryClientProvider } from '@tanstack/react-query'
 import { queryClientInstance } from '@/lib/query-client'
 import NavigationTracker from '@/lib/NavigationTracker'
 import { pagesConfig } from './pages.config'
-import { BrowserRouter as Router, Navigate, Route, Routes } from 'react-router-dom';
+import { BrowserRouter as Router, Navigate, Route, Routes, useLocation } from 'react-router-dom';
 import PageNotFound from './lib/PageNotFound';
 import { AuthProvider, useAuth } from '@/lib/AuthContext';
 import UserNotRegisteredError from '@/components/UserNotRegisteredError';
@@ -26,6 +26,12 @@ const AppShell = ({ children, withNavigationTracker = false }) => (
     {children}
   </AuthProvider>
 );
+
+const LegacyOperativeRedirect = () => {
+  const location = useLocation();
+  const nextPath = `/app${location.pathname}${location.search}${location.hash}`;
+  return <Navigate to={nextPath} replace />;
+};
 
 const AuthenticatedAppRoutes = () => {
   const { isLoadingAuth, isLoadingPublicSettings, authError, isAuthenticated } = useAuth();
@@ -83,7 +89,7 @@ function App() {
     <QueryClientProvider client={queryClientInstance}>
       <Router>
         <Routes>
-          <Route path="/operativa/*" element={<Navigate to="/app/operativa" replace />} />
+          <Route path="/operativa/*" element={<LegacyOperativeRedirect />} />
           <Route
             path="/app/*"
             element={

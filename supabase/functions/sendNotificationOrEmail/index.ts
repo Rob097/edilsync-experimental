@@ -1,9 +1,13 @@
 // @ts-nocheck
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+import { getAuthenticatedContext } from "../_shared/supabase.ts";
 
 const DEFAULT_PREFERENCES = {
   project_invite: { notification: true, email: true },
   company_invite: { notification: true, email: true },
+  company_plan_activated: { notification: true, email: true },
+  company_plan_changed: { notification: true, email: true },
+  company_plan_canceled: { notification: true, email: true },
   task_assigned: { notification: true, email: false },
   task_status_changed: { notification: true, email: false },
   change_request_assigned: { notification: true, email: true },
@@ -14,10 +18,47 @@ const DEFAULT_PREFERENCES = {
   event_cancelled: { notification: true, email: true },
   message_mention: { notification: true, email: false },
   document_comment: { notification: true, email: false },
+  project_sponsorship_activated: { notification: true, email: true },
+  project_sponsorship_revoked: { notification: true, email: true },
   dispute_opened: { notification: true, email: true },
   dispute_status_changed: { notification: true, email: true },
   dispute_commented: { notification: true, email: false },
 };
+
+async function findRecentDuplicateNotification({
+  recipientEmail,
+  notificationData,
+}: {
+  recipientEmail: string;
+  notificationData?: {
+    type?: string;
+    title?: string;
+    message?: string;
+    related_event_id?: string | null;
+  } | null;
+}) {
+  if (!recipientEmail || !notificationData?.type || !notificationData?.title || !notificationData?.message) {
+    return null;
+  }
+
+  const duplicateWindowStart = new Date(Date.now() - 5 * 60 * 1000).toISOString();
+
+  const { data, error } = await supabase
+    .from("notifications")
+    .select("id, created_date")
+    .eq("user_email", recipientEmail)
+    .eq("type", notificationData.type)
+    .eq("title", notificationData.title)
+    .eq("message", notificationData.message)
+    .eq("related_event_id", notificationData.related_event_id || null)
+    .gte("created_date", duplicateWindowStart)
+    .order("created_date", { ascending: false })
+    .limit(1)
+    .maybeSingle();
+
+  if (error) throw error;
+  return data || null;
+}
 
 const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
 const serviceRoleKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
@@ -94,6 +135,13 @@ Deno.serve(async (req) => {
       return new Response("ok", { headers: corsHeaders });
     }
 
+    const internalServiceKey = req.headers.get("x-internal-service-key") || "";
+    const isInternalRequest = internalServiceKey && internalServiceKey === serviceRoleKey;
+
+    if (!isInternalRequest) {
+      await getAuthenticatedContext(req);
+    }
+
     const payload = await req.json();
     const {
       action_type,
@@ -147,7 +195,21 @@ Deno.serve(async (req) => {
       email_sent: false,
       email_provider: null as string | null,
       email_skipped_reason: null as string | null,
+      duplicate_skipped: false,
     };
+
+    const recentDuplicate = notification_data
+      ? await findRecentDuplicateNotification({
+        recipientEmail: recipient_email,
+        notificationData: notification_data,
+      })
+      : null;
+
+    if (recentDuplicate) {
+      result.duplicate_skipped = true;
+      result.email_skipped_reason = "duplicate_notification_recently_sent";
+      return jsonResponse(result);
+    }
 
     if (notification_data && actionPrefs.notification) {
       const { error: notificationError } = await supabase

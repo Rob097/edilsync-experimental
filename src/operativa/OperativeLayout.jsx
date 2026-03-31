@@ -47,7 +47,7 @@ export default function OperativeLayout() {
       await queryClient.invalidateQueries({ queryKey: ['currentUser'] });
       await queryClient.invalidateQueries({ queryKey: ['userCompanies'] });
       await queryClient.invalidateQueries({ queryKey: ['operativeProjects'] });
-      navigate('/operativa', { replace: true });
+      navigate('/app/operativa', { replace: true });
     } finally {
       setIsChangingContext(false);
     }
@@ -55,22 +55,22 @@ export default function OperativeLayout() {
 
   const switchToNormal = () => {
     setUiMode(UI_MODES.NORMAL);
-    navigate('/');
+    navigate('/app');
   };
 
   const goToProject = (projectId) => {
     setMenuOpen(false);
-    navigate(`/operativa/progetto/${projectId}`);
+    navigate(`/app/operativa/progetto/${projectId}`);
   };
 
   const goToSummary = () => {
     setMenuOpen(false);
-    navigate('/operativa/riepilogo');
+    navigate('/app/operativa/riepilogo');
   };
 
   const goToCompanyWorkspace = () => {
     setMenuOpen(false);
-    navigate('/operativa/societa');
+    navigate('/app/operativa/societa');
   };
 
   const handleCompanyChangeFromMenu = async (company) => {
@@ -78,8 +78,8 @@ export default function OperativeLayout() {
     setMenuOpen(false);
   };
 
-  const selectedProjectId = location.pathname.startsWith('/operativa/progetto/')
-    ? location.pathname.split('/')[3]
+  const selectedProjectId = location.pathname.startsWith('/app/operativa/progetto/')
+    ? location.pathname.split('/')[4]
     : null;
 
   const showCompanyGuard = !isLoading && (currentContext !== 'company' || !currentCompany);

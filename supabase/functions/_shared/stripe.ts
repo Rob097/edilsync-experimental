@@ -1,6 +1,6 @@
 // @ts-nocheck
 import Stripe from "https://esm.sh/stripe@14?target=denonext";
-import { adminClient } from "./supabase.ts";
+import { adminClient, invokeInternalFunction } from "./supabase.ts";
 
 const stripeSecretKey = Deno.env.get("STRIPE_SECRET_KEY") || "";
 
@@ -170,7 +170,110 @@ export async function endActiveSponsorshipsForCompany(companyId: string) {
     .is("ended_at", null);
 }
 
-export async function syncCompanySubscriptionFromStripeSubscription(subscription: Record<string, any>, explicitCompanyId?: string | null) {
+async function notifyCompanyAdminsAboutPlanChange({
+  companyId,
+  previousSubscription,
+  nextPayload,
+  sourceEventType,
+}: {
+  companyId: string;
+  previousSubscription?: Record<string, any> | null;
+  nextPayload: Record<string, any>;
+  sourceEventType?: string | null;
+}) {
+  const previousStatus = previousSubscription?.billing_status || "free";
+  const previousCycle = previousSubscription?.billing_cycle || null;
+  const previousCancelAtPeriodEnd = Boolean(previousSubscription?.cancel_at_period_end);
+  const nextStatus = nextPayload.billing_status;
+  const nextCycle = nextPayload.billing_cycle;
+  const nextCancelAtPeriodEnd = Boolean(nextPayload.cancel_at_period_end);
+
+  let actionType = null;
+  let title = null;
+  let message = null;
+  let emailSubject = null;
+  let emailBody = null;
+
+  const isCanonicalNotificationSource = [
+    "customer.subscription.updated",
+    "customer.subscription.deleted",
+    "manual_stripe_sync",
+  ].includes(sourceEventType || "");
+
+  if (!isCanonicalNotificationSource) {
+    return;
+  }
+
+  if (previousStatus !== "active" && nextStatus === "active") {
+    actionType = "company_plan_activated";
+    title = "Piano Pro attivato";
+    message = `Il piano Pro della società è attivo con ciclo ${nextCycle === "yearly" ? "annuale" : "mensile"}.`;
+    emailSubject = "Piano Pro società attivato";
+    emailBody = `Ciao,\n\nIl piano Pro della società è ora attivo con ciclo ${nextCycle === "yearly" ? "annuale" : "mensile"}.\n\nCordiali saluti,\nIl team EdilSync`;
+  } else if (!previousCancelAtPeriodEnd && nextCancelAtPeriodEnd) {
+    actionType = "company_plan_canceled";
+    title = "Abbonamento società disdetto";
+    message = "Il piano Pro resterà attivo fino alla fine del periodo corrente, poi la società tornerà al piano Base.";
+    emailSubject = "Abbonamento società disdetto";
+    emailBody = "Ciao,\n\nIl piano Pro della società è stato disdetto. Resterà attivo fino alla fine del periodo corrente, poi la società tornerà al piano Base.\n\nCordiali saluti,\nIl team EdilSync";
+  } else if (previousStatus === "active" && nextStatus === "active" && previousCycle && nextCycle && previousCycle !== nextCycle) {
+    actionType = "company_plan_changed";
+    title = "Piano società modificato";
+    message = `Il piano Pro della società è stato aggiornato al ciclo ${nextCycle === "yearly" ? "annuale" : "mensile"}.`;
+    emailSubject = "Piano società modificato";
+    emailBody = `Ciao,\n\nIl piano Pro della società è stato aggiornato al ciclo ${nextCycle === "yearly" ? "annuale" : "mensile"}.\n\nCordiali saluti,\nIl team EdilSync`;
+  } else if (previousStatus === "active" && nextStatus !== "active" && ["canceled", "unpaid"].includes(nextStatus)) {
+    actionType = "company_plan_canceled";
+    title = "Piano Pro non più attivo";
+    message = "Il piano Pro della società non è più attivo. Alcune funzioni avanzate potrebbero non essere più disponibili.";
+    emailSubject = "Piano Pro non più attivo";
+    emailBody = "Ciao,\n\nIl piano Pro della società non è più attivo. Alcune funzioni avanzate potrebbero non essere più disponibili.\n\nCordiali saluti,\nIl team EdilSync";
+  }
+
+  if (!actionType) {
+    return;
+  }
+
+  const { data: companyAdmins, error: adminsError } = await adminClient
+    .from("company_members")
+    .select("user_email")
+    .eq("company_id", companyId)
+    .eq("status", "active")
+    .eq("role", "admin");
+
+  if (adminsError) throw adminsError;
+
+  for (const admin of companyAdmins || []) {
+    if (!admin.user_email) continue;
+
+    await invokeInternalFunction("sendNotificationOrEmail", {
+      action_type: actionType,
+      recipient_email: admin.user_email,
+      context_type: "company",
+      context_company_id: companyId,
+      notification_data: {
+        type: actionType,
+        title,
+        message,
+        related_event_id: companyId,
+      },
+      email_data: {
+        subject: emailSubject,
+        body: emailBody,
+      },
+    });
+  }
+}
+
+export async function syncCompanySubscriptionFromStripeSubscription(
+  subscription: Record<string, any>,
+  explicitCompanyId?: string | null,
+  periodOverrides?: {
+    currentPeriodStart?: string | null;
+    currentPeriodEnd?: string | null;
+  },
+  sourceEventType?: string | null,
+) {
   const companyId = await findCompanyIdForStripeReference({
     explicitCompanyId,
     subscriptionId: subscription?.id || null,
@@ -185,6 +288,13 @@ export async function syncCompanySubscriptionFromStripeSubscription(subscription
   const price = firstItem?.price || null;
   const interval = price?.recurring?.interval || null;
   const { planCode, billingStatus } = mapStripeSubscriptionStatus(subscription.status);
+  const { data: previousSubscription, error: previousSubscriptionError } = await adminClient
+    .from("company_subscriptions")
+    .select("plan_code, billing_status, billing_cycle, cancel_at_period_end")
+    .eq("company_id", companyId)
+    .maybeSingle();
+
+  if (previousSubscriptionError) throw previousSubscriptionError;
 
   const payload = {
     company_id: companyId,
@@ -196,8 +306,8 @@ export async function syncCompanySubscriptionFromStripeSubscription(subscription
     stripe_subscription_id: subscription?.id || null,
     stripe_product_id: price?.product ? String(price.product) : resolveStripeProductId(),
     stripe_price_id: price?.id || null,
-    current_period_start: toIsoOrNull(subscription?.current_period_start || null),
-    current_period_end: toIsoOrNull(subscription?.current_period_end || null),
+    current_period_start: toIsoOrNull(subscription?.current_period_start || null) || periodOverrides?.currentPeriodStart || null,
+    current_period_end: toIsoOrNull(subscription?.current_period_end || null) || periodOverrides?.currentPeriodEnd || null,
     cancel_at_period_end: Boolean(subscription?.cancel_at_period_end),
     canceled_at: toIsoOrNull(subscription?.canceled_at || null),
     created_by: "stripe_webhook",
@@ -208,6 +318,13 @@ export async function syncCompanySubscriptionFromStripeSubscription(subscription
     .upsert(payload, { onConflict: "company_id" });
 
   if (error) throw error;
+
+  await notifyCompanyAdminsAboutPlanChange({
+    companyId,
+    previousSubscription,
+    nextPayload: payload,
+    sourceEventType,
+  });
 
   if (!isStripeSubscriptionEntitled(subscription.status)) {
     await endActiveSponsorshipsForCompany(companyId);

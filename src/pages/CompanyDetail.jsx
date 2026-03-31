@@ -85,14 +85,17 @@ export default function CompanyDetail() {
   });
 
   const { featureMap: companyFeatureMap } = useCompanyFeatureAccess(companyId, [
+    'company_billing',
     'company_time_tracking',
     'company_chat',
     'company_documents',
   ], { enabled: !!companyId });
 
+  const companyBillingFeatureAccess = companyFeatureMap.company_billing;
   const companyTimeTrackingFeatureAccess = companyFeatureMap.company_time_tracking;
   const companyChatFeatureAccess = companyFeatureMap.company_chat;
   const companyDocumentsFeatureAccess = companyFeatureMap.company_documents;
+  const canUpgradeCompanyPlan = Boolean(companyBillingFeatureAccess?.config?.can_upgrade);
   const canUseCompanyTimeTracking = isFeatureAccessible(companyTimeTrackingFeatureAccess);
   const canCreateCompanyChannels = isFeatureFullyEnabled(companyChatFeatureAccess);
   const companyChatAccessMode = isFeatureFullyEnabled(companyChatFeatureAccess) ? 'full' : 'general_only';
@@ -278,6 +281,26 @@ export default function CompanyDetail() {
             </CardContent>
           </Card>
         )}
+
+        {isAdmin && canUpgradeCompanyPlan ? (
+          <Card className="border-[#ef6144]/20 bg-[linear-gradient(135deg,rgba(239,97,68,0.08),rgba(255,244,235,0.95))] shadow-sm">
+            <CardContent className="flex flex-col gap-4 p-4 lg:flex-row lg:items-center lg:justify-between">
+              <div className="space-y-1">
+                <p className="text-sm font-semibold text-[#b5432e]">{tr('Sblocca il piano Pro', 'Unlock the Pro plan')}</p>
+                <p className="text-base font-semibold text-slate-900">
+                  {tr('Attiva funzioni avanzate e sponsorship dei progetti della societa.', 'Activate advanced tools and project sponsorship for your company.')}
+                </p>
+                <p className="text-sm text-slate-600">
+                  {tr('Apri la sezione fatturazione e scopri il piano annuale con 2 mensilita gratuite.', 'Open billing and discover the yearly plan with 2 free months.')}
+                </p>
+              </div>
+              <Button className="bg-[#ef6144] shadow-[0_16px_32px_-18px_rgba(239,97,68,0.95)] hover:bg-[#d9553a]" onClick={() => navigateToSection('billing')}>
+                <CreditCard className="h-4 w-4" />
+                {tr('Vai alla fatturazione', 'Go to billing')}
+              </Button>
+            </CardContent>
+          </Card>
+        ) : null}
       </div>
 
       <div className="border-t" />

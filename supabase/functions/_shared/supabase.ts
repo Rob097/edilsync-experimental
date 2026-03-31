@@ -84,8 +84,9 @@ export async function invokeInternalFunction(name: string, payload: unknown) {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
-      Authorization: `Bearer ${serviceRoleKey}`,
       apikey: serviceRoleKey,
+      "x-internal-service-key": serviceRoleKey,
+      "x-internal-source": name,
     },
     body: JSON.stringify(payload),
   });

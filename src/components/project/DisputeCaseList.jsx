@@ -15,6 +15,7 @@ import { useLanguage } from '@/components/i18n/useLanguage';
 import EmptyState from '@/components/ui/EmptyState';
 import { sendDisputeNotifications } from '@/lib/disputeNotifications';
 import DisputeCommentComposer from './DisputeCommentComposer';
+import { isFeatureAccessible, useProjectFeatureAccess } from '@/hooks/useFeatureAccess';
 
 const categoryKeys = ['scope', 'cost', 'delay', 'quality', 'payment', 'other'];
 const statusKeys = ['open', 'awaiting_response', 'in_review', 'resolved', 'closed_no_agreement', 'escalated'];
@@ -33,6 +34,8 @@ export default function DisputeCaseList({
   const tr = (itText, enText) => currentLanguage === 'it' ? itText : enText;
   const dateLocale = currentLanguage === 'it' ? it : enUS;
   const queryClient = useQueryClient();
+  const { featureMap: projectFeatureMap } = useProjectFeatureAccess(projectId, ['project_milestones'], { enabled: !!projectId });
+  const canMentionMilestones = isFeatureAccessible(projectFeatureMap.project_milestones);
 
   const [internalCreateOpen, setInternalCreateOpen] = useState(false);
   const [title, setTitle] = useState('');
@@ -499,6 +502,7 @@ export default function DisputeCaseList({
                 projectId={projectId}
                 currentUser={currentUser}
                 isPending={addCommentMutation.isPending}
+                allowMilestoneMentions={canMentionMilestones}
                 onSubmit={(payload) => addCommentMutation.mutate(payload)}
               />
             </div>

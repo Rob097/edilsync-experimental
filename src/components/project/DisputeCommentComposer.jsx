@@ -43,6 +43,7 @@ export default function DisputeCommentComposer({
   currentUser,
   onSubmit,
   isPending,
+  allowMilestoneMentions = true,
 }) {
   const { t, currentLanguage } = useLanguage();
   const tr = (it, en) => (currentLanguage === 'it' ? it : en);
@@ -71,7 +72,7 @@ export default function DisputeCommentComposer({
   const { data: milestones = [] } = useQuery({
     queryKey: ['milestones', projectId],
     queryFn: () => appClient.entities.Milestone.filter({ project_id: projectId }),
-    enabled: !!projectId && mentionType === 'milestone',
+    enabled: !!projectId && allowMilestoneMentions && mentionType === 'milestone',
   });
 
   const { data: changeRequests = [] } = useQuery({
@@ -180,10 +181,16 @@ export default function DisputeCommentComposer({
   const getMentionOptions = () => {
     if (mentionType === 'participant') return participantOptions;
     if (mentionType === 'task') return tasks.map((task) => ({ id: task.id, label: task.title }));
-    if (mentionType === 'milestone') return milestones.map((milestone) => ({ id: milestone.id, label: milestone.title }));
+    if (mentionType === 'milestone' && allowMilestoneMentions) return milestones.map((milestone) => ({ id: milestone.id, label: milestone.title }));
     if (mentionType === 'change_request') return changeRequests.map((request) => ({ id: request.id, label: request.title }));
     return [];
   };
+
+  const entityMentionButtons = [
+    { type: 'task', icon: Hash },
+    ...(allowMilestoneMentions ? [{ type: 'milestone', icon: Flag }] : []),
+    { type: 'change_request', icon: DollarSign },
+  ];
 
   const submitDisabled = isPending || uploadPhotoMutation.isPending || !commentValue.trim();
 
@@ -210,7 +217,7 @@ export default function DisputeCommentComposer({
           </PopoverContent>
         </Popover>
 
-        {[{ type: 'task', icon: Hash }, { type: 'milestone', icon: Flag }, { type: 'change_request', icon: DollarSign }].map(({ type, icon: Icon }) => (
+        {entityMentionButtons.map(({ type, icon: Icon }) => (
           <Popover key={type} open={mentionsOpen && mentionType === type} onOpenChange={(open) => {
             setMentionsOpen(open);
             if (!open) setMentionType(null);

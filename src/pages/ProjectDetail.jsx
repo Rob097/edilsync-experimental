@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
 import { appClient } from '@/api/appClient';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
@@ -63,13 +63,15 @@ export default function ProjectDetail() {
   const tr = (itText, enText) => (currentLanguage === 'it' ? itText : enText);
   const { startTour } = useTour();
   const dateLocale = currentLanguage === 'it' ? it : enUS;
+  const location = useLocation();
   const navigate = useNavigate();
   const queryClient = useQueryClient();
-  const urlParams = new URLSearchParams(window.location.search);
+  const urlParams = new URLSearchParams(location.search);
   const projectId = urlParams.get('id');
   const initialTab = urlParams.get('tab');
   const initialSection = urlParams.get('section');
   const initialItemId = urlParams.get('itemId');
+  const initialCreateAction = urlParams.get('create');
   
   const [inviteDialogOpen, setInviteDialogOpen] = useState(false);
   const [editProjectDialogOpen, setEditProjectDialogOpen] = useState(false);
@@ -78,9 +80,38 @@ export default function ProjectDetail() {
   const [lavoriSection, setLavoriSection] = useState(initialTab === 'lavori' && initialSection ? initialSection : 'all');
   const [infoSection, setInfoSection] = useState(initialTab === 'info' && initialSection ? initialSection : 'all');
   const [documentUploadOpen, setDocumentUploadOpen] = useState(false);
+  const [taskCreateOpen, setTaskCreateOpen] = useState(false);
   const [changeCreateOpen, setChangeCreateOpen] = useState(false);
+  const [disputeCreateOpen, setDisputeCreateOpen] = useState(false);
   const [taskFilterMilestoneId, setTaskFilterMilestoneId] = useState(null);
   const [hasScrolledToItem, setHasScrolledToItem] = useState(false);
+
+  useEffect(() => {
+    if (!initialCreateAction) return;
+
+    if (initialCreateAction === 'task') {
+      setActiveTab('lavori');
+      setLavoriSection('tasks');
+      setTaskCreateOpen(true);
+    }
+
+    if (initialCreateAction === 'change') {
+      setActiveTab('lavori');
+      setLavoriSection('changes');
+      setChangeCreateOpen(true);
+    }
+
+    if (initialCreateAction === 'dispute') {
+      setActiveTab('lavori');
+      setLavoriSection('disputes');
+      setDisputeCreateOpen(true);
+    }
+
+    const nextParams = new URLSearchParams(location.search);
+    nextParams.delete('create');
+    const nextQuery = nextParams.toString();
+    navigate(`${createPageUrl('ProjectDetail')}${nextQuery ? `?${nextQuery}` : ''}`, { replace: true });
+  }, [initialCreateAction, location.search, navigate]);
 
   const acceptInviteMutation = useMutation({
     mutationFn: async (participantId) => {
@@ -704,6 +735,8 @@ export default function ProjectDetail() {
                 canEdit={canEditTasks} 
                 filterMilestoneId={taskFilterMilestoneId}
                 showMilestoneFilter={canUseMilestones}
+                createDialogOpen={taskCreateOpen}
+                onCreateDialogChange={setTaskCreateOpen}
               />
             </div>
           )}
@@ -775,6 +808,8 @@ export default function ProjectDetail() {
                 currentParticipant={userParticipation}
                 canCreate={canManageDisputes}
                 canRespond={canManageDisputes}
+                createDialogOpen={disputeCreateOpen}
+                onCreateDialogChange={setDisputeCreateOpen}
               />
             </div>
           )}

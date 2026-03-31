@@ -36,4 +36,4 @@ export const setOperationalMode = (enabled) => {
 	setUiMode(enabled ? UI_MODES.OPERATIONAL : UI_MODES.NORMAL);
 };
 
-export const isOperationalPath = (pathname = '') => pathname.startsWith('/operativa');
+export const isOperationalPath = (pathname = '') => pathname.startsWith('/operativa') || pathname.startsWith('/app/operativa');

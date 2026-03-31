@@ -34,7 +34,12 @@
         "change_request_assigned",
         "change_request_status_changed",
         "milestone_status_changed",
-        "document_comment"
+        "document_comment",
+        "company_plan_activated",
+        "company_plan_changed",
+        "company_plan_canceled",
+        "project_sponsorship_activated",
+        "project_sponsorship_revoked"
       ],
       "description": "Notification type"
     },

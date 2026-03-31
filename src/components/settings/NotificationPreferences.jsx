@@ -13,6 +13,9 @@ import { useLanguage } from '@/components/i18n/useLanguage';
 const DEFAULT_PREFERENCES = {
   project_invite: { notification: true, email: true },
   company_invite: { notification: true, email: true },
+  company_plan_activated: { notification: true, email: true },
+  company_plan_changed: { notification: true, email: true },
+  company_plan_canceled: { notification: true, email: true },
   task_assigned: { notification: true, email: false },
   task_status_changed: { notification: true, email: false },
   change_request_assigned: { notification: true, email: true },
@@ -23,6 +26,8 @@ const DEFAULT_PREFERENCES = {
   event_cancelled: { notification: true, email: true },
   message_mention: { notification: true, email: false },
   document_comment: { notification: true, email: false },
+  project_sponsorship_activated: { notification: true, email: true },
+  project_sponsorship_revoked: { notification: true, email: true },
   dispute_opened: { notification: true, email: true },
   dispute_status_changed: { notification: true, email: true },
   dispute_commented: { notification: true, email: false },
@@ -44,6 +49,16 @@ const NOTIFICATION_GROUPS = [
     group: { it: 'Gestione Società', en: 'Company Management' },
     actions: [
       { key: 'company_invite', label: { it: 'Invito a nuova società', en: 'Invitation to a new company' } },
+      { key: 'company_plan_activated', label: { it: 'Piano società attivato', en: 'Company plan activated' } },
+      { key: 'company_plan_changed', label: { it: 'Piano società modificato', en: 'Company plan changed' } },
+      { key: 'company_plan_canceled', label: { it: 'Abbonamento società disdetto', en: 'Company subscription canceled' } },
+    ],
+  },
+  {
+    group: { it: 'Piano Progetto', en: 'Project Plan' },
+    actions: [
+      { key: 'project_sponsorship_activated', label: { it: 'Sponsorship progetto attivata', en: 'Project sponsorship activated' } },
+      { key: 'project_sponsorship_revoked', label: { it: 'Sponsorship progetto revocata', en: 'Project sponsorship revoked' } },
     ],
   },
   {

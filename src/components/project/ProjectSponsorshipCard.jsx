@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { format } from 'date-fns';
 import { enUS, it } from 'date-fns/locale';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { Info, ShieldCheck, Sparkles } from 'lucide-react';
+import { ChevronDown, Info, ShieldCheck, Sparkles } from 'lucide-react';
 import { createPageUrl } from '@/utils';
 import { appClient } from '@/api/appClient';
 import { useLanguage } from '@/components/i18n/useLanguage';
@@ -28,12 +28,14 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog';
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Skeleton } from '@/components/ui/skeleton.jsx';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { toast } from '@/components/ui/use-toast';
 import { isPaidCompanySubscription, normalizeCompanySubscription } from '@/lib/subscriptions';
 import { isProjectBlockedForSponsorLoss, useProjectPricingStatus } from '@/hooks/useFeatureAccess';
+import { sendProjectSponsorshipNotifications } from '@/lib/projectSponsorshipNotifications';
 
 export default function ProjectSponsorshipCard({
   projectId,
@@ -52,6 +54,7 @@ export default function ProjectSponsorshipCard({
   const [sponsorDialogOpen, setSponsorDialogOpen] = useState(false);
   const [selectedSponsorCompanyId, setSelectedSponsorCompanyId] = useState('');
   const [endDialogOpen, setEndDialogOpen] = useState(false);
+  const [detailsOpen, setDetailsOpen] = useState(false);
 
   const { projectPricingStatus } = useProjectPricingStatus(projectId, { enabled: !!projectId });
 
@@ -178,6 +181,25 @@ export default function ProjectSponsorshipCard({
     onSuccess: async (_, sponsorCompanyId) => {
       await invalidateProjectAccess(sponsorCompanyId);
       setSponsorDialogOpen(false);
+
+      const sponsorCompanyName = companies.find((company) => company.id === sponsorCompanyId)?.name || tr('la società sponsor', 'the sponsor company');
+
+      await sendProjectSponsorshipNotifications({
+        projectId,
+        actionType: 'project_sponsorship_activated',
+        notificationType: 'project_sponsorship_activated',
+        title: tr('Sponsorship attivata', 'Sponsorship activated'),
+        message: tr(
+          `Il progetto è ora sponsorizzato da ${sponsorCompanyName} e le funzioni avanzate sono disponibili.`,
+          `The project is now sponsored by ${sponsorCompanyName} and advanced features are available.`,
+        ),
+        emailSubject: tr('Sponsorship progetto attivata', 'Project sponsorship activated'),
+        emailBody: tr(
+          `Ciao,\n\nIl progetto è ora sponsorizzato da ${sponsorCompanyName}. Le funzioni avanzate del progetto sono disponibili per i partecipanti.\n\nCordiali saluti,\nIl team EdilSync`,
+          `Hello,\n\nThe project is now sponsored by ${sponsorCompanyName}. Advanced project features are now available to participants.\n\nBest regards,\nThe EdilSync team`,
+        ),
+      });
+
       toast({
         title: tr('Sponsorship attivata', 'Sponsorship activated'),
         description: tr(
@@ -202,11 +224,30 @@ export default function ProjectSponsorshipCard({
     onSuccess: async () => {
       await invalidateProjectAccess(effectiveActiveSponsorship?.sponsor_company_id || null);
       setEndDialogOpen(false);
+
+      const revokedCompanyName = sponsorCompany?.name || tr('la società sponsor', 'the sponsor company');
+
+      await sendProjectSponsorshipNotifications({
+        projectId,
+        actionType: 'project_sponsorship_revoked',
+        notificationType: 'project_sponsorship_revoked',
+        title: tr('Sponsorship terminata', 'Sponsorship ended'),
+        message: tr(
+          `La sponsorship di ${revokedCompanyName} è terminata e alcune funzioni avanzate del progetto non sono più disponibili.`,
+          `The sponsorship from ${revokedCompanyName} has ended and some advanced project features are no longer available.`,
+        ),
+        emailSubject: tr('Sponsorship progetto revocata', 'Project sponsorship revoked'),
+        emailBody: tr(
+          `Ciao,\n\nLa sponsorship di ${revokedCompanyName} è terminata. Alcune funzioni avanzate del progetto potrebbero non essere più disponibili finché non viene attivata una nuova sponsorship.\n\nCordiali saluti,\nIl team EdilSync`,
+          `Hello,\n\nThe sponsorship from ${revokedCompanyName} has ended. Some advanced project features may no longer be available until a new sponsorship is activated.\n\nBest regards,\nThe EdilSync team`,
+        ),
+      });
+
       toast({
         title: tr('Sponsorship terminata', 'Sponsorship ended'),
         description: tr(
-          'Il progetto perde subito l entitlement premium. Se esiste gia un altro progetto owned non sponsorizzato, entra nello stato bloccato finche non rientra uno sponsor.',
-          'The project immediately loses premium entitlement. If there is already another owned unsponsored project, it enters the blocked state until a sponsor comes back.',
+          'Il progetto torna al piano Base finche non viene sponsorizzato di nuovo.',
+          'The project returns to the Base plan until it is sponsored again.',
         ),
       });
     },
@@ -235,63 +276,90 @@ export default function ProjectSponsorshipCard({
 
   return (
     <>
-      <Card>
-        <CardHeader className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
-          <div>
-            <div className="flex items-center gap-2">
-              <CardTitle className="text-lg">{tr('Stato sponsorship progetto', 'Project sponsorship status')}</CardTitle>
-              <TooltipProvider>
-                <Tooltip>
-                  <TooltipTrigger asChild>
-                    <Button variant="ghost" size="icon" onClick={() => setInfoOpen(true)}>
-                      <Info className="h-4 w-4 text-slate-500" />
-                    </Button>
-                  </TooltipTrigger>
-                  <TooltipContent>
-                    {tr('Cosa significa', 'What does this mean')}
-                  </TooltipContent>
-                </Tooltip>
-              </TooltipProvider>
+      <Collapsible open={detailsOpen} onOpenChange={setDetailsOpen}>
+        <Card className="h-full">
+          <CardHeader className="pb-3">
+            <div className="flex items-start justify-between gap-3">
+              <div className="flex items-center gap-3">
+                <div className={`flex h-10 w-10 items-center justify-center rounded-lg ${effectiveActiveSponsorship ? 'bg-[#ef6144]/10' : isBlockedProject ? 'bg-red-100' : 'bg-slate-100'}`}>
+                  <ShieldCheck className={`h-5 w-5 ${effectiveActiveSponsorship ? 'text-[#ef6144]' : isBlockedProject ? 'text-red-600' : 'text-slate-500'}`} />
+                </div>
+                <div>
+                  <CardTitle className="text-lg">{tr('Piano progetto', 'Project plan')}</CardTitle>
+                  <p className="mt-1 text-sm text-gray-500">
+                    {effectiveActiveSponsorship
+                      ? tr('Funzioni avanzate attive', 'Advanced features active')
+                      : isBlockedProject
+                        ? tr('Serve uno sponsor', 'A sponsor is needed')
+                        : tr('Piano Base attivo', 'Base plan active')}
+                  </p>
+                </div>
+              </div>
+              <div className="flex items-center gap-2">
+                <Badge className={effectiveActiveSponsorship ? 'bg-[#ef6144] text-white' : (isBlockedProject ? 'bg-red-100 text-red-700' : 'bg-slate-100 text-slate-700')}>
+                  {effectiveActiveSponsorship
+                    ? tr('Pro', 'Pro')
+                    : isBlockedProject
+                      ? tr('Sponsor mancante', 'Sponsor missing')
+                      : tr('Base', 'Base')}
+                </Badge>
+                <TooltipProvider>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <Button variant="ghost" size="icon" onClick={() => setInfoOpen(true)}>
+                        <Info className="h-4 w-4 text-slate-500" />
+                      </Button>
+                    </TooltipTrigger>
+                    <TooltipContent>
+                      {tr('Cosa significa', 'What does this mean')}
+                    </TooltipContent>
+                  </Tooltip>
+                </TooltipProvider>
+              </div>
             </div>
-            <p className="mt-1 text-sm text-gray-500">
-              {effectiveActiveSponsorship
-                ? tr(
-                  'Il progetto e sbloccato a livello premium per tutti i partecipanti.',
-                  'The project is premium-unlocked for all participants.',
-                )
-                : isBlockedProject
-                  ? tr(
-                    'Il progetto ha perso lo sponsor mentre l owner ha gia un altro progetto non sponsorizzato. Le superfici premium ora diventano invisibili e resta disponibile solo il recupero sponsor.',
-                    'The project lost its sponsor while the owner already has another unsponsored project. Premium surfaces are now hidden and only sponsor recovery remains available.',
-                  )
-                : tr(
-                  'Il progetto sta usando il set di feature free finche una societa paid partecipante non lo sponsorizza.',
-                  'The project is using the free feature set until a paid participant company sponsors it.',
-                )}
-            </p>
-          </div>
-          <Badge className={effectiveActiveSponsorship ? 'bg-[#ef6144] text-white' : (isBlockedProject ? 'bg-red-100 text-red-700' : 'bg-slate-100 text-slate-700')}>
-            {effectiveActiveSponsorship
-              ? tr('Progetto sponsorizzato', 'Sponsored project')
-              : isBlockedProject
-                ? tr('Bloccato per perdita sponsor', 'Blocked for sponsor loss')
-                : tr('Progetto non sponsorizzato', 'Unsponsored project')}
-          </Badge>
-        </CardHeader>
-        <CardContent className="space-y-4">
+          </CardHeader>
+          <CardContent className="pt-0">
+            <div className="min-h-[88px] rounded-xl border bg-slate-50 p-4">
+              <div className="flex h-full flex-col justify-between gap-2 sm:flex-row sm:items-center">
+                <div>
+                  <p className="text-lg font-semibold text-slate-900">
+                    {effectiveActiveSponsorship
+                      ? tr('Progetto sponsorizzato', 'Sponsored project')
+                      : isBlockedProject
+                        ? tr('Riattiva una societa sponsor', 'Restore a sponsor company')
+                        : tr('Puoi passare il progetto a Pro', 'You can upgrade this project to Pro')}
+                  </p>
+                  <p className="text-sm text-slate-500">
+                    {effectiveActiveSponsorship
+                      ? tr('Le funzioni avanzate del progetto sono attive per tutti i partecipanti.', 'Advanced project features are active for all participants.')
+                      : isBlockedProject
+                        ? tr('Per riattivare le funzioni avanzate serve una societa sponsor.', 'A sponsor company is required to reactivate advanced features.')
+                        : tr('Serve una societa Pro gia presente nel progetto.', 'A Pro company already in the project is required.')}
+                  </p>
+                </div>
+                <CollapsibleTrigger asChild>
+                  <Button variant="ghost" className="justify-start px-0 text-[#b5432e] hover:bg-transparent hover:text-[#ef6144] sm:justify-end">
+                    {detailsOpen ? tr('Nascondi dettagli', 'Hide details') : tr('Mostra dettagli', 'Show details')}
+                    <ChevronDown className={`h-4 w-4 transition-transform ${detailsOpen ? 'rotate-180' : ''}`} />
+                  </Button>
+                </CollapsibleTrigger>
+              </div>
+            </div>
+
+            <CollapsibleContent className="space-y-4 pt-4 data-[state=closed]:animate-accordion-up data-[state=open]:animate-accordion-down">
           {effectiveActiveSponsorship ? (
             <div className="rounded-xl border bg-[#ef6144]/5 p-4">
               <div className="flex items-start gap-3">
                 <div className="mt-0.5 flex h-10 w-10 items-center justify-center rounded-full bg-white shadow-sm">
                   <ShieldCheck className="h-5 w-5 text-[#ef6144]" />
                 </div>
-                <div>
+                <div className="space-y-2">
                   <p className="font-semibold text-slate-900">
                     {tr('Sponsorizzato da', 'Sponsored by')} {sponsorCompany?.name || effectiveActiveSponsorship.sponsor_company_id}
                   </p>
-                  <p className="mt-1 text-sm text-slate-600">
-                    {tr('Attivo dal', 'Active since')} {startedAtLabel}
-                  </p>
+                  {startedAtLabel ? (
+                    <p className="text-sm text-slate-600">{tr('Attivo dal', 'Active since')} {startedAtLabel}</p>
+                  ) : null}
                 </div>
               </div>
             </div>
@@ -299,22 +367,22 @@ export default function ProjectSponsorshipCard({
             <div className="rounded-xl border border-red-200 bg-red-50 p-4 text-sm text-red-900">
               <p className="font-medium">
                 {tr(
-                  'Questo progetto non puo continuare come semplice progetto free: prima deve rientrare una societa sponsor.',
-                  'This project cannot continue as a normal free project: a sponsor company must come back first.',
+                  'Questo progetto ha bisogno di una societa sponsor per tornare completo.',
+                  'This project needs a sponsor company to be fully active again.',
                 )}
               </p>
               <p className="mt-2 text-red-800">
                 {tr(
-                  'Sono consentite solo le azioni necessarie al recupero sponsorship, inclusi gli inviti verso societa che possano entrare e sponsorizzare.',
-                  'Only sponsor-recovery actions are allowed, including invitations to companies that can join and sponsor the project.',
+                  'Puoi invitare una societa e riattivare la sponsorship.',
+                  'You can invite a company and restore sponsorship.',
                 )}
               </p>
             </div>
           ) : (
             <div className="rounded-xl border border-dashed p-4 text-sm text-slate-600">
               {tr(
-                'Finche resta non sponsorizzato, milestone, economia, chat avanzata e documenti avanzati restano bloccati ma visibili come premium.',
-                'While it stays unsponsored, milestones, finance, advanced chat and advanced documents stay locked but visible as premium.',
+                'Per attivare funzioni come milestone, documenti avanzati, chat avanzata e area economica serve una societa Pro gia presente nel progetto.',
+                'To unlock milestones, advanced documents, advanced chat, and finance, a participating Pro company must sponsor the project.',
               )}
             </div>
           )}
@@ -323,8 +391,8 @@ export default function ProjectSponsorshipCard({
             <div className="space-y-3 rounded-xl border bg-slate-50 p-4">
               <p className="text-sm text-slate-700">
                 {tr(
-                  'Puoi sponsorizzare questo progetto con una delle tue societa paid gia presenti nel progetto.',
-                  'You can sponsor this project with one of your paid companies already participating in the project.',
+                  'Puoi attivare subito il piano Pro del progetto con una delle tue societa Pro gia presenti.',
+                  'You can activate the project Pro plan now with one of your participating Pro companies.',
                 )}
               </p>
               <div className="flex flex-wrap gap-2">
@@ -343,12 +411,12 @@ export default function ProjectSponsorshipCard({
             <div className="space-y-3 rounded-xl border bg-slate-50 p-4">
               <p className="text-sm text-slate-700">
                 {tr(
-                  'Sei admin di una societa partecipante ma ancora free. Passando al piano paid potrai sponsorizzare questo progetto.',
-                  'You are admin of a participant company but it is still free. Upgrading to the paid plan will let you sponsor this project.',
+                  'Sei admin di una societa partecipante. Passando a Pro potrai attivare il piano Pro di questo progetto.',
+                  'You are an admin of a participating company. Upgrading to Pro will let you activate this project Pro plan.',
                 )}
               </p>
               <Button variant="outline" onClick={openUpgradeTarget}>
-                {tr('Apri fatturazione di {company}', 'Open billing for {company}').replace('{company}', preferredUpgradeCompany.name)}
+                {tr('Vai al piano di {company}', 'Go to {company} plan').replace('{company}', preferredUpgradeCompany.name)}
               </Button>
             </div>
           ) : null}
@@ -360,8 +428,10 @@ export default function ProjectSponsorshipCard({
               </Button>
             </div>
           ) : null}
-        </CardContent>
-      </Card>
+            </CollapsibleContent>
+          </CardContent>
+        </Card>
+      </Collapsible>
 
       <Dialog open={infoOpen} onOpenChange={setInfoOpen}>
         <DialogContent>
@@ -369,22 +439,22 @@ export default function ProjectSponsorshipCard({
             <DialogTitle>{tr('Cosa significa la sponsorship', 'What project sponsorship means')}</DialogTitle>
             <DialogDescription>
               {tr(
-                'La sponsorship non cambia il piano globale delle altre societa coinvolte: sblocca solo le feature premium progettuali dentro questo progetto.',
-                'Sponsorship does not change the global plan of the other involved companies: it only unlocks premium project features inside this project.',
+                'La sponsorship attiva il piano Pro solo dentro questo progetto.',
+                'Sponsorship activates the Pro plan only inside this project.',
               )}
             </DialogDescription>
           </DialogHeader>
           <div className="space-y-3 text-sm text-slate-600">
             <p>
               {tr(
-                'Se il progetto e sponsorizzato, milestone, economia, chat avanzata e documenti avanzati diventano disponibili per tutti i partecipanti del progetto.',
-                'If the project is sponsored, milestones, finance, advanced chat and advanced documents become available to all project participants.',
+                'Quando una societa Pro sponsorizza il progetto, tutti i partecipanti vedono le funzioni avanzate del progetto.',
+                'When a Pro company sponsors the project, all participants can use its advanced features.',
               )}
             </p>
             <p>
               {tr(
-                'Se la societa sponsor perde il piano paid o esce dal progetto, la sponsorship cade subito e i dati premium restano conservati ma non accessibili.',
-                'If the sponsor company loses the paid plan or leaves the project, sponsorship drops immediately and premium data stays preserved but inaccessible.',
+                'Se la sponsorship termina, i dati restano salvati ma le funzioni avanzate si fermano finche non arriva un nuovo sponsor.',
+                'If sponsorship ends, data stays saved but advanced features pause until a new sponsor arrives.',
               )}
             </p>
           </div>
@@ -400,8 +470,8 @@ export default function ProjectSponsorshipCard({
             <DialogTitle>{tr('Sponsorizza progetto', 'Sponsor project')}</DialogTitle>
             <DialogDescription>
               {tr(
-                'Scegli la societa paid che deve sbloccare le feature premium di questo progetto.',
-                'Choose the paid company that should unlock this project premium features.',
+                'Scegli la societa Pro che deve attivare il piano Pro di questo progetto.',
+                'Choose the Pro company that should activate this project Pro plan.',
               )}
             </DialogDescription>
           </DialogHeader>
@@ -418,8 +488,8 @@ export default function ProjectSponsorshipCard({
             </Select>
             <p className="text-sm text-slate-600">
               {tr(
-                'La sponsorship e immediata e vale finche la societa sponsor resta paid e partecipante attiva del progetto.',
-                'Sponsorship is immediate and stays active while the sponsor company remains paid and an active project participant.',
+                'La sponsorship parte subito e resta attiva finche la societa sponsor mantiene il piano Pro e partecipa al progetto.',
+                'Sponsorship starts immediately and stays active while the sponsor company keeps its Pro plan and remains in the project.',
               )}
             </p>
           </div>
