@@ -52,8 +52,9 @@ const contentByLocale = {
     features: [
       {
         title: 'Viewer BIM integrato',
-        text: 'Carica IFC, GLB e GLTF. Visualizza i modelli 3D direttamente in piattaforma, condividili con committente e impresa.',
+        text: 'Nei progetti sponsorizzati, carica IFC, GLB e GLTF e visualizza i modelli 3D direttamente in piattaforma, condividendoli con committente e impresa.',
         icon: Globe,
+        badge: 'Progetto sponsorizzato',
       },
       {
         title: 'Gestione documentale avanzata',
@@ -126,8 +127,9 @@ const contentByLocale = {
     features: [
       {
         title: 'Integrated BIM viewer',
-        text: 'Upload IFC, GLB, and GLTF. Review 3D models directly in platform and share context with owners and contractors.',
+        text: 'On sponsored projects, upload IFC, GLB, and GLTF and review 3D models directly in platform while sharing context with owners and contractors.',
         icon: Globe,
+        badge: 'Sponsored project',
       },
       {
         title: 'Advanced document management',

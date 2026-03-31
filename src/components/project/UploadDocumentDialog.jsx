@@ -15,6 +15,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Loader2, Upload, File, X } from "lucide-react";
+import { toast } from '@/components/ui/use-toast';
 
 const LEGACY_TECHNICAL_CATEGORIES = new Set(['project', 'permit', 'drawing', 'technical']);
 
@@ -27,7 +28,11 @@ const inferModelFormat = (fileType) => {
   return null;
 };
 
-export default function UploadDocumentDialog({ open, onOpenChange, projectId, companyId, document }) {
+const BIM_FILE_TYPES = new Set(['ifc', 'glb', 'gltf']);
+
+const isBimFileType = (fileType) => BIM_FILE_TYPES.has((fileType || '').toLowerCase());
+
+export default function UploadDocumentDialog({ open, onOpenChange, projectId, companyId, document, featureAccess }) {
   const { t, currentLanguage } = useLanguage();
   const tr = (itText, enText) => (currentLanguage === 'it' ? itText : enText);
   const queryClient = useQueryClient();
@@ -35,6 +40,8 @@ export default function UploadDocumentDialog({ open, onOpenChange, projectId, co
   const documentsQueryKey = isCompanyScope ? ['companyDocuments', companyId] : ['projectDocuments', projectId];
   const fileInputRef = useRef(null);
   const isEditMode = !!document;
+  const featureMode = featureAccess?.config?.mode || null;
+  const bimUploadsBlocked = featureAccess?.access_level === 'limited' && ['basic', 'basic_chronological'].includes(featureMode);
   
   const [file, setFile] = useState(null);
   const [name, setName] = useState('');
@@ -229,6 +236,17 @@ export default function UploadDocumentDialog({ open, onOpenChange, projectId, co
     const selectedFile = e.currentTarget.files?.[0];
     setDragActive(false);
     if (selectedFile) {
+      const selectedFileType = selectedFile.name.split('.').pop()?.toLowerCase() || '';
+      if (bimUploadsBlocked && isBimFileType(selectedFileType)) {
+        toast({
+          title: tr('BIM disponibile solo con funzioni premium', 'BIM available only with premium features'),
+          description: isCompanyScope
+            ? tr('I file IFC, GLB e GLTF si possono caricare solo con una società Pro.', 'IFC, GLB, and GLTF files can be uploaded only with a Pro company.')
+            : tr('I file IFC, GLB e GLTF si possono caricare solo nei progetti sponsorizzati.', 'IFC, GLB, and GLTF files can be uploaded only on sponsored projects.'),
+        });
+        e.currentTarget.value = '';
+        return;
+      }
       setFile(selectedFile);
       if (!name) {
         setName(selectedFile.name.replace(/\.[^/.]+$/, ''));
@@ -241,6 +259,16 @@ export default function UploadDocumentDialog({ open, onOpenChange, projectId, co
     setDragActive(false);
     const droppedFile = event.dataTransfer.files?.[0];
     if (!droppedFile) return;
+    const droppedFileType = droppedFile.name.split('.').pop()?.toLowerCase() || '';
+    if (bimUploadsBlocked && isBimFileType(droppedFileType)) {
+      toast({
+        title: tr('BIM disponibile solo con funzioni premium', 'BIM available only with premium features'),
+        description: isCompanyScope
+          ? tr('I file IFC, GLB e GLTF si possono caricare solo con una società Pro.', 'IFC, GLB, and GLTF files can be uploaded only with a Pro company.')
+          : tr('I file IFC, GLB e GLTF si possono caricare solo nei progetti sponsorizzati.', 'IFC, GLB, and GLTF files can be uploaded only on sponsored projects.'),
+      });
+      return;
+    }
     setFile(droppedFile);
     if (!name) {
       setName(droppedFile.name.replace(/\.[^/.]+$/, ''));
@@ -249,6 +277,16 @@ export default function UploadDocumentDialog({ open, onOpenChange, projectId, co
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    const selectedFileType = file?.name.split('.').pop()?.toLowerCase() || '';
+    if (bimUploadsBlocked && file && isBimFileType(selectedFileType)) {
+      toast({
+        title: tr('BIM disponibile solo con funzioni premium', 'BIM available only with premium features'),
+        description: isCompanyScope
+          ? tr('I file IFC, GLB e GLTF si possono caricare solo con una società Pro.', 'IFC, GLB, and GLTF files can be uploaded only with a Pro company.')
+          : tr('I file IFC, GLB e GLTF si possono caricare solo nei progetti sponsorizzati.', 'IFC, GLB, and GLTF files can be uploaded only on sponsored projects.'),
+      });
+      return;
+    }
     uploadMutation.mutate();
   };
 
@@ -333,6 +371,13 @@ export default function UploadDocumentDialog({ open, onOpenChange, projectId, co
                 <p className="text-xs text-gray-400 mt-1">
                   {t('uploadDocumentDialog.supportedFormats')}
                 </p>
+                {bimUploadsBlocked ? (
+                  <p className="text-xs text-amber-700 mt-2">
+                    {isCompanyScope
+                      ? tr('IFC, GLB e GLTF sono disponibili solo con la società Pro.', 'IFC, GLB, and GLTF are available only with the Pro company plan.')
+                      : tr('IFC, GLB e GLTF sono disponibili solo nei progetti sponsorizzati.', 'IFC, GLB, and GLTF are available only on sponsored projects.')}
+                  </p>
+                ) : null}
               </div>
             )}
             {isEditMode && !file && (

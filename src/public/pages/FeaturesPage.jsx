@@ -111,8 +111,9 @@ const contentByLocale = {
           {
             title: 'BIM e Viewer 3D',
             icon: Globe,
+            badge: 'Progetto sponsorizzato',
             description:
-              'Supporto IFC, GLB e GLTF. Viewer in-app con camera orbitale, parsing IFC e fallback automatico a viewer esterno.',
+              'Nei progetti sponsorizzati, supporto IFC, GLB e GLTF con viewer in-app, camera orbitale, parsing IFC e fallback automatico a viewer esterno.',
           },
         ],
       },
@@ -283,8 +284,9 @@ const contentByLocale = {
           {
             title: 'BIM and 3D Viewer',
             icon: Globe,
+            badge: 'Sponsored project',
             description:
-              'Native support for IFC, GLB, and GLTF with in-app orbit controls, IFC parsing, and automatic fallback to external viewer when needed.',
+              'On sponsored projects, native support for IFC, GLB, and GLTF with in-app orbit controls, IFC parsing, and automatic fallback to external viewer when needed.',
           },
         ],
       },

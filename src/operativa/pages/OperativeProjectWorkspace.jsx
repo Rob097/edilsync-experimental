@@ -20,6 +20,7 @@ import MessageList from '@/components/messaging/MessageList';
 import MessageInput from '@/components/messaging/MessageInput';
 import DisputeCaseList from '@/components/project/DisputeCaseList';
 import FeatureGateCard from '@/components/ui/FeatureGateCard';
+import { toast } from '@/components/ui/use-toast';
 import { isFeatureAccessible, isFeatureFullyEnabled, isProjectBlockedForSponsorLoss, useProjectFeatureAccess, useProjectPricingStatus } from '@/hooks/useFeatureAccess';
 import { setUiMode, UI_MODES } from '@/lib/ui-mode';
 import { getUserDisplayNameByEmail } from '@/lib/userDisplay';
@@ -34,6 +35,7 @@ const taskStatusMeta = {
 };
 
 const LEGACY_TECHNICAL_CATEGORIES = new Set(['project', 'permit', 'drawing', 'technical']);
+const BIM_FILE_TYPES = new Set(['ifc', 'glb', 'gltf']);
 
 const normalizeCategory = (value) => (LEGACY_TECHNICAL_CATEGORIES.has(value) ? 'technical' : (value || 'other'));
 
@@ -86,6 +88,8 @@ export default function OperativeProjectWorkspace() {
   const canUseMilestones = isFeatureAccessible(milestonesFeatureAccess);
   const showMilestonesPlanGate = milestonesFeatureAccess?.access_level === 'disabled';
   const canUseProjectDocuments = isFeatureAccessible(projectDocumentsFeatureAccess);
+  const projectDocumentsMode = projectDocumentsFeatureAccess?.config?.mode || null;
+  const bimBlocked = projectDocumentsFeatureAccess?.access_level === 'limited' && ['basic', 'basic_chronological'].includes(projectDocumentsMode);
   const canCreateProjectChannels = isFeatureFullyEnabled(projectChatFeatureAccess);
   const chatAccessMode = isFeatureFullyEnabled(projectChatFeatureAccess) ? 'full' : 'general_only';
   const isGeneralOnlyChat = chatAccessMode === 'general_only';
@@ -323,8 +327,17 @@ export default function OperativeProjectWorkspace() {
     return null;
   };
 
+  const isBimFileType = (fileType) => BIM_FILE_TYPES.has((fileType || '').toLowerCase());
+
   const openDocumentFile = async (document) => {
     if (!document) return;
+    if (bimBlocked && isBimFileType(document.file_type || document.model_format)) {
+      toast({
+        title: tr('Preview BIM non disponibile', 'BIM preview unavailable'),
+        description: tr('Nei progetti non sponsorizzati i file IFC, GLB e GLTF non sono apribili in anteprima.', 'On unsponsored projects, IFC, GLB, and GLTF files cannot be previewed.'),
+      });
+      return;
+    }
     const url = await appClient.integrations.Core.ResolveFileAccessUrl({
       filePath: document.file_path,
       fallbackUrl: document.file_url,
@@ -355,16 +368,20 @@ export default function OperativeProjectWorkspace() {
   const uploadDocumentMutation = useMutation({
     mutationFn: async () => {
       if (!uploadFile) return;
+      const fileType = uploadFile.name.split('.').pop()?.toLowerCase() || 'file';
+      if (bimBlocked && isBimFileType(fileType)) {
+        throw new Error(tr('I file BIM sono disponibili solo nei progetti sponsorizzati.', 'BIM files are available only on sponsored projects.'));
+      }
       const uploaded = await appClient.integrations.Core.UploadFile({ file: uploadFile });
       await appClient.entities.ProjectDocument.create({
         project_id: projectId,
         name: uploadName.trim() || uploadFile.name,
         file_url: uploaded.file_url,
         file_path: uploaded.file_path,
-        file_type: uploadFile.name.split('.').pop()?.toLowerCase() || 'file',
+        file_type: fileType,
         file_size: uploadFile.size,
         category: uploadCategory,
-        model_format: inferModelFormat(uploadFile.name.split('.').pop()?.toLowerCase() || ''),
+        model_format: inferModelFormat(fileType),
         uploaded_by_email: user?.email,
         uploaded_by_name: user?.display_name || user?.full_name || user?.email,
       });
@@ -374,6 +391,12 @@ export default function OperativeProjectWorkspace() {
       setUploadName('');
       setUploadOpen(false);
       queryClient.invalidateQueries({ queryKey: ['projectDocuments', projectId] });
+    },
+    onError: (error) => {
+      toast({
+        title: tr('Upload non disponibile', 'Upload unavailable'),
+        description: error?.message || tr('Impossibile caricare il documento.', 'Unable to upload the document.'),
+      });
     },
   });
 
@@ -1098,7 +1121,8 @@ export default function OperativeProjectWorkspace() {
             </DialogDescription>
           </DialogHeader>
           <div className="space-y-3">
-            <Input type="file" accept="image/*,.pdf,.doc,.docx,.xls,.xlsx,.txt,.csv,.dwg,.dxf,.ifc,.glb,.gltf,.zip,.rar" onChange={(event) => setUploadFile(event.target.files?.[0] || null)} />
+            <Input type="file" accept={bimBlocked ? 'image/*,.pdf,.doc,.docx,.xls,.xlsx,.txt,.csv,.dwg,.dxf,.zip,.rar' : 'image/*,.pdf,.doc,.docx,.xls,.xlsx,.txt,.csv,.dwg,.dxf,.ifc,.glb,.gltf,.zip,.rar'} onChange={(event) => setUploadFile(event.target.files?.[0] || null)} />
+            {bimBlocked ? <p className="text-xs text-amber-700">{tr('IFC, GLB e GLTF si attivano solo quando il progetto è sponsorizzato.', 'IFC, GLB, and GLTF unlock only when the project is sponsored.')}</p> : null}
             <Select value={uploadCategory} onValueChange={setUploadCategory}>
               <SelectTrigger>
                 <SelectValue />

@@ -69,7 +69,7 @@ const contentByLocale = {
           },
           {
             q: 'E possibile visualizzare file BIM o modelli 3D?',
-            a: 'Sì. EdilSync supporta IFC, GLB e GLTF. C’è un viewer in-app per IFC con parsing diretto, e un viewer 3D basato su Three.js per GLB/GLTF con camera orbitale e fit automatico.',
+            a: 'Sì, ma come funzione premium di progetto. Nei progetti sponsorizzati EdilSync supporta IFC, GLB e GLTF con viewer in-app per IFC e viewer 3D per GLB/GLTF. Nei progetti non sponsorizzati questi file non si possono caricare e, se già presenti, la preview resta inibita.',
           },
           {
             q: 'Come funzionano le dispute?',
@@ -158,7 +158,7 @@ const contentByLocale = {
           },
           {
             q: 'Can I view BIM files or 3D models?',
-            a: 'Yes. EdilSync supports IFC, GLB, and GLTF. There is an in-app IFC viewer with direct parsing, plus a Three.js-based 3D viewer for GLB/GLTF with orbit controls and automatic fit.',
+            a: 'Yes, but as a premium project capability. On sponsored projects, EdilSync supports IFC, GLB, and GLTF with an in-app IFC viewer and a 3D viewer for GLB/GLTF. On unsponsored projects, these files cannot be uploaded and existing ones stay archived without preview.',
           },
           {
             q: 'How does dispute management work?',

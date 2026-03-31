@@ -14,7 +14,7 @@ import DocumentComments from './DocumentComments';
 import BimViewer from './BimViewer';
 import InAppIfcViewer from './InAppIfcViewer';
 
-export default function DocumentPreviewDialog({ document, open, onOpenChange, allDocuments = [], onNavigate, scopeType = 'project' }) {
+export default function DocumentPreviewDialog({ document, open, onOpenChange, allDocuments = [], onNavigate, scopeType = 'project', featureAccess }) {
   const [activeTab, setActiveTab] = useState('preview');
   const [isBimFullscreen, setIsBimFullscreen] = useState(false);
   const bimContainerRef = useRef(null);
@@ -42,6 +42,8 @@ export default function DocumentPreviewDialog({ document, open, onOpenChange, al
   const isPdf = fileType === 'pdf';
   const isBim = ['ifc', 'glb', 'gltf'].includes(fileType) || ['ifc', 'glb', 'gltf'].includes(safeDocument.model_format);
   const isIfc = (fileType || safeDocument.model_format) === 'ifc';
+  const featureMode = featureAccess?.config?.mode || null;
+  const bimPreviewBlocked = isBim && featureAccess?.access_level === 'limited' && ['basic', 'basic_chronological'].includes(featureMode);
 
   const { data: accessUrl } = useQuery({
     queryKey: ['documentAccessUrl', safeDocument.id, safeDocument.file_path, safeDocument.updated_date],
@@ -198,33 +200,51 @@ export default function DocumentPreviewDialog({ document, open, onOpenChange, al
           {isBim && (
             <TabsContent value="bim" className="flex-1 overflow-hidden p-4 mt-0 bg-slate-100">
               <div ref={bimContainerRef} className="relative h-full w-full bg-slate-100">
-                <Button
-                  type="button"
-                  size="icon"
-                  variant="outline"
-                  onClick={toggleBimFullscreen}
-                  className="absolute right-2 top-2 z-30 bg-white/90"
-                  title={isBimFullscreen ? 'Esci da schermo intero' : 'Schermo intero'}
-                >
-                  {isBimFullscreen ? <Minimize2 className="h-4 w-4" /> : <Maximize2 className="h-4 w-4" />}
-                </Button>
-
-                {isIfc ? (
-                  <InAppIfcViewer
-                    fileUrl={downloadUrl}
-                    fallbackUrl={safeDocument.file_url}
-                    filePath={safeDocument.file_path}
-                    documentId={safeDocument.id}
-                    fileType={fileType || safeDocument.model_format || 'ifc'}
-                    fileSize={safeDocument.file_size}
-                  />
+                {bimPreviewBlocked ? (
+                  <div className="flex h-full items-center justify-center">
+                    <div className="max-w-md rounded-2xl border border-amber-200 bg-white p-6 text-center shadow-sm">
+                      <Cuboid className="mx-auto h-10 w-10 text-amber-600" />
+                      <p className="mt-4 text-base font-semibold text-slate-900">
+                        {scopeType === 'company' ? 'Preview BIM disponibile solo con società Pro' : 'Preview BIM disponibile solo nei progetti sponsorizzati'}
+                      </p>
+                      <p className="mt-2 text-sm text-slate-600">
+                        {scopeType === 'company'
+                          ? 'I file IFC, GLB e GLTF già presenti restano archiviati, ma la visualizzazione 3D è disponibile solo con le funzioni premium della società.'
+                          : 'I file IFC, GLB e GLTF già presenti restano archiviati, ma la visualizzazione 3D è disponibile solo quando il progetto ha una sponsorship attiva.'}
+                      </p>
+                    </div>
+                  </div>
                 ) : (
-                  <BimViewer
-                    fileUrl={downloadUrl}
-                    fallbackUrl={safeDocument.file_url}
-                    filePath={safeDocument.file_path}
-                    fileType={fileType || document.model_format}
-                  />
+                  <>
+                    <Button
+                      type="button"
+                      size="icon"
+                      variant="outline"
+                      onClick={toggleBimFullscreen}
+                      className="absolute right-2 top-2 z-30 bg-white/90"
+                      title={isBimFullscreen ? 'Esci da schermo intero' : 'Schermo intero'}
+                    >
+                      {isBimFullscreen ? <Minimize2 className="h-4 w-4" /> : <Maximize2 className="h-4 w-4" />}
+                    </Button>
+
+                    {isIfc ? (
+                      <InAppIfcViewer
+                        fileUrl={downloadUrl}
+                        fallbackUrl={safeDocument.file_url}
+                        filePath={safeDocument.file_path}
+                        documentId={safeDocument.id}
+                        fileType={fileType || safeDocument.model_format || 'ifc'}
+                        fileSize={safeDocument.file_size}
+                      />
+                    ) : (
+                      <BimViewer
+                        fileUrl={downloadUrl}
+                        fallbackUrl={safeDocument.file_url}
+                        filePath={safeDocument.file_path}
+                        fileType={fileType || document.model_format}
+                      />
+                    )}
+                  </>
                 )}
               </div>
             </TabsContent>

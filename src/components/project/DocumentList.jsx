@@ -35,8 +35,10 @@ import { Eye } from "lucide-react";
 import { useLanguage } from '@/components/i18n/useLanguage';
 
 const LEGACY_TECHNICAL_CATEGORIES = new Set(['project', 'permit', 'drawing', 'technical']);
+const BIM_FILE_TYPES = new Set(['ifc', 'glb', 'gltf']);
 
 const normalizeCategory = (value) => (LEGACY_TECHNICAL_CATEGORIES.has(value) ? 'technical' : (value || 'other'));
+const isBimFile = (document) => BIM_FILE_TYPES.has((document?.file_type || document?.model_format || '').toLowerCase());
 
 const getCategoryLabels = (tr) => ({
   technical: tr('Documentazione tecnica', 'Technical documentation'),
@@ -601,6 +603,7 @@ export default function DocumentList({
         }}
         projectId={projectId}
         companyId={companyId}
+        featureAccess={featureAccess}
       />
 
       <UploadDocumentDialog
@@ -609,6 +612,7 @@ export default function DocumentList({
         projectId={projectId}
         companyId={companyId}
         document={editingDocument}
+        featureAccess={featureAccess}
       />
 
       <DocumentPreviewDialog
@@ -618,6 +622,7 @@ export default function DocumentList({
         allDocuments={filteredDocuments}
         onNavigate={setPreviewDocument}
         scopeType={scopeType}
+        featureAccess={featureAccess}
       />
     </div>
   );
