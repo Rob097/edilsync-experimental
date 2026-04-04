@@ -62,7 +62,7 @@ export default function ContextSwitcher({
         <DropdownMenuTrigger asChild>
           <Button 
             variant="outline" 
-            className="flex items-center gap-2 bg-white border-gray-200 hover:bg-gray-50"
+            className="h-10 gap-2 border-[rgba(197,177,165,0.52)] bg-[rgba(255,250,247,0.88)] px-4 text-[#231b18]"
           >
             {isPersonal ? (
               <>
@@ -130,7 +130,7 @@ export default function ContextSwitcher({
             <Button variant="outline" onClick={() => setConfirmDialog(null)}>
               {t('common.cancel')}
             </Button>
-            <Button onClick={handleConfirm} className="bg-[#ef6144] hover:bg-[#d9553a]">
+            <Button onClick={handleConfirm}>
               {t('common.confirm')}
             </Button>
           </DialogFooter>

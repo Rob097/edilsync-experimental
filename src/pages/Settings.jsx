@@ -60,16 +60,17 @@ export default function Settings() {
   if (isLoading) {
     return (
       <div className="flex items-center justify-center py-12">
-        <Loader2 className="h-8 w-8 animate-spin text-[#ef6144]" />
+        <Loader2 className="h-8 w-8 animate-spin text-[#d9553a]" />
       </div>
     );
   }
 
   return (
     <div className="max-w-4xl mx-auto space-y-6">
-      <div>
-        <h1 className="text-2xl font-bold text-gray-900">{t('settings.title')}</h1>
-        <p className="text-gray-500 mt-1">{t('settings.description')}</p>
+      <div className="app-page-header">
+        <span className="app-page-kicker">Profile and preferences</span>
+        <h1 className="app-page-title">{t('settings.title')}</h1>
+        <p className="app-page-subtitle">{t('settings.description')}</p>
       </div>
 
       <Tabs defaultValue="profile" className="space-y-6">
@@ -85,16 +86,16 @@ export default function Settings() {
         </TabsList>
 
         <TabsContent value="profile">
-          <Card>
+          <Card className="app-panel">
             <CardHeader>
               <div className="flex items-center gap-3">
-                <div className="w-12 h-12 rounded-full bg-[#ef6144] flex items-center justify-center">
+                <div className="flex h-12 w-12 items-center justify-center rounded-[1rem] bg-[linear-gradient(135deg,#ef6144,#d9553a)] shadow-[0_18px_36px_rgba(217,85,58,0.22)]">
                   <span className="text-white font-semibold text-lg">
                     {user?.full_name?.charAt(0)?.toUpperCase() || (currentLanguage === 'it' ? 'U' : 'U')}
                   </span>
                 </div>
                 <div>
-                  <CardTitle>{user?.full_name || tr('Utente', 'User')}</CardTitle>
+                  <CardTitle className="text-[#231b18]">{user?.full_name || tr('Utente', 'User')}</CardTitle>
                   <CardDescription>{user?.email}</CardDescription>
                 </div>
               </div>
@@ -117,9 +118,9 @@ export default function Settings() {
                     id="email"
                     value={user?.email || ''}
                     disabled
-                    className="bg-gray-50"
+                    className="bg-[rgba(240,232,226,0.7)]"
                   />
-                  <p className="text-xs text-gray-500">{t('settings.emailCannotBeChanged')}</p>
+                  <p className="text-xs text-[#8c766e]">{t('settings.emailCannotBeChanged')}</p>
                 </div>
 
                 <div className="space-y-2">
@@ -134,7 +135,6 @@ export default function Settings() {
 
                 <Button
                   type="submit"
-                  className="bg-[#ef6144] hover:bg-[#d9553a]"
                   disabled={!hasChanges || updateMutation.isPending}
                 >
                   {updateMutation.isPending ? (

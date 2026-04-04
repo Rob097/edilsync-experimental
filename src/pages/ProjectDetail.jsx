@@ -407,12 +407,12 @@ export default function ProjectDetail() {
 
       {/* Invitation Banner */}
       {isInvited && (
-        <Card className="border-[#ef6144] bg-[#ef6144]/5">
+        <Card className="app-panel border-[rgba(217,85,58,0.36)] bg-[rgba(239,97,68,0.08)]">
           <CardContent className="p-4">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
               <div>
-                <h3 className="font-semibold text-gray-900">{t('projectDetail.youAreInvited')}</h3>
-                <p className="text-sm text-gray-600 mt-1">
+                <h3 className="font-semibold tracking-[-0.02em] text-[#231b18]">{t('projectDetail.youAreInvited')}</h3>
+                <p className="mt-1 text-sm leading-6 text-[#6d5c55]">
                   {t('projectDetail.acceptInviteDescription')}
                 </p>
               </div>
@@ -425,7 +425,6 @@ export default function ProjectDetail() {
                   {t('projectDetail.decline')}
                 </Button>
                 <Button 
-                  className="bg-[#ef6144] hover:bg-[#d9553a]"
                   onClick={() => acceptInviteMutation.mutate(userParticipation.id)}
                   disabled={acceptInviteMutation.isPending}
                 >
@@ -438,19 +437,20 @@ export default function ProjectDetail() {
       )}
 
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-4">
-        <div className="flex-1 min-w-0">
+      <div className="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
+        <div className="app-page-header min-w-0 flex-1">
+          <span className="app-page-kicker">Cantiere</span>
           <Button
             variant="ghost"
             onClick={() => navigate(createPageUrl('Projects'))}
-            className="mb-2 -ml-3"
+            className="-ml-3 mb-1 w-fit"
           >
             <ArrowLeft className="h-4 w-4 mr-2" />
             {t('common.projects')}
           </Button>
-          <h1 className="text-2xl font-bold text-gray-900 mb-2">{project.name}</h1>
-          <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3">
-            <div className="flex items-center gap-1.5 text-gray-500">
+          <h1 className="app-page-title">{project.name}</h1>
+          <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:gap-3">
+            <div className="flex items-center gap-1.5 text-[#6d5c55]">
               <MapPin className="h-4 w-4 flex-shrink-0" />
               <span className="break-words">{project.address}</span>
             </div>
@@ -471,48 +471,48 @@ export default function ProjectDetail() {
 
       {/* Info Cards */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <Card>
+        <Card className="app-kpi-card">
           <CardContent className="p-4">
             <div className="flex items-center gap-3">
-               <div className="w-10 h-10 rounded-lg bg-[#ef6144]/10 flex items-center justify-center">
-                 <Users className="h-5 w-5 text-[#ef6144]" />
+               <div className="app-kpi-icon app-kpi-icon--accent">
+                 <Users className="h-5 w-5" />
                </div>
                <div>
-                 <p className="text-2xl font-bold">{activeParticipants.length}</p>
-                 <p className="text-sm text-gray-500">{t('projectDetail.participants')}</p>
+                 <p className="text-2xl font-bold tracking-[-0.03em] text-[#231b18]">{activeParticipants.length}</p>
+                 <p className="text-sm text-[#6d5c55]">{t('projectDetail.participants')}</p>
                </div>
              </div>
           </CardContent>
         </Card>
         {project.start_date && (
-          <Card>
+          <Card className="app-kpi-card">
             <CardContent className="p-4">
               <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-lg bg-blue-100 flex items-center justify-center">
-                  <Calendar className="h-5 w-5 text-blue-600" />
+                <div className="app-kpi-icon app-kpi-icon--info">
+                  <Calendar className="h-5 w-5" />
                 </div>
                 <div>
-                   <p className="text-lg font-semibold">
+                   <p className="text-lg font-semibold tracking-[-0.02em] text-[#231b18]">
                        {format(new Date(project.start_date), 'd MMM yyyy', { locale: dateLocale })}
                    </p>
-                   <p className="text-sm text-gray-500">{t('projectDetail.startDate')}</p>
+                   <p className="text-sm text-[#6d5c55]">{t('projectDetail.startDate')}</p>
                  </div>
               </div>
             </CardContent>
           </Card>
         )}
         {project.end_date && (
-          <Card>
+          <Card className="app-kpi-card">
             <CardContent className="p-4">
               <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-lg bg-green-100 flex items-center justify-center">
-                  <Calendar className="h-5 w-5 text-green-600" />
+                <div className="app-kpi-icon app-kpi-icon--success">
+                  <Calendar className="h-5 w-5" />
                 </div>
                 <div>
-                   <p className="text-lg font-semibold">
+                   <p className="text-lg font-semibold tracking-[-0.02em] text-[#231b18]">
                        {format(new Date(project.end_date), 'd MMM yyyy', { locale: dateLocale })}
                    </p>
-                   <p className="text-sm text-gray-500">{t('projectDetail.endDate')}</p>
+                   <p className="text-sm text-[#6d5c55]">{t('projectDetail.endDate')}</p>
                  </div>
               </div>
             </CardContent>
@@ -530,9 +530,9 @@ export default function ProjectDetail() {
 
       {/* Description */}
       {project.description && (
-        <Card>
+        <Card className="app-panel">
           <CardContent className="p-4">
-            <p className="text-gray-600">{project.description}</p>
+            <p className="leading-7 text-[#6d5c55]">{project.description}</p>
           </CardContent>
         </Card>
       )}
@@ -565,7 +565,7 @@ export default function ProjectDetail() {
       )}
 
       {/* Divider */}
-      {isActiveParticipant && <div className="border-t" />}
+      {isActiveParticipant && <div className="border-t border-[rgba(197,177,165,0.48)]" />}
 
       {/* Tabs - only for active participants */}
       {!isActiveParticipant ? null :
@@ -581,7 +581,7 @@ export default function ProjectDetail() {
           }
         }, 100);
       }}>
-        <TabsList className="mb-4 flex-wrap h-auto">
+        <TabsList className="mb-4 h-auto flex-wrap">
           {!isBlockedProject ? (
           <TabsTrigger value="cantiere" className="flex items-center gap-2">
             <Activity className="h-4 w-4" />

@@ -147,12 +147,14 @@ export default function SubcontractorsPage({ locale = 'it' }) {
     <div ref={rootRef} className={PUBLIC_CLASSES.page}>
       <section className="public-section-shell pt-32 pb-[4.5rem] md:pb-24">
         <div className="mx-auto grid max-w-6xl px-4 sm:px-6 gap-10 lg:grid-cols-[minmax(0,1.04fr)_minmax(320px,0.96fr)] lg:items-center">
-          <div className="relative overflow-hidden rounded-[32px] border border-[var(--public-line)] bg-[linear-gradient(135deg,rgba(255,255,255,0.95),rgba(255,246,240,0.88))] p-8 shadow-[0_30px_80px_rgba(37,25,20,0.08)] md:p-10" data-reveal>
+          <div className="relative min-w-0 overflow-hidden rounded-[32px] border border-[var(--public-line)] bg-[linear-gradient(135deg,rgba(255,255,255,0.95),rgba(255,246,240,0.88))] p-8 shadow-[0_30px_80px_rgba(37,25,20,0.08)] md:p-10" data-reveal>
             <div className="absolute -left-12 top-8 h-36 w-36 rounded-full bg-[rgba(239,97,68,0.14)] blur-3xl" aria-hidden />
             <div className="relative">
               <span className="public-eyebrow">{copy.badge}</span>
-              <h1 className={`mt-5 ${PUBLIC_CLASSES.displayH1}`}>
-                {copy.titleA} <span className="text-[var(--public-accent)]">{copy.titleB}</span> {copy.titleC}
+              <h1 className="mt-5 max-w-[16ch] text-[clamp(2.25rem,4.6vw,4.8rem)] font-bold tracking-[-0.05em] leading-[0.98] text-balance md:leading-[0.95]">
+                <span className="block">{copy.titleA}</span>
+                <span className="block text-[var(--public-accent)]">{copy.titleB}</span>
+                <span className="block">{copy.titleC}</span>
               </h1>
               <p className={`mt-6 max-w-2xl ${PUBLIC_CLASSES.bodyLead}`}>{copy.subtitle}</p>
               <div className="mt-8 flex flex-wrap items-center gap-4">

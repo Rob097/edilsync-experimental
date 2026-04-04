@@ -18,28 +18,28 @@ export default function CompanyCard({ company, userRole, memberCount }) {
 
   return (
     <Link to={createPageUrl('CompanyDetail') + `?id=${company.id}`}>
-      <Card className="hover:shadow-md transition-all duration-200 border-gray-200 hover:border-[#ef6144]/30 cursor-pointer">
+      <Card className="app-panel cursor-pointer border-[rgba(197,177,165,0.48)] transition-all duration-200 hover:-translate-y-0.5 hover:border-[rgba(217,85,58,0.35)] hover:shadow-[0_24px_48px_rgba(86,62,52,0.11)]">
         <CardContent className="p-5">
           <div className="flex items-start gap-4">
-            <div className="w-12 h-12 rounded-lg bg-[#ef6144]/10 flex items-center justify-center flex-shrink-0">
-              <Building2 className="h-6 w-6 text-[#ef6144]" />
+            <div className="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-[1rem] bg-[rgba(239,97,68,0.12)]">
+              <Building2 className="h-6 w-6 text-[#d9553a]" />
             </div>
             <div className="flex-1 min-w-0">
               <div className="flex items-start justify-between mb-1">
-                <h3 className="font-semibold text-gray-900 truncate">{company.name}</h3>
+                <h3 className="truncate text-lg font-semibold tracking-[-0.025em] text-[#231b18]">{company.name}</h3>
                 {userRole && (
-                  <Badge variant="outline" className="ml-2 flex-shrink-0">
+                  <Badge variant="outline" className="ml-2 flex-shrink-0 border-[rgba(197,177,165,0.58)] bg-[rgba(255,250,247,0.88)] text-[#5e504b]">
                     {roleLabels[userRole] || userRole}
                   </Badge>
                 )}
               </div>
               {company.vat_number && (
-                <p className="text-sm text-gray-500 mb-2">{tr('P.IVA', 'VAT')}: {company.vat_number}</p>
+                <p className="mb-2 text-sm text-[#6d5c55]">{tr('P.IVA', 'VAT')}: {company.vat_number}</p>
               )}
               {company.company_type && (
-                <p className="text-sm text-gray-500 mb-2">{getCompanyTypeLabel(company.company_type, currentLanguage)}</p>
+                <p className="mb-2 text-sm text-[#6d5c55]">{getCompanyTypeLabel(company.company_type, currentLanguage)}</p>
               )}
-              <div className="flex items-center gap-4 text-sm text-gray-500">
+              <div className="flex items-center gap-4 text-sm text-[#6d5c55]">
                 {memberCount > 0 && (
                   <div className="flex items-center gap-1">
                     <Users className="h-3.5 w-3.5" />

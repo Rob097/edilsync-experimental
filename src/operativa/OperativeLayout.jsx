@@ -86,16 +86,16 @@ export default function OperativeLayout() {
 
   return (
     <I18nextProvider i18n={i18next}>
-      <div className="min-h-screen bg-gray-100">
-        <header className="sticky top-0 z-40 bg-white border-b border-[#ef6144]/20">
+      <div className="app-shell min-h-screen">
+        <header className="app-topbar sticky top-0 z-40 border-b">
           <div className="px-4 h-14 flex items-center justify-between max-w-md mx-auto">
             <div className="flex items-center gap-2">
-              <div className="h-8 w-8 rounded-lg bg-[#ef6144] flex items-center justify-center">
+              <div className="flex h-9 w-9 items-center justify-center rounded-2xl bg-[linear-gradient(135deg,#ef6144,#d9553a)] shadow-[0_16px_32px_rgba(217,85,58,0.24)]">
                 <HardHat className="h-4 w-4 text-white" />
               </div>
               <div>
-                <p className="text-xs text-gray-500">{t('operationalMode.headerMode')}</p>
-                <p className="text-sm font-semibold text-gray-900 truncate max-w-[180px]">{currentCompany?.name || t('operationalMode.companyRequiredTitle')}</p>
+                <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-[#b2553f]">{t('operationalMode.headerMode')}</p>
+                <p className="max-w-[180px] truncate text-sm font-semibold tracking-[-0.02em] text-[#231b18]">{currentCompany?.name || t('operationalMode.companyRequiredTitle')}</p>
               </div>
             </div>
             <Button variant="ghost" size="icon" onClick={() => setMenuOpen(true)}>
@@ -106,15 +106,15 @@ export default function OperativeLayout() {
 
         {showCompanyGuard ? (
           <main className="max-w-md mx-auto px-4 py-4">
-            <Card className="border-[#ef6144]/20">
+            <Card className="app-panel">
               <CardContent className="p-4 space-y-3">
-                <h1 className="text-lg font-semibold text-gray-900">{t('operationalMode.companyRequiredTitle')}</h1>
-                <p className="text-sm text-gray-600">{t('operationalMode.companyRequiredDescription')}</p>
+                <h1 className="text-lg font-semibold tracking-[-0.02em] text-[#231b18]">{t('operationalMode.companyRequiredTitle')}</h1>
+                <p className="text-sm leading-6 text-[#6d5c55]">{t('operationalMode.companyRequiredDescription')}</p>
                 <div className="space-y-2">
                   {companies.map((company) => (
                     <Button
                       key={company.id}
-                      className="w-full bg-[#ef6144] hover:bg-[#d9553a]"
+                      className="w-full"
                       onClick={() => handleContextChange(company)}
                       disabled={isChangingContext}
                     >
@@ -126,36 +126,36 @@ export default function OperativeLayout() {
             </Card>
           </main>
         ) : (
-          <main className="max-w-md mx-auto px-4 py-4 pb-24">
+          <main className="max-w-md mx-auto overflow-visible px-4 py-4 pb-24">
             <Outlet />
           </main>
         )}
 
         {menuOpen && (
-          <div className="fixed inset-0 z-50 bg-white overflow-y-auto">
+          <div className="fixed inset-0 z-50 app-shell overflow-y-auto">
             <div className="max-w-md mx-auto px-4 py-4 space-y-4">
               <div className="flex items-center justify-between">
-                <h2 className="text-lg font-semibold text-gray-900">{t('operational.menuTitle')}</h2>
+                <h2 className="text-lg font-semibold tracking-[-0.02em] text-[#231b18]">{t('operational.menuTitle')}</h2>
                 <Button variant="ghost" size="icon" onClick={() => setMenuOpen(false)}>
                   <X className="h-5 w-5" />
                 </Button>
               </div>
 
-              <Card className="border-[#ef6144]/20">
+              <Card className="app-panel">
                 <CardContent className="p-4 space-y-3">
-                  <h3 className="text-sm font-semibold text-gray-900">{t('operational.menuModes')}</h3>
-                  <Button variant="outline" className="w-full border-[#ef6144]/30 text-[#ef6144]" onClick={switchToNormal}>
+                  <h3 className="text-sm font-semibold text-[#231b18]">{t('operational.menuModes')}</h3>
+                  <Button variant="outline" className="w-full" onClick={switchToNormal}>
                     <Monitor className="h-4 w-4 mr-2" />
                     {t('operationalMode.fullModeLabel')}
                   </Button>
                 </CardContent>
               </Card>
 
-              <Card className="border-[#ef6144]/20">
+              <Card className="app-panel">
                 <CardContent className="p-4 space-y-3">
-                  <h3 className="text-sm font-semibold text-gray-900">{t('settings.language')}</h3>
+                  <h3 className="text-sm font-semibold text-[#231b18]">{t('settings.language')}</h3>
                   <LanguageSelector />
-                  <Button variant="outline" className="w-full border-[#ef6144]/30 text-[#ef6144]" onClick={goToCompanyWorkspace}>
+                  <Button variant="outline" className="w-full" onClick={goToCompanyWorkspace}>
                     <Building2 className="h-4 w-4 mr-2" />
                     Società
                   </Button>
@@ -163,14 +163,14 @@ export default function OperativeLayout() {
               </Card>
 
               {companies.length > 1 && (
-                <Card className="border-[#ef6144]/20">
+                <Card className="app-panel">
                   <CardContent className="p-4 space-y-2">
-                    <h3 className="text-sm font-semibold text-gray-900">{t('operational.changeCompany')}</h3>
+                    <h3 className="text-sm font-semibold text-[#231b18]">{t('operational.changeCompany')}</h3>
                     {companies.map((company) => (
                       <Button
                         key={company.id}
                         variant={currentCompany?.id === company.id ? 'default' : 'outline'}
-                        className={currentCompany?.id === company.id ? 'w-full bg-[#ef6144] hover:bg-[#d9553a]' : 'w-full border-[#ef6144]/30 text-[#ef6144]'}
+                        className="w-full"
                         onClick={() => handleCompanyChangeFromMenu(company)}
                         disabled={isChangingContext}
                       >
@@ -183,17 +183,17 @@ export default function OperativeLayout() {
               )}
 
               {contextProjects.length > 1 && (
-                <Card className="border-[#ef6144]/20">
+                <Card className="app-panel">
                   <CardContent className="p-4 space-y-2">
-                    <h3 className="text-sm font-semibold text-gray-900">{t('operational.changeProject')}</h3>
-                    <Button variant="outline" className="w-full border-[#ef6144]/30 text-[#ef6144]" onClick={goToSummary}>
+                    <h3 className="text-sm font-semibold text-[#231b18]">{t('operational.changeProject')}</h3>
+                    <Button variant="outline" className="w-full" onClick={goToSummary}>
                       {t('operational.daySummary')}
                     </Button>
                     {contextProjects.map((project) => (
                       <Button
                         key={project.id}
                         variant={selectedProjectId === project.id ? 'default' : 'outline'}
-                        className={selectedProjectId === project.id ? 'w-full bg-[#ef6144] hover:bg-[#d9553a]' : 'w-full border-[#ef6144]/30 text-[#ef6144]'}
+                        className="w-full"
                         onClick={() => goToProject(project.id)}
                       >
                         <Briefcase className="h-4 w-4 mr-2" />

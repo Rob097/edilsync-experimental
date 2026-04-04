@@ -169,17 +169,20 @@ export default function Layout({ children, currentPageName }) {
       <TourProvider>
         {isChangingContext && <FullPageLoader message={currentLanguage === 'it' ? 'Cambio contesto in corso...' : 'Changing context...'} />}
         <TourOverlay />
-        <div className="min-h-screen bg-gray-50 flex flex-col">
+        <div className="app-shell min-h-screen flex flex-col">
       {/* Header */}
-      <header className="bg-white border-b border-gray-200 sticky top-0 z-50 pointer-events-auto">
+      <header className="app-topbar sticky top-0 z-50 border-b pointer-events-auto">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16 pointer-events-auto">
             {/* Logo */}
             <Link to={createPageUrl('Dashboard')} className="flex items-center gap-2">
-              <div className="w-8 h-8 rounded-lg bg-[#ef6144] flex items-center justify-center">
+              <div className="flex h-9 w-9 items-center justify-center rounded-2xl bg-[linear-gradient(135deg,#ef6144,#d9553a)] shadow-[0_18px_36px_rgba(217,85,58,0.24)]">
                 <HardHat className="h-5 w-5 text-white" />
               </div>
-              <span className="font-semibold text-xl text-gray-900 hidden sm:block">EdilSync</span>
+              <div className="hidden sm:block">
+                <span className="block text-[0.72rem] font-semibold uppercase tracking-[0.24em] text-[#b2553f]">Workspace</span>
+                <span className="block text-lg font-semibold tracking-[-0.03em] text-[#231b18]">EdilSync</span>
+              </div>
             </Link>
 
             {/* Desktop Nav */}
@@ -192,10 +195,10 @@ export default function Layout({ children, currentPageName }) {
                     to={item.path}
                     data-tour={item.page === 'Dashboard' ? 'nav-dashboard' : undefined}
                     className={`
-                      flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-colors
+                      flex items-center gap-2 rounded-full px-4 py-2 text-sm font-semibold transition-colors
                       ${isActive 
-                        ? 'bg-[#ef6144]/10 text-[#ef6144]' 
-                        : 'text-gray-600 hover:bg-gray-100'
+                        ? 'bg-[rgba(239,97,68,0.12)] text-[#d9553a]' 
+                        : 'text-[#6d5c55] hover:bg-[rgba(109,92,85,0.08)] hover:text-[#231b18]'
                       }
                     `}
                   >
@@ -216,7 +219,7 @@ export default function Layout({ children, currentPageName }) {
               {/* Notifications */}
               <Link to={createPageUrl('Notifications')} data-tour="notifications">
                 <Button variant="ghost" size="icon" className="relative">
-                  <Bell className="h-5 w-5 text-gray-600" />
+                  <Bell className="h-5 w-5 text-[#6d5c55]" />
                   {unreadCount > 0 && (
                     <span className="absolute -top-0.5 -right-0.5 h-4 w-4 rounded-full bg-[#ef6144] text-white text-xs flex items-center justify-center">
                       {unreadCount > 9 ? '9+' : unreadCount}
@@ -240,7 +243,7 @@ export default function Layout({ children, currentPageName }) {
                 <DropdownMenuTrigger asChild>
                   <Button variant="ghost" className="relative h-9 w-9 rounded-full" data-tour="user-menu-trigger">
                     <Avatar className="h-9 w-9">
-                      <AvatarFallback className="bg-[#ef6144] text-white text-sm">
+                      <AvatarFallback className="bg-[linear-gradient(135deg,#ef6144,#d9553a)] text-white text-sm">
                         {getInitials(user?.display_name || user?.full_name)}
                       </AvatarFallback>
                     </Avatar>
@@ -323,10 +326,10 @@ export default function Layout({ children, currentPageName }) {
                     to={item.path}
                     onClick={() => setMobileMenuOpen(false)}
                     className={`
-                      flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-medium transition-colors
+                      flex items-center gap-2 rounded-2xl px-3 py-2 text-sm font-semibold transition-colors
                       ${isActive 
-                        ? 'bg-[#ef6144]/10 text-[#ef6144]' 
-                        : 'text-gray-600 hover:bg-gray-100'
+                        ? 'bg-[rgba(239,97,68,0.12)] text-[#d9553a]' 
+                        : 'text-[#6d5c55] hover:bg-[rgba(109,92,85,0.08)] hover:text-[#231b18]'
                       }
                     `}
                   >
@@ -341,7 +344,7 @@ export default function Layout({ children, currentPageName }) {
       </header>
 
       {/* Main content */}
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 flex-1 w-full overflow-x-hidden">
+      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-10 flex-1 w-full overflow-x-clip overflow-y-visible">
         {children}
       </main>
 
@@ -364,7 +367,7 @@ export default function Layout({ children, currentPageName }) {
             <Button variant="outline" onClick={() => setSwitchDialogOpen(false)}>
               {t('common.cancel')}
             </Button>
-            <Button className="bg-[#ef6144] hover:bg-[#d9553a]" onClick={confirmModeSwitch}>
+            <Button onClick={confirmModeSwitch}>
               {switchDialogConfirm}
             </Button>
           </DialogFooter>

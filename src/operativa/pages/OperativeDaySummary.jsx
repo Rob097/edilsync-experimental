@@ -44,32 +44,32 @@ export default function OperativeDaySummary() {
   }
 
   return (
-    <div className="space-y-4">
-      <div className="sticky top-16 z-20 bg-gray-100 pb-2">
+    <div className="operative-shell space-y-4 rounded-[1.5rem] pb-2">
+      <div className="operative-sticky-strip sticky top-16 z-20 pb-2">
         <Button variant="outline" className="w-full" onClick={() => navigate('/app/operativa')}>
           Torna alla home
         </Button>
       </div>
 
-      <Card className="border-[#ef6144]/20">
+      <Card className="operative-simple-card rounded-[1.5rem] border-[rgba(197,177,165,0.44)]">
         <CardHeader>
-          <CardTitle className="text-base">{t('operational.daySummary')}</CardTitle>
+          <CardTitle className="text-base text-[#231b18]">{t('operational.daySummary')}</CardTitle>
         </CardHeader>
         <CardContent className="space-y-2">
           <div className="flex items-center justify-between">
-            <span className="text-sm text-gray-600">{t('operational.todayTasks')}</span>
-            <Badge className="bg-[#ef6144]/10 text-[#ef6144]">{todayTasks.length}</Badge>
+            <span className="text-sm text-[#6d5c55]">{t('operational.todayTasks')}</span>
+            <Badge className="bg-[rgba(239,97,68,0.12)] text-[#d9553a]">{todayTasks.length}</Badge>
           </div>
           <div className="flex items-center justify-between">
-            <span className="text-sm text-gray-600">{t('operational.todayEvents')}</span>
-            <Badge className="bg-[#ef6144]/10 text-[#ef6144]">{todayEvents.length}</Badge>
+            <span className="text-sm text-[#6d5c55]">{t('operational.todayEvents')}</span>
+            <Badge className="bg-[rgba(239,97,68,0.12)] text-[#d9553a]">{todayEvents.length}</Badge>
           </div>
         </CardContent>
       </Card>
 
-      <Card className="border-[#ef6144]/20">
+      <Card className="operative-simple-card rounded-[1.5rem] border-[rgba(197,177,165,0.44)]">
         <CardHeader>
-          <CardTitle className="text-base">{t('operational.todayTasks')}</CardTitle>
+          <CardTitle className="text-base text-[#231b18]">{t('operational.todayTasks')}</CardTitle>
         </CardHeader>
         <CardContent className="space-y-2 max-h-[38vh] overflow-y-auto">
           {todayTasks.length > 0 ? (
@@ -78,17 +78,17 @@ export default function OperativeDaySummary() {
                 key={task.id}
                 type="button"
                 onClick={() => navigate(`/app/operativa/progetto/${task.project_id}`)}
-                className="w-full text-left rounded-lg border border-[#ef6144]/20 p-3"
+                className="w-full rounded-[1rem] border border-[rgba(197,177,165,0.42)] bg-[rgba(255,251,248,0.96)] p-3 text-left"
               >
-                <p className="font-medium text-gray-900">{task.title}</p>
-                <p className="text-xs text-gray-500 mt-1">
+                <p className="font-semibold text-[#231b18]">{task.title}</p>
+                <p className="mt-1 text-xs text-[#6d5c55]">
                   {projectNameById[task.project_id] || t('common.projects')}
                   {task.due_date ? ` • ${format(new Date(`${task.due_date}T00:00:00`), 'dd MMM', { locale: dateLocale })}` : ''}
                 </p>
               </button>
             ))
           ) : (
-            <p className="text-sm text-gray-600">{t('operational.noTodayItems')}</p>
+            <p className="text-sm text-[#6d5c55]">{t('operational.noTodayItems')}</p>
           )}
         </CardContent>
       </Card>

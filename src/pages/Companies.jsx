@@ -76,14 +76,15 @@ export default function Companies() {
     <div className="space-y-6">
 
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-        <div>
-          <h1 className="text-2xl font-bold text-gray-900">{t('dashboard.yourCompanies')}</h1>
-          <p className="text-gray-500 mt-1">{t('companies.manageCompanies')}</p>
+      <div className="flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
+        <div className="app-page-header">
+          <span className="app-page-kicker">Company network</span>
+          <h1 className="app-page-title">{t('dashboard.yourCompanies')}</h1>
+          <p className="app-page-subtitle">{t('companies.manageCompanies')}</p>
         </div>
         {currentContext === 'personal' && (
           <Link to={createPageUrl('NewCompany')}>
-            <Button className="bg-[#ef6144] hover:bg-[#d9553a]">
+            <Button>
               <Plus className="h-4 w-4 mr-2" />
               {t('common.newCompany')}
             </Button>
@@ -92,14 +93,16 @@ export default function Companies() {
       </div>
 
       {/* Search */}
-      <div className="relative max-w-md">
-        <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
-        <Input
-          placeholder={t('common.searchCompanies')}
-          value={searchQuery}
-          onChange={(e) => setSearchQuery(e.target.value)}
-          className="pl-10"
-        />
+      <div className="app-panel max-w-md rounded-[1.75rem] p-3">
+        <div className="relative">
+          <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-[#9a867f]" />
+          <Input
+            placeholder={t('common.searchCompanies')}
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            className="pl-11"
+          />
+        </div>
       </div>
 
       {/* Company list */}

@@ -8,13 +8,7 @@ export default function ContextBadge({ context, companyName }) {
   const isPersonal = context === 'personal';
 
   return (
-    <div className={`
-      inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium
-      ${isPersonal 
-        ? 'bg-gray-100 text-gray-700' 
-        : 'bg-[#ef6144]/10 text-[#ef6144]'
-      }
-    `}>
+    <div className={`app-context-chip ${isPersonal ? 'app-context-chip--personal' : 'app-context-chip--company'}`}>
       {isPersonal ? (
         <>
           <User className="h-3 w-3" />

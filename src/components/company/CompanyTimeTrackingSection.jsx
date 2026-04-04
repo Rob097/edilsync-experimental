@@ -412,7 +412,7 @@ export default function CompanyTimeTrackingSection({
       : (startMutation.isPending ? tr('Clock-in in corso...', 'Clock-in in progress...') : 'Clock-in');
 
     return (
-      <Card>
+      <Card className="operative-simple-card rounded-[1.5rem] border-[rgba(197,177,165,0.44)]">
         <CardHeader>
           <CardTitle className="flex items-center gap-2 text-lg">
             <Clock3 className="h-5 w-5 text-[#ef6144]" />

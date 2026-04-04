@@ -9,19 +9,16 @@ export default function EmptyState({
   onAction 
 }) {
   return (
-    <div className="flex flex-col items-center justify-center py-16 px-4 text-center">
+    <div className="app-panel-muted flex flex-col items-center justify-center rounded-[1.75rem] px-5 py-16 text-center">
       {Icon && (
-        <div className="w-16 h-16 rounded-full bg-gray-100 flex items-center justify-center mb-4">
-          <Icon className="h-8 w-8 text-gray-400" />
+        <div className="mb-5 flex h-16 w-16 items-center justify-center rounded-[1.25rem] bg-[rgba(239,97,68,0.12)]">
+          <Icon className="h-8 w-8 text-[#d9553a]" />
         </div>
       )}
-      <h3 className="text-lg font-semibold text-gray-900 mb-1">{title}</h3>
-      <p className="text-sm text-gray-500 max-w-sm mb-6">{description}</p>
+      <h3 className="mb-1 text-lg font-semibold tracking-[-0.02em] text-[#231b18]">{title}</h3>
+      <p className="mb-6 max-w-sm text-sm leading-6 text-[#6d5c55]">{description}</p>
       {actionLabel && onAction && (
-        <Button 
-          onClick={onAction}
-          className="bg-[#ef6144] hover:bg-[#d9553a]"
-        >
+        <Button onClick={onAction}>
           {actionLabel}
         </Button>
       )}

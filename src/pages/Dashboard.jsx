@@ -144,18 +144,21 @@ export default function Dashboard() {
       />
 
       {/* Welcome section */}
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-        <div>
-          <h1 className="text-2xl font-bold text-gray-900">
+      <div className="flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
+        <div className="app-page-header">
+          <span className="app-page-kicker">Panoramica operativa</span>
+          <h1 className="app-page-title">
             {t('dashboard.greetingPrefix')} {(user?.display_name || user?.full_name)?.split(' ')[0] || 'Utente'}
           </h1>
-          <div className="flex items-center gap-2 mt-1">
-            <span className="text-gray-500">{t('dashboard.workingAs')}</span>
+          <p className="app-page-subtitle">
+            {t('dashboard.workingAs')} {currentContext === 'personal' ? t('dashboard.noPersonalProjects') : currentCompany?.name || t('common.companies')}
+          </p>
+          <div className="flex items-center gap-2">
             <ContextBadge context={currentContext} companyName={currentCompany?.name} />
           </div>
         </div>
         <Link to={createPageUrl('NewProject')}>
-          <Button className="bg-[#ef6144] hover:bg-[#d9553a]">
+          <Button>
             <Plus className="h-4 w-4 mr-2" />
             {t('common.newProject')}
           </Button>
@@ -164,73 +167,73 @@ export default function Dashboard() {
 
       {/* Stats */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-        <Card>
+        <Card className="app-kpi-card">
           <CardContent className="p-4">
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-lg bg-[#ef6144]/10 flex items-center justify-center">
-                <FolderKanban className="h-5 w-5 text-[#ef6144]" />
+              <div className="app-kpi-icon app-kpi-icon--accent">
+                <FolderKanban className="h-5 w-5" />
               </div>
               <div>
-                <p className="text-2xl font-bold text-gray-900">{contextProjects.length}</p>
-                <p className="text-sm text-gray-500">{t('common.projects')}</p>
+                <p className="text-2xl font-bold tracking-[-0.03em] text-[#231b18]">{contextProjects.length}</p>
+                <p className="text-sm text-[#6d5c55]">{t('common.projects')}</p>
               </div>
             </div>
           </CardContent>
         </Card>
-        <Card>
+        <Card className="app-kpi-card">
           <CardContent className="p-4">
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-lg bg-blue-100 flex items-center justify-center">
-                <Clock className="h-5 w-5 text-blue-600" />
+              <div className="app-kpi-icon app-kpi-icon--info">
+                <Clock className="h-5 w-5" />
               </div>
               <div>
-                <p className="text-2xl font-bold text-gray-900">
+                <p className="text-2xl font-bold tracking-[-0.03em] text-[#231b18]">
                   {contextProjects.filter(p => p.status === 'in_progress').length}
                 </p>
-                <p className="text-sm text-gray-500">{t('project.status.in_progress')}</p>
+                <p className="text-sm text-[#6d5c55]">{t('project.status.in_progress')}</p>
               </div>
             </div>
           </CardContent>
         </Card>
-        <Card>
+        <Card className="app-kpi-card">
           <CardContent className="p-4">
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-lg bg-green-100 flex items-center justify-center">
-                <Briefcase className="h-5 w-5 text-green-600" />
+              <div className="app-kpi-icon app-kpi-icon--success">
+                <Briefcase className="h-5 w-5" />
               </div>
               <div>
-                <p className="text-2xl font-bold text-gray-900">
+                <p className="text-2xl font-bold tracking-[-0.03em] text-[#231b18]">
                   {contextProjects.filter(p => p.status === 'completed').length}
                 </p>
-                <p className="text-sm text-gray-500">{t('project.status.completed')}</p>
+                <p className="text-sm text-[#6d5c55]">{t('project.status.completed')}</p>
               </div>
             </div>
           </CardContent>
         </Card>
         {currentContext === 'personal' ? (
-          <Card>
+          <Card className="app-kpi-card">
             <CardContent className="p-4">
               <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-lg bg-purple-100 flex items-center justify-center">
-                  <Building2 className="h-5 w-5 text-purple-600" />
+                <div className="app-kpi-icon app-kpi-icon--neutral">
+                  <Building2 className="h-5 w-5" />
                 </div>
                 <div>
-                  <p className="text-2xl font-bold text-gray-900">{companies.length}</p>
-                  <p className="text-sm text-gray-500">{t('common.companies')}</p>
+                  <p className="text-2xl font-bold tracking-[-0.03em] text-[#231b18]">{companies.length}</p>
+                  <p className="text-sm text-[#6d5c55]">{t('common.companies')}</p>
                 </div>
               </div>
             </CardContent>
           </Card>
         ) : (
-          <Card>
+          <Card className="app-kpi-card">
             <CardContent className="p-4">
               <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-lg bg-purple-100 flex items-center justify-center">
-                  <Building2 className="h-5 w-5 text-purple-600" />
+                <div className="app-kpi-icon app-kpi-icon--neutral">
+                  <Building2 className="h-5 w-5" />
                 </div>
                 <div>
-                  <p className="text-2xl font-bold text-gray-900">{currentCompanyMembers.length}</p>
-                  <p className="text-sm text-gray-500">{t('common.members')}</p>
+                  <p className="text-2xl font-bold tracking-[-0.03em] text-[#231b18]">{currentCompanyMembers.length}</p>
+                  <p className="text-sm text-[#6d5c55]">{t('common.members')}</p>
                 </div>
               </div>
             </CardContent>
@@ -239,11 +242,11 @@ export default function Dashboard() {
       </div>
 
       {/* Recent Projects */}
-      <Card>
+      <Card className="app-panel">
         <CardHeader className="flex flex-row items-center justify-between pb-4">
-          <CardTitle className="text-lg font-semibold">{t('dashboard.recentProjects')}</CardTitle>
+          <CardTitle className="text-lg font-semibold text-[#231b18]">{t('dashboard.recentProjects')}</CardTitle>
           <Link to={createPageUrl('Projects')}>
-            <Button variant="ghost" size="sm" className="text-[#ef6144]">
+            <Button variant="ghost" size="sm" className="app-section-link">
               {t('common.seeAll')}
               <ArrowRight className="h-4 w-4 ml-1" />
             </Button>
@@ -284,11 +287,11 @@ export default function Dashboard() {
 
       {/* Companies */}
       {currentContext === 'personal' && (
-        <Card>
+        <Card className="app-panel">
           <CardHeader className="flex flex-row items-center justify-between pb-4">
-            <CardTitle className="text-lg font-semibold">{t('dashboard.yourCompanies')}</CardTitle>
+            <CardTitle className="text-lg font-semibold text-[#231b18]">{t('dashboard.yourCompanies')}</CardTitle>
             <Link to={createPageUrl('Companies')}>
-              <Button variant="ghost" size="sm" className="text-[#ef6144]">
+              <Button variant="ghost" size="sm" className="app-section-link">
                 {t('common.seeAll')}
                 <ArrowRight className="h-4 w-4 ml-1" />
               </Button>

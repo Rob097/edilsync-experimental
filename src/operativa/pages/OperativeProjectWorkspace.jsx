@@ -562,8 +562,8 @@ export default function OperativeProjectWorkspace() {
   }
 
   return (
-    <div className="space-y-3 pb-24">
-      <div className="sticky top-16 z-20 bg-gray-100 pb-2">
+    <div className="operative-shell space-y-3 pb-24">
+      <div className="operative-sticky-strip sticky top-16 z-20 pb-2">
         <Button variant="outline" className="w-full" onClick={() => navigate('/app/operativa')}>
           Torna alla home
         </Button>

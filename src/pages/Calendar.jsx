@@ -273,29 +273,30 @@ export default function Calendar() {
   }
 
   return (
-    <div className="space-y-6 overflow-x-hidden">
+    <div className="space-y-6 overflow-visible">
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-        <div>
-          <h1 className="text-2xl font-bold text-gray-900">{t('calendar.title')}</h1>
-          <div className="flex items-center gap-2 mt-1">
-            <span className="text-gray-500">{t('dashboard.workingAs')}</span>
+      <div className="flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
+        <div className="app-page-header">
+          <span className="app-page-kicker">Planning</span>
+          <h1 className="app-page-title">{t('calendar.title')}</h1>
+          <p className="app-page-subtitle">Vista mensile di attività assegnate ed eventi del contesto selezionato.</p>
+          <div className="flex items-center gap-2">
             <ContextBadge context={currentContext} companyName={currentCompany?.name} />
           </div>
         </div>
-        <Button onClick={handleCreateEvent} className="bg-[#ef6144] hover:bg-[#d9553a]">
+        <Button onClick={handleCreateEvent}>
           <Plus className="h-4 w-4 mr-2" />
           {t('calendar.newEvent')}
         </Button>
       </div>
 
       {/* Calendar Controls */}
-      <div className="flex items-center justify-between">
+      <div className="app-panel flex items-center justify-between rounded-[1.75rem] p-3 sm:p-4">
         <div className="flex items-center gap-1 sm:gap-2">
           <Button variant="outline" size="icon" onClick={handlePrevMonth}>
             <ChevronLeft className="h-4 w-4" />
           </Button>
-          <h2 className="text-base sm:text-lg font-semibold min-w-0 text-center capitalize">
+          <h2 className="min-w-0 text-center text-base font-semibold capitalize tracking-[-0.02em] text-[#231b18] sm:text-lg">
             {format(currentDate, 'MMMM yyyy', { locale: dateLocale })}
           </h2>
           <Button variant="outline" size="icon" onClick={handleNextMonth}>
@@ -312,12 +313,12 @@ export default function Calendar() {
       </div>
 
       {/* Calendar Grid */}
-      <Card>
+      <Card className="app-panel">
         <CardContent className="p-2 sm:p-4">
           {/* Week days header */}
           <div className="grid grid-cols-7 gap-0.5 sm:gap-1 mb-2">
             {weekDays.map(day => (
-              <div key={day} className="text-center text-xs sm:text-sm font-medium text-gray-500 py-1 sm:py-2">
+              <div key={day} className="py-1 text-center text-xs font-semibold uppercase tracking-[0.14em] text-[#8c766e] sm:py-2 sm:text-sm sm:tracking-[0.1em]">
                 {day}
               </div>
             ))}
@@ -336,16 +337,16 @@ export default function Calendar() {
                   key={idx}
                   onClick={() => handleDayClick(day)}
                   className={`
-                    min-h-[60px] sm:min-h-[100px] p-1 sm:p-2 rounded-lg border cursor-pointer transition-colors
-                    ${isCurrentMonth ? 'bg-white' : 'bg-gray-50'}
-                    ${isToday ? 'border-[#ef6144]' : 'border-gray-200'}
-                    ${isSelected ? 'ring-2 ring-[#ef6144]' : ''}
-                    hover:bg-gray-50
+                    min-h-[60px] cursor-pointer rounded-[1rem] border p-1 transition-colors sm:min-h-[100px] sm:p-2
+                    ${isCurrentMonth ? 'bg-[rgba(255,250,247,0.9)]' : 'bg-[rgba(240,232,226,0.7)]'}
+                    ${isToday ? 'border-[#d9553a]' : 'border-[rgba(197,177,165,0.44)]'}
+                    ${isSelected ? 'ring-2 ring-[#d9553a]/40' : ''}
+                    hover:bg-[rgba(248,241,237,0.95)]
                   `}
                 >
                   <div className={`
                     text-xs sm:text-sm font-medium mb-0.5 sm:mb-1
-                    ${isToday ? 'text-[#ef6144]' : isCurrentMonth ? 'text-gray-900' : 'text-gray-400'}
+                    ${isToday ? 'text-[#d9553a]' : isCurrentMonth ? 'text-[#231b18]' : 'text-[#9a867f]'}
                   `}>
                     {format(day, 'd')}
                   </div>
@@ -364,7 +365,7 @@ export default function Calendar() {
                         className={`text-xs p-1 rounded truncate ${
                           event.entry_type === 'task'
                             ? 'bg-blue-100 text-blue-700 cursor-pointer hover:bg-blue-200'
-                            : 'bg-[#ef6144]/10 text-[#ef6144] hover:bg-[#ef6144]/20 cursor-pointer'
+                            : 'bg-[rgba(239,97,68,0.12)] text-[#d9553a] hover:bg-[rgba(239,97,68,0.18)] cursor-pointer'
                         }`}
                       >
                         {event.entry_type === 'task'
@@ -383,7 +384,7 @@ export default function Calendar() {
                     {dayEvents.slice(0, 3).map(event => (
                       <div
                         key={event.id}
-                        className={`w-1.5 h-1.5 rounded-full ${event.entry_type === 'task' ? 'bg-blue-500' : 'bg-[#ef6144]'}`}
+                        className={`h-1.5 w-1.5 rounded-full ${event.entry_type === 'task' ? 'bg-blue-500' : 'bg-[#d9553a]'}`}
                       />
                     ))}
                     {dayEvents.length > 3 && (

@@ -43,18 +43,18 @@ export default function OperativeEntry() {
   }
 
   return (
-    <div className="space-y-4">
+    <div className="operative-shell space-y-4 rounded-[1.5rem] pb-2">
       {companies.length > 1 ? (
-        <Card className="border-[#ef6144]/20">
+        <Card className="operative-simple-card rounded-[1.5rem] border-[rgba(197,177,165,0.44)]">
           <CardHeader>
-            <CardTitle className="text-base">{t('operational.selectCompany')}</CardTitle>
+            <CardTitle className="text-base text-[#231b18]">{t('operational.selectCompany')}</CardTitle>
           </CardHeader>
           <CardContent className="space-y-2">
             {companies.map((company) => (
               <Button
                 key={company.id}
                 variant={currentCompany?.id === company.id ? 'default' : 'outline'}
-                className={currentCompany?.id === company.id ? 'w-full bg-[#ef6144] hover:bg-[#d9553a]' : 'w-full border-[#ef6144]/30 text-[#ef6144] hover:bg-[#ef6144]/10'}
+                className="operative-quick-button w-full"
                 onClick={() => handleCompanyChange(company)}
               >
                 <Building2 className="h-4 w-4 mr-2" />
@@ -65,13 +65,13 @@ export default function OperativeEntry() {
         </Card>
       ) : null}
 
-      <Card className="border-[#ef6144]/20">
+      <Card className="operative-simple-card rounded-[1.5rem] border-[rgba(197,177,165,0.44)]">
         <CardHeader>
-          <CardTitle className="text-base">{t('operational.chooseStart')}</CardTitle>
+          <CardTitle className="text-base text-[#231b18]">{t('operational.chooseStart')}</CardTitle>
         </CardHeader>
         <CardContent className="space-y-3">
           <Button
-            className="w-full bg-[#ef6144] hover:bg-[#d9553a] h-12"
+            className="operative-quick-button w-full"
             onClick={() => navigate('/app/operativa/riepilogo')}
           >
             <CalendarClock className="h-4 w-4 mr-2" />
@@ -79,7 +79,7 @@ export default function OperativeEntry() {
           </Button>
           <Button
             variant="outline"
-            className="w-full border-[#ef6144]/30 text-[#ef6144] hover:bg-[#ef6144]/10 h-12"
+            className="operative-quick-button w-full"
             onClick={() => navigate('/app/operativa/societa')}
           >
             <Building2 className="h-4 w-4 mr-2" />
@@ -88,9 +88,9 @@ export default function OperativeEntry() {
         </CardContent>
       </Card>
 
-      <Card className="border-[#ef6144]/20">
+      <Card className="operative-simple-card rounded-[1.5rem] border-[rgba(197,177,165,0.44)]">
         <CardHeader>
-          <CardTitle className="text-base">{t('operational.selectProject')}</CardTitle>
+          <CardTitle className="text-base text-[#231b18]">{t('operational.selectProject')}</CardTitle>
         </CardHeader>
         <CardContent className="space-y-2">
           {contextProjects.length > 0 ? (
@@ -98,7 +98,7 @@ export default function OperativeEntry() {
               <Button
                 key={project.id}
                 variant="outline"
-                className="w-full justify-start border-[#ef6144]/30 text-[#ef6144] hover:bg-[#ef6144]/10"
+                className="operative-quick-button w-full"
                 onClick={() => navigate(`/app/operativa/progetto/${project.id}`)}
               >
                 <Briefcase className="h-4 w-4 mr-2" />
@@ -106,7 +106,7 @@ export default function OperativeEntry() {
               </Button>
             ))
           ) : (
-            <p className="text-sm text-gray-600">{t('operational.noProjects')}</p>
+            <p className="text-sm text-[#6d5c55]">{t('operational.noProjects')}</p>
           )}
         </CardContent>
       </Card>

@@ -198,9 +198,9 @@ export default function OperativeCompanyWorkspace() {
 
   if (!activeCompanyId || !currentCompany) {
     return (
-      <Card className="border-[#ef6144]/20">
+      <Card className="operative-simple-card rounded-[1.5rem] border-[rgba(197,177,165,0.44)]">
         <CardContent className="p-4 space-y-3">
-          <p className="text-sm text-gray-600">{tr('Nessuna società attiva nel contesto operativo.', 'No active company in operational context.')}</p>
+          <p className="text-sm text-[#6d5c55]">{tr('Nessuna società attiva nel contesto operativo.', 'No active company in operational context.')}</p>
           <Button className="w-full" onClick={() => navigate('/app/operativa')}>{t('operational.backToSelection')}</Button>
         </CardContent>
       </Card>
@@ -208,16 +208,16 @@ export default function OperativeCompanyWorkspace() {
   }
 
   return (
-    <div className="space-y-3 pb-24">
-      <div className="sticky top-16 z-20 bg-gray-100 pb-2">
+    <div className="operative-shell space-y-3 pb-24">
+      <div className="operative-sticky-strip sticky top-16 z-20 pb-2">
         <Button variant="outline" className="w-full" onClick={() => navigate('/app/operativa')}>
           Torna alla home
         </Button>
       </div>
 
-      <Card className="border-[#ef6144]/20">
+      <Card className="operative-simple-card rounded-[1.5rem] border-[rgba(197,177,165,0.44)]">
         <CardHeader>
-          <CardTitle className="text-base">{currentCompany.name}</CardTitle>
+          <CardTitle className="text-base text-[#231b18]">{currentCompany.name}</CardTitle>
         </CardHeader>
       </Card>
 
@@ -245,16 +245,15 @@ export default function OperativeCompanyWorkspace() {
 
       {activeTab === 'docs' && (
         canUseCompanyDocuments ? (
-          <Card className="border-[#ef6144]/20">
+          <Card className="operative-simple-card rounded-[1.5rem] border-[rgba(197,177,165,0.44)]">
             <CardHeader>
-              <CardTitle className="text-base">{tr('Documenti società', 'Company documents')}</CardTitle>
+              <CardTitle className="text-base text-[#231b18]">{tr('Documenti società', 'Company documents')}</CardTitle>
             </CardHeader>
             <CardContent className="space-y-2 max-h-[58vh] overflow-y-auto">
-              <p className="text-xs text-gray-500">{t('operational.docsOrderedInfo')}</p>
+              <p className="text-xs text-[#8c766e]">{t('operational.docsOrderedInfo')}</p>
               <div className="grid grid-cols-2 gap-2">
                 <Button
                   variant={docsView === 'chronological' ? 'default' : 'outline'}
-                  className={docsView === 'chronological' ? 'bg-[#ef6144] hover:bg-[#d9553a]' : ''}
                   onClick={() => setDocsView('chronological')}
                 >
                   <History className="h-4 w-4 mr-2" />
@@ -262,23 +261,22 @@ export default function OperativeCompanyWorkspace() {
                 </Button>
                 <Button
                   variant={docsView === 'explorer' ? 'default' : 'outline'}
-                  className={docsView === 'explorer' ? 'bg-[#ef6144] hover:bg-[#d9553a]' : ''}
                   onClick={() => setDocsView('explorer')}
                 >
                   <FolderTree className="h-4 w-4 mr-2" />
                   {t('operational.docsExplorer')}
                 </Button>
               </div>
-              <Button className="w-full bg-[#ef6144] hover:bg-[#d9553a]" onClick={() => setUploadOpen(true)} disabled={!canUpload}>
+              <Button className="operative-quick-button w-full justify-center" onClick={() => setUploadOpen(true)} disabled={!canUpload}>
                 <UploadCloud className="h-4 w-4 mr-2" />
                 {t('operational.addPhoto')}
               </Button>
               {companyDocuments.length > 0 ? (
                 docsView === 'chronological' ? (
                   documentsChronological.map((document) => (
-                    <div key={document.id} className="rounded-lg border border-[#ef6144]/20 p-3">
-                      <p className="font-medium text-gray-900">{document.name}</p>
-                      <p className="text-xs text-gray-500 mt-1">
+                    <div key={document.id} className="rounded-[1rem] border border-[rgba(197,177,165,0.42)] bg-[rgba(255,251,248,0.96)] p-3">
+                      <p className="font-semibold text-[#231b18]">{document.name}</p>
+                      <p className="mt-1 text-xs text-[#6d5c55]">
                         {format(new Date(document.created_date), 'dd MMM yyyy HH:mm', { locale: dateLocale })}
                         {' • '}
                         {documentCategoryLabel(document.category)}
@@ -304,9 +302,9 @@ export default function OperativeCompanyWorkspace() {
                         <AccordionTrigger>{`${documentCategoryLabel(category)} (${docs.length})`}</AccordionTrigger>
                         <AccordionContent className="space-y-2 max-h-[30vh] overflow-y-auto">
                           {docs.map((document) => (
-                            <div key={document.id} className="rounded-lg border border-[#ef6144]/20 p-3">
-                              <p className="font-medium text-gray-900">{document.name}</p>
-                              <p className="text-xs text-gray-500 mt-1">{format(new Date(document.created_date), 'dd MMM yyyy HH:mm', { locale: dateLocale })}</p>
+                            <div key={document.id} className="rounded-[1rem] border border-[rgba(197,177,165,0.42)] bg-[rgba(255,251,248,0.96)] p-3">
+                              <p className="font-semibold text-[#231b18]">{document.name}</p>
+                              <p className="mt-1 text-xs text-[#6d5c55]">{format(new Date(document.created_date), 'dd MMM yyyy HH:mm', { locale: dateLocale })}</p>
                               <Button size="sm" variant="outline" className="mt-2" onClick={() => {
                                 if (bimBlocked && isBimFileType(document.file_type || document.model_format)) {
                                   toast({
@@ -326,7 +324,7 @@ export default function OperativeCompanyWorkspace() {
                     ))}
                   </Accordion>
                 )
-              ) : <p className="text-sm text-gray-600">{t('documents.noDocuments')}</p>}
+              ) : <p className="text-sm text-[#6d5c55]">{t('documents.noDocuments')}</p>}
             </CardContent>
           </Card>
         ) : (
@@ -343,10 +341,10 @@ export default function OperativeCompanyWorkspace() {
       )}
 
       {activeTab === 'chat' && (
-        <Card className="border-[#ef6144]/20 h-[66vh] flex flex-col overflow-hidden">
-          <div className="border-b p-3 flex items-center justify-between">
+        <Card className="operative-simple-card flex h-[66vh] flex-col overflow-hidden rounded-[1.5rem] border-[rgba(197,177,165,0.44)]">
+          <div className="flex items-center justify-between border-b border-[rgba(197,177,165,0.42)] p-3">
             <div className="min-w-0">
-              <p className="text-sm font-semibold text-gray-900 truncate">{selectedChannel?.name || tr('Canali società', 'Company channels')}</p>
+              <p className="truncate text-sm font-semibold text-[#231b18]">{selectedChannel?.name || tr('Canali società', 'Company channels')}</p>
             </div>
             {!isGeneralOnlyChat && (
               <Button variant="ghost" size="icon" onClick={() => setChatShowChannels((prev) => !prev)}>
@@ -419,7 +417,7 @@ export default function OperativeCompanyWorkspace() {
               placeholder={t('operational.fileNameOptional')}
             />
             <Button
-              className="w-full bg-[#ef6144] hover:bg-[#d9553a]"
+              className="w-full"
               disabled={!uploadFile || uploadDocumentMutation.isPending}
               onClick={() => uploadDocumentMutation.mutate()}
             >
@@ -430,17 +428,17 @@ export default function OperativeCompanyWorkspace() {
         </DialogContent>
       </Dialog>
 
-      <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-[#ef6144]/20 px-2 py-2">
+      <div className="operative-bottom-nav fixed bottom-0 left-0 right-0 px-2 py-2">
         <div className="max-w-md mx-auto grid grid-cols-3 gap-2">
-          <Button variant={activeTab === 'timbrature' ? 'default' : 'ghost'} className={activeTab === 'timbrature' ? 'bg-[#ef6144] hover:bg-[#d9553a] h-12 flex-col' : 'h-12 flex-col'} onClick={() => setActiveTab('timbrature')}>
+          <Button variant={activeTab === 'timbrature' ? 'default' : 'ghost'} className="h-12 flex-col rounded-[1rem]" onClick={() => setActiveTab('timbrature')}>
             <Clock className="h-4 w-4" />
             <span className="text-[10px]">{tr('Timbrature', 'Tracking')}</span>
           </Button>
-          <Button variant={activeTab === 'docs' ? 'default' : 'ghost'} className={activeTab === 'docs' ? 'bg-[#ef6144] hover:bg-[#d9553a] h-12 flex-col' : 'h-12 flex-col'} onClick={() => setActiveTab('docs')}>
+          <Button variant={activeTab === 'docs' ? 'default' : 'ghost'} className="h-12 flex-col rounded-[1rem]" onClick={() => setActiveTab('docs')}>
             <FileText className="h-4 w-4" />
             <span className="text-[10px]">{t('operational.docsTab')}</span>
           </Button>
-          <Button variant={activeTab === 'chat' ? 'default' : 'ghost'} className={activeTab === 'chat' ? 'bg-[#ef6144] hover:bg-[#d9553a] h-12 flex-col' : 'h-12 flex-col'} onClick={() => setActiveTab('chat')}>
+          <Button variant={activeTab === 'chat' ? 'default' : 'ghost'} className="h-12 flex-col rounded-[1rem]" onClick={() => setActiveTab('chat')}>
             <MessageSquare className="h-4 w-4" />
             <span className="text-[10px]">{t('operational.chatTab')}</span>
           </Button>

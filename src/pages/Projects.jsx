@@ -131,16 +131,19 @@ export default function Projects() {
     <div className="space-y-6">
 
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-        <div>
-          <h1 className="text-2xl font-bold text-gray-900">{t('common.projects')}</h1>
-          <div className="flex items-center gap-2 mt-1">
-            <span className="text-gray-500">{t('dashboard.workingAs')}</span>
+      <div className="flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
+        <div className="app-page-header">
+          <span className="app-page-kicker">Project hub</span>
+          <h1 className="app-page-title">{t('common.projects')}</h1>
+          <p className="app-page-subtitle">
+            Elenco filtrabile dei cantieri attivi, pianificati e completati nel contesto di lavoro corrente.
+          </p>
+          <div className="flex items-center gap-2">
             <ContextBadge context={currentContext} companyName={currentCompany?.name} />
           </div>
         </div>
         <Link to={createPageUrl('NewProject')}>
-          <Button className="bg-[#ef6144] hover:bg-[#d9553a]">
+          <Button>
             <Plus className="h-4 w-4 mr-2" />
             {t('common.newProject')}
           </Button>
@@ -148,14 +151,14 @@ export default function Projects() {
       </div>
 
       {/* Filters */}
-      <div className="flex flex-col sm:flex-row gap-4">
+      <div className="app-panel flex flex-col gap-4 rounded-[1.75rem] p-4 sm:flex-row sm:items-center sm:justify-between">
         <div className="relative flex-1 max-w-md">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
+          <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-[#9a867f]" />
           <Input
             placeholder={t('common.searchProjects')}
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="pl-10"
+            className="pl-11"
           />
         </div>
         <Tabs value={statusFilter} onValueChange={setStatusFilter}>
