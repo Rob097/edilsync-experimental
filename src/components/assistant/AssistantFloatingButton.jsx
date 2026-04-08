@@ -1,9 +1,9 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { appClient } from '@/api/appClient';
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { useQuery } from '@tanstack/react-query';
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet";
-import { Sparkles, Send, Mic, MicOff, Loader2, MessageSquare, X, Plus, Trash2, History, MessageCircle } from "lucide-react";
+import { Sparkles, Send, Mic, MicOff, Loader2, MessageSquare, X, Plus, Trash2, History, MessageCircleOff } from "lucide-react";
 import { Textarea } from "@/components/ui/textarea";
 import MessageBubble from "@/components/assistant/MessageBubble";
 import SuggestedMessages from "@/components/assistant/SuggestedMessages";
@@ -13,11 +13,36 @@ import { format } from 'date-fns';
 import { it, enUS } from 'date-fns/locale';
 import { useLanguage } from '@/components/i18n/useLanguage';
 
+const STORAGE_KEY = 'edilsync_assistant_ui_conversations';
+const ACTIVE_CONVERSATION_KEY = 'edilsync_assistant_ui_active';
+const ASSISTANT_AVAILABLE = false;
+
+const readStoredConversations = () => {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    return raw ? JSON.parse(raw) : [];
+  } catch {
+    return [];
+  }
+};
+
+const writeStoredConversations = (conversations) => {
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(conversations));
+};
+
+const buildScopeKey = (user) => {
+  const context = user?.active_context || 'personal';
+  const companyId = user?.active_company_id || 'none';
+  const email = user?.email || 'unknown';
+  return `${email}::${context}::${companyId}`;
+};
+
+const buildConversationName = (dateLocale) => `Chat ${format(new Date(), 'dd/MM/yyyy HH:mm', { locale: dateLocale })}`;
+
 export default function AssistantFloatingButton({ className }) {
   const { currentLanguage } = useLanguage();
   const tr = (itText, enText) => currentLanguage === 'it' ? itText : enText;
   const dateLocale = currentLanguage === 'it' ? it : enUS;
-  const queryClient = useQueryClient();
   const [isOpen, setIsOpen] = useState(false);
   const [showConversations, setShowConversations] = useState(false);
   const [conversationId, setConversationId] = useState(null);
@@ -33,115 +58,70 @@ export default function AssistantFloatingButton({ className }) {
     queryFn: () => appClient.auth.me(),
   });
 
-  // Fetch all user conversations filtered by active context
-  const { data: conversations = [], refetch: refetchConversations } = useQuery({
-    queryKey: ['assistantConversations', user?.active_context, user?.active_company_id],
-    queryFn: async () => {
-      const allConversations = await appClient.agents.listConversations({ agent_name: "edilsync_assistant" });
-      // Filter conversations by active context
-      const currentContext = user?.active_context || 'personal';
-      const currentCompanyId = user?.active_company_id || null;
-      
-      return allConversations.filter(conv => {
-        const convContext = conv.metadata?.context || 'personal';
-        const convCompanyId = conv.metadata?.company_id || null;
-        
-        if (currentContext === 'personal') {
-          return convContext === 'personal';
-        } else {
-          return convContext === 'company' && convCompanyId === currentCompanyId;
-        }
-      });
-    },
-    enabled: !!user && isOpen,
-    staleTime: 0,
-  });
+  const scopeKey = useMemo(() => buildScopeKey(user), [user]);
 
-  // Delete conversation mutation - tracks deleted IDs in localStorage
-  const deleteConversationMutation = useMutation({
-    mutationFn: async (convId) => {
-      const deletedIds = JSON.parse(localStorage.getItem('deleted_conversations') || '[]');
-      deletedIds.push(convId);
-      localStorage.setItem('deleted_conversations', JSON.stringify(deletedIds));
-      return convId;
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['assistantConversations'] });
-      toast.success(tr('Chat eliminata', 'Chat deleted'));
-    },
-  });
+  const conversations = useMemo(() => {
+    return readStoredConversations()
+      .filter((conv) => conv.scopeKey === scopeKey)
+      .sort((a, b) => new Date(b.updated_date || b.created_date) - new Date(a.updated_date || a.created_date));
+  }, [scopeKey, isOpen, conversationId, messages.length]);
 
-  // Get deleted conversation IDs from localStorage
-  const getDeletedConversationIds = () => {
-    return JSON.parse(localStorage.getItem('deleted_conversations') || '[]');
+  const persistConversation = (nextConversation) => {
+    const allConversations = readStoredConversations().filter((conv) => conv.id !== nextConversation.id);
+    allConversations.push(nextConversation);
+    writeStoredConversations(allConversations);
   };
 
-  // Load or create conversation when opening
-  useEffect(() => {
-    const initConversation = async () => {
-      if (!isOpen || !user) return;
-      
-      try {
-        // Check localStorage for last conversation ID
-        const lastConvId = localStorage.getItem('assistant_conversation_id');
-        
-        // Filter out deleted conversations (from localStorage)
-        const deletedIds = getDeletedConversationIds();
-        const activeConversations = conversations.filter(c => !deletedIds.includes(c.id));
-        
-        if (lastConvId && activeConversations.find(c => c.id === lastConvId)) {
-          // Load last conversation
-          const conv = await appClient.agents.getConversation(lastConvId);
-          setConversationId(conv.id);
-          setMessages(conv.messages || []);
-        } else if (activeConversations.length > 0) {
-          // Load most recent conversation
-          const latestConv = activeConversations.sort((a, b) => 
-            new Date(b.created_date) - new Date(a.created_date)
-          )[0];
-          const conv = await appClient.agents.getConversation(latestConv.id);
-          setConversationId(conv.id);
-          setMessages(conv.messages || []);
-          localStorage.setItem('assistant_conversation_id', conv.id);
-        } else {
-          // Create new conversation with context info
-          const conv = await appClient.agents.createConversation({
-            agent_name: "edilsync_assistant",
-            metadata: {
-              name: `Chat ${format(new Date(), 'dd/MM/yyyy HH:mm', { locale: dateLocale })}`,
-              context: user?.active_context || 'personal',
-              company_id: user?.active_company_id || null,
-            }
-          });
-          setConversationId(conv.id);
-          setMessages(conv.messages || []);
-          localStorage.setItem('assistant_conversation_id', conv.id);
-          refetchConversations();
-        }
-      } catch (error) {
-        console.error('Failed to initialize conversation:', error);
-        toast.error(tr('Errore durante l\'inizializzazione', 'Initialization error'));
-      }
+  const openConversation = (conversation) => {
+    setConversationId(conversation.id);
+    setMessages(conversation.messages || []);
+    localStorage.setItem(`${ACTIVE_CONVERSATION_KEY}:${scopeKey}`, conversation.id);
+  };
+
+  const createConversation = () => {
+    const conversation = {
+      id: crypto.randomUUID(),
+      scopeKey,
+      metadata: {
+        name: buildConversationName(dateLocale),
+        context: user?.active_context || 'personal',
+        company_id: user?.active_company_id || null,
+      },
+      messages: [],
+      created_date: new Date().toISOString(),
+      updated_date: new Date().toISOString(),
     };
 
-    if (isOpen && !conversationId) {
-      initConversation();
-    }
-  }, [isOpen, user, conversationId, conversations, refetchConversations]);
+    persistConversation(conversation);
+    openConversation(conversation);
+    return conversation;
+  };
 
-  // Subscribe to conversation updates
   useEffect(() => {
-    if (!conversationId) return;
+    if (!ASSISTANT_AVAILABLE) return;
+    if (!isOpen || !user) return;
+    if (conversationId) return;
 
-    const unsubscribe = appClient.agents.subscribeToConversation(conversationId, (data) => {
-      setMessages(data.messages);
-      setIsLoading(data.messages[data.messages.length - 1]?.role === 'user');
-    });
+    const activeConversationId = localStorage.getItem(`${ACTIVE_CONVERSATION_KEY}:${scopeKey}`);
+    const existingConversations = readStoredConversations()
+      .filter((conv) => conv.scopeKey === scopeKey)
+      .sort((a, b) => new Date(b.updated_date || b.created_date) - new Date(a.updated_date || a.created_date));
 
-    return () => unsubscribe();
-  }, [conversationId]);
+    const activeConversation = existingConversations.find((conv) => conv.id === activeConversationId);
 
-  // Auto-scroll to bottom when messages change or sheet opens
+    if (activeConversation) {
+      openConversation(activeConversation);
+      return;
+    }
+
+    if (existingConversations[0]) {
+      openConversation(existingConversations[0]);
+      return;
+    }
+
+    createConversation();
+  }, [isOpen, user, conversationId, scopeKey]);
+
   useEffect(() => {
     if (isOpen && !showConversations && messages.length > 0) {
       setTimeout(() => {
@@ -150,7 +130,6 @@ export default function AssistantFloatingButton({ className }) {
     }
   }, [messages, isOpen, showConversations]);
 
-  // Initialize speech recognition
   useEffect(() => {
     if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
       const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
@@ -165,8 +144,7 @@ export default function AssistantFloatingButton({ className }) {
         setIsListening(false);
       };
 
-      recognitionInstance.onerror = (event) => {
-        console.error('Speech recognition error:', event.error);
+      recognitionInstance.onerror = () => {
         setIsListening(false);
         toast.error(tr('Errore nel riconoscimento vocale', 'Speech recognition error'));
       };
@@ -177,29 +155,48 @@ export default function AssistantFloatingButton({ className }) {
 
       setRecognition(recognitionInstance);
     }
-  }, []);
+  }, [currentLanguage]);
 
   const handleSendMessage = async (messageText) => {
-    if (!conversationId || (!messageText && !input.trim())) return;
+    if (!ASSISTANT_AVAILABLE) {
+      toast.info(tr('Stiamo lavorando all\'assistente AI. Per ora non e ancora attivo.', 'We are working on the AI assistant. It is not active yet.'));
+      return;
+    }
 
-    const textToSend = messageText || input.trim();
+    const textToSend = (messageText || input).trim();
+    if (!textToSend) return;
+
+    const existingConversation = conversations.find((conv) => conv.id === conversationId) || createConversation();
+    const nextMessages = [
+      ...(existingConversation.messages || []),
+      {
+        id: crypto.randomUUID(),
+        role: 'user',
+        content: textToSend,
+        created_date: new Date().toISOString(),
+      },
+    ];
+
+    const updatedConversation = {
+      ...existingConversation,
+      messages: nextMessages,
+      updated_date: new Date().toISOString(),
+    };
+
+    persistConversation(updatedConversation);
+    openConversation(updatedConversation);
     setInput('');
     setIsLoading(true);
 
-    try {
-      const conversation = { id: conversationId, messages };
-      await appClient.agents.addMessage(conversation, {
-        role: 'user',
-        content: textToSend,
-      });
-    } catch (error) {
-      console.error('Failed to send message:', error);
-      toast.error(tr('Errore durante l\'invio del messaggio', 'Error sending message'));
-      setIsLoading(false);
-    }
+    setIsLoading(false);
   };
 
   const toggleVoiceInput = () => {
+    if (!ASSISTANT_AVAILABLE) {
+      toast.info(tr('La funzione vocale arrivera piu avanti, insieme all\'assistente AI.', 'Voice input will be available later, together with the AI assistant.'));
+      return;
+    }
+
     if (!recognition) {
       toast.error(tr('Il riconoscimento vocale non è supportato dal tuo browser', 'Speech recognition is not supported by your browser'));
       return;
@@ -208,86 +205,69 @@ export default function AssistantFloatingButton({ className }) {
     if (isListening) {
       recognition.stop();
       setIsListening(false);
-    } else {
-      recognition.start();
-      setIsListening(true);
-      toast.info(tr('In ascolto...', 'Listening...'));
+      return;
     }
+
+    recognition.start();
+    setIsListening(true);
+    toast.info(tr('In ascolto...', 'Listening...'));
   };
 
-  const handleKeyDown = (e) => {
-    if (e.key === 'Enter' && !e.shiftKey) {
-      e.preventDefault();
+  const handleKeyDown = (event) => {
+    if (event.key === 'Enter' && !event.shiftKey) {
+      event.preventDefault();
       handleSendMessage();
     }
   };
 
-  const handleNewConversation = async () => {
-    try {
-      const conv = await appClient.agents.createConversation({
-        agent_name: "edilsync_assistant",
-        metadata: {
-          name: `Chat ${format(new Date(), 'dd/MM/yyyy HH:mm', { locale: dateLocale })}`,
-          context: user?.active_context || 'personal',
-          company_id: user?.active_company_id || null,
-        }
-      });
-      setConversationId(conv.id);
-      setMessages([]);
-      localStorage.setItem('assistant_conversation_id', conv.id);
-      setShowConversations(false);
-      refetchConversations();
-      toast.success(tr('Nuova chat avviata', 'New chat started'));
-    } catch (error) {
-      console.error('Failed to create conversation:', error);
-      toast.error(tr('Errore nella creazione della chat', 'Error creating chat'));
+  const handleNewConversation = () => {
+    if (!ASSISTANT_AVAILABLE) {
+      toast.info(tr('L\'assistente AI e ancora in preparazione.', 'The AI assistant is still in progress.'));
+      return;
     }
+
+    createConversation();
+    setShowConversations(false);
+    toast.success(tr('Nuova chat avviata', 'New chat started'));
   };
 
-  const handleLoadConversation = async (convId) => {
-    try {
-      const conv = await appClient.agents.getConversation(convId);
-      setConversationId(conv.id);
-      setMessages(conv.messages || []);
-      localStorage.setItem('assistant_conversation_id', conv.id);
-      setShowConversations(false);
-    } catch (error) {
-      console.error('Failed to load conversation:', error);
-      toast.error(tr('Errore nel caricamento della chat', 'Error loading chat'));
-    }
+  const handleLoadConversation = (targetConversationId) => {
+    const targetConversation = readStoredConversations().find((conv) => conv.id === targetConversationId && conv.scopeKey === scopeKey);
+    if (!targetConversation) return;
+    openConversation(targetConversation);
+    setShowConversations(false);
   };
 
-  const handleDeleteConversation = async (convId) => {
-    if (convId === conversationId) {
-      // If deleting current conversation, create a new one
+  const handleDeleteConversation = (targetConversationId) => {
+    const nextConversations = readStoredConversations().filter((conv) => conv.id !== targetConversationId);
+    writeStoredConversations(nextConversations);
+
+    if (targetConversationId === conversationId) {
       setConversationId(null);
       setMessages([]);
-      localStorage.removeItem('assistant_conversation_id');
+      localStorage.removeItem(`${ACTIVE_CONVERSATION_KEY}:${scopeKey}`);
     }
-    await deleteConversationMutation.mutateAsync(convId);
-  };
 
-  const deletedIds = getDeletedConversationIds();
-  const activeConversations = conversations.filter(c => !deletedIds.includes(c.id)).sort((a, b) => 
-    new Date(b.updated_date || b.created_date) - new Date(a.updated_date || a.created_date)
-  );
+    setShowConversations(false);
+    toast.success(tr('Chat eliminata', 'Chat deleted'));
+  };
 
   return (
     <>
-      {/* Floating Button */}
       <Button
         data-tour="assistant"
         onClick={() => setIsOpen(true)}
+        title={tr('Assistente AI in lavorazione', 'AI assistant in progress')}
+        aria-label={tr('Apri il pannello dell\'assistente AI in lavorazione', 'Open the AI assistant panel in progress')}
         className={cn(
           "fixed bottom-6 right-6 h-14 w-14 rounded-full shadow-lg bg-gradient-to-br from-[#ef6144] to-orange-600 hover:from-[#ef6144]/90 hover:to-orange-600/90 z-50",
-          className
+          className,
         )}
         size="icon"
       >
         <Sparkles className="h-6 w-6 text-white" />
       </Button>
 
-      {/* Chat Sheet */}
       <Sheet open={isOpen} onOpenChange={setIsOpen}>
         <SheetContent side="right" className="w-full sm:w-[500px] p-0 flex flex-col">
           <SheetHeader className="px-6 py-4 border-b border-gray-200">
@@ -297,89 +277,81 @@ export default function AssistantFloatingButton({ className }) {
               </div>
               <div className="flex-1">
                 <SheetTitle className="text-lg">{tr('Assistente AI', 'AI Assistant')}</SheetTitle>
-                <p className="text-xs text-gray-500">{tr('Sempre qui per aiutarti', 'Always here to help')}</p>
+                <p className="text-xs text-gray-500">{tr('Stiamo lavorando a questo strumento: per ora non e ancora attivo', 'We are working on this tool: it is not active yet')}</p>
               </div>
               <div className="flex gap-2">
-                <a 
-                  href={appClient.agents.getWhatsAppConnectURL('edilsync_assistant')} 
-                  target="_blank" 
-                  rel="noopener noreferrer"
-                  className="inline-block"
-                >
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    title={tr('Apri su WhatsApp', 'Open on WhatsApp')}
-                    className="text-green-600 hover:bg-green-50"
-                  >
-                    <MessageCircle className="h-4 w-4" />
-                  </Button>
-                </a>
                 <Button
                   variant="ghost"
                   size="icon"
-                  onClick={() => setShowConversations(!showConversations)}
-                  title={tr('Storico chat', 'Chat history')}
+                  title={tr('Assistente AI in lavorazione', 'AI assistant in progress')}
+                  onClick={() => toast.info(tr('Stiamo preparando l\'assistente AI. Quando sara pronto potrai usarlo da qui.', 'We are preparing the AI assistant. When it is ready, you will use it from here.'))}
                 >
-                  <History className="h-4 w-4" />
+                  <MessageCircleOff className="h-4 w-4" />
                 </Button>
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  onClick={handleNewConversation}
-                  title={tr('Nuova chat', 'New chat')}
-                >
-                  <Plus className="h-4 w-4" />
-                </Button>
+                {ASSISTANT_AVAILABLE && (
+                  <>
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      onClick={() => setShowConversations(!showConversations)}
+                      title={tr('Storico chat', 'Chat history')}
+                    >
+                      <History className="h-4 w-4" />
+                    </Button>
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      onClick={handleNewConversation}
+                      title={tr('Nuova chat', 'New chat')}
+                    >
+                      <Plus className="h-4 w-4" />
+                    </Button>
+                  </>
+                )}
               </div>
             </div>
           </SheetHeader>
 
           <div className="flex-1 flex flex-col min-h-0">
-            {/* Conversations List */}
-            {showConversations ? (
+            {ASSISTANT_AVAILABLE && showConversations ? (
               <div className="flex-1 overflow-y-auto p-6">
                 <div className="flex items-center justify-between mb-4">
                   <h3 className="font-semibold text-gray-900">{tr('Le tue chat', 'Your chats')}</h3>
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    onClick={() => setShowConversations(false)}
-                  >
+                  <Button variant="ghost" size="sm" onClick={() => setShowConversations(false)}>
                     <X className="h-4 w-4" />
                   </Button>
                 </div>
                 <div className="space-y-2">
-                  {activeConversations.length === 0 ? (
+                  {conversations.length === 0 ? (
                     <p className="text-sm text-gray-500 text-center py-8">{tr('Nessuna chat disponibile', 'No chats available')}</p>
                   ) : (
-                    activeConversations.map((conv) => (
+                    conversations.map((conversation) => (
                       <div
-                        key={conv.id}
+                        key={conversation.id}
                         className={cn(
                           "flex items-center gap-3 p-3 rounded-lg border transition-colors cursor-pointer",
-                          conv.id === conversationId
+                          conversation.id === conversationId
                             ? "bg-[#ef6144]/10 border-[#ef6144]"
-                            : "hover:bg-gray-50 border-gray-200"
+                            : "hover:bg-gray-50 border-gray-200",
                         )}
-                        onClick={() => handleLoadConversation(conv.id)}
+                        onClick={() => handleLoadConversation(conversation.id)}
                       >
                         <MessageSquare className="h-4 w-4 text-gray-400 flex-shrink-0" />
                         <div className="flex-1 min-w-0">
                           <p className="text-sm font-medium text-gray-900 truncate">
-                            {conv.metadata?.name || tr('Chat senza titolo', 'Untitled chat')}
+                            {conversation.metadata?.name || tr('Chat senza titolo', 'Untitled chat')}
                           </p>
                           <p className="text-xs text-gray-500">
-                            {format(new Date(conv.updated_date || conv.created_date), 'dd/MM/yyyy HH:mm', { locale: dateLocale })}
+                            {format(new Date(conversation.updated_date || conversation.created_date), 'dd/MM/yyyy HH:mm', { locale: dateLocale })}
                           </p>
                         </div>
                         <Button
                           variant="ghost"
                           size="icon"
                           className="h-8 w-8 flex-shrink-0"
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            handleDeleteConversation(conv.id);
+                          onClick={(event) => {
+                            event.stopPropagation();
+                            handleDeleteConversation(conversation.id);
                           }}
                         >
                           <Trash2 className="h-4 w-4 text-red-500" />
@@ -391,75 +363,94 @@ export default function AssistantFloatingButton({ className }) {
               </div>
             ) : (
               <>
-                {/* Messages */}
                 <div className="flex-1 overflow-y-auto p-6 space-y-4">
-              {messages.length === 0 ? (
-                <div className="flex flex-col items-center justify-center h-full text-center px-4">
-                  <div className="w-16 h-16 rounded-full bg-[#ef6144]/10 flex items-center justify-center mb-4">
-                    <MessageSquare className="h-8 w-8 text-[#ef6144]" />
-                  </div>
-                  <h3 className="text-lg font-semibold text-gray-900 mb-2">
-                    {tr('Ciao! Sono qui per aiutarti', 'Hi! I\'m here to help')}
-                  </h3>
-                  <p className="text-sm text-gray-500">
-                    {tr('Posso aiutarti con progetti, task, eventi e molto altro. Chiedi pure!', 'I can help with projects, tasks, events and much more. Just ask!')}
-                  </p>
+                  {!ASSISTANT_AVAILABLE ? (
+                    <div className="flex flex-col items-center justify-center h-full text-center px-4">
+                      <div className="w-16 h-16 rounded-full bg-[#ef6144]/10 flex items-center justify-center mb-4">
+                        <MessageCircleOff className="h-8 w-8 text-[#ef6144]" />
+                      </div>
+                      <h3 className="text-lg font-semibold text-gray-900 mb-2">
+                        {tr('Assistente AI in lavorazione', 'AI assistant in progress')}
+                      </h3>
+                      <p className="text-sm text-gray-600 max-w-sm">
+                        {tr('Stiamo preparando uno strumento che ti aiutera a trovare piu in fretta informazioni su progetti, documenti e attivita di cantiere.', 'We are preparing a tool that will help you find information about projects, documents, and site activities faster.')}
+                      </p>
+                      <p className="text-sm text-gray-500 max-w-sm mt-3">
+                        {tr('Per ora non funziona ancora. Quando sara pronto, potrai scrivergli da questo pannello.', 'For now, it does not work yet. When it is ready, you will be able to write to it from this panel.')}
+                      </p>
+                    </div>
+                  ) : messages.length === 0 ? (
+                    <div className="flex flex-col items-center justify-center h-full text-center px-4">
+                      <div className="w-16 h-16 rounded-full bg-[#ef6144]/10 flex items-center justify-center mb-4">
+                        <MessageSquare className="h-8 w-8 text-[#ef6144]" />
+                      </div>
+                      <h3 className="text-lg font-semibold text-gray-900 mb-2">
+                        {tr('Ciao! La UI dell’assistente e di nuovo disponibile', 'Hi! The assistant UI is available again')}
+                      </h3>
+                      <p className="text-sm text-gray-500">
+                        {tr('Puoi usare questa interfaccia come placeholder. Le risposte sono locali finche il backend non viene ricollegato.', 'You can use this interface as a placeholder. Replies are local until backend support is wired back in.')}
+                      </p>
+                    </div>
+                  ) : (
+                    messages.map((message, idx) => (
+                      <MessageBubble key={message.id || idx} message={message} />
+                    ))
+                  )}
+                  {isLoading && (
+                    <div className="flex items-center gap-2 text-gray-500">
+                      <Loader2 className="h-4 w-4 animate-spin" />
+                      <span className="text-sm">{tr('Sto pensando...', 'Thinking...')}</span>
+                    </div>
+                  )}
+                  <div ref={messagesEndRef} />
                 </div>
-              ) : (
-                messages.map((message, idx) => (
-                  <MessageBubble key={idx} message={message} />
-                ))
-              )}
-              {isLoading && (
-                <div className="flex items-center gap-2 text-gray-500">
-                  <Loader2 className="h-4 w-4 animate-spin" />
-                  <span className="text-sm">{tr('Sto pensando...', 'Thinking...')}</span>
-                </div>
-              )}
-              <div ref={messagesEndRef} />
-            </div>
 
-                {/* Suggested Messages */}
-                {messages.length === 0 && (
+                {ASSISTANT_AVAILABLE && messages.length === 0 && (
                   <div className="border-t border-gray-200 p-4">
                     <SuggestedMessages onSelectMessage={handleSendMessage} />
                   </div>
                 )}
 
-                {/* Input */}
                 <div className="border-t border-gray-200 p-4">
-              <div className="flex gap-2">
-                <Textarea
-                  value={input}
-                  onChange={(e) => setInput(e.target.value)}
-                  onKeyDown={handleKeyDown}
-                  placeholder={tr('Scrivi un messaggio...', 'Write a message...')}
-                  className="min-h-[60px] max-h-[120px] resize-none"
-                  disabled={isLoading}
-                />
-                <div className="flex flex-col gap-2">
-                  <Button
-                    size="icon"
-                    variant={isListening ? "destructive" : "outline"}
-                    onClick={toggleVoiceInput}
-                    disabled={isLoading}
-                  >
-                    {isListening ? (
-                      <MicOff className="h-4 w-4" />
-                    ) : (
-                      <Mic className="h-4 w-4" />
-                    )}
-                  </Button>
-                  <Button
-                    size="icon"
-                    onClick={() => handleSendMessage()}
-                    disabled={!input.trim() || isLoading}
-                    className="bg-[#ef6144] hover:bg-[#ef6144]/90"
-                  >
-                    <Send className="h-4 w-4" />
-                  </Button>
-                </div>
-                  </div>
+                  {!ASSISTANT_AVAILABLE ? (
+                    <div className="rounded-xl border border-amber-200 bg-amber-50 px-4 py-3">
+                      <p className="text-sm font-medium text-amber-900">
+                        {tr('Funzione in preparazione', 'Feature in progress')}
+                      </p>
+                      <p className="text-sm text-amber-800 mt-1">
+                        {tr('Qui potrai parlare con l\'assistente AI, ma non e ancora disponibile.', 'You will be able to talk to the AI assistant here, but it is not available yet.')}
+                      </p>
+                    </div>
+                  ) : (
+                    <div className="flex gap-2">
+                      <Textarea
+                        value={input}
+                        onChange={(event) => setInput(event.target.value)}
+                        onKeyDown={handleKeyDown}
+                        placeholder={tr('Scrivi un messaggio...', 'Write a message...')}
+                        className="min-h-[60px] max-h-[120px] resize-none"
+                        disabled={isLoading}
+                      />
+                      <div className="flex flex-col gap-2">
+                        <Button
+                          size="icon"
+                          variant={isListening ? 'destructive' : 'outline'}
+                          onClick={toggleVoiceInput}
+                          disabled={isLoading}
+                        >
+                          {isListening ? <MicOff className="h-4 w-4" /> : <Mic className="h-4 w-4" />}
+                        </Button>
+                        <Button
+                          size="icon"
+                          onClick={() => handleSendMessage()}
+                          disabled={!input.trim() || isLoading}
+                          className="bg-[#ef6144] hover:bg-[#ef6144]/90"
+                        >
+                          <Send className="h-4 w-4" />
+                        </Button>
+                      </div>
+                    </div>
+                  )}
                 </div>
               </>
             )}

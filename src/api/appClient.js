@@ -321,96 +321,6 @@ const integrations = {
   },
 };
 
-const agents = {
-  listConversations: async ({ agent_name }) => {
-    const me = await getUserRecord();
-    const { data, error } = await supabase
-      .from('assistant_conversations')
-      .select('*')
-      .eq('user_email', me.email)
-      .eq('agent_name', agent_name)
-      .order('updated_date', { ascending: false });
-    if (error) throw error;
-    return data || [];
-  },
-  getConversation: async (id) => {
-    const me = await getUserRecord();
-    const { data, error } = await supabase
-      .from('assistant_conversations')
-      .select('*')
-      .eq('id', id)
-      .eq('user_email', me.email)
-      .single();
-    if (error) throw error;
-    return data;
-  },
-  createConversation: async ({ agent_name, metadata }) => {
-    const me = await getUserRecord();
-    const { data, error } = await supabase
-      .from('assistant_conversations')
-      .insert({
-        user_email: me.email,
-        agent_name,
-        metadata: metadata || {},
-        messages: [],
-      })
-      .select('*')
-      .single();
-    if (error) throw error;
-    return data;
-  },
-  addMessage: async (conversation, message) => {
-    const current = await agents.getConversation(conversation.id);
-    const messages = Array.isArray(current.messages) ? [...current.messages] : [];
-    messages.push({
-      id: crypto.randomUUID(),
-      role: message.role,
-      content: message.content,
-      created_date: new Date().toISOString(),
-    });
-
-    messages.push({
-      id: crypto.randomUUID(),
-      role: 'assistant',
-      content:
-        'Assistente non ancora configurato in Supabase. Fornisci i dettagli di edilsync_assistant per completare questa parte.',
-      created_date: new Date().toISOString(),
-    });
-
-    const { data, error } = await supabase
-      .from('assistant_conversations')
-      .update({ messages })
-      .eq('id', conversation.id)
-      .select('*')
-      .single();
-    if (error) throw error;
-    return data;
-  },
-  subscribeToConversation: (conversationId, callback) => {
-    const channel = supabase
-      .channel(`assistant:${conversationId}`)
-      .on(
-        'postgres_changes',
-        {
-          event: '*',
-          schema: 'public',
-          table: 'assistant_conversations',
-          filter: `id=eq.${conversationId}`,
-        },
-        async () => {
-          const convo = await agents.getConversation(conversationId);
-          callback(convo);
-        },
-      )
-      .subscribe();
-
-    return () => {
-      supabase.removeChannel(channel);
-    };
-  },
-  getWhatsAppConnectURL: () => '#',
-};
-
 const appLogs = {
   logUserInApp: async (pageName) => {
     const me = await getUserRecord();
@@ -428,6 +338,5 @@ export const appClient = {
   functions,
   rpc,
   integrations,
-  agents,
   appLogs,
 };

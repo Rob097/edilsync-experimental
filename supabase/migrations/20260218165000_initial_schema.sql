@@ -360,17 +360,6 @@ create table if not exists public.project_messages (
   created_by text
 );
 
-create table if not exists public.assistant_conversations (
-  id text primary key default gen_random_uuid()::text,
-  user_email text not null,
-  agent_name text not null,
-  metadata jsonb,
-  messages jsonb not null default '[]'::jsonb,
-  created_date timestamptz not null default now(),
-  updated_date timestamptz not null default now(),
-  created_by text
-);
-
 create table if not exists public.app_logs (
   id text primary key default gen_random_uuid()::text,
   user_email text,
@@ -402,7 +391,6 @@ create trigger trg_project_documents_audit before insert or update on public.pro
 create trigger trg_project_participants_audit before insert or update on public.project_participants for each row execute function public.set_audit_fields();
 create trigger trg_tasks_audit before insert or update on public.tasks for each row execute function public.set_audit_fields();
 create trigger trg_project_messages_audit before insert or update on public.project_messages for each row execute function public.set_audit_fields();
-create trigger trg_assistant_conversations_audit before insert or update on public.assistant_conversations for each row execute function public.set_audit_fields();
 
 alter table public.users enable row level security;
 alter table public.change_requests enable row level security;
@@ -422,7 +410,6 @@ alter table public.project_documents enable row level security;
 alter table public.project_participants enable row level security;
 alter table public.tasks enable row level security;
 alter table public.project_messages enable row level security;
-alter table public.assistant_conversations enable row level security;
 alter table public.app_logs enable row level security;
 
 create policy users_select on public.users for select to authenticated using (
@@ -641,12 +628,6 @@ create policy project_messages_read on public.project_messages for select to aut
 );
 create policy project_messages_update on public.project_messages for update to authenticated using (created_by = public.current_user_email()) with check (created_by = public.current_user_email());
 create policy project_messages_delete on public.project_messages for delete to authenticated using (created_by = public.current_user_email());
-
-create policy assistant_conv_all on public.assistant_conversations for all to authenticated using (
-  user_email = public.current_user_email()
-) with check (
-  user_email = public.current_user_email()
-);
 
 create policy app_logs_insert on public.app_logs for insert to authenticated with check (true);
 create policy app_logs_read on public.app_logs for select to authenticated using (

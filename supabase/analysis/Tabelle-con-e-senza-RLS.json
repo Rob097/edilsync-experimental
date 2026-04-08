@@ -7,12 +7,6 @@
   },
   {
     "schema_name": "public",
-    "table_name": "assistant_conversations",
-    "rls_enabled": true,
-    "rls_forced": false
-  },
-  {
-    "schema_name": "public",
     "table_name": "change_requests",
     "rls_enabled": true,
     "rls_forced": false

@@ -6,6 +6,7 @@ import { useLanguage } from '@/components/i18n/useLanguage';
 export default function SuggestedMessages({ onSelectMessage }) {
   const { currentLanguage } = useLanguage();
   const tr = (itText, enText) => currentLanguage === 'it' ? itText : enText;
+
   const suggestions = [
     {
       icon: ListTodo,
@@ -24,6 +25,7 @@ export default function SuggestedMessages({ onSelectMessage }) {
       text: tr('Ci sono nuove notifiche importanti?', 'Are there any important new notifications?'),
     },
   ];
+
   return (
     <div className="space-y-2">
       <p className="text-xs font-medium text-gray-500 uppercase tracking-wide">

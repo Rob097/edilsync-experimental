@@ -21,16 +21,6 @@
   },
   {
     "schemaname": "public",
-    "tablename": "assistant_conversations",
-    "policyname": "assistant_conv_all",
-    "permissive": "PERMISSIVE",
-    "roles": "{authenticated}",
-    "cmd": "ALL",
-    "qual": "(user_email = current_user_email())",
-    "with_check": "(user_email = current_user_email())"
-  },
-  {
-    "schemaname": "public",
     "tablename": "change_requests",
     "policyname": "change_requests_create",
     "permissive": "PERMISSIVE",
