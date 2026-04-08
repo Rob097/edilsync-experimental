@@ -125,21 +125,21 @@ export default function HomePage({ locale = 'it' }) {
     <>
       <StructuredData id="home-software-app" data={structuredData} />
       <div ref={rootRef} className={PUBLIC_CLASSES.page}>
-        <section className="public-section-shell relative overflow-hidden px-6 pb-20 pt-28 md:pb-28 md:pt-36">
+        <section className="public-section-shell relative overflow-hidden px-6 pb-16 pt-14 sm:pt-16 md:pb-24 md:pt-20 xl:pb-28 xl:pt-28">
           <div data-parallax="slow" className="pointer-events-none absolute left-[8%] top-20 h-72 w-72 rounded-full bg-[rgba(239,97,68,0.12)] blur-3xl" aria-hidden />
           <div data-parallax="medium" className="pointer-events-none absolute bottom-10 right-[12%] h-64 w-64 rounded-full bg-[rgba(196,158,108,0.12)] blur-3xl" aria-hidden />
-          <div className="relative mx-auto grid max-w-7xl gap-14 lg:grid-cols-[minmax(0,1.08fr)_minmax(320px,0.92fr)] lg:items-center">
+          <div className="relative mx-auto grid max-w-7xl gap-10 lg:grid-cols-[minmax(0,1.08fr)_minmax(320px,0.92fr)] lg:items-start xl:gap-14 xl:items-center">
             <div className="max-w-2xl">
               <span data-reveal className="public-eyebrow">
                 {t('publicHome.hero.badge')}
               </span>
-              <h1 data-reveal className={`${PUBLIC_CLASSES.displayH1} mt-6 max-w-[13ch] text-[var(--public-ink)]`}>
+              <h1 data-reveal className="mt-4 max-w-[17ch] text-[clamp(2.45rem,4.2vw,4.85rem)] font-bold tracking-[-0.05em] leading-[0.92] text-[var(--public-ink)] xl:mt-5 xl:max-w-[13ch] xl:text-[clamp(3.1rem,6vw,5.9rem)]">
                 {t('publicHome.hero.titleA')} <span className="text-[var(--public-accent)]">{t('publicHome.hero.titleHighlight')}</span> {t('publicHome.hero.titleB')}
               </h1>
-              <p data-reveal className={`${PUBLIC_CLASSES.bodyLead} mt-6 max-w-[62ch]`}>
+              <p data-reveal className={`${PUBLIC_CLASSES.bodyLead} mt-5 max-w-[60ch]`}>
                 {t('publicHome.hero.subtitle')}
               </p>
-              <div data-reveal className="mt-9 flex flex-col gap-3 sm:flex-row sm:items-center">
+              <div data-reveal className="mt-7 flex flex-col gap-3 sm:flex-row sm:items-center">
                 <Button asChild className={`${PUBLIC_CLASSES.primaryCta} h-12 px-7 text-base`}>
                   <Link to="/app">
                     {t('publicHome.hero.ctaPrimary')}
@@ -152,10 +152,10 @@ export default function HomePage({ locale = 'it' }) {
                   </a>
                 </Button>
               </div>
-              <p data-reveal className="mt-5 max-w-[46ch] text-sm leading-[1.7] text-[var(--public-muted)]/85">
+              <p data-reveal className="mt-4 max-w-[46ch] text-sm leading-[1.7] text-[var(--public-muted)]/85">
                 {t('publicHome.hero.note')}
               </p>
-              <div data-reveal className="mt-10 grid gap-3 sm:grid-cols-3">
+              <div data-reveal className="mt-8 grid gap-3 sm:grid-cols-3">
                 {heroHighlights.map((item) => (
                   <div key={item.label} className="public-grid-card p-4">
                     <p className="text-[11px] font-extrabold uppercase tracking-[0.14em] text-[var(--public-accent-dark)]">{item.label}</p>
@@ -165,8 +165,8 @@ export default function HomePage({ locale = 'it' }) {
               </div>
             </div>
 
-            <div data-reveal className="lg:justify-self-end">
-              <div className="public-device-frame">
+            <div data-reveal className="lg:justify-self-end lg:pt-1 xl:pt-4">
+              <div className="public-device-frame max-w-[560px] xl:max-w-none">
                 <img src="/images/hero-image.png" alt={t('publicHome.hero.preview.alt')} className="block w-full border border-white/10 object-cover" />
                 <div className="mt-4 grid gap-3 sm:grid-cols-[1.2fr_0.8fr]">
                   <div className="public-kpi-card rounded-[24px] p-5">
