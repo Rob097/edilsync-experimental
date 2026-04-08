@@ -27,6 +27,14 @@ VITE_SUPABASE_ANON_KEY=<supabase-anon-or-publishable-key>
 VITE_SUPABASE_AUTH_PROVIDER=google
 ```
 
+Variabili `VITE_*`:
+
+- sono sempre incluse nel bundle frontend
+- possono contenere solo configurazione pubblica
+- non devono mai contenere token, secret, password o chiavi server-side
+
+Il frontend ora blocca l'avvio se trova variabili `VITE_*` con nomi da segreto come `VITE_*SECRET*`, `VITE_*ACCESS_TOKEN*`, `VITE_*SERVICE_ROLE*`.
+
 ## Avvio locale
 
 ```bash
@@ -65,6 +73,16 @@ Variabili supportate:
 - `RESEND_API_KEY`
 - `RESEND_FROM_EMAIL`
 - `EMAIL_WEBHOOK_URL` (fallback se Resend non è configurato)
+
+Per le funzioni Stripe servono anche:
+
+- `STRIPE_SECRET_KEY`
+- `STRIPE_PRODUCT_ID`
+- `STRIPE_PRICE_MONTHLY`
+- `STRIPE_PRICE_YEARLY`
+- `STRIPE_WEBHOOK_SIGNING_SECRET`
+
+Queste variabili sono server-side e non devono mai essere prefissate con `VITE_`.
 
 ## Note operative
 

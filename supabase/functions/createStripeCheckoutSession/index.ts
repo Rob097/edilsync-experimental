@@ -1,6 +1,8 @@
 // @ts-nocheck
 import { adminClient, corsHeaders, getAuthenticatedContext, jsonResponse } from "../_shared/supabase.ts";
+import { assertNoUnexpectedKeys, getErrorStatus, parseJsonBody, requiredEnum, requiredUrl, requiredUuid } from "../_shared/input.ts";
 import { isCompanyAdmin } from "../_shared/access.ts";
+import { enforceRateLimit } from "../_shared/rate-limit.ts";
 import {
   buildReturnUrl,
   ensureStripeConfigured,
@@ -16,21 +18,44 @@ Deno.serve(async (req) => {
       return new Response("ok", { headers: corsHeaders });
     }
 
+    if (req.method !== "POST") {
+      return jsonResponse({ error: "Method not allowed" }, 405);
+    }
+
     ensureStripeConfigured();
 
     const { appUser } = await getAuthenticatedContext(req);
-    const payload = await req.json();
+    const payload = await parseJsonBody(req, { maxBytes: 4 * 1024 });
+    assertNoUnexpectedKeys(payload, ["company_id", "billing_cycle", "return_url"]);
 
-    const companyId = payload?.company_id;
-    const billingCycle = payload?.billing_cycle;
-    const returnUrl = payload?.return_url;
+    const companyId = requiredUuid(payload.company_id, "company_id");
+    const billingCycle = requiredEnum(payload.billing_cycle, "billing_cycle", ["monthly", "yearly"]);
+    const returnUrl = requiredUrl(payload.return_url, "return_url", 1024);
 
-    if (!companyId || !["monthly", "yearly"].includes(billingCycle || "")) {
-      return jsonResponse({ error: "company_id and valid billing_cycle are required" }, 400);
+    const userRateLimitResponse = await enforceRateLimit({
+      scope: "stripe_checkout_session:user",
+      identifier: appUser.id,
+      windowSeconds: 10 * 60,
+      maxRequests: 6,
+      message: "Too many billing session requests. Please retry in a few minutes.",
+      corsHeaders,
+    });
+
+    if (userRateLimitResponse) {
+      return userRateLimitResponse;
     }
 
-    if (!returnUrl?.startsWith("http")) {
-      return jsonResponse({ error: "Valid return_url is required" }, 400);
+    const companyRateLimitResponse = await enforceRateLimit({
+      scope: "stripe_checkout_session:company",
+      identifier: companyId,
+      windowSeconds: 10 * 60,
+      maxRequests: 10,
+      message: "Too many billing session requests for this company. Please retry in a few minutes.",
+      corsHeaders,
+    });
+
+    if (companyRateLimitResponse) {
+      return companyRateLimitResponse;
     }
 
     const isAdmin = await isCompanyAdmin(companyId, appUser.email);
@@ -118,6 +143,6 @@ Deno.serve(async (req) => {
     });
   } catch (error) {
     console.error("createStripeCheckoutSession error:", error);
-    return jsonResponse({ error: error instanceof Error ? error.message : String(error) }, 500);
+    return jsonResponse({ error: error instanceof Error ? error.message : String(error) }, getErrorStatus(error, 500));
   }
 });

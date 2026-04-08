@@ -1,5 +1,6 @@
 // @ts-nocheck
 import { adminClient, corsHeaders, getAuthenticatedContext, jsonResponse } from "../_shared/supabase.ts";
+import { assertNoUnexpectedKeys, getErrorStatus, parseJsonBody, requiredUuid } from "../_shared/input.ts";
 import { isCompanyAdmin } from "../_shared/access.ts";
 import {
   ensureStripeConfigured,
@@ -13,15 +14,16 @@ Deno.serve(async (req) => {
       return new Response("ok", { headers: corsHeaders });
     }
 
+    if (req.method !== "POST") {
+      return jsonResponse({ error: "Method not allowed" }, 405);
+    }
+
     ensureStripeConfigured();
 
     const { appUser } = await getAuthenticatedContext(req);
-    const payload = await req.json();
-    const companyId = payload?.company_id;
-
-    if (!companyId) {
-      return jsonResponse({ error: "company_id is required" }, 400);
-    }
+    const payload = await parseJsonBody(req, { maxBytes: 2 * 1024 });
+    assertNoUnexpectedKeys(payload, ["company_id"]);
+    const companyId = requiredUuid(payload.company_id, "company_id");
 
     const canManageAsCompanyAdmin = await isCompanyAdmin(companyId, appUser.email);
     const canManageAsSystemAdmin = appUser.role === "admin";
@@ -113,6 +115,6 @@ Deno.serve(async (req) => {
     });
   } catch (error) {
     console.error("syncStripeCompanySubscription error:", error);
-    return jsonResponse({ error: error instanceof Error ? error.message : String(error) }, 500);
+    return jsonResponse({ error: error instanceof Error ? error.message : String(error) }, getErrorStatus(error, 500));
   }
 });

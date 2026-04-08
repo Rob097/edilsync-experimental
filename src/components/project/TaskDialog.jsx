@@ -201,9 +201,12 @@ export default function TaskDialog({ open, onOpenChange, task, projectId, showMi
         if (data.status === 'blocked') {
           await notifyTaskBlockedResponsible({
             projectId,
-            task: updatedTask,
             blockedReason: data.blocked_reason,
-            blockedByOption,
+            blockedByOption: {
+              ...blockedByOption,
+              taskTitle: updatedTask?.title || null,
+              projectName: project?.name || null,
+            },
             actorName: user?.display_name || user?.full_name || user?.email,
             t,
           });
@@ -230,9 +233,12 @@ export default function TaskDialog({ open, onOpenChange, task, projectId, showMi
         if (data.status === 'blocked') {
           await notifyTaskBlockedResponsible({
             projectId,
-            task: createdTask,
             blockedReason: data.blocked_reason,
-            blockedByOption,
+            blockedByOption: {
+              ...blockedByOption,
+              taskTitle: createdTask?.title || null,
+              projectName: project?.name || null,
+            },
             actorName: user?.display_name || user?.full_name || user?.email,
             t,
           });

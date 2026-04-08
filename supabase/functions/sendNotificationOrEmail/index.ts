@@ -1,6 +1,6 @@
 // @ts-nocheck
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
-import { getAuthenticatedContext } from "../_shared/supabase.ts";
+import { assertNoUnexpectedKeys, escapeHtml, getErrorStatus, optionalBoolean, optionalEnum, optionalText, optionalUuid, parseJsonBody, requireObject, requiredEmail, requiredIdentifier, requiredText } from "../_shared/input.ts";
 
 const DEFAULT_PREFERENCES = {
   project_invite: { notification: true, email: true },
@@ -87,7 +87,7 @@ const jsonResponse = (payload: unknown, status = 200) =>
 
 async function sendEmail(payload: { to: string; subject: string; body: string; from_name?: string }) {
   if (resendApiKey && resendFromEmail) {
-    const htmlBody = `<div style="font-family:Arial,sans-serif;line-height:1.5;white-space:pre-wrap;">${payload.body}</div>`;
+    const htmlBody = `<div style="font-family:Arial,sans-serif;line-height:1.5;white-space:pre-wrap;">${escapeHtml(payload.body)}</div>`;
 
     const res = await fetch("https://api.resend.com/emails", {
       method: "POST",
@@ -135,27 +135,41 @@ Deno.serve(async (req) => {
       return new Response("ok", { headers: corsHeaders });
     }
 
+    if (req.method !== "POST") {
+      return jsonResponse({ error: "Method not allowed" }, 405);
+    }
+
     const internalServiceKey = req.headers.get("x-internal-service-key") || "";
     const isInternalRequest = internalServiceKey && internalServiceKey === serviceRoleKey;
 
     if (!isInternalRequest) {
-      await getAuthenticatedContext(req);
+      return jsonResponse({ error: "Forbidden" }, 403);
     }
 
-    const payload = await req.json();
-    const {
-      action_type,
-      recipient_email,
-      context_type,
-      context_company_id,
-      notification_data,
-      email_data,
-      skip_preferences_check,
-    } = payload;
+    const payload = await parseJsonBody(req, { maxBytes: 24 * 1024 });
+    assertNoUnexpectedKeys(payload, [
+      "action_type",
+      "recipient_email",
+      "context_type",
+      "context_company_id",
+      "notification_data",
+      "email_data",
+      "skip_preferences_check",
+    ]);
 
-    if (!action_type || !recipient_email) {
-      return jsonResponse({ error: "Missing required fields: action_type, recipient_email" }, 400);
-    }
+    const action_type = requiredIdentifier(payload.action_type, "action_type", 80);
+    const recipient_email = requiredEmail(payload.recipient_email, "recipient_email");
+    const context_type = optionalEnum(payload.context_type, "context_type", ["personal", "company", "project"]) || "personal";
+    const context_company_id = optionalUuid(payload.context_company_id, "context_company_id");
+    const skip_preferences_check = optionalBoolean(payload.skip_preferences_check, "skip_preferences_check") || false;
+
+    const notification_data = payload.notification_data == null
+      ? null
+      : validateNotificationData(payload.notification_data);
+
+    const email_data = payload.email_data == null
+      ? null
+      : validateEmailData(payload.email_data);
 
     if (!notification_data && !email_data) {
       return jsonResponse({ error: "At least one of notification_data or email_data must be provided" }, 400);
@@ -247,6 +261,29 @@ Deno.serve(async (req) => {
     return jsonResponse(result);
   } catch (error) {
     console.error("sendNotificationOrEmail error:", error);
-    return jsonResponse({ error: error instanceof Error ? error.message : String(error) }, 500);
+    return jsonResponse({ error: error instanceof Error ? error.message : String(error) }, getErrorStatus(error, 500));
   }
 });
+
+function validateNotificationData(value: unknown) {
+  const payload = requireObject(value, "notification_data");
+  assertNoUnexpectedKeys(payload, ["type", "title", "message", "related_event_id"]);
+
+  return {
+    type: requiredIdentifier(payload.type, "notification_data.type", 80),
+    title: requiredText(payload.title, { field: "notification_data.title", minLength: 1, maxLength: 160, collapseWhitespace: true }),
+    message: requiredText(payload.message, { field: "notification_data.message", minLength: 1, maxLength: 2000, multiline: true, collapseWhitespace: true }),
+    related_event_id: optionalUuid(payload.related_event_id, "notification_data.related_event_id"),
+  };
+}
+
+function validateEmailData(value: unknown) {
+  const payload = requireObject(value, "email_data");
+  assertNoUnexpectedKeys(payload, ["subject", "body", "from_name"]);
+
+  return {
+    subject: requiredText(payload.subject, { field: "email_data.subject", minLength: 1, maxLength: 200, collapseWhitespace: true }),
+    body: requiredText(payload.body, { field: "email_data.body", minLength: 1, maxLength: 6000, multiline: true, collapseWhitespace: true }),
+    from_name: optionalText(payload.from_name, { field: "email_data.from_name", maxLength: 80, collapseWhitespace: true }) || "EdilSync",
+  };
+}

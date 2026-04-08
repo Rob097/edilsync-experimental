@@ -1,5 +1,7 @@
 // @ts-nocheck
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+import { assertNoUnexpectedKeys, escapeHtml, getErrorStatus, optionalIdentifier, optionalText, parseJsonBody, requiredEmail, requiredText } from "../_shared/input.ts";
+import { enforceRateLimit, getClientIp, sha256Hex } from "../_shared/rate-limit.ts";
 
 const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
 const serviceRoleKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
@@ -26,21 +28,6 @@ const jsonResponse = (payload: unknown, status = 200) =>
     },
   });
 
-const clean = (value: unknown) => String(value || "").trim();
-
-async function sha256Hex(input: string) {
-  const data = new TextEncoder().encode(input);
-  const hashBuffer = await crypto.subtle.digest("SHA-256", data);
-  const hashArray = Array.from(new Uint8Array(hashBuffer));
-  return hashArray.map((b) => b.toString(16).padStart(2, "0")).join("");
-}
-
-function getClientIp(req: Request) {
-  const headerValue = req.headers.get("cf-connecting-ip") || req.headers.get("x-forwarded-for") || req.headers.get("x-real-ip");
-  if (!headerValue) return "";
-  return headerValue.split(",")[0]?.trim() || "";
-}
-
 async function sendLeadEmail(payload: {
   full_name: string;
   email: string;
@@ -58,7 +45,7 @@ async function sendLeadEmail(payload: {
   const subject = `[EdilSync] Nuova richiesta demo da ${payload.full_name}`;
   const body = `Nuova richiesta demo ricevuta\n\nNome: ${payload.full_name}\nEmail: ${payload.email}\nAzienda: ${payload.company_name || "-"}\nRuolo: ${payload.role_label || "-"}\nLingua: ${payload.locale}\nSource path: ${payload.source_path || "-"}\nUser-Agent: ${payload.user_agent || "-"}\n\nMessaggio:\n${payload.message || "-"}`;
 
-  const htmlBody = `<div style="font-family:Arial,sans-serif;line-height:1.5;white-space:pre-wrap;">${body}</div>`;
+  const htmlBody = `<div style="font-family:Arial,sans-serif;line-height:1.5;white-space:pre-wrap;">${escapeHtml(body)}</div>`;
 
   const res = await fetch("https://api.resend.com/emails", {
     method: "POST",
@@ -93,59 +80,53 @@ Deno.serve(async (req) => {
       return jsonResponse({ error: "Method not allowed" }, 405);
     }
 
-    const raw = await req.json();
+    const raw = await parseJsonBody(req, { maxBytes: 8 * 1024 });
+    assertNoUnexpectedKeys(raw, ["full_name", "email", "company_name", "role_label", "message", "locale", "source_path", "website"]);
 
-    const full_name = clean(raw?.full_name);
-    const email = clean(raw?.email).toLowerCase();
-    const company_name = clean(raw?.company_name);
-    const role_label = clean(raw?.role_label);
-    const message = clean(raw?.message);
-    const locale = clean(raw?.locale) || "it";
-    const source_path = clean(raw?.source_path);
-    const honeypot = clean(raw?.website);
-    const user_agent = clean(req.headers.get("user-agent"));
+    const full_name = requiredText(raw?.full_name, { field: "full_name", minLength: 2, maxLength: 200, collapseWhitespace: true });
+    const email = requiredEmail(raw?.email, "email");
+    const company_name = optionalText(raw?.company_name, { field: "company_name", maxLength: 200, collapseWhitespace: true }) || "";
+    const role_label = optionalText(raw?.role_label, { field: "role_label", maxLength: 120, collapseWhitespace: true }) || "";
+    const message = requiredText(raw?.message, { field: "message", minLength: 10, maxLength: 4000, multiline: true, collapseWhitespace: true });
+    const locale = optionalIdentifier(raw?.locale, "locale", 16) || "it";
+    const source_path = optionalText(raw?.source_path, { field: "source_path", maxLength: 512, collapseWhitespace: true }) || "";
+    const honeypot = optionalText(raw?.website, { field: "website", maxLength: 200, collapseWhitespace: true }) || "";
+    const user_agent = optionalText(req.headers.get("user-agent"), { field: "user-agent", maxLength: 512, collapseWhitespace: true }) || "";
 
     if (honeypot) {
       // Bot trap: silently accept to avoid spam tuning by attackers.
       return jsonResponse({ success: true, accepted: false, reason: "bot_detected" }, 200);
     }
 
-    if (full_name.length < 2 || !/^.+@.+\..+$/.test(email) || message.length < 10) {
-      return jsonResponse({ error: "Invalid input" }, 400);
-    }
-
-    if (message.length > 4000 || full_name.length > 200 || company_name.length > 200 || role_label.length > 120) {
-      return jsonResponse({ error: "Input too long" }, 400);
-    }
-
     const clientIp = getClientIp(req);
     const ipHash = clientIp ? await sha256Hex(clientIp) : null;
 
-    const tenMinutesAgo = new Date(Date.now() - 10 * 60 * 1000).toISOString();
-    const oneDayAgo = new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString();
-
     if (ipHash) {
-      const { count: recentFromIp, error: ipCountError } = await supabase
-        .from("demo_requests")
-        .select("id", { count: "exact", head: true })
-        .eq("ip_hash", ipHash)
-        .gte("created_date", tenMinutesAgo);
+      const ipRateLimitResponse = await enforceRateLimit({
+        scope: "submit_demo_request:ip",
+        identifier: ipHash,
+        windowSeconds: 10 * 60,
+        maxRequests: 5,
+        message: "Too many requests. Please retry later.",
+        corsHeaders,
+      });
 
-      if (ipCountError) throw ipCountError;
-      if ((recentFromIp || 0) >= 5) {
-        return jsonResponse({ error: "Too many requests. Please retry later." }, 429);
+      if (ipRateLimitResponse) {
+        return ipRateLimitResponse;
       }
     }
 
-    const { count: recentFromEmail, error: emailCountError } = await supabase
-      .from("demo_requests")
-      .select("id", { count: "exact", head: true })
-      .eq("email", email)
-      .gte("created_date", oneDayAgo);
+    const emailRateLimitResponse = await enforceRateLimit({
+      scope: "submit_demo_request:email",
+      identifier: email,
+      windowSeconds: 24 * 60 * 60,
+      maxRequests: 3,
+      message: "Too many requests from this email. Please retry later.",
+      corsHeaders,
+    });
 
-    if (emailCountError) throw emailCountError;
-    if ((recentFromEmail || 0) >= 3) {
-      return jsonResponse({ error: "Too many requests from this email. Please retry later." }, 429);
+    if (emailRateLimitResponse) {
+      return emailRateLimitResponse;
     }
 
     const { error: insertError } = await supabase.from("demo_requests").insert({
@@ -176,6 +157,6 @@ Deno.serve(async (req) => {
     return jsonResponse({ success: true, accepted: true, emailSent: !!emailResult.sent, emailInfo: emailResult }, 200);
   } catch (error) {
     console.error("submitDemoRequest error:", error);
-    return jsonResponse({ error: error instanceof Error ? error.message : String(error) }, 500);
+    return jsonResponse({ error: error instanceof Error ? error.message : String(error) }, getErrorStatus(error, 400));
   }
 });

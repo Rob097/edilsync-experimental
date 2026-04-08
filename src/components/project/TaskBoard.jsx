@@ -143,9 +143,12 @@ export default function TaskBoard({ projectId, canEdit, onTaskCreate, filteredTa
 
       await notifyTaskBlockedResponsible({
         projectId,
-        task: updatedTask,
         blockedReason: blockedReason.trim(),
-        blockedByOption,
+        blockedByOption: {
+          ...blockedByOption,
+          taskTitle: updatedTask?.title || null,
+          projectName: project?.name || null,
+        },
         actorName: user?.display_name || user?.full_name || user?.email,
         t,
       });

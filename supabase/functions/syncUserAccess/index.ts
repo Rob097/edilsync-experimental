@@ -1,5 +1,6 @@
 // @ts-nocheck
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+import { assertNoUnexpectedKeys, getErrorStatus, optionalBoolean, optionalEmail, optionalUuid, parseJsonBody, requireObject } from "../_shared/input.ts";
 
 type MembershipRow = {
   company_id: string | null;
@@ -137,16 +138,33 @@ Deno.serve(async (req) => {
       return new Response("ok", { headers: corsHeaders });
     }
 
-    const payload = await req.json().catch(() => ({}));
+    if (req.method !== "POST") {
+      return jsonResponse({ error: "Method not allowed" }, 405);
+    }
+
+    const payload = await parseJsonBody(req, { maxBytes: 16 * 1024, allowEmptyObject: true });
+    assertNoUnexpectedKeys(payload, ["event", "data", "old_data", "user_email", "company_id", "sync_all"]);
     const emailsToSync = new Set<string>();
 
-    if (payload?.event) {
-      const { event, data, old_data } = payload;
+    const directUserEmail = optionalEmail(payload?.user_email, "user_email");
+    const directCompanyId = optionalUuid(payload?.company_id, "company_id");
+    const syncAll = optionalBoolean(payload?.sync_all, "sync_all") || false;
+
+    const eventPayload = payload?.event == null ? null : requireObject(payload.event, "event");
+    const eventData = payload?.data == null ? null : requireObject(payload.data, "data");
+    const previousEventData = payload?.old_data == null ? null : requireObject(payload.old_data, "old_data");
+
+    if (eventPayload) {
+      const event = eventPayload;
+      const data = eventData;
+      const old_data = previousEventData;
 
       if (event?.entity_name === "CompanyMember") {
-        if (data?.user_email) emailsToSync.add(data.user_email);
-        if (old_data?.user_email && old_data.user_email !== data?.user_email) {
-          emailsToSync.add(old_data.user_email);
+        const nextEmail = optionalEmail(data?.user_email, "event.data.user_email");
+        const previousEmail = optionalEmail(old_data?.user_email, "event.old_data.user_email");
+        if (nextEmail) emailsToSync.add(nextEmail);
+        if (previousEmail && previousEmail !== nextEmail) {
+          emailsToSync.add(previousEmail);
         }
       }
 
@@ -154,14 +172,16 @@ Deno.serve(async (req) => {
         const participantType = data?.participant_type ?? old_data?.participant_type;
 
         if (participantType === "personal") {
-          if (data?.user_email) emailsToSync.add(data.user_email);
-          if (old_data?.user_email && old_data.user_email !== data?.user_email) {
-            emailsToSync.add(old_data.user_email);
+          const nextEmail = optionalEmail(data?.user_email, "event.data.user_email");
+          const previousEmail = optionalEmail(old_data?.user_email, "event.old_data.user_email");
+          if (nextEmail) emailsToSync.add(nextEmail);
+          if (previousEmail && previousEmail !== nextEmail) {
+            emailsToSync.add(previousEmail);
           }
         }
 
         if (participantType === "company") {
-          const companyId = data?.company_id ?? old_data?.company_id;
+          const companyId = optionalUuid(data?.company_id ?? old_data?.company_id, "event.company_id");
           if (companyId) {
             const { data: members, error: membersError } = await supabase
               .from("company_members")
@@ -180,13 +200,13 @@ Deno.serve(async (req) => {
       }
     }
 
-    if (payload?.user_email) emailsToSync.add(payload.user_email);
+    if (directUserEmail) emailsToSync.add(directUserEmail);
 
-    if (payload?.company_id) {
+    if (directCompanyId) {
       const { data: members, error: membersError } = await supabase
         .from("company_members")
         .select("user_email, status")
-        .eq("company_id", payload.company_id);
+        .eq("company_id", directCompanyId);
 
       if (membersError) throw membersError;
 
@@ -197,7 +217,7 @@ Deno.serve(async (req) => {
       }
     }
 
-    if (payload?.sync_all === true) {
+    if (syncAll === true) {
       return jsonResponse({ error: "sync_all is disabled" }, 403);
     }
 
@@ -214,6 +234,6 @@ Deno.serve(async (req) => {
     return jsonResponse({ success: true, synced: results });
   } catch (error) {
     console.error("syncUserAccess error:", error);
-    return jsonResponse({ error: error instanceof Error ? error.message : String(error) }, 500);
+    return jsonResponse({ error: error instanceof Error ? error.message : String(error) }, getErrorStatus(error, 500));
   }
 });

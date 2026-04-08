@@ -11,10 +11,6 @@ export const stripe = new Stripe(stripeSecretKey, {
 
 export const stripeCryptoProvider = Stripe.createSubtleCryptoProvider();
 
-const DEFAULT_TEST_PRODUCT_ID = "prod_UB4HrBdtPMrVBt";
-const DEFAULT_TEST_MONTHLY_PRICE_ID = "price_1TCi8XH3IgxY3mDBFnvLe67e";
-const DEFAULT_TEST_YEARLY_PRICE_ID = "price_1TD6MlH3IgxY3mDBtO34Fsz3";
-
 export function ensureStripeConfigured() {
   if (!stripeSecretKey) {
     throw new Error("Missing STRIPE_SECRET_KEY");
@@ -22,16 +18,34 @@ export function ensureStripeConfigured() {
 }
 
 export function resolveStripeProductId() {
-  return Deno.env.get("STRIPE_PRODUCT_ID") || DEFAULT_TEST_PRODUCT_ID;
+  const stripeProductId = Deno.env.get("STRIPE_PRODUCT_ID") || "";
+
+  if (!stripeProductId) {
+    throw new Error("Missing STRIPE_PRODUCT_ID");
+  }
+
+  return stripeProductId;
 }
 
 export function resolveStripePriceId(billingCycle: string) {
   if (billingCycle === "monthly") {
-    return Deno.env.get("STRIPE_PRICE_MONTHLY") || DEFAULT_TEST_MONTHLY_PRICE_ID;
+    const stripeMonthlyPriceId = Deno.env.get("STRIPE_PRICE_MONTHLY") || "";
+
+    if (!stripeMonthlyPriceId) {
+      throw new Error("Missing STRIPE_PRICE_MONTHLY");
+    }
+
+    return stripeMonthlyPriceId;
   }
 
   if (billingCycle === "yearly") {
-    return Deno.env.get("STRIPE_PRICE_YEARLY") || DEFAULT_TEST_YEARLY_PRICE_ID;
+    const stripeYearlyPriceId = Deno.env.get("STRIPE_PRICE_YEARLY") || "";
+
+    if (!stripeYearlyPriceId) {
+      throw new Error("Missing STRIPE_PRICE_YEARLY");
+    }
+
+    return stripeYearlyPriceId;
   }
 
   throw new Error("Unsupported billing cycle");

@@ -1,5 +1,6 @@
 // @ts-nocheck
 import { adminClient, corsHeaders, getAuthenticatedContext, invokeInternalFunction, jsonResponse } from "../_shared/supabase.ts";
+import { assertNoUnexpectedKeys, getErrorStatus, optionalEnum, optionalIdentifier, parseJsonBody, requiredEmail, requiredUuid } from "../_shared/input.ts";
 import { isCompanyAdmin, syncUserAccessByEmail } from "../_shared/access.ts";
 
 Deno.serve(async (req) => {
@@ -8,17 +9,18 @@ Deno.serve(async (req) => {
       return new Response("ok", { headers: corsHeaders });
     }
 
-    const { appUser } = await getAuthenticatedContext(req);
-    const payload = await req.json();
-
-    const companyId = payload.company_id;
-    const email = payload.user_email?.trim()?.toLowerCase();
-    const role = payload.role || "member";
-    const companyMemberRole = payload.company_member_role || payload.profession || "worker";
-
-    if (!companyId || !email || !email.includes("@")) {
-      return jsonResponse({ error: "company_id and valid user_email are required" }, 400);
+    if (req.method !== "POST") {
+      return jsonResponse({ error: "Method not allowed" }, 405);
     }
+
+    const { appUser } = await getAuthenticatedContext(req);
+    const payload = await parseJsonBody(req, { maxBytes: 4 * 1024 });
+    assertNoUnexpectedKeys(payload, ["company_id", "user_email", "role", "company_member_role", "profession"]);
+
+    const companyId = requiredUuid(payload.company_id, "company_id");
+    const email = requiredEmail(payload.user_email, "user_email");
+    const role = optionalEnum(payload.role, "role", ["member", "admin"]) || "member";
+    const companyMemberRole = optionalIdentifier(payload.company_member_role || payload.profession, "company_member_role", 64) || "worker";
 
     const admin = await isCompanyAdmin(companyId, appUser.email);
     if (!admin) {
@@ -108,6 +110,6 @@ Deno.serve(async (req) => {
     return jsonResponse({ success: true, member });
   } catch (error) {
     console.error("inviteCompanyMemberWithValidation error:", error);
-    return jsonResponse({ error: error instanceof Error ? error.message : String(error) }, 500);
+    return jsonResponse({ error: error instanceof Error ? error.message : String(error) }, getErrorStatus(error, 500));
   }
 });

@@ -1,5 +1,6 @@
 // @ts-nocheck
 import { adminClient, corsHeaders, getAuthenticatedContext, invokeInternalFunction, jsonResponse } from "../_shared/supabase.ts";
+import { assertNoUnexpectedKeys, getErrorStatus, optionalEmail, optionalEnum, optionalUuid, parseJsonBody, requiredEnum, requiredUuid } from "../_shared/input.ts";
 import { syncCompanyUsers, syncUserAccessByEmail } from "../_shared/access.ts";
 
 const COMPANY_TYPE_ROLE_COMPATIBILITY = {
@@ -28,6 +29,9 @@ const COMPANY_TYPE_ROLE_COMPATIBILITY = {
   other: ["homeowner", "contractor", "subcontractor", "architect", "engineer", "surveyor", "designer", "consultant", "supplier"],
 };
 
+const PARTICIPANT_TYPES = ["company", "personal"];
+const PROJECT_ROLES = ["homeowner", "contractor", "subcontractor", "architect", "engineer", "surveyor", "designer", "consultant", "supplier"];
+
 function isCompanyTypeCompatible(companyType: string | null, projectRole: string) {
   if (!companyType) return true;
   return (COMPANY_TYPE_ROLE_COMPATIBILITY[companyType] || COMPANY_TYPE_ROLE_COMPATIBILITY.other).includes(projectRole);
@@ -39,22 +43,19 @@ Deno.serve(async (req) => {
       return new Response("ok", { headers: corsHeaders });
     }
 
+    if (req.method !== "POST") {
+      return jsonResponse({ error: "Method not allowed" }, 405);
+    }
+
     const { appUser } = await getAuthenticatedContext(req);
-    const payload = await req.json();
+    const payload = await parseJsonBody(req, { maxBytes: 6 * 1024 });
+    assertNoUnexpectedKeys(payload, ["project_id", "participant_type", "project_role", "company_id", "user_email"]);
 
-    const projectId = payload.project_id;
-    const participantType = payload.participant_type;
-    const projectRole = payload.project_role;
-    const invitedCompanyId = payload.company_id || null;
-    const invitedEmail = payload.user_email?.trim()?.toLowerCase() || null;
-
-    if (!projectId || !participantType || !projectRole) {
-      return jsonResponse({ error: "project_id, participant_type and project_role are required" }, 400);
-    }
-
-    if (!["company", "personal"].includes(participantType)) {
-      return jsonResponse({ error: "Invalid participant_type" }, 400);
-    }
+    const projectId = requiredUuid(payload.project_id, "project_id");
+    const participantType = requiredEnum(payload.participant_type, "participant_type", PARTICIPANT_TYPES);
+    const projectRole = requiredEnum(payload.project_role, "project_role", PROJECT_ROLES);
+    const invitedCompanyId = optionalUuid(payload.company_id, "company_id");
+    const invitedEmail = optionalEmail(payload.user_email, "user_email");
 
     const { data: project, error: projectError } = await adminClient
       .from("projects")
@@ -330,6 +331,6 @@ Deno.serve(async (req) => {
     return jsonResponse({ success: true, participant });
   } catch (error) {
     console.error("inviteProjectParticipantWithValidation error:", error);
-    return jsonResponse({ error: error instanceof Error ? error.message : String(error) }, 500);
+    return jsonResponse({ error: error instanceof Error ? error.message : String(error) }, getErrorStatus(error, 500));
   }
 });

@@ -36,11 +36,11 @@ Responsabilita principali:
 - crea la Checkout Session con metadata `company_id`
 - salva o aggiorna il record `company_subscriptions` con i riferimenti Stripe noti gia in fase di checkout
 
-Prezzi test confermati e usati come fallback operativo:
+Configurazione richiesta via environment variables server-side:
 
-- prodotto `EdilSync PRO` -> `prod_UB4HrBdtPMrVBt`
-- mensile `19 EUR` -> `price_1TCi8XH3IgxY3mDBFnvLe67e`
-- annuale `190 EUR` -> `price_1TD6MlH3IgxY3mDBtO34Fsz3`
+- prodotto `EdilSync PRO` -> `STRIPE_PRODUCT_ID`
+- mensile `19 EUR` -> `STRIPE_PRICE_MONTHLY`
+- annuale `190 EUR` -> `STRIPE_PRICE_YEARLY`
 
 ## 2. Billing portal per societa gia collegate a Stripe
 

@@ -1,6 +1,9 @@
 // @ts-nocheck
 import { adminClient, corsHeaders, getAuthenticatedContext, jsonResponse } from "../_shared/supabase.ts";
+import { assertNoUnexpectedKeys, getErrorStatus, optionalDate, optionalEmail, optionalIdentifier, optionalText, parseJsonBody, requiredEnum, requiredText } from "../_shared/input.ts";
 import { isCompanyAdmin, syncUserAccessByEmail } from "../_shared/access.ts";
+
+const CREATOR_PROJECT_ROLES = ["homeowner", "contractor"];
 
 Deno.serve(async (req) => {
   try {
@@ -8,12 +11,22 @@ Deno.serve(async (req) => {
       return new Response("ok", { headers: corsHeaders });
     }
 
-    const { appUser } = await getAuthenticatedContext(req);
-    const payload = await req.json();
-
-    if (!payload?.name?.trim() || !payload?.address?.trim()) {
-      return jsonResponse({ error: "Project name and address are required" }, 400);
+    if (req.method !== "POST") {
+      return jsonResponse({ error: "Method not allowed" }, 405);
     }
+
+    const { appUser } = await getAuthenticatedContext(req);
+    const payload = await parseJsonBody(req, { maxBytes: 12 * 1024 });
+    assertNoUnexpectedKeys(payload, ["name", "address", "description", "status", "start_date", "end_date", "my_role", "homeowner_email"]);
+
+    const projectName = requiredText(payload.name, { field: "name", minLength: 1, maxLength: 120, collapseWhitespace: true });
+    const projectAddress = requiredText(payload.address, { field: "address", minLength: 1, maxLength: 240, collapseWhitespace: true });
+    const projectDescription = optionalText(payload.description, { field: "description", maxLength: 2000, multiline: true, collapseWhitespace: true });
+    const projectStatus = optionalIdentifier(payload.status, "status", 40) || "planning";
+    const startDate = optionalDate(payload.start_date, "start_date");
+    const endDate = optionalDate(payload.end_date, "end_date");
+    const creatorRole = optionalEnum(payload.my_role, "my_role", CREATOR_PROJECT_ROLES);
+    const homeownerEmail = optionalEmail(payload.homeowner_email, "homeowner_email");
 
     const currentContext = appUser.active_context || "personal";
     const activeCompanyId = appUser.active_company_id || null;
@@ -29,12 +42,9 @@ Deno.serve(async (req) => {
       }
     }
 
-    const myRole = currentContext === "personal" ? "homeowner" : (payload.my_role || "homeowner");
-    if (!["homeowner", "contractor"].includes(myRole)) {
-      return jsonResponse({ error: "Invalid creator project role" }, 400);
-    }
+    const myRole = currentContext === "personal" ? "homeowner" : (creatorRole || "homeowner");
 
-    if (currentContext === "company" && myRole === "contractor" && !payload.homeowner_email?.trim()) {
+    if (currentContext === "company" && myRole === "contractor" && !homeownerEmail) {
       return jsonResponse({ error: "Homeowner email is required when company creates project as contractor" }, 400);
     }
 
@@ -83,12 +93,12 @@ Deno.serve(async (req) => {
     const { data: project, error: projectError } = await adminClient
       .from("projects")
       .insert({
-        name: payload.name.trim(),
-        address: payload.address.trim(),
-        description: payload.description || null,
-        status: payload.status || "planning",
-        start_date: payload.start_date || null,
-        end_date: payload.end_date || null,
+        name: projectName,
+        address: projectAddress,
+        description: projectDescription,
+        status: projectStatus,
+        start_date: startDate,
+        end_date: endDate,
         owner_type: ownerType,
         owner_company_id: ownerCompanyId,
         owner_user_id: appUser.id,
@@ -144,7 +154,7 @@ Deno.serve(async (req) => {
     if (channelMemberError) throw channelMemberError;
 
     let invitedHomeowner = null;
-    if (ownerType === "company" && myRole === "contractor" && payload.homeowner_email?.trim()) {
+    if (ownerType === "company" && myRole === "contractor" && homeownerEmail) {
       const { data: existingHomeowner, error: homeownerCheckError } = await adminClient
         .from("project_participants")
         .select("id")
@@ -160,7 +170,7 @@ Deno.serve(async (req) => {
           .insert({
             project_id: project.id,
             participant_type: "personal",
-            user_email: payload.homeowner_email.trim(),
+            user_email: homeownerEmail,
             project_role: "homeowner",
             status: "invited",
             can_invite: true,
@@ -170,7 +180,7 @@ Deno.serve(async (req) => {
 
         if (inviteError) throw inviteError;
         invitedHomeowner = invitedParticipant;
-        await syncUserAccessByEmail(payload.homeowner_email.trim());
+        await syncUserAccessByEmail(homeownerEmail);
       }
     }
 
@@ -198,6 +208,6 @@ Deno.serve(async (req) => {
     });
   } catch (error) {
     console.error("createProjectWithContext error:", error);
-    return jsonResponse({ error: error instanceof Error ? error.message : String(error) }, 500);
+    return jsonResponse({ error: error instanceof Error ? error.message : String(error) }, getErrorStatus(error, 500));
   }
 });
