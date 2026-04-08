@@ -5,11 +5,13 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useAuth } from '@/lib/AuthContext';
+import { useLanguage } from '@/components/i18n/useLanguage';
 import { Loader2 } from 'lucide-react';
 import { toast } from 'sonner';
 
 export default function AuthScreen() {
   const { signInWithPassword, signUpWithPassword } = useAuth();
+  const { t } = useLanguage();
   const [isLoading, setIsLoading] = useState(false);
 
   const [signinEmail, setSigninEmail] = useState('');
@@ -29,9 +31,9 @@ export default function AuthScreen() {
         email: signinEmail,
         password: signinPassword,
       });
-      toast.success('Accesso effettuato');
+      toast.success(t('authScreen.signInSuccess'));
     } catch (error) {
-      toast.error(error?.message || 'Credenziali non valide');
+      toast.error(error?.message || t('authScreen.invalidCredentials'));
     } finally {
       setIsLoading(false);
     }
@@ -42,7 +44,7 @@ export default function AuthScreen() {
 
     if (!signupEmail || !signupPassword) return;
     if (signupPassword !== signupConfirmPassword) {
-      toast.error('Le password non coincidono');
+      toast.error(t('authScreen.passwordMismatch'));
       return;
     }
 
@@ -54,12 +56,12 @@ export default function AuthScreen() {
       });
 
       if (result?.requiresEmailConfirmation) {
-        toast.success('Registrazione completata. Controlla la mail per confermare l’account.');
+        toast.success(t('authScreen.signUpConfirmationRequired'));
       } else {
-        toast.success('Account creato con successo');
+        toast.success(t('authScreen.signUpSuccess'));
       }
     } catch (error) {
-      toast.error(error?.message || 'Impossibile completare la registrazione');
+      toast.error(error?.message || t('authScreen.signUpError'));
     } finally {
       setIsLoading(false);
     }
@@ -69,22 +71,22 @@ export default function AuthScreen() {
     <div className="min-h-screen flex items-center justify-center p-4 bg-background">
       <Card className="w-full max-w-md">
         <CardHeader>
-          <CardTitle>Accedi a EdilSync</CardTitle>
+          <CardTitle>{t('authScreen.title')}</CardTitle>
           <CardDescription>
-            Usa email e password. L’accesso Google sarà disponibile più avanti.
+            {t('authScreen.description')}
           </CardDescription>
         </CardHeader>
         <CardContent>
           <Tabs defaultValue="signin" className="w-full">
             <TabsList className="grid w-full grid-cols-2">
-              <TabsTrigger value="signin">Sign in</TabsTrigger>
-              <TabsTrigger value="signup">Sign up</TabsTrigger>
+              <TabsTrigger value="signin">{t('authScreen.signInTab')}</TabsTrigger>
+              <TabsTrigger value="signup">{t('authScreen.signUpTab')}</TabsTrigger>
             </TabsList>
 
             <TabsContent value="signin" className="pt-4">
               <form className="space-y-4" onSubmit={handleSignIn}>
                 <div className="space-y-2">
-                  <Label htmlFor="signin-email">Email</Label>
+                  <Label htmlFor="signin-email">{t('authScreen.email')}</Label>
                   <Input
                     id="signin-email"
                     type="email"
@@ -95,7 +97,7 @@ export default function AuthScreen() {
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="signin-password">Password</Label>
+                  <Label htmlFor="signin-password">{t('authScreen.password')}</Label>
                   <Input
                     id="signin-password"
                     type="password"
@@ -107,7 +109,7 @@ export default function AuthScreen() {
                 </div>
 
                 <Button type="submit" className="w-full" disabled={isLoading}>
-                  {isLoading ? <Loader2 className="h-4 w-4 animate-spin" /> : 'Entra'}
+                  {isLoading ? <Loader2 className="h-4 w-4 animate-spin" /> : t('authScreen.signIn')}
                 </Button>
               </form>
             </TabsContent>
@@ -115,7 +117,7 @@ export default function AuthScreen() {
             <TabsContent value="signup" className="pt-4">
               <form className="space-y-4" onSubmit={handleSignUp}>
                 <div className="space-y-2">
-                  <Label htmlFor="signup-email">Email</Label>
+                  <Label htmlFor="signup-email">{t('authScreen.email')}</Label>
                   <Input
                     id="signup-email"
                     type="email"
@@ -126,7 +128,7 @@ export default function AuthScreen() {
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="signup-password">Password</Label>
+                  <Label htmlFor="signup-password">{t('authScreen.password')}</Label>
                   <Input
                     id="signup-password"
                     type="password"
@@ -137,7 +139,7 @@ export default function AuthScreen() {
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="signup-confirm-password">Conferma password</Label>
+                  <Label htmlFor="signup-confirm-password">{t('authScreen.confirmPassword')}</Label>
                   <Input
                     id="signup-confirm-password"
                     type="password"
@@ -149,7 +151,7 @@ export default function AuthScreen() {
                 </div>
 
                 <Button type="submit" className="w-full" disabled={isLoading}>
-                  {isLoading ? <Loader2 className="h-4 w-4 animate-spin" /> : 'Crea account'}
+                  {isLoading ? <Loader2 className="h-4 w-4 animate-spin" /> : t('authScreen.signUp')}
                 </Button>
               </form>
             </TabsContent>
@@ -160,10 +162,10 @@ export default function AuthScreen() {
               type="button"
               variant="outline"
               className="w-full"
-              onClick={() => toast.info('Accesso con Google non ancora disponibile')}
+              onClick={() => toast.info(t('authScreen.googleUnavailable'))}
               disabled={isLoading}
             >
-              Continua con Google (presto disponibile)
+              {t('authScreen.googleComingSoon')}
             </Button>
           </div>
         </CardContent>

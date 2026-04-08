@@ -12,7 +12,24 @@
     "subtitle": "EdilSync brings owners, contractors, subcontractors, and professionals into one platform. Fewer calls, fewer misunderstandings, more control.",
     "ctaPrimary": "Create free account",
     "ctaSecondary": "Learn more",
-    "note": "Personal or company account · No card required to start · Upgrade when needed"
+    "note": "Personal or company account · No card required to start · Upgrade when needed",
+    "highlights": {
+      "alignmentLabel": "Alignment",
+      "alignmentText": "One place for tasks, photos, change requests, and project conversations.",
+      "traceabilityLabel": "Traceability",
+      "traceabilityText": "Every action becomes usable evidence for decisions, work progress, and disputes.",
+      "controlLabel": "Control",
+      "controlText": "Fewer clarification calls, fewer wasted trips, fewer gray areas."
+    },
+    "preview": {
+      "alt": "EdilSync interface for coordinating the construction site",
+      "feedLabel": "Site feed",
+      "feedTitle": "Status, accountability, and approvals in the same operating flow.",
+      "feedText": "The owner sees progress and decisions. The contractor keeps context without chasing chats and attachments.",
+      "fieldReadyLabel": "Field-ready",
+      "fieldReadyValue": "3 taps",
+      "fieldReadyText": "To update status, attach a photo, or answer a change request."
+    }
   },
   "stats": {
     "aValue": "$31B",
@@ -28,6 +45,7 @@
     "chip": "The problem",
     "title": "Construction communication is chaotic",
     "subtitle": "Every day, different tools are used to run construction work, but the result is misalignment and communication outside the right context.",
+    "issueLabel": "Issue {{number}}",
     "c1t": "WhatsApp, SMS, email... everywhere",
     "c1d": "Information gets lost across private chats, groups, and endless threads. Finding that important conversation from 3 weeks ago becomes impossible.",
     "c2t": "Constant calls stop execution",
@@ -50,12 +68,21 @@
     "s2t": "Work and document",
     "s2d": "Every action - photos, tasks, changes, messages - automatically becomes traceable documentation.",
     "s3t": "Stay aligned",
-    "s3d": "Everyone sees the same project state. Zero ambiguity."
+    "s3d": "Everyone sees the same project state. Zero ambiguity.",
+    "result": {
+      "label": "Operational result",
+      "title": "Everyone sees the same site without chasing updates.",
+      "b1": "The owner follows progress and decisions without constant phone calls.",
+      "b2": "The contractor coordinates tasks, photo evidence, and change requests in the same flow.",
+      "b3": "The subcontractor sees only what is needed, when it is needed."
+    }
   },
   "features": {
     "chip": "Features",
     "title": "Everything your site needs",
     "subtitle": "Tasks, photos, changes, chat, and financial control in one integrated flow.",
+    "moduleLabel": "Module",
+    "seeAll": "See all features",
     "f1t": "Tasks and Milestones",
     "f1d": "Organize work by rooms, phases, and milestones. Blocked status with tagged ownership to document who causes delays.",
     "f2t": "Photo Documentation",
@@ -144,6 +171,15 @@
       "projectTitle": "What unlocks on the project",
       "projectText": "Milestones, financial control, advanced documents, disputes, and full project chat activate when a Pro company sponsors that specific project."
     },
+    "access": {
+      "label": "Billing logic",
+      "title": "One company plan. Free access for everyone else.",
+      "i1": "Homeowners and invited collaborators stay free",
+      "i2": "Only the company pays when it needs premium company tools",
+      "i3": "Sponsored projects unlock advanced shared project areas"
+    },
+    "teamsNeedLabel": "What teams usually need first",
+    "seeFull": "See full pricing details",
     "hint": " per year can repay the whole subscription.",
     "hintStrong": "One avoided dispute",
     "hintSub": "About $230/year: the cost of a single wasted trip."

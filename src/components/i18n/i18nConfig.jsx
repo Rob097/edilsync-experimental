@@ -635,7 +635,8 @@ const itTranslations = {
     "deleteAll": "Elimina milestone e tutte le attività",
     "cancel": "Annulla",
     "save": "Salva",
-    "create": "Crea"
+    "create": "Crea",
+    "permissionError": "Solo gli amministratori della società possono creare o modificare milestone"
   },
   "changeRequestDialog": {
     "editTitle": "Richiesta di Modifica",
@@ -655,7 +656,8 @@ const itTranslations = {
     "approve": "Approva",
     "close": "Chiudi",
     "cancel": "Annulla",
-    "submit": "Invia Richiesta"
+    "submit": "Invia Richiesta",
+    "permissionError": "Solo il committente del progetto può creare richieste di modifica"
   },
   "editProjectDialog": {
     "title": "Modifica Progetto",
@@ -671,10 +673,19 @@ const itTranslations = {
     "startDate": "Data inizio",
     "endDate": "Data fine",
     "cancel": "Annulla",
-    "save": "Salva"
+    "save": "Salva",
+    "permissionError": "Solo gli amministratori della società possono modificare il progetto"
   },
   "messageInput": {
-    "placeholder": "Scrivi un messaggio..."
+    "placeholder": "Scrivi un messaggio...",
+    "mentionTitle": "Sei stato menzionato",
+    "mentionInCompany": "{{sender}} ti ha menzionato in \"{{channel}}\" nella società \"{{company}}\"",
+    "mentionInProject": "{{sender}} ti ha menzionato in \"{{channel}}\" nel progetto \"{{project}}\"",
+    "senderFallback": "Utente",
+    "noUsersAvailable": "Nessun utente presente",
+    "noTasksAvailable": "Nessuna attività presente",
+    "noMilestonesAvailable": "Nessuna milestone presente",
+    "noRequestsAvailable": "Nessuna richiesta presente"
   },
   "uploadDocumentDialog": {
     "editTitle": "Modifica Documento",
@@ -807,6 +818,154 @@ const itTranslations = {
       "empty": "Nessun SAL registrato.",
       "enableHint": "Abilita i SAL nelle impostazioni economiche per usarli pienamente."
     }
+  },
+  "authScreen": {
+    "title": "Accedi a EdilSync",
+    "description": "Usa email e password. L’accesso Google sarà disponibile più avanti.",
+    "signInTab": "Accedi",
+    "signUpTab": "Registrati",
+    "email": "Email",
+    "password": "Password",
+    "confirmPassword": "Conferma password",
+    "signIn": "Entra",
+    "signUp": "Crea account",
+    "googleComingSoon": "Continua con Google (presto disponibile)",
+    "signInSuccess": "Accesso effettuato",
+    "invalidCredentials": "Credenziali non valide",
+    "passwordMismatch": "Le password non coincidono",
+    "signUpConfirmationRequired": "Registrazione completata. Controlla la mail per confermare l’account.",
+    "signUpSuccess": "Account creato con successo",
+    "signUpError": "Impossibile completare la registrazione",
+    "googleUnavailable": "Accesso con Google non ancora disponibile"
+  },
+  "userNotRegistered": {
+    "title": "Accesso limitato",
+    "description": "Non sei registrato per usare questa applicazione. Contatta l'amministratore per richiedere l'accesso.",
+    "helpIntro": "Se pensi che sia un errore, puoi:",
+    "checkCorrectAccount": "Verificare di aver effettuato l'accesso con l'account corretto",
+    "contactAdmin": "Contattare l'amministratore dell'applicazione per ottenere accesso",
+    "tryAgain": "Provare a uscire e rientrare"
+  },
+  "languageSelector": {
+    "placeholder": "Seleziona lingua",
+    "italian": "Italiano",
+    "english": "English"
+  },
+  "createChannelDialog": {
+    "title": "Crea nuovo canale",
+    "channelName": "Nome canale",
+    "channelNamePlaceholder": "es. Problemi e richieste",
+    "description": "Descrizione (opzionale)",
+    "descriptionPlaceholder": "Descrivi lo scopo del canale...",
+    "participantsMinimum": "Partecipanti (minimo {{count}})",
+    "companyFallback": "Società",
+    "cancel": "Annulla",
+    "create": "Crea canale",
+    "permissionError": "Solo gli amministratori della società possono creare canali a nome della società"
+  },
+  "eventDialog": {
+    "editTitle": "Modifica evento",
+    "newTitle": "Nuovo evento",
+    "editDescription": "Modifica i dettagli dell'evento.",
+    "newDescription": "Crea un nuovo evento nel calendario.",
+    "title": "Titolo",
+    "titlePlaceholder": "Es. Riunione di cantiere",
+    "context": "Contesto",
+    "personal": "Personale",
+    "startDate": "Data inizio",
+    "startTime": "Ora inizio",
+    "endDate": "Data fine",
+    "endTime": "Ora fine",
+    "location": "Luogo",
+    "locationPlaceholder": "Es. Cantiere Via Roma 15",
+    "description": "Descrizione",
+    "descriptionPlaceholder": "Descrizione opzionale...",
+    "creatorConflict": "Hai già un evento \"{{title}}\" in questo orario. Continuando, l'evento esistente verrà cancellato.",
+    "participantsConflict": "I seguenti partecipanti hanno conflitti:",
+    "participantsConflictSuffix": "Gli inviti verranno comunque inviati con avviso di conflitto.",
+    "confirm": "Conferma",
+    "updatedTitle": "Evento modificato",
+    "updatedMessage": "L'evento \"{{title}}\" è stato modificato.",
+    "inviteTitle": "Nuovo invito evento",
+    "inviteMessage": "Sei stato invitato a \"{{title}}\".",
+    "inviteConflictMessage": "Sei stato invitato a \"{{title}}\". ATTENZIONE: hai un conflitto con \"{{conflictTitle}}\".",
+    "cancelledForConflictMessage": "L'evento \"{{title}}\" è stato cancellato per un conflitto di orario.",
+    "cancel": "Annulla",
+    "save": "Salva",
+    "create": "Crea evento"
+  },
+  "eventDetailDialog": {
+    "statusPending": "In attesa",
+    "statusAccepted": "Accettato",
+    "statusDeclined": "Rifiutato",
+    "conflictResolvedTitle": "Conflitto risolto",
+    "conflictResolvedMessage": "{{name}} ha accettato l'invito a \"{{title}}\", cancellando l'evento in conflitto.",
+    "participantDeclinedTitle": "Invito rifiutato",
+    "participantDeclinedMessage": "{{name}} ha rifiutato l'invito a \"{{title}}\".",
+    "eventCancelledTitle": "Evento cancellato",
+    "eventCancelledMessage": "L'evento \"{{title}}\" è stato cancellato.",
+    "companyFallback": "Società",
+    "createdBy": "Creato da",
+    "participants": "Partecipanti",
+    "conflictNotice": "Accettando, l'evento in conflitto verrà cancellato.",
+    "accept": "Accetta",
+    "reject": "Rifiuta",
+    "editEvent": "Modifica evento",
+    "cancelEvent": "Cancella evento",
+    "removeMyself": "Rimuovimi dall'evento"
+  },
+  "notificationPreferences": {
+    "title": "Preferenze di comunicazione",
+    "description": "Scegli come vuoi ricevere le notifiche per ogni tipo di azione",
+    "allCommunications": "Tutte le comunicazioni",
+    "email": "Email",
+    "saveSuccess": "Preferenze salvate con successo",
+    "save": "Salva preferenze"
+  },
+  "changeRequestBoard": {
+    "emptyTitle": "Nessuna richiesta di modifica",
+    "emptyDescription": "Nessuna richiesta è stata ancora creata.",
+    "emptyColumn": "Nessuna richiesta"
+  },
+  "calendarDayView": {
+    "new": "Nuovo",
+    "taskPrefix": "Attività",
+    "dueToday": "Scadenza giornata",
+    "project": "Progetto",
+    "emptyDescription": "Non ci sono eventi programmati per questo giorno.",
+    "createEvent": "Crea evento"
+  },
+  "bimViewer": {
+    "noModelUrl": "Nessun URL disponibile per caricare il modello.",
+    "loadFailed": "Impossibile caricare il modello BIM.",
+    "invalidModelUrl": "URL del modello non valido o non raggiungibile. Riapri il documento per rigenerare il link e riprova.",
+    "ifcExternalDescription": "La consultazione IFC si apre in una nuova scheda per compatibilità con il viewer esterno.",
+    "openIfcViewer": "Apri IFC nel viewer",
+    "openIfcFile": "Apri file IFC",
+    "loadingModel": "Caricamento modello 3D..."
+  },
+  "ifcViewer": {
+    "downloadWasmFailed": "Download WASM fallito ({{status}}) da {{url}}",
+    "invalidWasmRuntime": "Runtime WASM non valido (atteso 00 61 73 6d) su {{url}}",
+    "noSource": "Nessun URL IFC disponibile per la visualizzazione in-app.",
+    "prepareViewer": "Preparazione viewer...",
+    "downloadIfc": "Download IFC...",
+    "initEngine": "Inizializzazione motore 3D...",
+    "prepareRuntime": "Preparazione runtime IFC...",
+    "parseIfc": "Parsing IFC...",
+    "renderGeometry": "Rendering geometrie...",
+    "downloadIfcFailed": "Download IFC fallito ({{status}}).",
+    "emptyIfc": "Il file IFC risulta vuoto.",
+    "timeoutLoading": "Timeout caricamento IFC in-app (oltre 60s).",
+    "noVisibleGeometry": "Nessuna geometria IFC visibile nel modello (file vuoto o non supportato).",
+    "initFailed": "Impossibile avviare il viewer IFC in-app.",
+    "timeoutFallback": "Il rendering IFC in-app ha superato il timeout: fallback automatico attivato.",
+    "loadingTitle": "Caricamento IFC in-app...",
+    "retryInApp": "Riprova in-app",
+    "fallbackFrameTitle": "Viewer IFC fallback",
+    "unavailableTitle": "Viewer IFC in-app non disponibile",
+    "unavailableDescription": "Il rendering IFC nativo non è riuscito. Usa il fallback esterno.",
+    "openViewer": "Apri IFC nel viewer"
   },
   "tour": {
     "dashboard": "Questo è il tuo dashboard. Qui vedi una panoramica dei tuoi progetti.",
@@ -1451,7 +1610,8 @@ const enTranslations = {
     "deleteAll": "Delete milestone and all tasks",
     "cancel": "Cancel",
     "save": "Save",
-    "create": "Create"
+    "create": "Create",
+    "permissionError": "Only company administrators can create or edit milestones"
   },
   "changeRequestDialog": {
     "editTitle": "Change Request",
@@ -1471,7 +1631,8 @@ const enTranslations = {
     "approve": "Approve",
     "close": "Close",
     "cancel": "Cancel",
-    "submit": "Submit Request"
+    "submit": "Submit Request",
+    "permissionError": "Only the project homeowner can create change requests"
   },
   "editProjectDialog": {
     "title": "Edit Project",
@@ -1487,10 +1648,19 @@ const enTranslations = {
     "startDate": "Start date",
     "endDate": "End date",
     "cancel": "Cancel",
-    "save": "Save"
+    "save": "Save",
+    "permissionError": "Only company administrators can edit the project"
   },
   "messageInput": {
-    "placeholder": "Write a message..."
+    "placeholder": "Write a message...",
+    "mentionTitle": "You were mentioned",
+    "mentionInCompany": "{{sender}} mentioned you in \"{{channel}}\" in company \"{{company}}\"",
+    "mentionInProject": "{{sender}} mentioned you in \"{{channel}}\" in project \"{{project}}\"",
+    "senderFallback": "User",
+    "noUsersAvailable": "No users available",
+    "noTasksAvailable": "No task available",
+    "noMilestonesAvailable": "No milestone available",
+    "noRequestsAvailable": "No request available"
   },
   "uploadDocumentDialog": {
     "editTitle": "Edit Document",
@@ -1623,6 +1793,154 @@ const enTranslations = {
       "empty": "No progress statements yet.",
       "enableHint": "Enable progress statements in financial settings for full workflow."
     }
+  },
+  "authScreen": {
+    "title": "Sign in to EdilSync",
+    "description": "Use email and password. Google sign-in will be available later.",
+    "signInTab": "Sign in",
+    "signUpTab": "Sign up",
+    "email": "Email",
+    "password": "Password",
+    "confirmPassword": "Confirm password",
+    "signIn": "Sign in",
+    "signUp": "Create account",
+    "googleComingSoon": "Continue with Google (coming soon)",
+    "signInSuccess": "Signed in successfully",
+    "invalidCredentials": "Invalid credentials",
+    "passwordMismatch": "Passwords do not match",
+    "signUpConfirmationRequired": "Registration complete. Check your email to confirm the account.",
+    "signUpSuccess": "Account created successfully",
+    "signUpError": "Unable to complete registration",
+    "googleUnavailable": "Google sign-in is not available yet"
+  },
+  "userNotRegistered": {
+    "title": "Access restricted",
+    "description": "You are not registered to use this application. Please contact the administrator to request access.",
+    "helpIntro": "If you believe this is an error, you can:",
+    "checkCorrectAccount": "Verify you are logged in with the correct account",
+    "contactAdmin": "Contact the application administrator to get access",
+    "tryAgain": "Try logging out and back in again"
+  },
+  "languageSelector": {
+    "placeholder": "Select language",
+    "italian": "Italiano",
+    "english": "English"
+  },
+  "createChannelDialog": {
+    "title": "Create new channel",
+    "channelName": "Channel name",
+    "channelNamePlaceholder": "e.g. Issues and requests",
+    "description": "Description (optional)",
+    "descriptionPlaceholder": "Describe the purpose of the channel...",
+    "participantsMinimum": "Participants (minimum {{count}})",
+    "companyFallback": "Company",
+    "cancel": "Cancel",
+    "create": "Create channel",
+    "permissionError": "Only company administrators can create channels on behalf of the company"
+  },
+  "eventDialog": {
+    "editTitle": "Edit event",
+    "newTitle": "New event",
+    "editDescription": "Edit event details.",
+    "newDescription": "Create a new event in the calendar.",
+    "title": "Title",
+    "titlePlaceholder": "e.g. Site meeting",
+    "context": "Context",
+    "personal": "Personal",
+    "startDate": "Start date",
+    "startTime": "Start time",
+    "endDate": "End date",
+    "endTime": "End time",
+    "location": "Location",
+    "locationPlaceholder": "e.g. Site at 15 Rome Street",
+    "description": "Description",
+    "descriptionPlaceholder": "Optional description...",
+    "creatorConflict": "You already have an event \"{{title}}\" at this time. Continuing will delete the existing event.",
+    "participantsConflict": "The following participants have conflicts:",
+    "participantsConflictSuffix": "Invitations will still be sent with a conflict warning.",
+    "confirm": "Confirm",
+    "updatedTitle": "Event updated",
+    "updatedMessage": "The event \"{{title}}\" was updated.",
+    "inviteTitle": "New event invitation",
+    "inviteMessage": "You have been invited to \"{{title}}\".",
+    "inviteConflictMessage": "You have been invited to \"{{title}}\". WARNING: you have a conflict with \"{{conflictTitle}}\".",
+    "cancelledForConflictMessage": "The event \"{{title}}\" was cancelled because of a time conflict.",
+    "cancel": "Cancel",
+    "save": "Save",
+    "create": "Create event"
+  },
+  "eventDetailDialog": {
+    "statusPending": "Pending",
+    "statusAccepted": "Accepted",
+    "statusDeclined": "Declined",
+    "conflictResolvedTitle": "Conflict resolved",
+    "conflictResolvedMessage": "{{name}} accepted the invitation to \"{{title}}\", cancelling the conflicting event.",
+    "participantDeclinedTitle": "Invitation declined",
+    "participantDeclinedMessage": "{{name}} declined the invitation to \"{{title}}\".",
+    "eventCancelledTitle": "Event cancelled",
+    "eventCancelledMessage": "The event \"{{title}}\" was cancelled.",
+    "companyFallback": "Company",
+    "createdBy": "Created by",
+    "participants": "Participants",
+    "conflictNotice": "Accepting will cancel the conflicting event.",
+    "accept": "Accept",
+    "reject": "Reject",
+    "editEvent": "Edit event",
+    "cancelEvent": "Cancel event",
+    "removeMyself": "Remove me from the event"
+  },
+  "notificationPreferences": {
+    "title": "Communication preferences",
+    "description": "Choose how you want to receive notifications for each action type",
+    "allCommunications": "All communications",
+    "email": "Email",
+    "saveSuccess": "Preferences saved successfully",
+    "save": "Save preferences"
+  },
+  "changeRequestBoard": {
+    "emptyTitle": "No change requests",
+    "emptyDescription": "No requests have been created yet.",
+    "emptyColumn": "No requests"
+  },
+  "calendarDayView": {
+    "new": "New",
+    "taskPrefix": "Task",
+    "dueToday": "Due today",
+    "project": "Project",
+    "emptyDescription": "There are no events scheduled for this day.",
+    "createEvent": "Create event"
+  },
+  "bimViewer": {
+    "noModelUrl": "No URL is available to load the model.",
+    "loadFailed": "Unable to load the BIM model.",
+    "invalidModelUrl": "Model URL is invalid or unreachable. Reopen the document to regenerate the link and try again.",
+    "ifcExternalDescription": "IFC viewing opens in a new tab for compatibility with the external viewer.",
+    "openIfcViewer": "Open IFC in viewer",
+    "openIfcFile": "Open IFC file",
+    "loadingModel": "Loading 3D model..."
+  },
+  "ifcViewer": {
+    "downloadWasmFailed": "WASM download failed ({{status}}) from {{url}}",
+    "invalidWasmRuntime": "Invalid WASM runtime (expected 00 61 73 6d) at {{url}}",
+    "noSource": "No IFC URL is available for in-app viewing.",
+    "prepareViewer": "Preparing viewer...",
+    "downloadIfc": "Downloading IFC...",
+    "initEngine": "Initializing 3D engine...",
+    "prepareRuntime": "Preparing IFC runtime...",
+    "parseIfc": "Parsing IFC...",
+    "renderGeometry": "Rendering geometry...",
+    "downloadIfcFailed": "IFC download failed ({{status}}).",
+    "emptyIfc": "The IFC file is empty.",
+    "timeoutLoading": "In-app IFC loading timed out (over 60s).",
+    "noVisibleGeometry": "No IFC geometry is visible in the model (empty or unsupported file).",
+    "initFailed": "Unable to start the in-app IFC viewer.",
+    "timeoutFallback": "In-app IFC rendering timed out: automatic fallback enabled.",
+    "loadingTitle": "Loading in-app IFC...",
+    "retryInApp": "Retry in-app",
+    "fallbackFrameTitle": "IFC fallback viewer",
+    "unavailableTitle": "In-app IFC viewer unavailable",
+    "unavailableDescription": "Native IFC rendering failed. Use the external fallback.",
+    "openViewer": "Open IFC in viewer"
   },
   "tour": {
     "dashboard": "This is your dashboard. Here you see an overview of your projects.",

@@ -66,7 +66,7 @@ export default function EditProjectDialog({ open, onOpenChange, project }) {
       if (userParticipation?.participant_type === 'company' && userParticipation?.company_id) {
         const membership = companyMemberships.find(m => m.company_id === userParticipation.company_id);
         if (!membership || membership.role !== 'admin') {
-          throw new Error('Solo gli amministratori della società possono modificare il progetto');
+          throw new Error(t('editProjectDialog.permissionError'));
         }
       }
       

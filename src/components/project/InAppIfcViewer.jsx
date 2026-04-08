@@ -3,6 +3,7 @@ import { AlertTriangle, ExternalLink, RotateCcw } from 'lucide-react';
 import * as THREE from 'three';
 import * as OBC from '@thatopen/components';
 import { appClient } from '@/api/appClient';
+import { useLanguage } from '@/components/i18n/useLanguage';
 
 const toPublicStorageUrl = (filePath) => {
   if (!filePath) return null;
@@ -40,28 +41,12 @@ const locateWebIfcAsset = (url) => {
   return resolveWasmUrl(url);
 };
 
-const assertWasmBinary = async (url) => {
-  const response = await fetch(url);
-  if (!response.ok) {
-    throw new Error(`Download WASM fallito (${response.status}) da ${url}`);
-  }
-  const header = new Uint8Array(await response.arrayBuffer().then((buffer) => buffer.slice(0, 4)));
-  const isWasm = header.length === 4
-    && header[0] === 0x00
-    && header[1] === 0x61
-    && header[2] === 0x73
-    && header[3] === 0x6d;
-
-  if (!isWasm) {
-    throw new Error(`Runtime WASM non valido (atteso 00 61 73 6d) su ${url}`);
-  }
-};
-
 export default function InAppIfcViewer({ fileUrl, fallbackUrl, filePath, documentId, fileType, fileSize }) {
+  const { t } = useLanguage();
   const mountRef = useRef(null);
   const [status, setStatus] = useState('loading');
   const [error, setError] = useState('');
-  const [loadingStep, setLoadingStep] = useState('Preparazione viewer...');
+  const [loadingStep, setLoadingStep] = useState(t('ifcViewer.prepareViewer'));
   const [retryCount, setRetryCount] = useState(0);
   const [timeoutFallbackActive, setTimeoutFallbackActive] = useState(false);
 
@@ -93,7 +78,7 @@ export default function InAppIfcViewer({ fileUrl, fallbackUrl, filePath, documen
   useEffect(() => {
     if (!ifcSourceUrl || !mountRef.current) {
       setStatus('error');
-      setError('Nessun URL IFC disponibile per la visualizzazione in-app.');
+      setError(t('ifcViewer.noSource'));
       return undefined;
     }
 
@@ -125,7 +110,7 @@ export default function InAppIfcViewer({ fileUrl, fallbackUrl, filePath, documen
         setStatus('loading');
         setError('');
         setTimeoutFallbackActive(false);
-        setLoadingStep('Download IFC...');
+        setLoadingStep(t('ifcViewer.downloadIfc'));
 
         trackTelemetry('ifc_open_started', {
           file_type: fileType || 'ifc',
@@ -135,15 +120,15 @@ export default function InAppIfcViewer({ fileUrl, fallbackUrl, filePath, documen
 
         const response = await fetch(ifcSourceUrl);
         if (!response.ok) {
-          throw new Error(`Download IFC fallito (${response.status}).`);
+          throw new Error(t('ifcViewer.downloadIfcFailed', { status: response.status }));
         }
 
         const bytes = new Uint8Array(await response.arrayBuffer());
         if (!bytes.length) {
-          throw new Error('Il file IFC risulta vuoto.');
+          throw new Error(t('ifcViewer.emptyIfc'));
         }
 
-        setLoadingStep('Inizializzazione motore 3D...');
+        setLoadingStep(t('ifcViewer.initEngine'));
 
         components = new OBC.Components();
         const worlds = components.get(OBC.Worlds);
@@ -162,8 +147,24 @@ export default function InAppIfcViewer({ fileUrl, fallbackUrl, filePath, documen
         fragments.init(FRAGMENTS_WORKER_URL);
 
         const ifcLoader = components.get(OBC.IfcLoader);
-        setLoadingStep('Preparazione runtime IFC...');
-        await Promise.all([assertWasmBinary(WEB_IFC_WASM_URL), assertWasmBinary(WEB_IFC_MT_WASM_URL)]);
+        setLoadingStep(t('ifcViewer.prepareRuntime'));
+        const assertBinary = async (url) => {
+          const response = await fetch(url);
+          if (!response.ok) {
+            throw new Error(t('ifcViewer.downloadWasmFailed', { status: response.status, url }));
+          }
+          const header = new Uint8Array(await response.arrayBuffer().then((buffer) => buffer.slice(0, 4)));
+          const isWasm = header.length === 4
+            && header[0] === 0x00
+            && header[1] === 0x61
+            && header[2] === 0x73
+            && header[3] === 0x6d;
+
+          if (!isWasm) {
+            throw new Error(t('ifcViewer.invalidWasmRuntime', { url }));
+          }
+        };
+        await Promise.all([assertBinary(WEB_IFC_WASM_URL), assertBinary(WEB_IFC_MT_WASM_URL)]);
 
         await ifcLoader.setup({
           autoSetWasm: false,
@@ -174,11 +175,11 @@ export default function InAppIfcViewer({ fileUrl, fallbackUrl, filePath, documen
           customLocateFileHandler: locateWebIfcAsset,
         });
 
-        setLoadingStep('Parsing IFC...');
+        setLoadingStep(t('ifcViewer.parseIfc'));
         const loadPromise = ifcLoader.load(bytes, true, `ifc-${Date.now()}`);
         const timeoutPromise = new Promise((_, reject) => {
           loadTimeoutId = window.setTimeout(() => {
-            reject(new Error('Timeout caricamento IFC in-app (oltre 60s).'));
+            reject(new Error(t('ifcViewer.timeoutLoading')));
           }, 60000);
         });
 
@@ -195,11 +196,11 @@ export default function InAppIfcViewer({ fileUrl, fallbackUrl, filePath, documen
         };
 
         // Force an initial tile update so the first frame is not an empty scene.
-        setLoadingStep('Rendering geometrie...');
+        setLoadingStep(t('ifcViewer.renderGeometry'));
         await fragments.core.update(true);
 
         if (model.visibleItems.size === 0) {
-          throw new Error('Nessuna geometria IFC visibile nel modello (file vuoto o non supportato).');
+          throw new Error(t('ifcViewer.noVisibleGeometry'));
         }
 
         fitModel(world, model.object);
@@ -238,7 +239,7 @@ export default function InAppIfcViewer({ fileUrl, fallbackUrl, filePath, documen
           if (isTimeout && ifcViewerUrl) {
             setTimeoutFallbackActive(true);
             setStatus('fallback');
-            setError('Il rendering IFC in-app ha superato il timeout: fallback automatico attivato.');
+            setError(t('ifcViewer.timeoutFallback'));
           } else {
             setStatus('error');
             setError(message);
@@ -269,7 +270,7 @@ export default function InAppIfcViewer({ fileUrl, fallbackUrl, filePath, documen
       {status === 'loading' && (
         <div className="absolute inset-0 grid place-items-center text-sm text-slate-600 bg-white/80 z-10">
           <div className="text-center space-y-1">
-            <p>Caricamento IFC in-app...</p>
+            <p>{t('ifcViewer.loadingTitle')}</p>
             <p className="text-xs text-slate-500">{loadingStep}</p>
           </div>
         </div>
@@ -287,13 +288,13 @@ export default function InAppIfcViewer({ fileUrl, fallbackUrl, filePath, documen
               className="inline-flex items-center gap-1 rounded border border-amber-300 bg-white px-2 py-1 hover:bg-amber-100"
             >
               <RotateCcw className="h-3.5 w-3.5" />
-              Riprova in-app
+              {t('ifcViewer.retryInApp')}
             </button>
           </div>
           <iframe
             src={ifcViewerUrl}
             className="w-full h-[calc(100%-37px)] border-0"
-            title="IFC fallback viewer"
+            title={t('ifcViewer.fallbackFrameTitle')}
           />
         </div>
       )}
@@ -306,9 +307,9 @@ export default function InAppIfcViewer({ fileUrl, fallbackUrl, filePath, documen
             </div>
 
             <div className="space-y-1">
-              <p className="text-sm font-medium text-slate-800">Viewer IFC in-app non disponibile</p>
+              <p className="text-sm font-medium text-slate-800">{t('ifcViewer.unavailableTitle')}</p>
               <p className="text-sm text-slate-600">
-                {error || 'Il rendering IFC nativo non e\' riuscito. Usa il fallback esterno.'}
+                {error || t('ifcViewer.unavailableDescription')}
               </p>
             </div>
 
@@ -319,7 +320,7 @@ export default function InAppIfcViewer({ fileUrl, fallbackUrl, filePath, documen
                 className="inline-flex items-center rounded-md border border-slate-300 hover:bg-slate-100 px-4 py-2 text-sm"
               >
                 <RotateCcw className="h-4 w-4 mr-2" />
-                Riprova in-app
+                {t('ifcViewer.retryInApp')}
               </button>
               <a
                 href={ifcViewerUrl || '#'}
@@ -328,7 +329,7 @@ export default function InAppIfcViewer({ fileUrl, fallbackUrl, filePath, documen
                 className="inline-flex items-center rounded-md bg-[#ef6144] hover:bg-[#d9553a] text-white px-4 py-2 text-sm"
               >
                 <ExternalLink className="h-4 w-4 mr-2" />
-                Apri IFC nel viewer
+                {t('ifcViewer.openViewer')}
               </a>
             </div>
           </div>

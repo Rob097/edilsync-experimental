@@ -99,7 +99,7 @@ export default function PublicLayout({ locale = 'it', children }) {
               <div>
                 <span className="block font-semibold text-[1.05rem] leading-none">EdilSync</span>
                 <span className="hidden md:block mt-1 text-[10px] font-extrabold uppercase tracking-[0.18em] text-[#7b665e]">
-                  Field-ready coordination
+                  {localized.brandTagline}
                 </span>
               </div>
             </Link>

@@ -5,10 +5,11 @@ import { Avatar } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton.jsx";
 import { format } from 'date-fns';
-import { it } from 'date-fns/locale';
+import { enUS, it } from 'date-fns/locale';
 import { User, Building2, Flag, CheckCircle2, DollarSign, FileText } from "lucide-react";
 import DocumentPreviewDialog from '@/components/project/DocumentPreviewDialog';
 import { getUserDisplayNameByEmail } from '@/lib/userDisplay';
+import { useLanguage } from '@/components/i18n/useLanguage';
 
 export default function MessageList({ 
   channelId, 
@@ -19,7 +20,9 @@ export default function MessageList({
   focusedMessageId,
   onNavigate
 }) {
+  const { currentLanguage } = useLanguage();
   const queryClient = useQueryClient();
+  const dateLocale = currentLanguage === 'it' ? it : enUS;
   const messagesContainerRef = useRef(null);
   const messageRefs = useRef({});
   const [selectedDocument, setSelectedDocument] = useState(null);
@@ -229,7 +232,7 @@ export default function MessageList({
                   <div className="flex items-baseline gap-2 mb-1 px-1">
                     <span className="font-semibold text-xs text-gray-700">{senderDisplay}</span>
                     <span className="text-xs text-gray-400">
-                      {format(new Date(message.created_date), 'HH:mm', { locale: it })}
+                      {format(new Date(message.created_date), 'HH:mm', { locale: dateLocale })}
                     </span>
                   </div>
                 )}
@@ -246,7 +249,7 @@ export default function MessageList({
                 </div>
                 {isOwnMessage && (
                   <span className="text-xs text-gray-400 mt-1 px-1">
-                    {format(new Date(message.created_date), 'HH:mm', { locale: it })}
+                    {format(new Date(message.created_date), 'HH:mm', { locale: dateLocale })}
                   </span>
                 )}
               </div>

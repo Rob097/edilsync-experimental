@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { appClient } from '@/api/appClient';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
 import { DollarSign, Clock, CheckCircle2, XCircle, AlertCircle } from "lucide-react";
@@ -13,7 +12,7 @@ import EmptyState from '@/components/ui/EmptyState';
 import { useLanguage } from '@/components/i18n/useLanguage';
 
 export default function ChangeRequestBoard({ projectId, canCreateOrRespond, currentUserEmail }) {
-  const { currentLanguage } = useLanguage();
+  const { currentLanguage, t } = useLanguage();
   const tr = (itText, enText) => currentLanguage === 'it' ? itText : enText;
   const dateLocale = currentLanguage === 'it' ? it : enUS;
   const columns = [
@@ -77,8 +76,8 @@ export default function ChangeRequestBoard({ projectId, canCreateOrRespond, curr
     return (
       <EmptyState
         icon={DollarSign}
-        title={tr('Nessuna richiesta di modifica', 'No change requests')}
-        description={tr('Nessuna richiesta è stata ancora creata.', 'No requests have been created yet.')}
+        title={t('changeRequestBoard.emptyTitle')}
+        description={t('changeRequestBoard.emptyDescription')}
       />
     );
   }
@@ -169,7 +168,7 @@ export default function ChangeRequestBoard({ projectId, canCreateOrRespond, curr
                       
                       {columnRequests.length === 0 && (
                         <div className="flex items-center justify-center h-32 text-gray-400 text-sm">
-                          {tr('Nessuna richiesta', 'No requests')}
+                          {t('changeRequestBoard.emptyColumn')}
                         </div>
                       )}
                     </div>

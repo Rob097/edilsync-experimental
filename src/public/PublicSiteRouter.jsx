@@ -55,6 +55,9 @@ export default function PublicSiteRouter() {
       <Route path="/PrivacyPolicy" element={<Navigate to="/privacy" replace />} />
       <Route path="/TermsOfService" element={<Navigate to="/termini" replace />} />
       <Route path="/CookiePolicy" element={<Navigate to="/cookie" replace />} />
+      <Route path="/en/PrivacyPolicy" element={<Navigate to="/en/privacy" replace />} />
+      <Route path="/en/TermsOfService" element={<Navigate to="/en/termini" replace />} />
+      <Route path="/en/CookiePolicy" element={<Navigate to="/en/cookie" replace />} />
       <Route path="/en/*" element={<PublicLocaleRoutes locale="en" basePath="/en" />} />
       <Route path="/*" element={<PublicLocaleRoutes locale="it" basePath="" />} />
     </Routes>

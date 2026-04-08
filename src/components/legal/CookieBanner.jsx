@@ -1,15 +1,18 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { Button } from "@/components/ui/button";
 import { Cookie } from "lucide-react";
 import { useLanguage } from '@/components/i18n/useLanguage';
+import { localizePublicPath } from '@/public/lib/localePath';
 
 const COOKIE_CONSENT_KEY = 'edilsync_cookie_consent';
 
 export default function CookieBanner() {
   const { currentLanguage } = useLanguage();
+  const location = useLocation();
   const tr = (itText, enText) => currentLanguage === 'it' ? itText : enText;
   const [visible, setVisible] = useState(false);
+  const cookiePolicyPath = localizePublicPath('/cookie', location.pathname);
 
   useEffect(() => {
     const consent = localStorage.getItem(COOKIE_CONSENT_KEY);
@@ -37,7 +40,7 @@ export default function CookieBanner() {
           <Cookie className="h-5 w-5 text-[#ef6144] mt-0.5 flex-shrink-0" />
           <p className="text-sm text-gray-600">
             {tr('Utilizziamo cookie tecnici necessari per il funzionamento del servizio e cookie analitici per migliorare la tua esperienza. Per maggiori informazioni consulta la nostra', 'We use technical cookies necessary for the service and analytics cookies to improve your experience. For more information, see our')}{' '}
-            <Link to="/cookie" className="text-[#ef6144] hover:underline font-medium">
+            <Link to={cookiePolicyPath} className="text-[#ef6144] hover:underline font-medium">
               {tr('Cookie Policy', 'Cookie Policy')}
             </Link>.
           </p>

@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
+import { useLanguage } from '@/components/i18n/useLanguage';
 
 const toPublicStorageUrl = (filePath) => {
   if (!filePath) return null;
@@ -92,6 +93,7 @@ const fitCameraToObject = (camera, controls, object) => {
 };
 
 export default function BimViewer({ fileUrl, fileType, filePath, fallbackUrl }) {
+  const { t } = useLanguage();
   const mountRef = useRef(null);
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(true);
@@ -128,7 +130,7 @@ export default function BimViewer({ fileUrl, fileType, filePath, fallbackUrl }) 
         ]);
 
         if (!candidateUrls.length) {
-          throw new Error('Nessun URL disponibile per caricare il modello.');
+          throw new Error(t('bimViewer.noModelUrl'));
         }
 
         let gltf = null;
@@ -144,7 +146,7 @@ export default function BimViewer({ fileUrl, fileType, filePath, fallbackUrl }) 
         }
 
         if (!gltf) {
-          throw lastError || new Error('Impossibile caricare il modello BIM.');
+          throw lastError || new Error(t('bimViewer.loadFailed'));
         }
 
         if (!disposed) {
@@ -155,8 +157,8 @@ export default function BimViewer({ fileUrl, fileType, filePath, fallbackUrl }) 
         if (!disposed) {
           const rawMessage = loadError?.message || '';
           const friendlyMessage = rawMessage.includes("Unexpected token '<'")
-            ? 'URL del modello non valido o non raggiungibile. Riapri il documento per rigenerare il link e riprova.'
-            : (rawMessage || 'Impossibile caricare il modello BIM.');
+            ? t('bimViewer.invalidModelUrl')
+            : (rawMessage || t('bimViewer.loadFailed'));
           setError(friendlyMessage);
         }
       } finally {
@@ -179,7 +181,7 @@ export default function BimViewer({ fileUrl, fileType, filePath, fallbackUrl }) 
       <div className="h-full min-h-[320px] w-full rounded-md border bg-slate-50 overflow-hidden grid place-items-center p-6 text-center">
         <div className="space-y-3 max-w-xl">
           <p className="text-sm text-slate-700">
-            La consultazione IFC si apre in una nuova scheda per compatibilita con il viewer esterno.
+            {t('bimViewer.ifcExternalDescription')}
           </p>
           <div className="flex flex-wrap gap-2 justify-center">
             <a
@@ -188,7 +190,7 @@ export default function BimViewer({ fileUrl, fileType, filePath, fallbackUrl }) 
               rel="noopener noreferrer"
               className="inline-flex items-center rounded-md bg-[#ef6144] hover:bg-[#d9553a] text-white px-4 py-2 text-sm"
             >
-              Apri IFC nel viewer
+              {t('bimViewer.openIfcViewer')}
             </a>
             <a
               href={ifcSourceUrl || '#'}
@@ -196,7 +198,7 @@ export default function BimViewer({ fileUrl, fileType, filePath, fallbackUrl }) 
               rel="noopener noreferrer"
               className="inline-flex items-center rounded-md border border-slate-300 hover:bg-slate-100 px-4 py-2 text-sm"
             >
-              Apri file IFC
+              {t('bimViewer.openIfcFile')}
             </a>
           </div>
         </div>
@@ -208,7 +210,7 @@ export default function BimViewer({ fileUrl, fileType, filePath, fallbackUrl }) 
     <div className="h-full min-h-[320px] w-full relative rounded-md border bg-slate-50 overflow-hidden">
       {isLoading && (
         <div className="absolute inset-0 grid place-items-center text-sm text-slate-600 bg-white/70 z-10">
-          Caricamento modello 3D...
+          {t('bimViewer.loadingModel')}
         </div>
       )}
       {error && (

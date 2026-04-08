@@ -1,17 +1,20 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { Card, CardContent } from "@/components/ui/card";
 import { useLanguage } from '@/components/i18n/useLanguage';
 import usePublicSeo from '@/public/hooks/usePublicSeo';
+import { localizePublicPath } from '@/public/lib/localePath';
 
 export default function PrivacyPolicy() {
   const { currentLanguage } = useLanguage();
+  const location = useLocation();
   const tr = (itText, enText) => currentLanguage === 'it' ? itText : enText;
   const title = tr('Informativa sulla Privacy', 'Privacy Policy');
   const description = tr(
     'Informativa sul trattamento dei dati personali per la piattaforma EdilSync.',
     'Privacy policy describing how personal data is processed on EdilSync.',
   );
+  const cookiePolicyPath = localizePublicPath('/cookie', location.pathname);
 
   usePublicSeo({
     title,
@@ -84,7 +87,7 @@ export default function PrivacyPolicy() {
           <p>{tr('Per esercitare i propri diritti, scrivere a:', 'To exercise your rights, write to:')} <strong>info@rdlabs.digital</strong></p>
 
           <h2 className="text-lg font-semibold mt-6 mb-2">{tr('7. Cookie', '7. Cookies')}</h2>
-          <p>{tr('Per informazioni sull\'utilizzo dei cookie, consultare la nostra', 'For information about cookie usage, see our')} <Link to="/cookie" className="text-[#ef6144] hover:underline">Cookie Policy</Link>.</p>
+          <p>{tr('Per informazioni sull\'utilizzo dei cookie, consultare la nostra', 'For information about cookie usage, see our')} <Link to={cookiePolicyPath} className="text-[#ef6144] hover:underline">Cookie Policy</Link>.</p>
 
           <h2 className="text-lg font-semibold mt-6 mb-2">{tr('8. Modifiche', '8. Changes')}</h2>
           <p>{tr('Ci riserviamo il diritto di aggiornare questa informativa. Eventuali modifiche saranno comunicate tramite l\'applicazione.', 'We reserve the right to update this policy. Any changes will be communicated through the application.')}</p>

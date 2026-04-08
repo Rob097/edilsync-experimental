@@ -127,7 +127,7 @@ export default function NotificationPreferences({ userEmail }) {
     onSuccess: () => {
       queryClient.invalidateQueries(['notificationPreferences', userEmail]);
       setHasChanges(false);
-      toast.success(tr('Preferenze salvate con successo', 'Preferences saved successfully'));
+      toast.success(t('notificationPreferences.saveSuccess'));
     },
   });
 
@@ -174,16 +174,16 @@ export default function NotificationPreferences({ userEmail }) {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>{tr('Preferenze di Comunicazione', 'Communication Preferences')}</CardTitle>
+        <CardTitle>{t('notificationPreferences.title')}</CardTitle>
         <CardDescription>
-          {tr('Scegli come vuoi ricevere le notifiche per ogni tipo di azione', 'Choose how you want to receive notifications for each action type')}
+          {t('notificationPreferences.description')}
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-6">
         {/* Master Controls */}
         <div className="bg-gray-50 rounded-lg p-4">
           <div className="flex items-center justify-between mb-2">
-            <Label className="text-base font-semibold">{tr('Tutte le comunicazioni', 'All communications')}</Label>
+            <Label className="text-base font-semibold">{t('notificationPreferences.allCommunications')}</Label>
           </div>
           <div className="grid grid-cols-2 gap-4">
             <div className="flex items-center justify-between">
@@ -199,7 +199,7 @@ export default function NotificationPreferences({ userEmail }) {
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
                 <Mail className="h-4 w-4 text-gray-500" />
-                <span className="text-sm text-gray-700">Email</span>
+                <span className="text-sm text-gray-700">{t('notificationPreferences.email')}</span>
               </div>
               <Switch
                 checked={areAllEnabled('email')}
@@ -250,7 +250,7 @@ export default function NotificationPreferences({ userEmail }) {
             ) : (
               <Check className="h-4 w-4 mr-2" />
             )}
-            {tr('Salva preferenze', 'Save preferences')}
+            {t('notificationPreferences.save')}
           </Button>
         </div>
       </CardContent>

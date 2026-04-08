@@ -80,7 +80,7 @@ export default function ChangeRequestDialog({ open, onOpenChange, request, proje
         // Security check: Only homeowner can create change request
         const userParticipation = projectParticipants.find(p => p.user_email === user?.email);
         if (!userParticipation || userParticipation.project_role !== 'homeowner') {
-          throw new Error('Solo il committente del progetto può creare richieste di modifica');
+          throw new Error(t('changeRequestDialog.permissionError'));
         }
 
         return appClient.entities.ChangeRequest.create({

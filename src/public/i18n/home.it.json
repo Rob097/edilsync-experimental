@@ -12,7 +12,24 @@
     "subtitle": "EdilSync unisce committenti, imprese, subappaltatori e professionisti in un'unica piattaforma. Meno chiamate, meno incomprensioni, più controllo sul tuo cantiere.",
     "ctaPrimary": "Crea account gratis",
     "ctaSecondary": "Scopri di più",
-    "note": "Account personale o società · Nessuna carta per iniziare · Upgrade quando serve"
+    "note": "Account personale o società · Nessuna carta per iniziare · Upgrade quando serve",
+    "highlights": {
+      "alignmentLabel": "Allineamento",
+      "alignmentText": "Un solo posto per task, foto, varianti e conversazioni di progetto.",
+      "traceabilityLabel": "Tracciabilità",
+      "traceabilityText": "Ogni azione diventa evidenza utile per decisioni, SAL e dispute.",
+      "controlLabel": "Controllo",
+      "controlText": "Meno chiamate di chiarimento, meno viaggi a vuoto, meno zone grigie."
+    },
+    "preview": {
+      "alt": "Interfaccia EdilSync per coordinare il cantiere",
+      "feedLabel": "Feed di cantiere",
+      "feedTitle": "Stato, responsabilità e approvazioni nello stesso flusso operativo.",
+      "feedText": "Il committente vede avanzamento e decisioni. L’impresa conserva il contesto senza rincorrere chat e allegati.",
+      "fieldReadyLabel": "Pronto sul campo",
+      "fieldReadyValue": "3 tap",
+      "fieldReadyText": "Per aggiornare stato, allegare una foto o rispondere a una richiesta di variante."
+    }
   },
   "stats": {
     "aValue": "$31B",
@@ -28,6 +45,7 @@
     "chip": "Il problema",
     "title": "Il cantiere è un caos comunicativo",
     "subtitle": "Ogni giorno si usano strumenti diversi per lavorare in cantiere, ma il risultato è disallineamento e comunicazioni fuori contesto.",
+    "issueLabel": "Criticità {{number}}",
     "c1t": "WhatsApp, SMS, email... ovunque",
     "c1d": "Le informazioni si perdono tra chat personali, gruppi e thread infiniti. Impossibile ritrovare quella conversazione importante di 3 settimane fa.",
     "c2t": "Chiamate continue che bloccano il lavoro",
@@ -50,12 +68,21 @@
     "s2t": "Lavora e documenta",
     "s2d": "Ogni azione — foto, task, varianti, messaggi — diventa automaticamente documentazione tracciabile.",
     "s3t": "Tutti allineati",
-    "s3d": "Committente, impresa e subappaltatori vedono lo stesso stato del progetto. Zero ambiguità."
+    "s3d": "Committente, impresa e subappaltatori vedono lo stesso stato del progetto. Zero ambiguità.",
+    "result": {
+      "label": "Risultato operativo",
+      "title": "Tutti vedono lo stesso cantiere, senza rincorrersi.",
+      "b1": "Il committente segue avanzamento e decisioni senza telefonate continue.",
+      "b2": "L’impresa coordina task, prove fotografiche e change request nello stesso flusso.",
+      "b3": "Il subappaltatore trova solo ciò che gli serve, quando gli serve."
+    }
   },
   "features": {
     "chip": "Funzionalità",
     "title": "Tutto ciò che serve al tuo cantiere",
     "subtitle": "Task, foto, varianti, chat e controllo economico lavorano insieme per darti controllo reale.",
+    "moduleLabel": "Modulo",
+    "seeAll": "Vedi tutte le funzionalità",
     "f1t": "Task e Milestone",
     "f1d": "Organizza il lavoro per stanze, fasi e milestone. Stato bloccato con responsabilità taggata per documentare chi causa i ritardi.",
     "f2t": "Documentazione Fotografica",
@@ -144,6 +171,15 @@
       "projectTitle": "Cosa si sblocca sul progetto",
       "projectText": "Milestone, controllo economico, documenti avanzati, dispute e chat progettuale completa si attivano quando una società Pro sponsorizza quel progetto."
     },
+    "access": {
+      "label": "Logica del prezzo",
+      "title": "Un piano per la società. Accesso gratuito per tutti gli altri.",
+      "i1": "Committente e invitati restano free",
+      "i2": "Paga solo la società quando servono strumenti avanzati",
+      "i3": "I progetti sponsorizzati sbloccano le aree premium condivise"
+    },
+    "teamsNeedLabel": "Cosa serve subito nella pratica",
+    "seeFull": "Vedi il dettaglio completo dei prezzi",
     "hint": " all'anno ripaga l'intero abbonamento.",
     "hintStrong": "Una disputa evitata",
     "hintSub": "~€230/anno = il costo di un solo viaggio a vuoto."

@@ -22,17 +22,19 @@ import {
   Loader2
 } from "lucide-react";
 import { format } from 'date-fns';
-import { it } from 'date-fns/locale';
+import { enUS, it } from 'date-fns/locale';
 import { getUserDisplayNameByEmail } from '@/lib/userDisplay';
-
-const statusLabels = {
-  pending: { label: 'In attesa', color: 'bg-yellow-100 text-yellow-700' },
-  accepted: { label: 'Accettato', color: 'bg-green-100 text-green-700' },
-  declined: { label: 'Rifiutato', color: 'bg-red-100 text-red-700' },
-};
+import { useLanguage } from '@/components/i18n/useLanguage';
 
 export default function EventDetailDialog({ open, onOpenChange, event, user, companyMemberships, onEdit }) {
+  const { t, currentLanguage } = useLanguage();
   const queryClient = useQueryClient();
+  const dateLocale = currentLanguage === 'it' ? it : enUS;
+  const statusLabels = {
+    pending: { label: t('eventDetailDialog.statusPending'), color: 'bg-yellow-100 text-yellow-700' },
+    accepted: { label: t('eventDetailDialog.statusAccepted'), color: 'bg-green-100 text-green-700' },
+    declined: { label: t('eventDetailDialog.statusDeclined'), color: 'bg-red-100 text-red-700' },
+  };
 
   const { data: participants = [] } = useQuery({
     queryKey: ['eventParticipants', event?.id],
@@ -78,8 +80,8 @@ export default function EventDetailDialog({ open, onOpenChange, event, user, com
         await appClient.entities.Notification.create({
           user_email: event.creator_email,
           type: 'conflict_resolved',
-          title: 'Conflitto risolto',
-          message: `${user?.full_name} ha accettato l'invito a "${event.title}", cancellando l'evento in conflitto.`,
+          title: t('eventDetailDialog.conflictResolvedTitle'),
+          message: t('eventDetailDialog.conflictResolvedMessage', { name: user?.full_name, title: event.title }),
           related_event_id: event.id,
           is_read: false,
         });
@@ -89,8 +91,8 @@ export default function EventDetailDialog({ open, onOpenChange, event, user, com
         await appClient.entities.Notification.create({
           user_email: event.creator_email,
           type: 'participant_declined',
-          title: 'Invito rifiutato',
-          message: `${user?.full_name} ha rifiutato l'invito a "${event.title}".`,
+          title: t('eventDetailDialog.participantDeclinedTitle'),
+          message: t('eventDetailDialog.participantDeclinedMessage', { name: user?.full_name, title: event.title }),
           related_event_id: event.id,
           is_read: false,
         });
@@ -113,8 +115,8 @@ export default function EventDetailDialog({ open, onOpenChange, event, user, com
           await appClient.entities.Notification.create({
             user_email: p.user_email,
             type: 'event_cancelled',
-            title: 'Evento cancellato',
-            message: `L'evento "${event.title}" è stato cancellato.`,
+            title: t('eventDetailDialog.eventCancelledTitle'),
+            message: t('eventDetailDialog.eventCancelledMessage', { title: event.title }),
             related_event_id: event.id,
             is_read: false,
           });
@@ -141,7 +143,7 @@ export default function EventDetailDialog({ open, onOpenChange, event, user, com
   if (!event) return null;
 
   const getCompanyName = (companyId) => {
-    return companies.find(c => c.id === companyId)?.name || 'Società';
+    return companies.find(c => c.id === companyId)?.name || t('eventDetailDialog.companyFallback');
   };
 
   return (
@@ -157,7 +159,7 @@ export default function EventDetailDialog({ open, onOpenChange, event, user, com
             <Clock className="h-5 w-5 text-gray-400" />
             <div>
               <p className="font-medium">
-                {format(new Date(event.start_datetime), "EEEE d MMMM yyyy", { locale: it })}
+                {format(new Date(event.start_datetime), "EEEE d MMMM yyyy", { locale: dateLocale })}
               </p>
               <p className="text-sm">
                 {format(new Date(event.start_datetime), 'HH:mm')} - {format(new Date(event.end_datetime), 'HH:mm')}
@@ -180,7 +182,7 @@ export default function EventDetailDialog({ open, onOpenChange, event, user, com
 
           {/* Creator */}
           <div className="flex items-center gap-2 text-sm text-gray-500">
-            <span>Creato da</span>
+            <span>{t('eventDetailDialog.createdBy')}</span>
             <Badge variant="outline">{event.creator_name || event.creator_email}</Badge>
           </div>
 
@@ -189,7 +191,7 @@ export default function EventDetailDialog({ open, onOpenChange, event, user, com
             <>
               <Separator />
               <div>
-                <h4 className="text-sm font-medium text-gray-700 mb-2">Partecipanti</h4>
+                <h4 className="text-sm font-medium text-gray-700 mb-2">{t('eventDetailDialog.participants')}</h4>
                 <div className="space-y-2">
                   {participants.map(p => {
                     const status = statusLabels[p.status] || statusLabels.pending;
@@ -228,7 +230,7 @@ export default function EventDetailDialog({ open, onOpenChange, event, user, com
               {userParticipation.has_conflict && (
                 <p className="text-sm text-yellow-600 flex items-center gap-1">
                   <AlertTriangle className="h-4 w-4" />
-                  Accettando, l'evento in conflitto verrà cancellato.
+                  {t('eventDetailDialog.conflictNotice')}
                 </p>
               )}
               <div className="flex gap-2">
@@ -242,7 +244,7 @@ export default function EventDetailDialog({ open, onOpenChange, event, user, com
                   ) : (
                     <>
                       <Check className="h-4 w-4 mr-2" />
-                      Accetta
+                      {t('eventDetailDialog.accept')}
                     </>
                   )}
                 </Button>
@@ -253,7 +255,7 @@ export default function EventDetailDialog({ open, onOpenChange, event, user, com
                   disabled={respondMutation.isPending}
                 >
                   <X className="h-4 w-4 mr-2" />
-                  Rifiuta
+                  {t('eventDetailDialog.reject')}
                 </Button>
               </div>
             </div>
@@ -270,7 +272,7 @@ export default function EventDetailDialog({ open, onOpenChange, event, user, com
                 }}
                 className="w-full"
               >
-                Modifica evento
+                {t('eventDetailDialog.editEvent')}
               </Button>
               <Button
                 variant="destructive"
@@ -283,7 +285,7 @@ export default function EventDetailDialog({ open, onOpenChange, event, user, com
                 ) : (
                   <Trash2 className="h-4 w-4 mr-2" />
                 )}
-                Cancella evento
+                {t('eventDetailDialog.cancelEvent')}
               </Button>
             </div>
           )}
@@ -296,7 +298,7 @@ export default function EventDetailDialog({ open, onOpenChange, event, user, com
               disabled={removeMyself.isPending}
               className="w-full"
             >
-              Rimuovimi dall'evento
+              {t('eventDetailDialog.removeMyself')}
             </Button>
           )}
         </div>

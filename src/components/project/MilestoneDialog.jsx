@@ -96,7 +96,7 @@ export default function MilestoneDialog({ open, onOpenChange, projectId, milesto
       if (userParticipation?.participant_type === 'company' && userParticipation?.company_id) {
         const membership = companyMemberships.find(m => m.company_id === userParticipation.company_id);
         if (!membership || membership.role !== 'admin') {
-          throw new Error('Solo gli amministratori della società possono creare o modificare milestone');
+          throw new Error(t('milestoneDialog.permissionError'));
         }
       }
 

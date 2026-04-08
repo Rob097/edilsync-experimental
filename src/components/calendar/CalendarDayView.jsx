@@ -8,8 +8,7 @@ import EmptyState from '@/components/ui/EmptyState';
 import { useLanguage } from '@/components/i18n/useLanguage';
 
 export default function CalendarDayView({ date, events, onEventClick, onTaskClick, onClose, onCreateEvent }) {
-  const { currentLanguage } = useLanguage();
-  const tr = (itText, enText) => currentLanguage === 'it' ? itText : enText;
+  const { currentLanguage, t } = useLanguage();
   const dateLocale = currentLanguage === 'it' ? it : enUS;
   const sortedEvents = [...events].sort((a, b) => {
     const firstDate = a.entry_type === 'task' ? new Date(a.due_date) : new Date(a.start_datetime);
@@ -26,7 +25,7 @@ export default function CalendarDayView({ date, events, onEventClick, onTaskClic
         <div className="flex items-center gap-2">
           <Button variant="outline" size="sm" onClick={onCreateEvent}>
             <Plus className="h-4 w-4 mr-1" />
-            {tr('Nuovo', 'New')}
+            {t('calendarDayView.new')}
           </Button>
           <Button variant="ghost" size="icon" onClick={onClose}>
             <X className="h-4 w-4" />
@@ -51,14 +50,14 @@ export default function CalendarDayView({ date, events, onEventClick, onTaskClic
                 <div className="flex items-start justify-between">
                   <div className="flex-1 min-w-0">
                     <h4 className="font-medium text-gray-900">
-                      {event.entry_type === 'task' ? `${tr('Attività', 'Task')}: ${event.title}` : event.title}
+                      {event.entry_type === 'task' ? `${t('calendarDayView.taskPrefix')}: ${event.title}` : event.title}
                     </h4>
                     <div className="flex items-center gap-4 mt-1 text-sm text-gray-500">
                       <div className="flex items-center gap-1">
                         <Clock className="h-3.5 w-3.5" />
                         <span>
                           {event.entry_type === 'task'
-                            ? tr('Scadenza giornata', 'Due today')
+                            ? t('calendarDayView.dueToday')
                             : `${format(new Date(event.start_datetime), 'HH:mm')} - ${format(new Date(event.end_datetime), 'HH:mm')}`}
                         </span>
                       </div>
@@ -71,7 +70,7 @@ export default function CalendarDayView({ date, events, onEventClick, onTaskClic
                     </div>
                     {event.entry_type === 'task' && event.project_name && (
                       <p className="text-sm text-gray-600 mt-2">
-                        {tr('Progetto', 'Project')}: {event.project_name}
+                        {t('calendarDayView.project')}: {event.project_name}
                       </p>
                     )}
                     {event.description && (
@@ -85,9 +84,9 @@ export default function CalendarDayView({ date, events, onEventClick, onTaskClic
         ) : (
           <EmptyState
             icon={Clock}
-            title={tr('Nessun evento', 'No events')}
-            description={tr('Non ci sono eventi programmati per questo giorno.', 'There are no events scheduled for this day.')}
-            actionLabel={tr('Crea evento', 'Create event')}
+            title={t('events.noEvents')}
+            description={t('calendarDayView.emptyDescription')}
+            actionLabel={t('calendarDayView.createEvent')}
             onAction={onCreateEvent}
           />
         )}

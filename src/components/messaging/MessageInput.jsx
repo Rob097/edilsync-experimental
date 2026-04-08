@@ -25,8 +25,7 @@ export default function MessageInput({
   scopeType = 'project',
   allowMilestoneMentions = true,
 }) {
-  const { t, currentLanguage } = useLanguage();
-  const tr = (it, en) => currentLanguage === 'it' ? it : en;
+  const { t } = useLanguage();
   const queryClient = useQueryClient();
   const isCompanyScope = scopeType === 'company';
   const scopeId = isCompanyScope ? companyId : projectId;
@@ -90,15 +89,18 @@ export default function MessageInput({
                 context_type: contextType || 'personal',
                 context_company_id: contextType === 'company' ? activeCompanyId : null,
                 type: 'message_mention',
-                title: tr('Sei stato menzionato', 'You were mentioned'),
-                message: tr(
-                  isCompanyScope
-                    ? `${messageData.sender_name} ti ha menzionato in "${channel?.name}" nella società "${activeCompanyName || ''}"`
-                    : `${messageData.sender_name} ti ha menzionato in "${channel?.name}" nel progetto "${project?.name}"`,
-                  isCompanyScope
-                    ? `${messageData.sender_name} mentioned you in "${channel?.name}" in company "${activeCompanyName || ''}"`
-                    : `${messageData.sender_name} mentioned you in "${channel?.name}" in project "${project?.name}"`
-                ),
+                title: t('messageInput.mentionTitle'),
+                message: isCompanyScope
+                  ? t('messageInput.mentionInCompany', {
+                      sender: messageData.sender_name,
+                      channel: channel?.name || '',
+                      company: activeCompanyName || '',
+                    })
+                  : t('messageInput.mentionInProject', {
+                      sender: messageData.sender_name,
+                      channel: channel?.name || '',
+                      project: project?.name || '',
+                    }),
                 related_event_id: msg.id,
                 is_read: false
               }).catch(err => console.error('Failed to send notification:', err));
@@ -143,7 +145,7 @@ export default function MessageInput({
       company_id: isCompanyScope ? companyId : null,
       content: message,
       sender_email: currentUserEmail,
-      sender_name: currentUserName || currentUserEmail || 'Utente',
+      sender_name: currentUserName || currentUserEmail || t('messageInput.senderFallback'),
       sender_context_type: contextType || 'personal',
       sender_company_id: contextType === 'company' ? activeCompanyId : null,
       sender_company_name: contextType === 'company' ? activeCompanyName : null,
@@ -235,7 +237,7 @@ export default function MessageInput({
                 ))
               ) : (
                 <p className="px-3 py-2 text-sm text-gray-500">
-                  {tr('Nessun utente presente', 'No users available')}
+                  {t('messageInput.noUsersAvailable')}
                 </p>
               )}
             </div>
@@ -273,7 +275,7 @@ export default function MessageInput({
                 ))
               ) : (
                 <p className="px-3 py-2 text-sm text-gray-500">
-                  {tr('Nessun attività presente', 'No task available')}
+                  {t('messageInput.noTasksAvailable')}
                 </p>
               )}
             </div>
@@ -312,7 +314,7 @@ export default function MessageInput({
                 ))
               ) : (
                 <p className="px-3 py-2 text-sm text-gray-500">
-                  {tr('Nessuna Milestone presente', 'No milestone available')}
+                  {t('messageInput.noMilestonesAvailable')}
                 </p>
               )}
             </div>
@@ -351,7 +353,7 @@ export default function MessageInput({
                 ))
               ) : (
                 <p className="px-3 py-2 text-sm text-gray-500">
-                  {tr('Nessuna richiesta presente', 'No request available')}
+                  {t('messageInput.noRequestsAvailable')}
                 </p>
               )}
             </div>

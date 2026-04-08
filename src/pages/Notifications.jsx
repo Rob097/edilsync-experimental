@@ -4,9 +4,8 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
 import { useLanguage } from '@/components/i18n/useLanguage';
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
 import { 
   Bell, 
@@ -19,7 +18,7 @@ import {
   AlertTriangle
 } from "lucide-react";
 import { format } from 'date-fns';
-import { it } from 'date-fns/locale';
+import { enUS, it } from 'date-fns/locale';
 import EmptyState from '@/components/ui/EmptyState';
 
 const typeIcons = {
@@ -74,9 +73,10 @@ const EVENT_BASED_NOTIFICATION_TYPES = new Set([
 ]);
 
 export default function Notifications() {
-  const { t } = useLanguage();
+  const { t, currentLanguage } = useLanguage();
   const queryClient = useQueryClient();
   const navigate = useNavigate();
+  const dateLocale = currentLanguage === 'it' ? it : enUS;
 
   const { data: user } = useQuery({
     queryKey: ['currentUser'],
@@ -330,7 +330,7 @@ export default function Notifications() {
                         )}
                       </div>
                       <p className="text-xs text-gray-400 mt-2">
-                        {format(new Date(notification.created_date), "d MMM yyyy, HH:mm", { locale: it })}
+                        {format(new Date(notification.created_date), "d MMM yyyy, HH:mm", { locale: dateLocale })}
                       </p>
                     </div>
                   </div>

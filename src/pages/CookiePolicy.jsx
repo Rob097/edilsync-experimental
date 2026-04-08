@@ -1,17 +1,20 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { Card, CardContent } from "@/components/ui/card";
 import { useLanguage } from '@/components/i18n/useLanguage';
 import usePublicSeo from '@/public/hooks/usePublicSeo';
+import { localizePublicPath } from '@/public/lib/localePath';
 
 export default function CookiePolicy() {
   const { currentLanguage } = useLanguage();
+  const location = useLocation();
   const tr = (itText, enText) => currentLanguage === 'it' ? itText : enText;
   const title = 'Cookie Policy';
   const description = tr(
     'Informativa sull\'uso dei cookie per il funzionamento e il miglioramento del servizio EdilSync.',
     'Cookie policy for service operation and improvement on EdilSync.',
   );
+  const privacyPolicyPath = localizePublicPath('/privacy', location.pathname);
 
   usePublicSeo({
     title,
@@ -90,7 +93,7 @@ export default function CookiePolicy() {
           </table>
 
           <h2 className="text-lg font-semibold mt-6 mb-2">{tr('6. Diritti dell\'utente', '6. User rights')}</h2>
-          <p>{tr('Per maggiori informazioni sui diritti relativi al trattamento dei dati, consultare la nostra', 'For more information on data-processing rights, see our')} <Link to="/privacy" className="text-[#ef6144] hover:underline">{tr('Informativa sulla Privacy', 'Privacy Policy')}</Link>.</p>
+          <p>{tr('Per maggiori informazioni sui diritti relativi al trattamento dei dati, consultare la nostra', 'For more information on data-processing rights, see our')} <Link to={privacyPolicyPath} className="text-[#ef6144] hover:underline">{tr('Informativa sulla Privacy', 'Privacy Policy')}</Link>.</p>
 
           <h2 className="text-lg font-semibold mt-6 mb-2">{tr('7. Contatti', '7. Contacts')}</h2>
           <p>{tr('Per domande relative ai cookie, scrivere a:', 'For cookie-related questions, write to:')} <strong>info@rdlabs.digital</strong></p>

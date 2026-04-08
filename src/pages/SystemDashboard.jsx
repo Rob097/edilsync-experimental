@@ -9,12 +9,10 @@ import {
   Building2, 
   FolderKanban, 
   CheckSquare, 
-  Calendar,
   FileText,
   MessageSquare,
   TrendingUp,
   AlertCircle,
-  Clock,
   Target,
   BarChart3,
   PieChart as PieChartIcon,
@@ -22,9 +20,12 @@ import {
 } from "lucide-react";
 import { BarChart, Bar, LineChart, Line, PieChart, Pie, Cell, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import { format, subDays, startOfDay } from 'date-fns';
-import { it } from 'date-fns/locale';
+import { enUS, it } from 'date-fns/locale';
+import { useLanguage } from '@/components/i18n/useLanguage';
 
 export default function SystemDashboard() {
+  const { currentLanguage } = useLanguage();
+  const dateLocale = currentLanguage === 'it' ? it : enUS;
   // Auth check
   const { data: user, isLoading: userLoading } = useQuery({
     queryKey: ['currentUser'],
@@ -179,7 +180,7 @@ export default function SystemDashboard() {
       const dateStr = format(startOfDay(date), 'yyyy-MM-dd');
       
       return {
-        date: format(date, 'dd/MM', { locale: it }),
+        date: format(date, 'dd/MM', { locale: dateLocale }),
         projects: projects.filter(p => format(startOfDay(new Date(p.created_date)), 'yyyy-MM-dd') === dateStr).length,
         tasks: tasks.filter(t => t.status === 'completed' && format(startOfDay(new Date(t.updated_date)), 'yyyy-MM-dd') === dateStr).length,
         messages: messages.filter(m => format(startOfDay(new Date(m.created_date)), 'yyyy-MM-dd') === dateStr).length,
@@ -246,7 +247,7 @@ export default function SystemDashboard() {
         topCompanies: companyActivity,
       },
     };
-  }, [allUsers, companies, companyMembers, projects, tasks, milestones, changeRequests, messages, documents, events, notifications, isLoading]);
+  }, [allUsers, companies, companyMembers, projects, tasks, milestones, changeRequests, messages, documents, events, notifications, isLoading, dateLocale]);
 
   // Access control
   if (userLoading) {

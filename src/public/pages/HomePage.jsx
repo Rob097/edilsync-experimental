@@ -72,20 +72,24 @@ export default function HomePage({ locale = 'it' }) {
   ];
 
   const pricingBullets = Array.from({ length: 12 }, (_, index) => t(`publicHome.pricing.p${index + 1}`));
+  const heroHighlights = [
+    { label: t('publicHome.hero.highlights.alignmentLabel'), text: t('publicHome.hero.highlights.alignmentText') },
+    { label: t('publicHome.hero.highlights.traceabilityLabel'), text: t('publicHome.hero.highlights.traceabilityText') },
+    { label: t('publicHome.hero.highlights.controlLabel'), text: t('publicHome.hero.highlights.controlText') },
+  ];
   const featuredProblemItems = problemItems.slice(0, 4);
   const featuredFeatureItems = featureItems.slice(0, 4);
   const pricingHighlights = pricingBullets.slice(0, 5);
-  const pricingAccessItems = locale === 'en'
-    ? [
-        'Homeowners and invited collaborators stay free',
-        'Only the company pays when it needs premium company tools',
-        'Sponsored projects unlock advanced shared project areas',
-      ]
-    : [
-        'Committente e invitati restano free',
-        'Paga solo la società quando servono strumenti avanzati',
-        'I progetti sponsorizzati sbloccano le aree premium condivise',
-      ];
+  const pricingAccessItems = [
+    t('publicHome.pricing.access.i1'),
+    t('publicHome.pricing.access.i2'),
+    t('publicHome.pricing.access.i3'),
+  ];
+  const resultBullets = [
+    t('publicHome.solution.result.b1'),
+    t('publicHome.solution.result.b2'),
+    t('publicHome.solution.result.b3'),
+  ];
 
   const handleLearnMoreClick = (event) => {
     const target = document.getElementById('problema');
@@ -152,36 +156,30 @@ export default function HomePage({ locale = 'it' }) {
                 {t('publicHome.hero.note')}
               </p>
               <div data-reveal className="mt-10 grid gap-3 sm:grid-cols-3">
-                <div className="public-grid-card p-4">
-                  <p className="text-[11px] font-extrabold uppercase tracking-[0.14em] text-[var(--public-accent-dark)]">Allineamento</p>
-                  <p className="mt-2 text-sm leading-[1.6] text-[var(--public-muted)]">Un solo posto per task, foto, varianti e conversazioni di progetto.</p>
-                </div>
-                <div className="public-grid-card p-4">
-                  <p className="text-[11px] font-extrabold uppercase tracking-[0.14em] text-[var(--public-accent-dark)]">Tracciabilità</p>
-                  <p className="mt-2 text-sm leading-[1.6] text-[var(--public-muted)]">Ogni azione diventa evidenza utile per decisioni, SAL e dispute.</p>
-                </div>
-                <div className="public-grid-card p-4">
-                  <p className="text-[11px] font-extrabold uppercase tracking-[0.14em] text-[var(--public-accent-dark)]">Controllo</p>
-                  <p className="mt-2 text-sm leading-[1.6] text-[var(--public-muted)]">Meno chiamate di chiarimento, meno viaggi a vuoto, meno zone grigie.</p>
-                </div>
+                {heroHighlights.map((item) => (
+                  <div key={item.label} className="public-grid-card p-4">
+                    <p className="text-[11px] font-extrabold uppercase tracking-[0.14em] text-[var(--public-accent-dark)]">{item.label}</p>
+                    <p className="mt-2 text-sm leading-[1.6] text-[var(--public-muted)]">{item.text}</p>
+                  </div>
+                ))}
               </div>
             </div>
 
             <div data-reveal className="lg:justify-self-end">
               <div className="public-device-frame">
-                <img src="/images/hero-image.png" alt="Interfaccia EdilSync per coordinare il cantiere" className="block w-full border border-white/10 object-cover" />
+                <img src="/images/hero-image.png" alt={t('publicHome.hero.preview.alt')} className="block w-full border border-white/10 object-cover" />
                 <div className="mt-4 grid gap-3 sm:grid-cols-[1.2fr_0.8fr]">
                   <div className="public-kpi-card rounded-[24px] p-5">
-                    <p className="text-[11px] font-extrabold uppercase tracking-[0.14em] text-[#f7b7a8]">Feed di cantiere</p>
-                    <p className="mt-3 text-lg font-semibold tracking-[-0.03em] text-[#f8f3ef]">Stato, responsabilita e approvazioni nello stesso flusso operativo.</p>
-                    <p className="mt-3 text-sm leading-[1.65] text-[#ded7d1]/76">Il committente vede avanzamento e decisioni. L’impresa conserva il contesto senza rincorrere chat e allegati.</p>
+                    <p className="text-[11px] font-extrabold uppercase tracking-[0.14em] text-[#f7b7a8]">{t('publicHome.hero.preview.feedLabel')}</p>
+                    <p className="mt-3 text-lg font-semibold tracking-[-0.03em] text-[#f8f3ef]">{t('publicHome.hero.preview.feedTitle')}</p>
+                    <p className="mt-3 text-sm leading-[1.65] text-[#ded7d1]/76">{t('publicHome.hero.preview.feedText')}</p>
                   </div>
                   <div className="public-grid-card flex flex-col justify-between p-5">
                     <div>
-                      <p className="text-[11px] font-extrabold uppercase tracking-[0.14em] text-[var(--public-accent-dark)]">Pronto sul campo</p>
-                      <p className="mt-3 text-3xl font-bold tracking-[-0.05em] text-[var(--public-ink)]">3 tap</p>
+                      <p className="text-[11px] font-extrabold uppercase tracking-[0.14em] text-[var(--public-accent-dark)]">{t('publicHome.hero.preview.fieldReadyLabel')}</p>
+                      <p className="mt-3 text-3xl font-bold tracking-[-0.05em] text-[var(--public-ink)]">{t('publicHome.hero.preview.fieldReadyValue')}</p>
                     </div>
-                    <p className="text-sm leading-[1.6] text-[var(--public-muted)]">Per aggiornare stato, allegare una foto o rispondere a una richiesta di variante.</p>
+                    <p className="text-sm leading-[1.6] text-[var(--public-muted)]">{t('publicHome.hero.preview.fieldReadyText')}</p>
                   </div>
                 </div>
               </div>
@@ -229,7 +227,7 @@ export default function HomePage({ locale = 'it' }) {
                       <div className={PUBLIC_CLASSES.iconWrap}>
                         <Icon className={PUBLIC_CLASSES.icon} />
                       </div>
-                      <span className="text-[11px] font-extrabold uppercase tracking-[0.14em] text-[var(--public-accent-dark)]">Criticita {index + 1}</span>
+                      <span className="text-[11px] font-extrabold uppercase tracking-[0.14em] text-[var(--public-accent-dark)]">{t('publicHome.problem.issueLabel', { number: index + 1 })}</span>
                     </div>
                     <h3 className={`${PUBLIC_CLASSES.sectionH3} mt-5 max-w-[18ch]`}>{item.title}</h3>
                     <p className={`${PUBLIC_CLASSES.bodySm} mt-3`}>{item.description}</p>
@@ -264,14 +262,14 @@ export default function HomePage({ locale = 'it' }) {
             </div>
             <div className="space-y-4" data-reveal>
               <div className="public-kpi-card rounded-[32px] p-7 md:p-9">
-                <p className="text-[11px] font-extrabold uppercase tracking-[0.14em] text-[#f7b7a8]">Risultato operativo</p>
+                <p className="text-[11px] font-extrabold uppercase tracking-[0.14em] text-[#f7b7a8]">{t('publicHome.solution.result.label')}</p>
                 <h3 className="mt-4 text-[clamp(1.9rem,3vw,3.1rem)] font-bold tracking-[-0.05em] leading-[1.02] text-[#f8f3ef]">
-                  Tutti vedono lo stesso cantiere, senza rincorrersi.
+                  {t('publicHome.solution.result.title')}
                 </h3>
                 <ul className="public-check-list mt-8 space-y-3 text-sm leading-[1.7] text-[#ded7d1]">
-                  <li>Il committente segue avanzamento e decisioni senza telefonate continue.</li>
-                  <li>L’impresa coordina task, prove fotografiche e change request nello stesso flusso.</li>
-                  <li>Il subappaltatore trova solo cio che gli serve, quando gli serve.</li>
+                  {resultBullets.map((bullet) => (
+                    <li key={bullet}>{bullet}</li>
+                  ))}
                 </ul>
               </div>
               <div className="grid gap-4 md:grid-cols-2">
@@ -317,7 +315,7 @@ export default function HomePage({ locale = 'it' }) {
                       <div className={PUBLIC_CLASSES.iconWrap}>
                         <Icon className={PUBLIC_CLASSES.icon} />
                       </div>
-                      <span className="text-[11px] font-extrabold uppercase tracking-[0.14em] text-[var(--public-accent-dark)]">Modulo</span>
+                      <span className="text-[11px] font-extrabold uppercase tracking-[0.14em] text-[var(--public-accent-dark)]">{t('publicHome.features.moduleLabel')}</span>
                     </div>
                     <h3 className={`${PUBLIC_CLASSES.sectionH3} mt-5`}>{item.title}</h3>
                     <p className={`${PUBLIC_CLASSES.bodyBase} mt-3`}>{item.description}</p>
@@ -328,7 +326,7 @@ export default function HomePage({ locale = 'it' }) {
             <div data-reveal className="mt-8 flex justify-start">
               <Button asChild variant="outline" className="public-outline-button rounded-full px-6">
                 <Link to={`${basePrefix}/funzionalita`}>
-                  {locale === 'en' ? 'See all features' : 'Vedi tutte le funzionalita'}
+                  {t('publicHome.features.seeAll')}
                   <ChevronRight className="h-4 w-4" />
                 </Link>
               </Button>
@@ -390,10 +388,10 @@ export default function HomePage({ locale = 'it' }) {
                   <div className="grid gap-5 md:grid-cols-[0.9fr_1.1fr] md:items-start">
                     <div>
                       <p className="text-[11px] font-extrabold uppercase tracking-[0.14em] text-[var(--public-accent-dark)]">
-                        {locale === 'en' ? 'Billing logic' : 'Logica del prezzo'}
+                        {t('publicHome.pricing.access.label')}
                       </p>
                       <h3 className="mt-4 text-[clamp(1.5rem,2.5vw,2.3rem)] font-bold tracking-[-0.05em] text-[var(--public-ink)]">
-                        {locale === 'en' ? 'One company plan. Free access for everyone else.' : 'Un piano per la società. Accesso gratuito per tutti gli altri.'}
+                        {t('publicHome.pricing.access.title')}
                       </h3>
                     </div>
                     <div className="space-y-3">
@@ -440,7 +438,7 @@ export default function HomePage({ locale = 'it' }) {
                 </div>
                 <p className="mt-3 text-center text-xs leading-[1.6] text-[var(--public-muted)]/85">{t('publicHome.pricing.noCard')}</p>
                 <div className="mt-7 border-t border-[rgba(84,63,54,0.1)] pt-7">
-                  <p className="text-sm font-semibold text-[var(--public-ink)]">{locale === 'en' ? 'What teams usually need first' : 'Cosa serve subito nella pratica'}</p>
+                  <p className="text-sm font-semibold text-[var(--public-ink)]">{t('publicHome.pricing.teamsNeedLabel')}</p>
                   <ul className="public-check-list mt-4 space-y-3 text-sm leading-[1.68] text-[var(--public-ink)]">
                     {pricingHighlights.map((bullet) => (
                       <li key={bullet}>{bullet}</li>
@@ -448,7 +446,7 @@ export default function HomePage({ locale = 'it' }) {
                   </ul>
                   <div className="mt-5 flex flex-wrap gap-2">
                     <Link to={`${basePrefix}/prezzi`} className="public-anchor-link text-sm font-semibold">
-                      {locale === 'en' ? 'See full pricing details' : 'Vedi il dettaglio completo dei prezzi'}
+                      {t('publicHome.pricing.seeFull')}
                     </Link>
                   </div>
                 </div>

@@ -14,7 +14,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Alert, AlertDescription } from "@/components/ui/alert";
-import { Loader2, AlertTriangle, Plus, X } from "lucide-react";
+import { Loader2, AlertTriangle } from "lucide-react";
 import { format } from 'date-fns';
 import ParticipantSelector from './ParticipantSelector';
 import { useLanguage } from '@/components/i18n/useLanguage';
@@ -28,8 +28,7 @@ export default function EventDialog({
   currentCompany,
   user 
 }) {
-  const { currentLanguage } = useLanguage();
-  const tr = (itText, enText) => currentLanguage === 'it' ? itText : enText;
+  const { t } = useLanguage();
   const queryClient = useQueryClient();
   
   const [formData, setFormData] = useState({
@@ -157,8 +156,8 @@ export default function EventDialog({
             await appClient.entities.Notification.create({
               user_email: p.user_email,
               type: 'event_cancelled',
-              title: 'Evento cancellato',
-              message: `L'evento "${conflicts.creator.title}" è stato cancellato per un conflitto di orario.`,
+              title: t('eventDetailDialog.eventCancelledTitle'),
+              message: t('eventDialog.cancelledForConflictMessage', { title: conflicts.creator.title }),
               related_event_id: conflicts.creator.id,
               is_read: false,
             });
@@ -195,8 +194,8 @@ export default function EventDialog({
             await appClient.entities.Notification.create({
               user_email: p.user_email,
               type: 'event_updated',
-              title: 'Evento modificato',
-              message: `L'evento "${formData.title}" è stato modificato.`,
+              title: t('eventDialog.updatedTitle'),
+              message: t('eventDialog.updatedMessage', { title: formData.title }),
               related_event_id: eventId,
               is_read: false,
             });
@@ -228,10 +227,10 @@ export default function EventDialog({
             await appClient.entities.Notification.create({
               user_email: p.email,
               type: 'event_invite',
-              title: 'Nuovo invito evento',
+              title: t('eventDialog.inviteTitle'),
               message: conflict 
-                ? `Sei stato invitato a "${formData.title}". ATTENZIONE: hai un conflitto con "${conflict.conflictingEvents[0]?.title}".`
-                : `Sei stato invitato a "${formData.title}".`,
+                ? t('eventDialog.inviteConflictMessage', { title: formData.title, conflictTitle: conflict.conflictingEvents[0]?.title })
+                : t('eventDialog.inviteMessage', { title: formData.title }),
               related_event_id: eventId,
               is_read: false,
             });
@@ -273,32 +272,32 @@ export default function EventDialog({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-lg max-w-[97%] max-h-[90vh] overflow-y-auto p-4 sm:p-6 rounded-lg">
         <DialogHeader>
-          <DialogTitle>{event ? tr('Modifica Evento', 'Edit Event') : tr('Nuovo Evento', 'New Event')}</DialogTitle>
+          <DialogTitle>{event ? t('eventDialog.editTitle') : t('eventDialog.newTitle')}</DialogTitle>
           <DialogDescription>
-            {event ? tr('Modifica i dettagli dell\'evento.', 'Edit event details.') : tr('Crea un nuovo evento nel calendario.', 'Create a new event in the calendar.')}
+            {event ? t('eventDialog.editDescription') : t('eventDialog.newDescription')}
           </DialogDescription>
         </DialogHeader>
 
         <form onSubmit={handleSubmit} className="space-y-3 sm:space-y-4 mt-4">
           <div className="space-y-2">
-            <Label htmlFor="title">{tr('Titolo', 'Title')} *</Label>
+            <Label htmlFor="title">{t('eventDialog.title')} *</Label>
             <Input
               id="title"
               value={formData.title}
               onChange={(e) => handleChange('title', e.target.value)}
-              placeholder={tr('Es. Riunione di cantiere', 'e.g. Site meeting')}
+              placeholder={t('eventDialog.titlePlaceholder')}
               required
             />
           </div>
 
           <div className="space-y-2">
-            <Label>{tr('Contesto', 'Context')}</Label>
+            <Label>{t('eventDialog.context')}</Label>
             <Select value={formData.owner_type} onValueChange={(v) => handleChange('owner_type', v)}>
               <SelectTrigger>
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="personal">{tr('Personale', 'Personal')}</SelectItem>
+                <SelectItem value="personal">{t('eventDialog.personal')}</SelectItem>
                 {currentCompany && (
                   <SelectItem value="company">{currentCompany.name}</SelectItem>
                 )}
@@ -308,7 +307,7 @@ export default function EventDialog({
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
             <div className="space-y-2">
-              <Label htmlFor="start_date">{tr('Data inizio', 'Start date')} *</Label>
+              <Label htmlFor="start_date">{t('eventDialog.startDate')} *</Label>
               <Input
                 id="start_date"
                 type="date"
@@ -318,7 +317,7 @@ export default function EventDialog({
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="start_time">{tr('Ora inizio', 'Start time')} *</Label>
+              <Label htmlFor="start_time">{t('eventDialog.startTime')} *</Label>
               <Input
                 id="start_time"
                 type="time"
@@ -331,7 +330,7 @@ export default function EventDialog({
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
             <div className="space-y-2">
-              <Label htmlFor="end_date">{tr('Data fine', 'End date')} *</Label>
+              <Label htmlFor="end_date">{t('eventDialog.endDate')} *</Label>
               <Input
                 id="end_date"
                 type="date"
@@ -341,7 +340,7 @@ export default function EventDialog({
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="end_time">{tr('Ora fine', 'End time')} *</Label>
+              <Label htmlFor="end_time">{t('eventDialog.endTime')} *</Label>
               <Input
                 id="end_time"
                 type="time"
@@ -353,22 +352,22 @@ export default function EventDialog({
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="location">{tr('Luogo', 'Location')}</Label>
+            <Label htmlFor="location">{t('eventDialog.location')}</Label>
             <Input
               id="location"
               value={formData.location}
               onChange={(e) => handleChange('location', e.target.value)}
-              placeholder={tr('Es. Cantiere Via Roma 15', 'e.g. Site at 15 Rome Street')}
+              placeholder={t('eventDialog.locationPlaceholder')}
             />
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="description">{tr('Descrizione', 'Description')}</Label>
+            <Label htmlFor="description">{t('eventDialog.description')}</Label>
             <Textarea
               id="description"
               value={formData.description}
               onChange={(e) => handleChange('description', e.target.value)}
-              placeholder={tr('Descrizione opzionale...', 'Optional description...')}
+              placeholder={t('eventDialog.descriptionPlaceholder')}
               rows={2}
             />
           </div>
@@ -385,10 +384,7 @@ export default function EventDialog({
             <Alert variant="destructive">
               <AlertTriangle className="h-4 w-4" />
               <AlertDescription>
-                {tr(
-                  `Hai già un evento "${conflicts.creator.title}" in questo orario. Continuando, l'evento esistente verrà cancellato.`,
-                  `You already have an event "${conflicts.creator.title}" at this time. Continuing will delete the existing event.`
-                )}
+                {t('eventDialog.creatorConflict', { title: conflicts.creator.title })}
               </AlertDescription>
             </Alert>
           )}
@@ -397,7 +393,7 @@ export default function EventDialog({
             <Alert>
               <AlertTriangle className="h-4 w-4" />
               <AlertDescription>
-                {tr('I seguenti partecipanti hanno conflitti:', 'The following participants have conflicts:')}
+                {t('eventDialog.participantsConflict')}
                 <ul className="mt-1 list-disc list-inside">
                   {conflicts.participants.map((c, idx) => (
                     <li key={idx}>
@@ -405,7 +401,7 @@ export default function EventDialog({
                     </li>
                   ))}
                 </ul>
-                {tr('Gli inviti verranno comunque inviati con avviso di conflitto.', 'Invitations will still be sent with a conflict warning.')}
+                {t('eventDialog.participantsConflictSuffix')}
               </AlertDescription>
             </Alert>
           )}
@@ -417,7 +413,7 @@ export default function EventDialog({
               onClick={() => onOpenChange(false)}
               className="flex-1"
             >
-              {tr('Annulla', 'Cancel')}
+              {t('eventDialog.cancel')}
             </Button>
             <Button
               type="submit"
@@ -427,7 +423,7 @@ export default function EventDialog({
               {createEventMutation.isPending && (
                 <Loader2 className="h-4 w-4 mr-2 animate-spin" />
               )}
-              {showConflictWarning ? tr('Conferma', 'Confirm') : (event ? tr('Salva', 'Save') : tr('Crea', 'Create'))}
+              {showConflictWarning ? t('eventDialog.confirm') : (event ? t('eventDialog.save') : t('eventDialog.create'))}
             </Button>
           </div>
         </form>
