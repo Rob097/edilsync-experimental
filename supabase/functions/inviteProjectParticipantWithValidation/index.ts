@@ -284,8 +284,8 @@ Deno.serve(async (req) => {
           context_company_id: invitedCompanyId,
           notification_data: {
             type: "project_invite",
-            title: "Invito a nuovo progetto",
-            message: `La tua società è stata invitata al progetto \"${project.name}\" con ruolo ${projectRole}`,
+            title: "Invito a nuovo cantiere",
+            message: `La tua società è stata invitata al cantiere \"${project.name}\" con ruolo ${projectRole}`,
             related_event_id: projectId,
           },
           email_data: null,
@@ -301,8 +301,8 @@ Deno.serve(async (req) => {
           skip_preferences_check: true,
           notification_data: null,
           email_data: {
-            subject: `Invito a nuovo progetto: ${project.name}`,
-            body: `Gentile ${invitedCompany.name},\n\nLa vostra società è stata invitata al progetto \"${project.name}\" con ruolo ${projectRole}.\n\nI membri amministratori della società riceveranno una notifica nell'applicazione.\n\nCordiali saluti,\nIl team EdilSync`,
+            subject: `Invito a nuovo cantiere: ${project.name}`,
+            body: `Gentile ${invitedCompany.name},\n\nLa vostra società è stata invitata al cantiere \"${project.name}\" con ruolo ${projectRole}.\n\nI membri amministratori della società riceveranno una notifica nell'applicazione.\n\nCordiali saluti,\nIl team EdilSync`,
           },
         });
       }
@@ -315,13 +315,13 @@ Deno.serve(async (req) => {
         context_type: "personal",
         notification_data: {
           type: "project_invite",
-          title: "Invito a nuovo progetto",
-          message: `Sei stato invitato al progetto \"${project.name}\" con ruolo ${projectRole}`,
+          title: "Invito a nuovo cantiere",
+          message: `Sei stato invitato al cantiere \"${project.name}\" con ruolo ${projectRole}`,
           related_event_id: projectId,
         },
         email_data: {
-          subject: `Invito a nuovo progetto: ${project.name}`,
-          body: `Ciao,\n\nSei stato invitato al progetto \"${project.name}\" con ruolo ${projectRole}.\n\nAccedi all'applicazione per visualizzare i dettagli del progetto.\n\nCordiali saluti,\nIl team EdilSync`,
+          subject: `Invito a nuovo cantiere: ${project.name}`,
+          body: `Ciao,\n\nSei stato invitato al cantiere \"${project.name}\" con ruolo ${projectRole}.\n\nAccedi all'applicazione per visualizzare i dettagli del cantiere.\n\nCordiali saluti,\nIl team EdilSync`,
         },
       });
 

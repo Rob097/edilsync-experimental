@@ -13,6 +13,21 @@
     - [X] Analizzare formati comuni
     - [X] Analizzare difficoltà integrazione BIM
 - Ragionare al concetto di "Decision Making".
+- Workflow documentale e approvazioni
+    - [ ] Congelare la matrice classi documento -> ruoli -> transizioni consentite
+    - [ ] Decidere se introdurre `workflow_class` / `approval_profile` nello schema documentale
+    - [ ] Spostare le transizioni di stato documento su azioni backend dedicate
+    - [ ] Rendere `document_approvals` il registro centrale delle decisioni documentali
+    - [ ] Sostituire la select libera dello stato con azioni contestuali (`Invia in revisione`, `Approva`, `Respingi`, `Archivia`)
+    - [ ] Allineare revisioni, notifiche e audit trail al nuovo workflow documentale
+- Assistente AI
+    - [ ] Definire i casi d'uso reali dell'assistente dentro EdilSync
+    - [ ] Collegare la UI già presente a un backend reale invece del placeholder attuale
+    - [ ] Dare all'assistente contesto applicativo reale (utente, contesto attivo, società, cantiere)
+    - [ ] Permettere query utili su cantieri, task, eventi, partecipanti e notifiche
+    - [ ] Gestire risposte con suggerimenti operativi e link/azioni contestuali nell'app
+    - [ ] Valutare persistenza conversazioni lato server invece del solo localStorage
+    - [ ] Valutare input vocale reale e non solo scaffolding UI
 - [X] Parte pubblica
     - [X] Landing page
     - [X] Pagine in base al ruolo
