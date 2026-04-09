@@ -99,16 +99,16 @@ Deno.serve(async (req) => {
     }
 
     if (!currentUserParticipation?.id) {
-      return jsonResponse({ error: "You are not an active participant in this project" }, 403);
+      return jsonResponse({ error: "You are not an active participant in this worksite" }, 403);
     }
 
     const canInvite = Boolean(currentUserParticipation.can_invite || currentUserParticipation.project_role === "homeowner");
     if (!canInvite) {
-      return jsonResponse({ error: "You do not have permission to invite participants in this project" }, 403);
+      return jsonResponse({ error: "You do not have permission to invite participants in this worksite" }, 403);
     }
 
     if (isBlockedForSponsorLoss && participantType !== "company") {
-      return jsonResponse({ error: "A blocked project can invite only companies until sponsorship is restored" }, 403);
+      return jsonResponse({ error: "A blocked worksite can invite only companies until sponsorship is restored" }, 403);
     }
 
     if (currentUserParticipation.project_role === "contractor" && projectRole !== "subcontractor") {
@@ -123,7 +123,7 @@ Deno.serve(async (req) => {
         return jsonResponse({ error: "A valid homeowner email is required" }, 400);
       }
       if (project.owner_type === "personal") {
-        return jsonResponse({ error: "This project already has a canonical homeowner" }, 409);
+        return jsonResponse({ error: "This worksite already has a canonical homeowner" }, 409);
       }
 
       const { data: existingHomeowner, error: existingHomeownerError } = await adminClient
@@ -136,7 +136,7 @@ Deno.serve(async (req) => {
 
       if (existingHomeownerError) throw existingHomeownerError;
       if (existingHomeowner?.id) {
-        return jsonResponse({ error: "This project already has a canonical homeowner" }, 409);
+        return jsonResponse({ error: "This worksite already has a canonical homeowner" }, 409);
       }
     }
 
@@ -154,7 +154,7 @@ Deno.serve(async (req) => {
       if (companyError) throw companyError;
 
       if (!isCompanyTypeCompatible(company.company_type, projectRole)) {
-        return jsonResponse({ error: "The selected company type is not compatible with the requested project role" }, 400);
+        return jsonResponse({ error: "The selected company type is not compatible with the requested worksite role" }, 400);
       }
 
       const isSponsored = Boolean((await adminClient.rpc("is_project_sponsored", { target_project_id: projectId })).data);
@@ -163,7 +163,7 @@ Deno.serve(async (req) => {
         && !(await adminClient.rpc("is_company_paid", { target_company_id: project.owner_company_id })).data;
 
       if (!isBlockedForSponsorLoss && !isSponsored && ownerIsFreeCompany && project.owner_company_id === currentUserParticipation.company_id) {
-        return jsonResponse({ error: "A free company-owned non-sponsored project can invite only the homeowner" }, 403);
+        return jsonResponse({ error: "A free company-owned non-sponsored worksite can invite only the homeowner" }, 403);
       }
 
       const { data: duplicateCompanyParticipant, error: duplicateCompanyParticipantError } = await adminClient
@@ -177,7 +177,7 @@ Deno.serve(async (req) => {
 
       if (duplicateCompanyParticipantError) throw duplicateCompanyParticipantError;
       if (duplicateCompanyParticipant?.id) {
-        return jsonResponse({ error: "This company is already active or invited in the project" }, 409);
+        return jsonResponse({ error: "This company is already active or invited in the worksite" }, 409);
       }
     }
 
@@ -193,7 +193,7 @@ Deno.serve(async (req) => {
 
       if (duplicatePersonalParticipantError) throw duplicatePersonalParticipantError;
       if (duplicatePersonalParticipant?.id) {
-        return jsonResponse({ error: "This personal participant is already active or invited in the project" }, 409);
+        return jsonResponse({ error: "This personal participant is already active or invited in the worksite" }, 409);
       }
     }
 

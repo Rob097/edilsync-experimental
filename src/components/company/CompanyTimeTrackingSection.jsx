@@ -312,7 +312,7 @@ export default function CompanyTimeTrackingSection({
       ended_at: session.ended_at || '',
       member: getUserDisplayNameByEmail(session.user_email, allUsers),
       member_email: session.user_email,
-      project: session.project_id ? (projectById.get(session.project_id)?.name || tr('Progetto', 'Project')) : tr('Senza progetto', 'No project'),
+      project: session.project_id ? (projectById.get(session.project_id)?.name || tr('Cantiere', 'Worksite')) : tr('Senza cantiere', 'No worksite'),
       duration_hours: formatDurationHours(session),
       entry_type: session.entry_type || '',
       manual_reason: session.manual_reason || '',
@@ -435,13 +435,13 @@ export default function CompanyTimeTrackingSection({
           </div>
 
           <div className="space-y-2">
-            <Label>{tr('Progetto', 'Project')}</Label>
+            <Label>{tr('Cantiere', 'Worksite')}</Label>
             <Select value={startProjectId} onValueChange={setStartProjectId} disabled={!!myOpenSession}>
               <SelectTrigger>
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="__none__">{tr('Nessun progetto / esterno EdilSync', 'No project / external to EdilSync')}</SelectItem>
+                <SelectItem value="__none__">{tr('Nessun cantiere / esterno EdilSync', 'No worksite / external to EdilSync')}</SelectItem>
                 {projectOptions.map((project) => (
                   <SelectItem key={project.id} value={project.id}>{project.name}</SelectItem>
                 ))}
@@ -449,7 +449,7 @@ export default function CompanyTimeTrackingSection({
             </Select>
             {myOpenSession?.project_id && (
               <p className="text-xs text-gray-500">
-                {tr('Sessione in corso su', 'Current session on')}: {projectById.get(myOpenSession.project_id)?.name || tr('Progetto', 'Project')}
+                {tr('Sessione in corso su', 'Current session on')}: {projectById.get(myOpenSession.project_id)?.name || tr('Cantiere', 'Worksite')}
               </p>
             )}
           </div>
@@ -540,13 +540,13 @@ export default function CompanyTimeTrackingSection({
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="space-y-2">
-              <Label>{tr('Progetto (consigliato)', 'Project (recommended)')}</Label>
+              <Label>{tr('Cantiere (consigliato)', 'Worksite (recommended)')}</Label>
               <Select value={startProjectId} onValueChange={setStartProjectId}>
                 <SelectTrigger>
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="__none__">{tr('Nessun progetto / esterno EdilSync', 'No project / external to EdilSync')}</SelectItem>
+                  <SelectItem value="__none__">{tr('Nessun cantiere / esterno EdilSync', 'No worksite / external to EdilSync')}</SelectItem>
                   {projectOptions.map((project) => (
                     <SelectItem key={project.id} value={project.id}>{project.name}</SelectItem>
                   ))}
@@ -615,11 +615,11 @@ export default function CompanyTimeTrackingSection({
                     </div>
 
                     <div className="space-y-2">
-                      <Label>{tr('Progetto (opzionale)', 'Project (optional)')}</Label>
+                      <Label>{tr('Cantiere (opzionale)', 'Worksite (optional)')}</Label>
                       <Select value={manualProjectId} onValueChange={setManualProjectId}>
                         <SelectTrigger><SelectValue /></SelectTrigger>
                         <SelectContent>
-                          <SelectItem value="__none__">{tr('Nessun progetto / esterno EdilSync', 'No project / external to EdilSync')}</SelectItem>
+                          <SelectItem value="__none__">{tr('Nessun cantiere / esterno EdilSync', 'No worksite / external to EdilSync')}</SelectItem>
                           {projectOptions.map((project) => (
                             <SelectItem key={project.id} value={project.id}>{project.name}</SelectItem>
                           ))}
@@ -689,7 +689,7 @@ export default function CompanyTimeTrackingSection({
                   {session.ended_at ? ` → ${format(new Date(session.ended_at), 'dd MMM yyyy HH:mm', { locale: dateLocale })}` : ''}
                 </p>
                 <p className="text-xs text-gray-500 mt-1">
-                  {session.project_id ? (projectById.get(session.project_id)?.name || tr('Progetto', 'Project')) : tr('Nessun progetto associato', 'No linked project')}
+                  {session.project_id ? (projectById.get(session.project_id)?.name || tr('Cantiere', 'Worksite')) : tr('Nessun cantiere associato', 'No linked worksite')}
                 </p>
                 {session.note && <p className="text-xs text-gray-600 mt-1">{session.note}</p>}
               </div>
@@ -716,7 +716,7 @@ export default function CompanyTimeTrackingSection({
                   <p className="font-medium text-sm">{session.user_email}</p>
                   <p className="text-xs text-gray-500">
                     {tr('Aperta alle', 'Started at')} {format(new Date(session.started_at), 'dd MMM yyyy HH:mm', { locale: dateLocale })}
-                    {session.project_id ? ` · ${projectById.get(session.project_id)?.name || tr('Progetto', 'Project')}` : ''}
+                    {session.project_id ? ` · ${projectById.get(session.project_id)?.name || tr('Cantiere', 'Worksite')}` : ''}
                   </p>
                   <div className="mt-1 space-y-1">
                     {renderGpsInfo(
@@ -776,14 +776,14 @@ export default function CompanyTimeTrackingSection({
                 </Select>
               </div>
               <div className="space-y-2">
-                <Label>{tr('Progetto', 'Project')}</Label>
+                <Label>{tr('Cantiere', 'Worksite')}</Label>
                 <Select value={adminFilterProject} onValueChange={setAdminFilterProject}>
                   <SelectTrigger>
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="__all__">{tr('Tutti i progetti', 'All projects')}</SelectItem>
-                    <SelectItem value="__none__">{tr('Senza progetto', 'No project')}</SelectItem>
+                    <SelectItem value="__all__">{tr('Tutti i cantieri', 'All worksites')}</SelectItem>
+                    <SelectItem value="__none__">{tr('Senza cantiere', 'No worksite')}</SelectItem>
                     {projectOptions.map((project) => (
                       <SelectItem key={project.id} value={project.id}>{project.name}</SelectItem>
                     ))}
@@ -851,7 +851,7 @@ export default function CompanyTimeTrackingSection({
                     {session.ended_at ? ` → ${format(new Date(session.ended_at), 'dd MMM yyyy HH:mm', { locale: dateLocale })}` : ''}
                   </p>
                   <p className="text-xs text-gray-500 mt-1">
-                    {session.project_id ? (projectById.get(session.project_id)?.name || tr('Progetto', 'Project')) : tr('Nessun progetto associato', 'No linked project')}
+                    {session.project_id ? (projectById.get(session.project_id)?.name || tr('Cantiere', 'Worksite')) : tr('Nessun cantiere associato', 'No linked worksite')}
                   </p>
                   <div className="mt-1 space-y-1">
                     {renderGpsInfo(

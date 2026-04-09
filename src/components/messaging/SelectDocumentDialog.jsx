@@ -23,7 +23,7 @@ import EmptyState from '@/components/ui/EmptyState';
 import { useLanguage } from '@/components/i18n/useLanguage';
 
 const categoryLabels = {
-  project: 'Progetto',
+  project: 'Cantiere',
   contract: 'Contratto',
   permit: 'Permesso',
   drawing: 'Disegno',
@@ -130,7 +130,7 @@ export default function SelectDocumentDialog({ projectId, companyId, scopeType =
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="all">{tr('Tutte', 'All')}</SelectItem>
-                  <SelectItem value="project">{tr('Progetto', 'Project')}</SelectItem>
+                  <SelectItem value="project">{tr('Cantiere', 'Worksite')}</SelectItem>
                   <SelectItem value="contract">{tr('Contratto', 'Contract')}</SelectItem>
                   <SelectItem value="permit">{tr('Permesso', 'Permit')}</SelectItem>
                   <SelectItem value="drawing">{tr('Disegno', 'Drawing')}</SelectItem>

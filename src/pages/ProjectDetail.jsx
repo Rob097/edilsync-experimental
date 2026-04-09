@@ -439,7 +439,7 @@ export default function ProjectDetail() {
       {/* Header */}
       <div className="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
         <div className="app-page-header min-w-0 flex-1">
-          <span className="app-page-kicker">Cantiere</span>
+          <span className="app-page-kicker">{t('projectDetail.kicker')}</span>
           <Button
             variant="ghost"
             onClick={() => navigate(createPageUrl('Projects'))}
@@ -768,10 +768,10 @@ export default function ProjectDetail() {
                 <FeatureGateCard
                   title={tr('Milestone premium', 'Premium milestones')}
                   description={tr(
-                    'Le milestone sono disponibili nei progetti sponsorizzati. In un progetto free questa sezione resta visibile ma bloccata.',
-                    'Milestones are available on sponsored projects. On a free project this section stays visible but locked.',
+                    'Le milestone sono disponibili nei cantieri sponsorizzati. In un cantiere free questa sezione resta visibile ma bloccata.',
+                    'Milestones are available on sponsored worksites. On a free worksite this section stays visible but locked.',
                   )}
-                  badgeLabel={tr('Progetto sponsorizzato', 'Sponsored project')}
+                  badgeLabel={tr('Cantiere sponsorizzato', 'Sponsored worksite')}
                 />
               ) : (
                 <MilestoneList 
@@ -825,12 +825,12 @@ export default function ProjectDetail() {
                   <AlertCircle className="mt-0.5 h-5 w-5 flex-shrink-0 text-red-600" />
                   <div>
                     <h3 className="font-semibold text-red-900">
-                      {tr('Progetto bloccato per perdita sponsor', 'Project blocked after sponsor loss')}
+                      {tr('Cantiere bloccato per perdita sponsor', 'Worksite blocked after sponsor loss')}
                     </h3>
                     <p className="mt-1 text-sm text-red-800">
                       {tr(
-                        'Le aree premium sono state nascoste e il progetto non puo essere usato come normale progetto free. Da qui puoi solo gestire i partecipanti e invitare societa che possano riportare una sponsorship valida.',
-                        'Premium areas are now hidden and the project cannot be used as a normal free project. From here you can only manage participants and invite companies that can restore a valid sponsorship.',
+                        'Le aree premium sono state nascoste e il cantiere non puo essere usato come normale cantiere free. Da qui puoi solo gestire i partecipanti e invitare societa che possano riportare una sponsorship valida.',
+                        'Premium areas are now hidden and the worksite cannot be used as a normal free worksite. From here you can only manage participants and invite companies that can restore a valid sponsorship.',
                       )}
                     </p>
                   </div>
@@ -1013,10 +1013,10 @@ export default function ProjectDetail() {
               </div>
               {showFinancePlanGate ? (
                 <FeatureGateCard
-                  title={tr('Economia di progetto premium', 'Premium project finance')}
+                  title={tr('Economia di cantiere premium', 'Premium worksite finance')}
                   description={tr(
-                    'Budget, costi, SAL e impostazioni finanziarie si sbloccano solo quando il progetto è sponsorizzato da una società paid.',
-                    'Budget, costs, progress statements and financial settings unlock only when the project is sponsored by a paid company.',
+                    'Budget, costi, SAL e impostazioni finanziarie si sbloccano solo quando il cantiere è sponsorizzato da una società paid.',
+                    'Budget, costs, progress statements and financial settings unlock only when the worksite is sponsored by a paid company.',
                   )}
                   badgeLabel={tr('Richiede sponsorship', 'Requires sponsorship')}
                 />

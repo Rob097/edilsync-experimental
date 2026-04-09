@@ -179,7 +179,7 @@ export default function ActivityFeed({ projectId, onItemClick }) {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>{tr('Attività Progetto', 'Project Activity')}</CardTitle>
+        <CardTitle>{tr('Attività Cantiere', 'Worksite Activity')}</CardTitle>
       </CardHeader>
       <CardContent>
         {isLoading ? (
@@ -227,7 +227,7 @@ export default function ActivityFeed({ projectId, onItemClick }) {
           <EmptyState
             icon={FileText}
             title={tr('Nessuna attività', 'No activity')}
-            description={tr('Le attività del progetto appariranno qui.', 'Project activity will appear here.')}
+            description={tr('Le attività del cantiere appariranno qui.', 'Worksite activity will appear here.')}
           />
         )}
       </CardContent>

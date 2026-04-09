@@ -22,7 +22,7 @@ const contentByLocale = {
       {
         role: 'Contractor',
         roleClass: 'bg-blue-500/10 text-blue-600',
-        text: 'Gestisce il progetto, assegna task, approva varianti, monitora costi.',
+        text: 'Gestisce il cantiere, assegna task, approva varianti, monitora costi.',
       },
       {
         role: 'Committente',
@@ -83,11 +83,11 @@ const contentByLocale = {
       },
       {
         title: 'Visibilità per ruolo',
-        text: 'Ognuno vede solo ciò che è rilevante per il proprio ruolo nel progetto specifico.',
+        text: 'Ognuno vede solo ciò che è rilevante per il proprio ruolo nel cantiere specifico.',
         icon: Navigation,
       },
       {
-        title: 'Feed di progetto condiviso',
+        title: 'Feed di cantiere condiviso',
         text: 'Un unico feed cronologico con tutto ciò che succede nel cantiere. Tutti allineati.',
         icon: Zap,
       },
@@ -116,7 +116,7 @@ const contentByLocale = {
       {
         role: 'Contractor',
         roleClass: 'bg-blue-500/10 text-blue-600',
-        text: 'Manages project, assigns tasks, approves changes, monitors costs.',
+        text: 'Manages the worksite, assigns tasks, approves changes, monitors costs.',
       },
       {
         role: 'Owner',
@@ -177,11 +177,11 @@ const contentByLocale = {
       },
       {
         title: 'Role-based visibility',
-        text: 'Everyone sees only what matters for their role in that project context.',
+        text: 'Everyone sees only what matters for their role in that worksite context.',
         icon: Navigation,
       },
       {
-        title: 'Shared project feed',
+        title: 'Shared worksite feed',
         text: 'One chronological feed for what happens on site. Photos, updates, approvals: aligned by default.',
         icon: Zap,
       },

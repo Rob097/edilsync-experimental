@@ -38,14 +38,14 @@ Deno.serve(async (req) => {
 
       const admin = await isCompanyAdmin(activeCompanyId, appUser.email);
       if (!admin) {
-        return jsonResponse({ error: "Only company admins can create projects in company context" }, 403);
+        return jsonResponse({ error: "Only company admins can create worksites in company context" }, 403);
       }
     }
 
     const myRole = currentContext === "personal" ? "homeowner" : (creatorRole || "homeowner");
 
     if (currentContext === "company" && myRole === "contractor" && !homeownerEmail) {
-      return jsonResponse({ error: "Homeowner email is required when company creates project as contractor" }, 400);
+      return jsonResponse({ error: "Homeowner email is required when company creates a worksite as contractor" }, 400);
     }
 
     const ownerType = currentContext;
@@ -86,7 +86,7 @@ Deno.serve(async (req) => {
       }
 
       if (nonSponsoredCount >= 1) {
-        return jsonResponse({ error: "Only one non-sponsored owned project is allowed" }, 403);
+        return jsonResponse({ error: "Only one non-sponsored owned worksite is allowed" }, 403);
       }
     }
 
@@ -132,7 +132,7 @@ Deno.serve(async (req) => {
         project_id: project.id,
         name: "General",
         type: "general",
-        description: "Canale generale per comunicazioni all'interno del progetto",
+        description: "Canale generale per comunicazioni all'interno del cantiere",
         created_by_email: appUser.email,
       })
       .select("*")

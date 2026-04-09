@@ -12,7 +12,7 @@ export const getCompanyTour = (language = 'it') => {
         {
           target: 'h1',
           title: 'Nome della Società',
-          content: 'Questa è la tua società. Qui potrai gestire i membri del team, i dati aziendali e i progetti associati.',
+          content: 'Questa è la tua società. Qui potrai gestire i membri del team, i dati aziendali e i cantieri associati.',
           placement: 'bottom',
           padding: 12,
         },
@@ -38,7 +38,7 @@ export const getCompanyTour = (language = 'it') => {
         {
           target: null,
           title: 'Società Pronta! ✅',
-          content: 'Ora puoi iniziare a collaborare con il tuo team. Crea progetti a nome della società e gestisci la collaborazione!',
+          content: 'Ora puoi iniziare a collaborare con il tuo team. Crea cantieri a nome della società e gestisci la collaborazione!',
           placement: 'center',
         },
       ],
@@ -57,7 +57,7 @@ export const getCompanyTour = (language = 'it') => {
       {
         target: 'h1',
         title: 'Company Name',
-        content: 'This is your company workspace. Here you can manage team members, company data, and related projects.',
+        content: 'This is your company workspace. Here you can manage team members, company data, and related worksites.',
         placement: 'bottom',
         padding: 12,
       },
@@ -83,7 +83,7 @@ export const getCompanyTour = (language = 'it') => {
       {
         target: null,
         title: 'Company Ready! ✅',
-        content: 'You can now collaborate with your team. Create projects under the company and manage collaboration!',
+        content: 'You can now collaborate with your team. Create worksites under the company and manage collaboration!',
         placement: 'center',
       },
     ],

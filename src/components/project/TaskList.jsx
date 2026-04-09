@@ -209,7 +209,7 @@ export default function TaskList({ projectId, canEdit, filterMilestoneId, showMi
             <EmptyState
               icon={CheckCircle2}
               title={tr('Nessuna attività', 'No tasks')}
-              description={tr('Non ci sono attività per questo progetto.', 'There are no tasks for this project.')}
+              description={tr('Non ci sono attività per questo cantiere.', 'There are no tasks for this worksite.')}
               actionLabel={canEdit ? tr('Crea attività', 'Create task') : undefined}
               onAction={canEdit ? handleCreate : undefined}
             />

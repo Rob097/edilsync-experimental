@@ -242,7 +242,7 @@ export default function UploadDocumentDialog({ open, onOpenChange, projectId, co
           title: tr('BIM disponibile solo con funzioni premium', 'BIM available only with premium features'),
           description: isCompanyScope
             ? tr('I file IFC, GLB e GLTF si possono caricare solo con una società Pro.', 'IFC, GLB, and GLTF files can be uploaded only with a Pro company.')
-            : tr('I file IFC, GLB e GLTF si possono caricare solo nei progetti sponsorizzati.', 'IFC, GLB, and GLTF files can be uploaded only on sponsored projects.'),
+            : tr('I file IFC, GLB e GLTF si possono caricare solo nei cantieri sponsorizzati.', 'IFC, GLB, and GLTF files can be uploaded only on sponsored worksites.'),
         });
         e.currentTarget.value = '';
         return;
@@ -265,7 +265,7 @@ export default function UploadDocumentDialog({ open, onOpenChange, projectId, co
         title: tr('BIM disponibile solo con funzioni premium', 'BIM available only with premium features'),
         description: isCompanyScope
           ? tr('I file IFC, GLB e GLTF si possono caricare solo con una società Pro.', 'IFC, GLB, and GLTF files can be uploaded only with a Pro company.')
-          : tr('I file IFC, GLB e GLTF si possono caricare solo nei progetti sponsorizzati.', 'IFC, GLB, and GLTF files can be uploaded only on sponsored projects.'),
+          : tr('I file IFC, GLB e GLTF si possono caricare solo nei cantieri sponsorizzati.', 'IFC, GLB, and GLTF files can be uploaded only on sponsored worksites.'),
       });
       return;
     }
@@ -283,7 +283,7 @@ export default function UploadDocumentDialog({ open, onOpenChange, projectId, co
         title: tr('BIM disponibile solo con funzioni premium', 'BIM available only with premium features'),
         description: isCompanyScope
           ? tr('I file IFC, GLB e GLTF si possono caricare solo con una società Pro.', 'IFC, GLB, and GLTF files can be uploaded only with a Pro company.')
-          : tr('I file IFC, GLB e GLTF si possono caricare solo nei progetti sponsorizzati.', 'IFC, GLB, and GLTF files can be uploaded only on sponsored projects.'),
+          : tr('I file IFC, GLB e GLTF si possono caricare solo nei cantieri sponsorizzati.', 'IFC, GLB, and GLTF files can be uploaded only on sponsored worksites.'),
       });
       return;
     }
@@ -375,7 +375,7 @@ export default function UploadDocumentDialog({ open, onOpenChange, projectId, co
                   <p className="text-xs text-amber-700 mt-2">
                     {isCompanyScope
                       ? tr('IFC, GLB e GLTF sono disponibili solo con la società Pro.', 'IFC, GLB, and GLTF are available only with the Pro company plan.')
-                      : tr('IFC, GLB e GLTF sono disponibili solo nei progetti sponsorizzati.', 'IFC, GLB, and GLTF are available only on sponsored projects.')}
+                      : tr('IFC, GLB e GLTF sono disponibili solo nei cantieri sponsorizzati.', 'IFC, GLB, and GLTF are available only on sponsored worksites.')}
                   </p>
                 ) : null}
               </div>
@@ -449,7 +449,7 @@ export default function UploadDocumentDialog({ open, onOpenChange, projectId, co
               </div>
 
               <div className="space-y-2">
-                <Label>{tr('Fase progetto', 'Project phase')}</Label>
+                <Label>{tr('Fase cantiere', 'Worksite phase')}</Label>
                 <Select value={projectPhase || 'none'} onValueChange={(value) => setProjectPhase(value === 'none' ? '' : value)}>
                   <SelectTrigger>
                     <SelectValue placeholder={tr('Seleziona fase', 'Select phase')} />

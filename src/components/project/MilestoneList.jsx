@@ -181,7 +181,7 @@ export default function MilestoneList({ projectId, project, canEdit, onNavigateT
             <EmptyState
               icon={Flag}
               title={tr('Nessuna milestone', 'No milestones')}
-              description={tr('Le milestone ti aiutano a tracciare i traguardi principali del progetto.', 'Milestones help you track the key goals of the project.')}
+              description={tr('Le milestone ti aiutano a tracciare i traguardi principali del cantiere.', 'Milestones help you track the key goals of the worksite.')}
               actionLabel={canEdit ? tr('Aggiungi milestone', 'Add milestone') : undefined}
               onAction={canEdit ? () => setDialogOpen(true) : undefined}
             />

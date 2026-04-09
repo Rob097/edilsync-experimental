@@ -148,7 +148,7 @@ export default function ChangeRequestList({ projectId, canCreate, canRespond, cr
             <EmptyState
               icon={DollarSign}
               title={tr('Nessuna richiesta', 'No requests')}
-              description={tr('Non ci sono richieste di modifica per questo progetto.', 'There are no change requests for this project.')}
+              description={tr('Non ci sono richieste di modifica per questo cantiere.', 'There are no change requests for this worksite.')}
               actionLabel={canCreate ? tr('Crea richiesta', 'Create request') : undefined}
               onAction={canCreate ? handleCreate : undefined}
             />

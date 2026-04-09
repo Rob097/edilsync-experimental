@@ -68,7 +68,7 @@ export default function ProjectChat({ projectId }) {
   return (
     <Card className="flex flex-col h-[600px]">
       <CardHeader className="pb-4">
-        <CardTitle>{tr('Messaggi Progetto', 'Project Messages')}</CardTitle>
+        <CardTitle>{tr('Messaggi Cantiere', 'Worksite Messages')}</CardTitle>
       </CardHeader>
       <CardContent className="flex-1 flex flex-col min-h-0">
         <div className="flex-1 overflow-y-auto space-y-3 mb-4">

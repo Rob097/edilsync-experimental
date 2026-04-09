@@ -64,7 +64,7 @@ export default function TaskDetailDialog({ open, onOpenChange, task }) {
             <div className="flex items-center gap-3 text-gray-600">
               <FolderKanban className="h-5 w-5 text-gray-400" />
               <div>
-                <p className="text-sm text-gray-500">{tr('Progetto', 'Project')}</p>
+                <p className="text-sm text-gray-500">{tr('Cantiere', 'Worksite')}</p>
                 <p className="font-medium">{task.project_name}</p>
               </div>
             </div>
@@ -93,7 +93,7 @@ export default function TaskDetailDialog({ open, onOpenChange, task }) {
           <Separator />
           <Button onClick={handleOpenTaskInProject} className="w-full bg-[#ef6144] hover:bg-[#d9553a]">
             <ArrowRight className="h-4 w-4 mr-2" />
-            {tr('Vai all\'attività nel progetto', 'Go to task in project')}
+            {tr('Vai all\'attività nel cantiere', 'Go to task in worksite')}
           </Button>
         </div>
       </DialogContent>

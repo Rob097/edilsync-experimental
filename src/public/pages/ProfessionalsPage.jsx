@@ -18,18 +18,18 @@ const contentByLocale = {
   it: {
     seoTitle: 'Per i Professionisti Tecnici',
     seoDescription:
-      'Pagina dedicata ai professionisti tecnici: accesso gratuito ai progetti invitati, con gestione documentale avanzata e coordinamento strutturato nei progetti sponsorizzati.',
+      'Pagina dedicata ai professionisti tecnici: accesso gratuito ai cantieri invitati, con gestione documentale avanzata e coordinamento strutturato nei cantieri sponsorizzati.',
     badge: 'Per i Professionisti Tecnici',
     title: 'Il tuo spazio di lavoro condiviso con impresa e committente',
     subtitle:
-      'Architetti, ingegneri, geometri e designer. Entri gratis nei progetti in cui vieni invitato e, quando il progetto è sponsorizzato, lavori con documenti avanzati, milestone e chat contestuale completa.',
-    note: 'Accesso gratuito nei progetti invitati. Gli strumenti avanzati di progetto si attivano nei progetti sponsorizzati.',
+      'Architetti, ingegneri, geometri e designer. Entri gratis nei cantieri in cui vieni invitato e, quando il cantiere è sponsorizzato, lavori con documenti avanzati, milestone e chat contestuale completa.',
+    note: 'Accesso gratuito nei cantieri invitati. Gli strumenti avanzati di cantiere si attivano nei cantieri sponsorizzati.',
     ctaTop: 'Apri account gratis',
     rolesTitle: 'Per ogni figura professionale',
     roles: [
       {
         title: 'Architetti',
-        text: 'Coordina progetto esecutivo, varianti e approvazioni con committente e impresa in un unico spazio. I tuoi elaborati tecnici sempre accessibili a tutti.',
+        text: 'Coordina esecutivo, varianti e approvazioni con committente e impresa in un unico spazio. I tuoi elaborati tecnici sempre accessibili a tutti.',
       },
       {
         title: 'Ingegneri strutturali',
@@ -41,41 +41,41 @@ const contentByLocale = {
       },
       {
         title: 'Interior designer',
-        text: 'Condividi tavole, materiali e revisioni. Le change request documentano ogni variante di progetto concordata con il cliente.',
+        text: 'Condividi tavole, materiali e revisioni. Le change request documentano ogni variante di cantiere concordata con il cliente.',
       },
       {
         title: 'Consulenti tecnici',
-        text: 'Accedi al progetto nel tuo contesto, vedi i documenti rilevanti e comunica con tutte le parti senza dover gestire accessi multipli.',
+        text: 'Accedi al cantiere nel tuo contesto, vedi i documenti rilevanti e comunica con tutte le parti senza dover gestire accessi multipli.',
       },
     ],
     featuresTitle: 'Funzionalità pensate per i professionisti',
     features: [
       {
         title: 'Viewer BIM integrato',
-        text: 'Nei progetti sponsorizzati, carica IFC, GLB e GLTF e visualizza i modelli 3D direttamente in piattaforma, condividendoli con committente e impresa.',
+        text: 'Nei cantieri sponsorizzati, carica IFC, GLB e GLTF e visualizza i modelli 3D direttamente in piattaforma, condividendoli con committente e impresa.',
         icon: Globe,
-        badge: 'Progetto sponsorizzato',
+        badge: 'Cantiere sponsorizzato',
       },
       {
         title: 'Gestione documentale avanzata',
-        text: 'Nei progetti sponsorizzati, disciplina, fase, stato, revisioni e tag tengono ogni documento ricercabile, verificabile e gestito correttamente.',
+        text: 'Nei cantieri sponsorizzati, disciplina, fase, stato, revisioni e tag tengono ogni documento ricercabile, verificabile e gestito correttamente.',
         icon: FileText,
-        badge: 'Progetto sponsorizzato',
+        badge: 'Cantiere sponsorizzato',
       },
       {
         title: 'Calendario condiviso',
-        text: 'Sopralluoghi, riunioni, scadenze - tutto coordinato con tutti gli attori del progetto in un calendario unificato.',
+        text: 'Sopralluoghi, riunioni, scadenze - tutto coordinato con tutti gli attori del cantiere in un calendario unificato.',
         icon: CalendarDays,
       },
       {
-        title: 'Chat di progetto strutturata',
-        text: 'Nei progetti sponsorizzati, i messaggi possono riferirsi a documenti, task e milestone. Non più email infinite per ogni aggiornamento.',
+        title: 'Chat di cantiere strutturata',
+        text: 'Nei cantieri sponsorizzati, i messaggi possono riferirsi a documenti, task e milestone. Non più email infinite per ogni aggiornamento.',
         icon: MessageCircle,
-        badge: 'Progetto sponsorizzato',
+        badge: 'Cantiere sponsorizzato',
       },
       {
         title: 'Accesso contestuale',
-        text: 'Il tuo profilo professionista ti permette di lavorare su più progetti con ruoli diversi. Un solo account per tutto.',
+        text: 'Il tuo profilo professionista ti permette di lavorare su più cantieri con ruoli diversi. Un solo account per tutto.',
         icon: Layers,
       },
       {
@@ -88,17 +88,17 @@ const contentByLocale = {
     finalText:
       'Smetti di perdere tempo tra chat, email e telefonate. Inizia oggi con EdilSync e vedi la differenza dal primo giorno.',
     finalCta: 'Apri account gratis',
-    finalNote: 'Account unico · Accesso gratuito nei progetti invitati · Strumenti avanzati nei progetti sponsorizzati',
+    finalNote: 'Account unico · Accesso gratuito nei cantieri invitati · Strumenti avanzati nei cantieri sponsorizzati',
   },
   en: {
     seoTitle: 'For Technical Professionals',
     seoDescription:
-      'Dedicated page for technical professionals: free access on invited projects, with advanced document management and structured coordination on sponsored projects.',
+      'Dedicated page for technical professionals: free access on invited worksites, with advanced document management and structured coordination on sponsored worksites.',
     badge: 'For Technical Professionals',
     title: 'Your shared workspace with contractor and owner',
     subtitle:
-      'Architects, engineers, surveyors, and designers. You join invited projects for free and, when the project is sponsored, work with advanced documents, milestones, and fully contextual chat.',
-    note: 'Free access on invited projects. Premium project surfaces unlock on sponsored projects.',
+      'Architects, engineers, surveyors, and designers. You join invited worksites for free and, when the worksite is sponsored, work with advanced documents, milestones, and fully contextual chat.',
+    note: 'Free access on invited worksites. Premium worksite surfaces unlock on sponsored worksites.',
     ctaTop: 'Open free account',
     rolesTitle: 'For every professional profile',
     roles: [
@@ -120,37 +120,37 @@ const contentByLocale = {
       },
       {
         title: 'Technical consultants',
-        text: 'Access the project in your role context, see relevant documents, and communicate with all stakeholders without multi-account overhead.',
+        text: 'Access the worksite in your role context, see relevant documents, and communicate with all stakeholders without multi-account overhead.',
       },
     ],
     featuresTitle: 'Features built for technical professionals',
     features: [
       {
         title: 'Integrated BIM viewer',
-        text: 'On sponsored projects, upload IFC, GLB, and GLTF and review 3D models directly in platform while sharing context with owners and contractors.',
+        text: 'On sponsored worksites, upload IFC, GLB, and GLTF and review 3D models directly in platform while sharing context with owners and contractors.',
         icon: Globe,
-        badge: 'Sponsored project',
+        badge: 'Sponsored worksite',
       },
       {
         title: 'Advanced document management',
-        text: 'On sponsored projects, discipline, phase, status, revisions, and tags keep every document searchable, auditable, and easy to manage.',
+        text: 'On sponsored worksites, discipline, phase, status, revisions, and tags keep every document searchable, auditable, and easy to manage.',
         icon: FileText,
-        badge: 'Sponsored project',
+        badge: 'Sponsored worksite',
       },
       {
         title: 'Shared calendar',
-        text: 'Site visits, meetings, deadlines - fully coordinated across all project participants in one unified calendar.',
+        text: 'Site visits, meetings, deadlines - fully coordinated across all worksite participants in one unified calendar.',
         icon: CalendarDays,
       },
       {
-        title: 'Structured project chat',
-        text: 'On sponsored projects, messages can link to docs, tasks, and milestones. No more endless email threads for each update.',
+        title: 'Structured worksite chat',
+        text: 'On sponsored worksites, messages can link to docs, tasks, and milestones. No more endless email threads for each update.',
         icon: MessageCircle,
-        badge: 'Sponsored project',
+        badge: 'Sponsored worksite',
       },
       {
         title: 'Contextual access',
-        text: 'Your professional profile can work across multiple projects with different roles. One account for everything.',
+        text: 'Your professional profile can work across multiple worksites with different roles. One account for everything.',
         icon: Layers,
       },
       {
@@ -162,7 +162,7 @@ const contentByLocale = {
     finalTitle: 'Ready to bring order to your construction site?',
     finalText: 'Stop wasting time across chats, emails, and calls. Start today with EdilSync and feel the difference from day one.',
     finalCta: 'Open free account',
-    finalNote: 'Single account · Free access on invited projects · Premium on sponsored projects',
+    finalNote: 'Single account · Free access on invited worksites · Premium on sponsored worksites',
   },
 };
 

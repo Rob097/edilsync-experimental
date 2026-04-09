@@ -29,9 +29,9 @@ const itTranslations = {
     "more": "Altro",
     "noData": "Nessun dato disponibile",
     "selectLanguage": "Seleziona Lingua",
-    "newProject": "Nuovo Progetto",
+    "newProject": "Nuovo Cantiere",
     "newCompany": "Nuova Società",
-    "projects": "Progetti",
+    "projects": "Cantieri",
     "companies": "Società",
     "members": "Membri",
     "tasks": "Task",
@@ -40,12 +40,13 @@ const itTranslations = {
     "noResults": "Nessun risultato",
     "tryModifyingFilters": "Prova a modificare i filtri di ricerca.",
     "tryModifyingSearchTerms": "Prova a modificare i termini di ricerca.",
-    "searchProjects": "Cerca progetti...",
-    "searchCompanies": "Cerca società..."
+    "searchProjects": "Cerca cantieri...",
+    "searchCompanies": "Cerca società...",
+    "toggleSidebar": "Apri o chiudi barra laterale"
   },
   "navigation": {
     "dashboard": "Dashboard",
-    "projects": "Progetti",
+    "projects": "Cantieri",
     "companies": "Società",
     "calendar": "Calendario",
     "settings": "Impostazioni",
@@ -79,13 +80,14 @@ const itTranslations = {
   },
   "dashboard": {
     "welcome": "Benvenuto",
-    "projectStats": "Statistiche Progetti",
-    "totalProjects": "Progetti Totali",
-    "recentProjects": "Progetti Recenti",
+    "projectStats": "Statistiche Cantieri",
+    "totalProjects": "Cantieri Totali",
+    "recentProjects": "Cantieri Recenti",
     "viewAll": "Visualizza Tutto",
-    "noProjects": "Nessun progetto",
-    "noPersonalProjects": "Non hai ancora progetti personali. Crea il tuo primo cantiere.",
-    "noCompanyProjects": "Questa società non ha ancora progetti. Crea il primo cantiere.",
+    "noProjects": "Nessun cantiere",
+    "noPersonalProjects": "Non hai ancora cantieri personali. Crea il tuo primo cantiere.",
+    "noCompanyProjects": "Questa società non ha ancora cantieri. Crea il primo cantiere.",
+    "kicker": "Panoramica operativa",
     "greetingPrefix": "Ciao,",
     "workingAs": "Stai operando come",
     "yourCompanies": "Le tue Società",
@@ -93,11 +95,13 @@ const itTranslations = {
     "noCompaniesDescription": "Non fai parte di nessuna società. Creane una o attendi un invito."
   },
   "projects": {
-    "title": "Progetti",
+    "title": "Cantieri",
+    "kicker": "Hub cantieri",
+    "subtitle": "Elenco filtrabile dei cantieri attivi, pianificati e completati nel contesto di lavoro corrente.",
     "filter": "Filtra",
     "participants": "Partecipanti",
     "tasks": "Task",
-    "noProjects": "Nessun progetto trovato",
+    "noProjects": "Nessun cantiere trovato",
     "status": {
       "planning": "Pianificazione",
       "in_progress": "In corso",
@@ -114,8 +118,12 @@ const itTranslations = {
   },
   "companies": {
     "title": "Società",
+    "kicker": "Rete aziende",
+    "description": "Invita una società o un professionista a partecipare al cantiere.",
     "members": "Membri",
     "admin": "Amministratore",
+    "projectRole": "Ruolo nel cantiere",
+    "compatibilityError": "Il ruolo nel cantiere selezionato non è compatibile con la tipologia della società selezionata.",
     "member": "Membro",
     "noCompanies": "Nessuna società disponibile",
     "manageCompanies": "Gestisci le società di cui fai parte"
@@ -133,9 +141,9 @@ const itTranslations = {
     "dueDate": "Data di Scadenza",
     "noTasks": "Nessun task disponibile",
     "blockedNotificationTitle": "Task bloccato",
-    "blockedNotificationMessage": "Il task \"{{task}}\" è bloccato per te nel progetto \"{{project}}\". Motivo: {{reason}} (segnalato da {{actor}})",
-    "blockedNotificationEmailSubject": "Task bloccato nel progetto",
-    "blockedNotificationEmailBody": "Il task \"{{task}}\" nel progetto \"{{project}}\" è stato bloccato con motivo: {{reason}}. Segnalato da {{actor}}."
+    "blockedNotificationMessage": "Il task \"{{task}}\" è bloccato per te nel cantiere \"{{project}}\". Motivo: {{reason}} (segnalato da {{actor}})",
+    "blockedNotificationEmailSubject": "Task bloccato nel cantiere",
+    "blockedNotificationEmailBody": "Il task \"{{task}}\" nel cantiere \"{{project}}\" è stato bloccato con motivo: {{reason}}. Segnalato da {{actor}}."
   },
   "milestones": {
     "milestone": "Milestone",
@@ -151,21 +159,24 @@ const itTranslations = {
   },
   "calendar": {
     "title": "Calendario",
+    "kicker": "Pianificazione",
     "newEvent": "Nuovo Evento",
+    "subtitle": "Vista mensile di attività assegnate ed eventi del contesto selezionato.",
     "today": "Oggi"
   },
   "operational": {
     "selectCompany": "Per quale azienda lavori oggi?",
     "chooseStart": "Come vuoi iniziare?",
+    "project": "Cantiere",
     "daySummary": "Riepilogo della giornata",
-    "selectProject": "Scegli progetto",
-    "noProjects": "Nessun progetto disponibile per questa azienda.",
+    "selectProject": "Scegli cantiere",
+    "noProjects": "Nessun cantiere disponibile per questa azienda.",
     "todayTasks": "Attività di oggi",
     "todayEvents": "Eventi di oggi",
     "noTodayItems": "Nessuna attività urgente per oggi.",
     "backToSelection": "Torna alla selezione",
-    "projectNotAvailable": "Progetto non disponibile nel contesto corrente.",
-    "changeProject": "Cambia progetto",
+    "projectNotAvailable": "Cantiere non disponibile nel contesto corrente.",
+    "changeProject": "Cambia cantiere",
     "changeCompany": "Cambia società",
     "menuTitle": "Menu operativo",
     "menuModes": "Cambio modalità",
@@ -181,7 +192,7 @@ const itTranslations = {
     "calendarSection": "Calendario",
     "noCalendarItems": "Nessun elemento in calendario",
     "viewDetails": "Vedi dettagli",
-    "projectDetails": "Dettagli progetto",
+    "projectDetails": "Dettagli cantiere",
     "taskDetails": "Dettagli attività",
     "homeowner": "Committente",
     "activityHistory": "Storia attività",
@@ -318,9 +329,10 @@ const itTranslations = {
     "notifications": {
       "openedTitle": "Nuova disputa aperta",
       "openedMessage": "È stata aperta una disputa: {{title}}",
-      "openedEmailSubject": "Nuova disputa nel progetto",
+      "openedEmailSubject": "Nuova disputa nel cantiere",
       "openedEmailBody": "È stata aperta una nuova disputa: {{title}}.",
       "statusChangedTitle": "Stato disputa aggiornato",
+      "projectContext": "Cantiere: {{project}}",
       "statusChangedMessage": "La disputa \"{{title}}\" è ora: {{status}}",
       "statusChangedEmailSubject": "Aggiornamento stato disputa",
       "statusChangedEmailBody": "La disputa \"{{title}}\" è stata aggiornata allo stato: {{status}}.",
@@ -354,7 +366,7 @@ const itTranslations = {
     "listening": "In ascolto...",
     "thinking": "Sto pensando...",
     "greeting": "Ciao! Sono qui per aiutarti",
-    "greetingSubtitle": "Posso aiutarti con progetti, task, eventi e molto altro. Chiedi pure!",
+    "greetingSubtitle": "Posso aiutarti con cantieri, task, eventi e molto altro. Chiedi pure!",
     "whatsapp": "Apri su WhatsApp",
     "chatDeleted": "Chat eliminata"
   },
@@ -363,14 +375,6 @@ const itTranslations = {
     "noNotifications": "Nessuna notifica",
     "markAsRead": "Segna come letto",
     "markAllAsRead": "Segna tutto come letto"
-  },
-  "settings": {
-    "settings": "Impostazioni",
-    "language": "Lingua",
-    "theme": "Tema",
-    "notifications": "Notifiche",
-    "privacy": "Privacy",
-    "account": "Account"
   },
   "errors": {
     "unauthorized": "Non autorizzato",
@@ -387,10 +391,11 @@ const itTranslations = {
     "thisMonth": "Questo mese"
   },
   "projectDetail": {
-    "projectNotFound": "Progetto non trovato",
-    "projectNotFoundDescription": "Il progetto richiesto non esiste o non hai i permessi per visualizzarlo.",
-    "backToProjects": "Torna ai progetti",
-    "youAreInvited": "Sei stato invitato a questo progetto",
+    "projectNotFound": "Cantiere non trovato",
+    "projectNotFoundDescription": "Il cantiere richiesto non esiste o non hai i permessi per visualizzarlo.",
+    "backToProjects": "Torna ai cantieri",
+    "kicker": "Cantiere",
+    "youAreInvited": "Sei stato invitato a questo cantiere",
     "acceptInviteDescription": "Accetta l'invito per partecipare alle attività del cantiere",
     "decline": "Rifiuta",
     "accept": "Accetta",
@@ -428,13 +433,20 @@ const itTranslations = {
     "invite": "Invita"
   },
   "settings": {
+    "settings": "Impostazioni",
     "title": "Impostazioni",
+    "kicker": "Profilo e preferenze",
     "description": "Gestisci il tuo profilo e le tue preferenze",
     "language": "Lingua",
+    "theme": "Tema",
+    "notifications": "Notifiche",
+    "privacy": "Privacy",
+    "account": "Account",
     "profile": "Profilo",
     "communications": "Comunicazioni",
     "profileUpdated": "Profilo aggiornato con successo",
     "fullName": "Nome completo",
+    "fullNamePlaceholder": "Mario Rossi",
     "email": "Email",
     "emailCannotBeChanged": "L'email non può essere modificata",
     "phone": "Telefono",
@@ -445,7 +457,7 @@ const itTranslations = {
     "unread": "non lette",
     "allRead": "Tutte lette",
     "markAllAsRead": "Segna tutte come lette",
-    "projectContext": "Progetto: {{project}}",
+     "projectContext": "Cantiere: {{project}}",
     "noNotifications": "Nessuna notifica",
     "noNotificationsDescription": "Non hai ancora ricevuto notifiche."
   },
@@ -464,22 +476,22 @@ const itTranslations = {
     "email": "Email"
   },
   "newProject": {
-    "title": "Nuovo Progetto",
-    "creating": "Stai creando un progetto come",
+    "title": "Nuovo Cantiere",
+    "creating": "Stai creando un cantiere come",
     "back": "Indietro",
-    "projectName": "Nome del progetto",
+    "projectName": "Nome del cantiere",
     "projectNamePlaceholder": "Es. Ristrutturazione Via Roma 15",
     "siteAddress": "Indirizzo del cantiere",
     "siteAddressPlaceholder": "Es. Via Roma 15, 20121 Milano",
     "description": "Descrizione",
-    "descriptionPlaceholder": "Descrivi brevemente il progetto...",
-    "yourRole": "Il tuo ruolo nel progetto",
+    "descriptionPlaceholder": "Descrivi brevemente il cantiere...",
+    "yourRole": "Il tuo ruolo nel cantiere",
     "homeowner": "Committente",
     "contractor": "Contractor",
-    "personalNote": "Come privato puoi creare progetti solo come committente",
+    "personalNote": "Come privato puoi creare cantieri solo come committente",
     "homeownerEmail": "Email del committente",
     "homeownerEmailPlaceholder": "email@committente.it",
-    "homeownerNote": "Il committente riceverà un invito al progetto",
+    "homeownerNote": "Il committente riceverà un invito al cantiere",
     "status": "Stato",
     "planning": "Pianificazione",
     "inProgress": "In corso",
@@ -487,7 +499,7 @@ const itTranslations = {
     "startDate": "Data inizio prevista",
     "endDate": "Data fine prevista",
     "cancel": "Annulla",
-    "create": "Crea Progetto"
+    "create": "Crea Cantiere"
   },
   "newCompany": {
     "title": "Nuova Società",
@@ -543,7 +555,7 @@ const itTranslations = {
   },
   "inviteParticipantDialog": {
     "title": "Invita Partecipante",
-    "description": "Invita una società o un professionista a partecipare al progetto.",
+    "description": "Invita una società o un professionista a partecipare al cantiere.",
     "participantType": "Tipo di partecipante",
     "company": "Società",
     "person": "Persona",
@@ -551,7 +563,7 @@ const itTranslations = {
     "selectCompanyPlaceholder": "Scegli una società...",
     "email": "Email",
     "emailPlaceholder": "email@esempio.it",
-    "projectRole": "Ruolo nel progetto",
+    "projectRole": "Ruolo nel cantiere",
     "selectRolePlaceholder": "Seleziona ruolo...",
     "contractor": "Contractor",
     "subcontractor": "Subappaltatore",
@@ -570,7 +582,7 @@ const itTranslations = {
     "consultantDesc": "Consulenza specializzata",
     "supplierDesc": "Fornitore di materiali o servizi",
     "missingCompanyType": "La società selezionata non ha ancora una tipologia impostata. Impostala per ottenere suggerimenti di compatibilità.",
-    "compatibilityError": "Ruolo progetto non compatibile con la tipologia della società selezionata.",
+    "compatibilityError": "Ruolo nel cantiere non compatibile con la tipologia della società selezionata.",
     "cancel": "Annulla",
     "invite": "Invita"
   },
@@ -613,7 +625,7 @@ const itTranslations = {
     "editTitle": "Modifica Milestone",
     "newTitle": "Nuova Milestone",
     "editDescription": "Aggiorna i dettagli della milestone.",
-    "newDescription": "Aggiungi un traguardo importante al progetto.",
+    "newDescription": "Aggiungi un traguardo importante al cantiere.",
     "title": "Titolo",
     "titlePlaceholder": "Es. Demolizione completata",
     "description": "Descrizione",
@@ -657,12 +669,12 @@ const itTranslations = {
     "close": "Chiudi",
     "cancel": "Annulla",
     "submit": "Invia Richiesta",
-    "permissionError": "Solo il committente del progetto può creare richieste di modifica"
+    "permissionError": "Solo il committente del cantiere può creare richieste di modifica"
   },
   "editProjectDialog": {
-    "title": "Modifica Progetto",
-    "description": "Aggiorna le informazioni del progetto.",
-    "projectName": "Nome del progetto",
+    "title": "Modifica Cantiere",
+    "description": "Aggiorna le informazioni del cantiere.",
+    "projectName": "Nome del cantiere",
     "siteAddress": "Indirizzo del cantiere",
     "projectDescription": "Descrizione",
     "status": "Stato",
@@ -674,13 +686,13 @@ const itTranslations = {
     "endDate": "Data fine",
     "cancel": "Annulla",
     "save": "Salva",
-    "permissionError": "Solo gli amministratori della società possono modificare il progetto"
+    "permissionError": "Solo gli amministratori della società possono modificare il cantiere"
   },
   "messageInput": {
     "placeholder": "Scrivi un messaggio...",
     "mentionTitle": "Sei stato menzionato",
     "mentionInCompany": "{{sender}} ti ha menzionato in \"{{channel}}\" nella società \"{{company}}\"",
-    "mentionInProject": "{{sender}} ti ha menzionato in \"{{channel}}\" nel progetto \"{{project}}\"",
+    "mentionInProject": "{{sender}} ti ha menzionato in \"{{channel}}\" nel cantiere \"{{project}}\"",
     "senderFallback": "Utente",
     "noUsersAvailable": "Nessun utente presente",
     "noTasksAvailable": "Nessuna attività presente",
@@ -691,7 +703,7 @@ const itTranslations = {
     "editTitle": "Modifica Documento",
     "newTitle": "Carica Documento",
     "editDescription": "Modifica le informazioni del documento o sostituisci il file.",
-    "newDescription": "Carica un file da associare al progetto.",
+    "newDescription": "Carica un file da associare al cantiere.",
     "file": "File",
     "clickToReplace": "Clicca per sostituire il file",
     "clickToSelect": "Clicca per selezionare un file",
@@ -701,7 +713,7 @@ const itTranslations = {
     "documentNamePlaceholder": "Es. Planimetria piano terra",
     "category": "Categoria",
     "categoryTechnical": "Documentazione tecnica",
-    "categoryProject": "Progetto",
+    "categoryProject": "Cantiere",
     "categoryContract": "Contratto",
     "categoryPermit": "Permesso",
     "categoryDrawing": "Disegno tecnico",
@@ -770,7 +782,7 @@ const itTranslations = {
       "cost_code": "Analitica per codici"
     },
     "visibilityModes": {
-      "project_full": "Intero progetto",
+      "project_full": "Intero cantiere",
       "company_scoped": "Per società"
     },
     "laborMethods": {
@@ -931,7 +943,7 @@ const itTranslations = {
     "new": "Nuovo",
     "taskPrefix": "Attività",
     "dueToday": "Scadenza giornata",
-    "project": "Progetto",
+    "project": "Cantiere",
     "emptyDescription": "Non ci sono eventi programmati per questo giorno.",
     "createEvent": "Crea evento"
   },
@@ -968,9 +980,9 @@ const itTranslations = {
     "openViewer": "Apri IFC nel viewer"
   },
   "tour": {
-    "dashboard": "Questo è il tuo dashboard. Qui vedi una panoramica dei tuoi progetti.",
-    "projects": "Gestisci tutti i tuoi progetti edilizi da questa sezione.",
-    "calendar": "Pianifica e traccia gli eventi del tuo progetto.",
+    "dashboard": "Questo è il tuo dashboard. Qui vedi una panoramica dei tuoi cantieri.",
+    "projects": "Gestisci tutti i tuoi cantieri da questa sezione.",
+    "calendar": "Pianifica e traccia gli eventi del tuo cantiere.",
     "companies": "Gestisci le tue società e i membri del team.",
     "contextSwitcher": "Passa tra il contesto personale e aziendale.",
     "notifications": "Ricevi notifiche su tutte le attività importanti.",
@@ -1004,9 +1016,9 @@ const enTranslations = {
     "more": "More",
     "noData": "No data available",
     "selectLanguage": "Select Language",
-    "newProject": "New Project",
+    "newProject": "New Worksite",
     "newCompany": "New Company",
-    "projects": "Projects",
+    "projects": "Worksites",
     "companies": "Companies",
     "members": "Members",
     "tasks": "Tasks",
@@ -1015,12 +1027,13 @@ const enTranslations = {
     "noResults": "No results",
     "tryModifyingFilters": "Try modifying your search filters.",
     "tryModifyingSearchTerms": "Try modifying your search terms.",
-    "searchProjects": "Search projects...",
-    "searchCompanies": "Search companies..."
+    "searchProjects": "Search worksites...",
+    "searchCompanies": "Search companies...",
+    "toggleSidebar": "Toggle sidebar"
   },
   "navigation": {
     "dashboard": "Dashboard",
-    "projects": "Projects",
+    "projects": "Worksites",
     "companies": "Companies",
     "calendar": "Calendar",
     "settings": "Settings",
@@ -1054,13 +1067,14 @@ const enTranslations = {
   },
   "dashboard": {
     "welcome": "Welcome",
-    "projectStats": "Project Statistics",
-    "totalProjects": "Total Projects",
-    "recentProjects": "Recent Projects",
+    "projectStats": "Worksite Statistics",
+    "totalProjects": "Total Worksites",
+    "recentProjects": "Recent Worksites",
     "viewAll": "View All",
-    "noProjects": "No projects",
-    "noPersonalProjects": "You don't have any personal projects yet. Create your first one.",
-    "noCompanyProjects": "This company has no projects yet. Create the first one.",
+    "noProjects": "No worksites",
+    "noPersonalProjects": "You don't have any personal worksites yet. Create your first one.",
+    "noCompanyProjects": "This company has no worksites yet. Create the first one.",
+    "kicker": "Operational overview",
     "greetingPrefix": "Hi,",
     "workingAs": "You are operating as",
     "yourCompanies": "Your Companies",
@@ -1068,11 +1082,13 @@ const enTranslations = {
     "noCompaniesDescription": "You are not a member of any company. Create one or wait for an invitation."
   },
   "projects": {
-    "title": "Projects",
+    "title": "Worksites",
+    "kicker": "Worksite hub",
+    "subtitle": "Filterable list of active, planned, and completed worksites in the current working context.",
     "filter": "Filter",
     "participants": "Participants",
     "tasks": "Tasks",
-    "noProjects": "No projects found",
+    "noProjects": "No worksites found",
     "status": {
       "planning": "Planning",
       "in_progress": "In progress",
@@ -1089,6 +1105,7 @@ const enTranslations = {
   },
   "companies": {
     "title": "Companies",
+    "kicker": "Company network",
     "members": "Members",
     "admin": "Administrator",
     "member": "Member",
@@ -1108,9 +1125,9 @@ const enTranslations = {
     "dueDate": "Due Date",
     "noTasks": "No tasks available",
     "blockedNotificationTitle": "Task blocked",
-    "blockedNotificationMessage": "The task \"{{task}}\" is blocked for you in project \"{{project}}\". Reason: {{reason}} (reported by {{actor}})",
-    "blockedNotificationEmailSubject": "Task blocked in project",
-    "blockedNotificationEmailBody": "The task \"{{task}}\" in project \"{{project}}\" has been blocked with reason: {{reason}}. Reported by {{actor}}."
+    "blockedNotificationMessage": "The task \"{{task}}\" is blocked for you in worksite \"{{project}}\". Reason: {{reason}} (reported by {{actor}})",
+    "blockedNotificationEmailSubject": "Task blocked in worksite",
+    "blockedNotificationEmailBody": "The task \"{{task}}\" in worksite \"{{project}}\" has been blocked with reason: {{reason}}. Reported by {{actor}}."
   },
   "milestones": {
     "milestone": "Milestone",
@@ -1126,21 +1143,23 @@ const enTranslations = {
   },
   "calendar": {
     "title": "Calendar",
+    "kicker": "Planning",
     "newEvent": "New Event",
+    "subtitle": "Monthly view of assigned activities and events for the selected context.",
     "today": "Today"
   },
   "operational": {
     "selectCompany": "Which company are you working for today?",
     "chooseStart": "How do you want to start?",
     "daySummary": "Day summary",
-    "selectProject": "Select project",
-    "noProjects": "No projects available for this company.",
+    "selectProject": "Select worksite",
+    "noProjects": "No worksites available for this company.",
     "todayTasks": "Today's tasks",
     "todayEvents": "Today's events",
     "noTodayItems": "No urgent tasks for today.",
     "backToSelection": "Back to selection",
-    "projectNotAvailable": "Project not available in current context.",
-    "changeProject": "Change project",
+    "projectNotAvailable": "Worksite not available in current context.",
+    "changeProject": "Change worksite",
     "changeCompany": "Change company",
     "menuTitle": "Operational menu",
     "menuModes": "Switch mode",
@@ -1156,7 +1175,7 @@ const enTranslations = {
     "calendarSection": "Calendar",
     "noCalendarItems": "No calendar items",
     "viewDetails": "View details",
-    "projectDetails": "Project details",
+    "projectDetails": "Worksite details",
     "taskDetails": "Task details",
     "homeowner": "Homeowner",
     "activityHistory": "Activity history",
@@ -1293,7 +1312,7 @@ const enTranslations = {
     "notifications": {
       "openedTitle": "New dispute opened",
       "openedMessage": "A new dispute has been opened: {{title}}",
-      "openedEmailSubject": "New dispute in project",
+      "openedEmailSubject": "New dispute in worksite",
       "openedEmailBody": "A new dispute has been opened: {{title}}.",
       "statusChangedTitle": "Dispute status updated",
       "statusChangedMessage": "Dispute \"{{title}}\" is now: {{status}}",
@@ -1329,7 +1348,7 @@ const enTranslations = {
     "listening": "Listening...",
     "thinking": "Thinking...",
     "greeting": "Hi! I'm here to help",
-    "greetingSubtitle": "I can help you with projects, tasks, events and much more. Just ask!",
+    "greetingSubtitle": "I can help you with worksites, tasks, events and much more. Just ask!",
     "whatsapp": "Open on WhatsApp",
     "chatDeleted": "Chat deleted"
   },
@@ -1338,14 +1357,6 @@ const enTranslations = {
     "noNotifications": "No notifications",
     "markAsRead": "Mark as read",
     "markAllAsRead": "Mark all as read"
-  },
-  "settings": {
-    "settings": "Settings",
-    "language": "Language",
-    "theme": "Theme",
-    "notifications": "Notifications",
-    "privacy": "Privacy",
-    "account": "Account"
   },
   "errors": {
     "unauthorized": "Unauthorized",
@@ -1362,18 +1373,19 @@ const enTranslations = {
     "thisMonth": "This month"
   },
   "projectDetail": {
-    "projectNotFound": "Project not found",
-    "projectNotFoundDescription": "The requested project does not exist or you do not have permission to view it.",
-    "backToProjects": "Back to projects",
-    "youAreInvited": "You have been invited to this project",
-    "acceptInviteDescription": "Accept the invitation to participate in project activities",
+    "projectNotFound": "Worksite not found",
+    "projectNotFoundDescription": "The requested worksite does not exist or you do not have permission to view it.",
+    "backToProjects": "Back to worksites",
+    "kicker": "Worksite",
+    "youAreInvited": "You have been invited to this worksite",
+    "acceptInviteDescription": "Accept the invitation to participate in worksite activities",
     "decline": "Decline",
     "accept": "Accept",
     "participants": "Participants",
     "startDate": "Start date",
     "endDate": "End date",
     "edit": "Edit",
-    "projectStopped": "Project Stopped",
+    "projectStopped": "Worksite Stopped",
     "blockedTasks": "blocked tasks",
     "seeDetails": "See details →",
     "tabs": {
@@ -1403,13 +1415,20 @@ const enTranslations = {
     "invite": "Invite"
   },
   "settings": {
+    "settings": "Settings",
     "title": "Settings",
+    "kicker": "Profile and preferences",
     "description": "Manage your profile and preferences",
     "language": "Language",
+    "theme": "Theme",
+    "notifications": "Notifications",
+    "privacy": "Privacy",
+    "account": "Account",
     "profile": "Profile",
     "communications": "Communications",
     "profileUpdated": "Profile updated successfully",
     "fullName": "Full name",
+    "fullNamePlaceholder": "John Smith",
     "email": "Email",
     "emailCannotBeChanged": "Email cannot be changed",
     "phone": "Phone",
@@ -1420,7 +1439,7 @@ const enTranslations = {
     "unread": "unread",
     "allRead": "All read",
     "markAllAsRead": "Mark all as read",
-    "projectContext": "Project: {{project}}",
+    "projectContext": "Worksite: {{project}}",
     "noNotifications": "No notifications",
     "noNotificationsDescription": "You have not received any notifications yet."
   },
@@ -1439,22 +1458,22 @@ const enTranslations = {
     "email": "Email"
   },
   "newProject": {
-    "title": "New Project",
-    "creating": "You are creating a project as",
+    "title": "New Worksite",
+    "creating": "You are creating a worksite as",
     "back": "Back",
-    "projectName": "Project name",
+    "projectName": "Worksite name",
     "projectNamePlaceholder": "E.g. Renovation at 15 Rome Street",
     "siteAddress": "Site address",
     "siteAddressPlaceholder": "E.g. 15 Rome Street, 20121 Milan",
     "description": "Description",
-    "descriptionPlaceholder": "Briefly describe the project...",
-    "yourRole": "Your role in the project",
+    "descriptionPlaceholder": "Briefly describe the worksite...",
+    "yourRole": "Your role in the worksite",
     "homeowner": "Homeowner",
     "contractor": "Contractor",
-    "personalNote": "As an individual you can only create projects as homeowner",
+    "personalNote": "As an individual you can only create worksites as homeowner",
     "homeownerEmail": "Homeowner email",
     "homeownerEmailPlaceholder": "email@homeowner.com",
-    "homeownerNote": "The homeowner will receive an invitation to the project",
+    "homeownerNote": "The homeowner will receive an invitation to the worksite",
     "status": "Status",
     "planning": "Planning",
     "inProgress": "In progress",
@@ -1462,7 +1481,7 @@ const enTranslations = {
     "startDate": "Planned start date",
     "endDate": "Planned end date",
     "cancel": "Cancel",
-    "create": "Create Project"
+    "create": "Create Worksite"
   },
   "newCompany": {
     "title": "New Company",
@@ -1518,7 +1537,7 @@ const enTranslations = {
   },
   "inviteParticipantDialog": {
     "title": "Invite Participant",
-    "description": "Invite a company or professional to participate in the project.",
+    "description": "Invite a company or professional to participate in the worksite.",
     "participantType": "Participant type",
     "company": "Company",
     "person": "Person",
@@ -1526,7 +1545,7 @@ const enTranslations = {
     "selectCompanyPlaceholder": "Choose a company...",
     "email": "Email",
     "emailPlaceholder": "email@example.com",
-    "projectRole": "Project role",
+    "projectRole": "Worksite role",
     "selectRolePlaceholder": "Select role...",
     "contractor": "Contractor",
     "subcontractor": "Subcontractor",
@@ -1545,7 +1564,7 @@ const enTranslations = {
     "consultantDesc": "Specialized consulting",
     "supplierDesc": "Supplies materials or services",
     "missingCompanyType": "Selected company has no type yet. Set it to unlock compatibility guidance.",
-    "compatibilityError": "Selected project role is not compatible with the selected company type.",
+    "compatibilityError": "Selected worksite role is not compatible with the selected company type.",
     "cancel": "Cancel",
     "invite": "Invite"
   },
@@ -1588,7 +1607,7 @@ const enTranslations = {
     "editTitle": "Edit Milestone",
     "newTitle": "New Milestone",
     "editDescription": "Update milestone details.",
-    "newDescription": "Add an important milestone to the project.",
+    "newDescription": "Add an important milestone to the worksite.",
     "title": "Title",
     "titlePlaceholder": "E.g. Demolition completed",
     "description": "Description",
@@ -1632,12 +1651,12 @@ const enTranslations = {
     "close": "Close",
     "cancel": "Cancel",
     "submit": "Submit Request",
-    "permissionError": "Only the project homeowner can create change requests"
+    "permissionError": "Only the worksite homeowner can create change requests"
   },
   "editProjectDialog": {
-    "title": "Edit Project",
-    "description": "Update project information.",
-    "projectName": "Project name",
+    "title": "Edit Worksite",
+    "description": "Update worksite information.",
+    "projectName": "Worksite name",
     "siteAddress": "Site address",
     "projectDescription": "Description",
     "status": "Status",
@@ -1649,13 +1668,13 @@ const enTranslations = {
     "endDate": "End date",
     "cancel": "Cancel",
     "save": "Save",
-    "permissionError": "Only company administrators can edit the project"
+    "permissionError": "Only company administrators can edit the worksite"
   },
   "messageInput": {
     "placeholder": "Write a message...",
     "mentionTitle": "You were mentioned",
     "mentionInCompany": "{{sender}} mentioned you in \"{{channel}}\" in company \"{{company}}\"",
-    "mentionInProject": "{{sender}} mentioned you in \"{{channel}}\" in project \"{{project}}\"",
+    "mentionInProject": "{{sender}} mentioned you in \"{{channel}}\" in worksite \"{{project}}\"",
     "senderFallback": "User",
     "noUsersAvailable": "No users available",
     "noTasksAvailable": "No task available",
@@ -1666,7 +1685,7 @@ const enTranslations = {
     "editTitle": "Edit Document",
     "newTitle": "Upload Document",
     "editDescription": "Edit document information or replace the file.",
-    "newDescription": "Upload a file to associate with the project.",
+    "newDescription": "Upload a file to associate with the worksite.",
     "file": "File",
     "clickToReplace": "Click to replace file",
     "clickToSelect": "Click to select a file",
@@ -1676,7 +1695,7 @@ const enTranslations = {
     "documentNamePlaceholder": "E.g. Ground floor floor plan",
     "category": "Category",
     "categoryTechnical": "Technical documentation",
-    "categoryProject": "Project",
+    "categoryProject": "Worksite",
     "categoryContract": "Contract",
     "categoryPermit": "Permit",
     "categoryDrawing": "Technical drawing",
@@ -1690,7 +1709,7 @@ const enTranslations = {
     "save": "Save"
   },
   "finance": {
-    "sectionTitle": "Project finance",
+    "sectionTitle": "Worksite finance",
     "plannedBudget": "Planned budget",
     "recordedActual": "Recorded actual",
     "laborActual": "Labor actual (from work sessions)",
@@ -1737,7 +1756,7 @@ const enTranslations = {
     "derivedLaborNote": "Note: labor costs from work sessions are derived actuals and remain separate from manually recorded costs.",
     "operator": "Operator:",
     "access": {
-      "viewerNotice": "You are viewing the transparency version of project finance: you can read budget, actuals, and progress statements, but not change operational financial settings.",
+      "viewerNotice": "You are viewing the transparency version of worksite finance: you can read budget, actuals, and progress statements, but not change operational financial settings.",
       "contributorNotice": "You can record costs and sync labor, but budget, rates, progress statements, and settings remain managed by contractor company administrators."
     },
     "budgetModes": {
@@ -1745,7 +1764,7 @@ const enTranslations = {
       "cost_code": "Analytical by cost codes"
     },
     "visibilityModes": {
-      "project_full": "Whole project",
+      "project_full": "Whole worksite",
       "company_scoped": "Company scoped"
     },
     "laborMethods": {
@@ -1906,7 +1925,7 @@ const enTranslations = {
     "new": "New",
     "taskPrefix": "Task",
     "dueToday": "Due today",
-    "project": "Project",
+    "project": "Worksite",
     "emptyDescription": "There are no events scheduled for this day.",
     "createEvent": "Create event"
   },
@@ -1943,9 +1962,9 @@ const enTranslations = {
     "openViewer": "Open IFC in viewer"
   },
   "tour": {
-    "dashboard": "This is your dashboard. Here you see an overview of your projects.",
-    "projects": "Manage all your construction projects from this section.",
-    "calendar": "Plan and track your project events.",
+    "dashboard": "This is your dashboard. Here you see an overview of your worksites.",
+    "projects": "Manage all your worksites from this section.",
+    "calendar": "Plan and track your worksite events.",
     "companies": "Manage your companies and team members.",
     "contextSwitcher": "Switch between personal and company contexts.",
     "notifications": "Receive notifications on all important activities.",

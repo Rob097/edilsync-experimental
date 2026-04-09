@@ -118,7 +118,7 @@ export default function MilestoneBoard({ projectId, project, canEdit, onMileston
       <EmptyState
         icon={Flag}
         title={tr('Nessuna milestone', 'No milestones')}
-        description={tr('Crea la prima milestone per tracciare i progressi del progetto.', 'Create the first milestone to track project progress.')}
+        description={tr('Crea la prima milestone per tracciare i progressi del cantiere.', 'Create the first milestone to track worksite progress.')}
       />
     );
   }

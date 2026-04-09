@@ -257,11 +257,72 @@ const auth = {
   },
 };
 
+const getFunctionInvokeHeaders = async () => {
+  const {
+    data: { session: initialSession },
+    error,
+  } = await supabase.auth.getSession();
+
+  if (error) throw error;
+
+  let session = initialSession;
+
+  const expiresSoon = session?.expires_at
+    ? session.expires_at * 1000 <= Date.now() + 60 * 1000
+    : false;
+
+  if (session?.refresh_token && expiresSoon) {
+    const { data: refreshed, error: refreshError } = await supabase.auth.refreshSession({
+      refresh_token: session.refresh_token,
+    });
+
+    if (refreshError) throw refreshError;
+    session = refreshed.session;
+  }
+
+  if (!session?.access_token) {
+    return undefined;
+  }
+
+  return {
+    Authorization: `Bearer ${session.access_token}`,
+  };
+};
+
+const parseFunctionResponse = async (response) => {
+  const contentType = response.headers.get('content-type') || '';
+
+  if (contentType.includes('application/json')) {
+    return response.json().catch(() => null);
+  }
+
+  const text = await response.text().catch(() => '');
+  return text || null;
+};
+
 const functions = {
   invoke: async (name, body) => {
-    const { data, error } = await supabase.functions.invoke(name, { body });
-    if (error) throw error;
-    return data;
+    const authHeaders = await getFunctionInvokeHeaders();
+    const response = await fetch(`${supabaseUrl}/functions/v1/${name}`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        apikey: supabaseAnonKey,
+        ...(authHeaders || {}),
+      },
+      body: JSON.stringify(body ?? {}),
+    });
+
+    const payload = await parseFunctionResponse(response);
+
+    if (!response.ok) {
+      const message = typeof payload === 'string'
+        ? payload
+        : payload?.error || payload?.message || `Function ${name} failed with status ${response.status}`;
+      throw new Error(message);
+    }
+
+    return payload;
   },
 };
 

@@ -146,7 +146,7 @@ export default function Dashboard() {
       {/* Welcome section */}
       <div className="flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
         <div className="app-page-header">
-          <span className="app-page-kicker">Panoramica operativa</span>
+          <span className="app-page-kicker">{t('dashboard.kicker')}</span>
           <h1 className="app-page-title">
             {t('dashboard.greetingPrefix')} {(user?.display_name || user?.full_name)?.split(' ')[0] || 'Utente'}
           </h1>

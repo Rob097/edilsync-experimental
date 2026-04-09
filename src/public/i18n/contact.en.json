@@ -2,7 +2,7 @@
   "seoTitle": "Contact and Demo Request",
   "chip": "Contact",
   "title": "Request an EdilSync demo",
-  "subtitle": "Tell us about your project context. We will follow up with a demo focused on dispute prevention, coordination, and operational control.",
+  "subtitle": "Tell us about your worksite context. We will follow up with a demo focused on dispute prevention, coordination, and operational control.",
   "fields": {
     "fullName": "Full name",
     "email": "Email",
@@ -27,7 +27,7 @@
   "faq": "FAQ",
   "detailsTitle": "Demo details",
   "finalTitle": "Need immediate support before the demo?",
-  "finalText": "Write to us and we will guide you on the best starting point for your project context.",
+  "finalText": "Write to us and we will guide you on the best starting point for your worksite context.",
   "finalCta": "Open resources",
   "finalNote": "Practical guides, real workflows, and field-tested updates"
 }

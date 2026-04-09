@@ -49,7 +49,7 @@ export default function PrivacyPolicy() {
             <li><strong>{tr('Dati identificativi:', 'Identification data:')}</strong> {tr('nome, cognome, indirizzo email', 'name, surname, email address')}</li>
             <li><strong>{tr('Dati aziendali:', 'Company data:')}</strong> {tr('ragione sociale, P.IVA, indirizzo sede, telefono', 'company name, VAT number, office address, phone')}</li>
             <li><strong>{tr('Dati di utilizzo:', 'Usage data:')}</strong> {tr('log di accesso, interazioni con l\'applicazione', 'access logs, interactions with the application')}</li>
-            <li><strong>{tr('Dati di progetto:', 'Project data:')}</strong> {tr('documenti, foto, messaggi caricati dall\'utente', 'documents, photos, messages uploaded by the user')}</li>
+            <li><strong>{tr('Dati di cantiere:', 'Worksite data:')}</strong> {tr('documenti, foto, messaggi caricati dall\'utente', 'documents, photos, messages uploaded by the user')}</li>
           </ul>
 
           <h2 className="text-lg font-semibold mt-6 mb-2">{tr('3. Finalità e base giuridica', '3. Purposes and legal basis')}</h2>
@@ -67,7 +67,7 @@ export default function PrivacyPolicy() {
           <h2 className="text-lg font-semibold mt-6 mb-2">{tr('5. Condivisione dei dati', '5. Data sharing')}</h2>
           <p>{tr('I dati possono essere condivisi con:', 'Data may be shared with:')}</p>
           <ul className="list-disc pl-5 space-y-1">
-            <li>{tr('Altri partecipanti al progetto (nome, email, ruolo) — necessario per il funzionamento del servizio', 'Other project participants (name, email, role) — necessary for service operation')}</li>
+            <li>{tr('Altri partecipanti al cantiere (nome, email, ruolo) — necessario per il funzionamento del servizio', 'Other worksite participants (name, email, role) — necessary for service operation')}</li>
             <li>{tr('Fornitori di servizi tecnici (hosting, email) — in qualità di responsabili del trattamento', 'Technical service providers (hosting, email) — as processors')}</li>
           </ul>
           <p>{tr('I dati non vengono venduti a terzi.', 'Data is not sold to third parties.')}</p>

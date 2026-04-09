@@ -157,10 +157,10 @@ export default function InviteParticipantDialog({
   const inviteContextNotice = useMemo(() => {
     if (projectIsBlockedForSponsorLoss) {
       return {
-        title: tr('Progetto bloccato per perdita sponsor', 'Project blocked after sponsor loss'),
+        title: tr('Cantiere bloccato per perdita sponsor', 'Worksite blocked after sponsor loss'),
         description: tr(
-          'Questo progetto puo invitare solo societa finche non rientra una sponsorship valida. Le superfici premium restano invisibili fino al recupero sponsor.',
-          'This project can invite only companies until a valid sponsorship returns. Premium surfaces stay hidden until sponsor recovery.',
+          'Questo cantiere puo invitare solo societa finche non rientra una sponsorship valida. Le superfici premium restano invisibili fino al recupero sponsor.',
+          'This worksite can invite only companies until a valid sponsorship returns. Premium surfaces stay hidden until sponsor recovery.',
         ),
         className: 'border-red-200 bg-red-50 text-red-900',
       };
@@ -175,10 +175,10 @@ export default function InviteParticipantDialog({
 
     if (projectIsSponsored && !companyIsPaid) {
       return {
-        title: tr('Societa free, progetto sponsorizzato', 'Free company, sponsored project'),
+        title: tr('Societa free, cantiere sponsorizzato', 'Free company, sponsored worksite'),
         description: tr(
-          'Questa societa restera free a livello globale, ma dentro questo progetto potra usare le feature premium progettuali grazie alla sponsorship attiva.',
-          'This company will remain free globally, but inside this project it will be able to use premium project features thanks to the active sponsorship.',
+          'Questa societa restera free a livello globale, ma dentro questo cantiere potra usare le feature premium grazie alla sponsorship attiva.',
+          'This company will remain free globally, but inside this worksite it will be able to use premium features thanks to the active sponsorship.',
         ),
         className: 'border-green-200 bg-green-50 text-green-900',
       };
@@ -186,10 +186,10 @@ export default function InviteParticipantDialog({
 
     if (!projectIsSponsored && !companyIsPaid) {
       return {
-        title: tr('Societa free, progetto non sponsorizzato', 'Free company, unsponsored project'),
+        title: tr('Societa free, cantiere non sponsorizzato', 'Free company, unsponsored worksite'),
         description: tr(
-          'Questa societa potra partecipare al progetto solo con le feature gratuite finche nessuna societa paid partecipante non attivera una sponsorship.',
-          'This company will join the project with free features only until a paid participant company activates a sponsorship.',
+          'Questa societa potra partecipare al cantiere solo con le feature gratuite finche nessuna societa paid partecipante non attivera una sponsorship.',
+          'This company will join the worksite with free features only until a paid participant company activates a sponsorship.',
         ),
         className: 'border-slate-200 bg-slate-50 text-slate-900',
       };
@@ -197,10 +197,10 @@ export default function InviteParticipantDialog({
 
     if (!projectIsSponsored && companyIsPaid) {
       return {
-        title: tr('Societa paid, progetto non sponsorizzato', 'Paid company, unsponsored project'),
+        title: tr('Societa paid, cantiere non sponsorizzato', 'Paid company, unsponsored worksite'),
         description: tr(
-          'Dopo l ingresso nel progetto, questa societa potra sponsorizzarlo e sbloccare le feature premium progettuali per tutti i partecipanti.',
-          'After joining the project, this company will be able to sponsor it and unlock premium project features for all participants.',
+          'Dopo l ingresso nel cantiere, questa societa potra sponsorizzarlo e sbloccare le feature premium per tutti i partecipanti.',
+          'After joining the worksite, this company will be able to sponsor it and unlock premium features for all participants.',
         ),
         className: 'border-[#ef6144]/20 bg-[#ef6144]/5 text-slate-900',
       };

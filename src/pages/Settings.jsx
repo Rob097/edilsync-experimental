@@ -68,7 +68,7 @@ export default function Settings() {
   return (
     <div className="max-w-4xl mx-auto space-y-6">
       <div className="app-page-header">
-        <span className="app-page-kicker">Profile and preferences</span>
+        <span className="app-page-kicker">{t('settings.kicker')}</span>
         <h1 className="app-page-title">{t('settings.title')}</h1>
         <p className="app-page-subtitle">{t('settings.description')}</p>
       </div>
@@ -108,7 +108,7 @@ export default function Settings() {
                     id="display_name"
                     value={formData.display_name}
                     onChange={(e) => handleChange('display_name', e.target.value)}
-                    placeholder={currentLanguage === 'it' ? 'Mario Rossi' : 'John Smith'}
+                    placeholder={t('settings.fullNamePlaceholder')}
                   />
                 </div>
 

@@ -19,7 +19,7 @@ const contentByLocale = {
         items: [
           {
             q: 'Cos\'e EdilSync?',
-            a: 'EdilSync è una piattaforma per il coordinamento di cantieri edili e ristrutturazioni. Unisce committenti, imprese, subappaltatori e professionisti in un unico spazio condiviso, con ruoli e permessi contestuali adattati a ogni progetto.',
+            a: 'EdilSync è una piattaforma per il coordinamento di cantieri edili e ristrutturazioni. Unisce committenti, imprese, subappaltatori e professionisti in un unico spazio condiviso, con ruoli e permessi contestuali adattati a ogni cantiere.',
           },
           {
             q: 'EdilSync è adatto anche per piccole imprese?',
@@ -36,7 +36,7 @@ const contentByLocale = {
         items: [
           {
             q: 'Quanto costa EdilSync?',
-            a: 'EdilSync Pro per società costa €19/mese oppure €190/anno. Il privato resta free. Le società possono restare free o passare a Pro per sbloccare la sponsorship del progetto e gli strumenti avanzati dell’impresa.',
+            a: 'EdilSync Pro per società costa €19/mese oppure €190/anno. Il privato resta free. Le società possono restare free o passare a Pro per sbloccare la sponsorship del cantiere e gli strumenti avanzati dell’impresa.',
           },
           {
             q: 'Posso iniziare senza carta?',
@@ -48,7 +48,7 @@ const contentByLocale = {
           },
           {
             q: 'I miei committenti devono pagare?',
-            a: 'No. Il committente resta free. Anche subappaltatori e professionisti possono entrare gratis nei progetti a cui vengono invitati. Gli strumenti avanzati di progetto dipendono dalla sponsorship attiva di una società paid.',
+            a: 'No. Il committente resta free. Anche subappaltatori e professionisti possono entrare gratis nei cantieri a cui vengono invitati. Gli strumenti avanzati di cantiere dipendono dalla sponsorship attiva di una società paid.',
           },
         ],
       },
@@ -61,7 +61,7 @@ const contentByLocale = {
           },
           {
             q: 'Come funzionano i permessi? Tutti vedono tutto?',
-            a: 'No. EdilSync ha un sistema di permessi contestuale a 4 livelli: ruolo applicativo, contesto attivo (personale o aziendale), ruolo nella società e ruolo nel progetto. Ogni persona vede solo ciò che è rilevante per il suo ruolo nel progetto specifico.',
+            a: 'No. EdilSync ha un sistema di permessi contestuale a 4 livelli: ruolo applicativo, contesto attivo (personale o aziendale), ruolo nella società e ruolo nel cantiere. Ogni persona vede solo ciò che è rilevante per il suo ruolo nel cantiere specifico.',
           },
           {
             q: 'Posso gestire i subappalti a catena?',
@@ -69,7 +69,7 @@ const contentByLocale = {
           },
           {
             q: 'E possibile visualizzare file BIM o modelli 3D?',
-            a: 'Sì, ma come funzione premium di progetto. Nei progetti sponsorizzati EdilSync supporta IFC, GLB e GLTF con viewer in-app per IFC e viewer 3D per GLB/GLTF. Nei progetti non sponsorizzati questi file non si possono caricare e, se già presenti, la preview resta inibita.',
+            a: 'Sì, ma come funzione premium di cantiere. Nei cantieri sponsorizzati EdilSync supporta IFC, GLB e GLTF con viewer in-app per IFC e viewer 3D per GLB/GLTF. Nei cantieri non sponsorizzati questi file non si possono caricare e, se già presenti, la preview resta inibita.',
           },
           {
             q: 'Come funzionano le dispute?',
@@ -85,8 +85,8 @@ const contentByLocale = {
             a: 'Sì. EdilSync utilizza infrastruttura cloud con Row Level Security (RLS) su ogni operazione dati. L’accesso ai dati è costruito su insiemi utente sincronizzati automaticamente da membership e partecipazioni.',
           },
           {
-            q: 'Chi può vedere i miei progetti?',
-            a: 'Solo le persone che hai invitato come partecipanti al progetto. Ogni utente vede solo i progetti in cui è partecipante attivo, e solo le sezioni adeguate al proprio ruolo nel progetto.',
+            q: 'Chi può vedere i miei cantieri?',
+            a: 'Solo le persone che hai invitato come partecipanti al cantiere. Ogni utente vede solo i cantieri in cui è partecipante attivo, e solo le sezioni adeguate al proprio ruolo nel cantiere.',
           },
         ],
       },
@@ -108,7 +108,7 @@ const contentByLocale = {
         items: [
           {
             q: 'What is EdilSync?',
-            a: 'EdilSync is a SaaS platform for construction-site and renovation coordination. It brings together clients, contractors, subcontractors, and professionals in one shared workspace, with contextual roles and permissions adapted to each project.',
+            a: 'EdilSync is a SaaS platform for construction-site and renovation coordination. It brings together clients, contractors, subcontractors, and professionals in one shared workspace, with contextual roles and permissions adapted to each worksite.',
           },
           {
             q: 'Is EdilSync suitable for small companies?',
@@ -125,7 +125,7 @@ const contentByLocale = {
         items: [
           {
             q: 'How much does EdilSync cost?',
-            a: 'EdilSync Pro for companies costs €19/month or €190/year. Private owners remain free. Companies can stay free or upgrade to Pro to unlock project sponsorship and company premium capabilities.',
+            a: 'EdilSync Pro for companies costs €19/month or €190/year. Private owners remain free. Companies can stay free or upgrade to Pro to unlock worksite sponsorship and company premium capabilities.',
           },
           {
             q: 'Can I get started without a card?',
@@ -137,7 +137,7 @@ const contentByLocale = {
           },
           {
             q: 'Do my owners need to pay?',
-            a: 'No. The homeowner remains free. Subcontractors and professionals can also join invited projects for free. Premium project capabilities depend on an active sponsorship from a paid company.',
+            a: 'No. The homeowner remains free. Subcontractors and professionals can also join invited worksites for free. Premium worksite capabilities depend on an active sponsorship from a paid company.',
           },
         ],
       },
@@ -150,7 +150,7 @@ const contentByLocale = {
           },
           {
             q: 'How do permissions work? Can everyone see everything?',
-            a: 'No. EdilSync uses a 4-level contextual permission model: application role, active context (personal or company), company role, and project role. Each person only sees what is relevant to their role in that specific project.',
+            a: 'No. EdilSync uses a 4-level contextual permission model: application role, active context (personal or company), company role, and worksite role. Each person only sees what is relevant to their role in that specific worksite.',
           },
           {
             q: 'Can I manage multi-level subcontracting?',
@@ -158,7 +158,7 @@ const contentByLocale = {
           },
           {
             q: 'Can I view BIM files or 3D models?',
-            a: 'Yes, but as a premium project capability. On sponsored projects, EdilSync supports IFC, GLB, and GLTF with an in-app IFC viewer and a 3D viewer for GLB/GLTF. On unsponsored projects, these files cannot be uploaded and existing ones stay archived without preview.',
+            a: 'Yes, but as a premium worksite capability. On sponsored worksites, EdilSync supports IFC, GLB, and GLTF with an in-app IFC viewer and a 3D viewer for GLB/GLTF. On unsponsored worksites, these files cannot be uploaded and existing ones stay archived without preview.',
           },
           {
             q: 'How does dispute management work?',
@@ -171,11 +171,11 @@ const contentByLocale = {
         items: [
           {
             q: 'Are my data secure?',
-            a: 'Yes. EdilSync runs on cloud infrastructure with Row Level Security (RLS) enforced on every data operation. Data access is built on synchronized user sets automatically derived from memberships and project participation.',
+            a: 'Yes. EdilSync runs on cloud infrastructure with Row Level Security (RLS) enforced on every data operation. Data access is built on synchronized user sets automatically derived from memberships and worksite participation.',
           },
           {
-            q: 'Who can view my projects?',
-            a: 'Only people you have invited as project participants. Each user only sees projects where they are an active participant, and only the sections appropriate for their role in that project.',
+            q: 'Who can view my worksites?',
+            a: 'Only people you have invited as worksite participants. Each user only sees worksites where they are an active participant, and only the sections appropriate for their role in that worksite.',
           },
         ],
       },

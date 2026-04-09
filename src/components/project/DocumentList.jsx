@@ -66,6 +66,25 @@ const formatFileSize = (bytes) => {
   return (bytes / (1024 * 1024)).toFixed(1) + ' MB';
 };
 
+const getDocumentStatusLabel = (status, tr) => {
+  switch (status) {
+    case 'draft':
+      return tr('Bozza', 'Draft');
+    case 'in_review':
+      return tr('In revisione', 'In review');
+    case 'approved':
+      return tr('Approvato', 'Approved');
+    case 'rejected':
+      return tr('Respinto', 'Rejected');
+    case 'superseded':
+      return tr('Superato', 'Superseded');
+    case 'archived':
+      return tr('Archiviato', 'Archived');
+    default:
+      return status || tr('Bozza', 'Draft');
+  }
+};
+
 export default function DocumentList({
   projectId,
   companyId,
@@ -86,7 +105,7 @@ export default function DocumentList({
   const featureMode = featureAccess?.config?.mode || null;
   const isBasicMode = featureAccess?.access_level === 'limited' && ['basic', 'basic_chronological'].includes(featureMode);
   const documentsQueryKey = isCompanyScope ? ['companyDocuments', companyId] : ['projectDocuments', projectId];
-  const scopeLabel = isCompanyScope ? tr('società', 'company') : tr('progetto', 'project');
+  const scopeLabel = isCompanyScope ? tr('società', 'company') : tr('cantiere', 'worksite');
   const [searchQuery, setSearchQuery] = useState('');
   const [filterCategory, setFilterCategory] = useState('all');
   const [filterType, setFilterType] = useState('all');
@@ -506,7 +525,7 @@ export default function DocumentList({
                       )}
                       {!isBasicMode && doc.document_status && (
                         <span className="bg-orange-50 text-orange-700 px-2 py-0.5 rounded text-xs uppercase">
-                          {doc.document_status.replace('_', ' ')}
+                          {getDocumentStatusLabel(doc.document_status, tr)}
                         </span>
                       )}
                       {!isBasicMode && doc.revision_number && (

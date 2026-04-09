@@ -8,8 +8,8 @@
           "title": "Product overview",
           "links": [
             { "label": "Full feature set", "href": "/en/funzionalita", "desc": "Tasks, documents, disputes, finance, and chat in one flow." },
-            { "label": "How it works", "href": "/en/come-funziona", "desc": "From project kickoff to closeout with traceable evidence." },
-            { "label": "Pricing", "href": "/en/prezzi", "desc": "Guided onboarding aligned with your team and project volume." }
+            { "label": "How it works", "href": "/en/come-funziona", "desc": "From worksite kickoff to closeout with traceable evidence." },
+            { "label": "Pricing", "href": "/en/prezzi", "desc": "Guided onboarding aligned with your team and worksite volume." }
           ]
         },
         {
@@ -23,7 +23,7 @@
       ],
       "featured": {
         "title": "Why EdilSync",
-        "text": "Built to protect contractor margin and reputation through a defensible, project-native timeline when disputes happen."
+        "text": "Built to protect contractor margin and reputation through a defensible, worksite-native timeline when disputes happen."
       }
     },
     "audiences": {
@@ -63,7 +63,7 @@
       ],
       "featured": {
         "title": "Practical guidance",
-        "text": "Content is built around real jobsite constraints, not generic project management theory."
+        "text": "Content is built around real jobsite constraints, not generic management theory."
       }
     },
     "quickLinks": [

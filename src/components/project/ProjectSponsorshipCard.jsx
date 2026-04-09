@@ -190,21 +190,21 @@ export default function ProjectSponsorshipCard({
         notificationType: 'project_sponsorship_activated',
         title: tr('Sponsorship attivata', 'Sponsorship activated'),
         message: tr(
-          `Il progetto è ora sponsorizzato da ${sponsorCompanyName} e le funzioni avanzate sono disponibili.`,
-          `The project is now sponsored by ${sponsorCompanyName} and advanced features are available.`,
+          `Il cantiere è ora sponsorizzato da ${sponsorCompanyName} e le funzioni avanzate sono disponibili.`,
+          `The worksite is now sponsored by ${sponsorCompanyName} and advanced features are available.`,
         ),
-        emailSubject: tr('Sponsorship progetto attivata', 'Project sponsorship activated'),
+        emailSubject: tr('Sponsorship cantiere attivata', 'Worksite sponsorship activated'),
         emailBody: tr(
-          `Ciao,\n\nIl progetto è ora sponsorizzato da ${sponsorCompanyName}. Le funzioni avanzate del progetto sono disponibili per i partecipanti.\n\nCordiali saluti,\nIl team EdilSync`,
-          `Hello,\n\nThe project is now sponsored by ${sponsorCompanyName}. Advanced project features are now available to participants.\n\nBest regards,\nThe EdilSync team`,
+          `Ciao,\n\nIl cantiere è ora sponsorizzato da ${sponsorCompanyName}. Le funzioni avanzate del cantiere sono disponibili per i partecipanti.\n\nCordiali saluti,\nIl team EdilSync`,
+          `Hello,\n\nThe worksite is now sponsored by ${sponsorCompanyName}. Advanced worksite features are now available to participants.\n\nBest regards,\nThe EdilSync team`,
         ),
       });
 
       toast({
         title: tr('Sponsorship attivata', 'Sponsorship activated'),
         description: tr(
-          'Il progetto ora sblocca le feature premium progettuali per tutti i partecipanti.',
-          'The project now unlocks premium project features for all participants.',
+          'Il cantiere ora sblocca le feature premium per tutti i partecipanti.',
+          'The worksite now unlocks premium features for all participants.',
         ),
       });
     },
@@ -233,21 +233,21 @@ export default function ProjectSponsorshipCard({
         notificationType: 'project_sponsorship_revoked',
         title: tr('Sponsorship terminata', 'Sponsorship ended'),
         message: tr(
-          `La sponsorship di ${revokedCompanyName} è terminata e alcune funzioni avanzate del progetto non sono più disponibili.`,
-          `The sponsorship from ${revokedCompanyName} has ended and some advanced project features are no longer available.`,
+          `La sponsorship di ${revokedCompanyName} è terminata e alcune funzioni avanzate del cantiere non sono più disponibili.`,
+          `The sponsorship from ${revokedCompanyName} has ended and some advanced worksite features are no longer available.`,
         ),
-        emailSubject: tr('Sponsorship progetto revocata', 'Project sponsorship revoked'),
+        emailSubject: tr('Sponsorship cantiere revocata', 'Worksite sponsorship revoked'),
         emailBody: tr(
-          `Ciao,\n\nLa sponsorship di ${revokedCompanyName} è terminata. Alcune funzioni avanzate del progetto potrebbero non essere più disponibili finché non viene attivata una nuova sponsorship.\n\nCordiali saluti,\nIl team EdilSync`,
-          `Hello,\n\nThe sponsorship from ${revokedCompanyName} has ended. Some advanced project features may no longer be available until a new sponsorship is activated.\n\nBest regards,\nThe EdilSync team`,
+          `Ciao,\n\nLa sponsorship di ${revokedCompanyName} è terminata. Alcune funzioni avanzate del cantiere potrebbero non essere più disponibili finché non viene attivata una nuova sponsorship.\n\nCordiali saluti,\nIl team EdilSync`,
+          `Hello,\n\nThe sponsorship from ${revokedCompanyName} has ended. Some advanced worksite features may no longer be available until a new sponsorship is activated.\n\nBest regards,\nThe EdilSync team`,
         ),
       });
 
       toast({
         title: tr('Sponsorship terminata', 'Sponsorship ended'),
         description: tr(
-          'Il progetto torna al piano Base finche non viene sponsorizzato di nuovo.',
-          'The project returns to the Base plan until it is sponsored again.',
+          'Il cantiere torna al piano Base finche non viene sponsorizzato di nuovo.',
+          'The worksite returns to the Base plan until it is sponsored again.',
         ),
       });
     },
@@ -285,7 +285,7 @@ export default function ProjectSponsorshipCard({
                   <ShieldCheck className={`h-5 w-5 ${effectiveActiveSponsorship ? 'text-[#ef6144]' : isBlockedProject ? 'text-red-600' : 'text-slate-500'}`} />
                 </div>
                 <div>
-                  <CardTitle className="text-lg">{tr('Piano progetto', 'Project plan')}</CardTitle>
+                  <CardTitle className="text-lg">{tr('Piano cantiere', 'Worksite plan')}</CardTitle>
                   <p className="mt-1 text-sm text-gray-500">
                     {effectiveActiveSponsorship
                       ? tr('Funzioni avanzate attive', 'Advanced features active')
@@ -324,17 +324,17 @@ export default function ProjectSponsorshipCard({
                 <div>
                   <p className="text-lg font-semibold text-slate-900">
                     {effectiveActiveSponsorship
-                      ? tr('Progetto sponsorizzato', 'Sponsored project')
+                      ? tr('Cantiere sponsorizzato', 'Sponsored worksite')
                       : isBlockedProject
                         ? tr('Riattiva una societa sponsor', 'Restore a sponsor company')
-                        : tr('Puoi passare il progetto a Pro', 'You can upgrade this project to Pro')}
+                        : tr('Puoi passare il cantiere a Pro', 'You can upgrade this worksite to Pro')}
                   </p>
                   <p className="text-sm text-slate-500">
                     {effectiveActiveSponsorship
-                      ? tr('Le funzioni avanzate del progetto sono attive per tutti i partecipanti.', 'Advanced project features are active for all participants.')
+                      ? tr('Le funzioni avanzate del cantiere sono attive per tutti i partecipanti.', 'Advanced worksite features are active for all participants.')
                       : isBlockedProject
                         ? tr('Per riattivare le funzioni avanzate serve una societa sponsor.', 'A sponsor company is required to reactivate advanced features.')
-                        : tr('Serve una societa Pro gia presente nel progetto.', 'A Pro company already in the project is required.')}
+                        : tr('Serve una societa Pro gia presente nel cantiere.', 'A Pro company already in the worksite is required.')}
                   </p>
                 </div>
                 <CollapsibleTrigger asChild>
@@ -367,8 +367,8 @@ export default function ProjectSponsorshipCard({
             <div className="rounded-xl border border-red-200 bg-red-50 p-4 text-sm text-red-900">
               <p className="font-medium">
                 {tr(
-                  'Questo progetto ha bisogno di una societa sponsor per tornare completo.',
-                  'This project needs a sponsor company to be fully active again.',
+                  'Questo cantiere ha bisogno di una societa sponsor per tornare completo.',
+                  'This worksite needs a sponsor company to be fully active again.',
                 )}
               </p>
               <p className="mt-2 text-red-800">
@@ -381,8 +381,8 @@ export default function ProjectSponsorshipCard({
           ) : (
             <div className="rounded-xl border border-dashed p-4 text-sm text-slate-600">
               {tr(
-                'Per attivare funzioni come milestone, documenti avanzati, chat avanzata e area economica serve una societa Pro gia presente nel progetto.',
-                'To unlock milestones, advanced documents, advanced chat, and finance, a participating Pro company must sponsor the project.',
+                'Per attivare funzioni come milestone, documenti avanzati, chat avanzata e area economica serve una societa Pro gia presente nel cantiere.',
+                'To unlock milestones, advanced documents, advanced chat, and finance, a participating Pro company must sponsor the worksite.',
               )}
             </div>
           )}
@@ -391,8 +391,8 @@ export default function ProjectSponsorshipCard({
             <div className="space-y-3 rounded-xl border bg-slate-50 p-4">
               <p className="text-sm text-slate-700">
                 {tr(
-                  'Puoi attivare subito il piano Pro del progetto con una delle tue societa Pro gia presenti.',
-                  'You can activate the project Pro plan now with one of your participating Pro companies.',
+                  'Puoi attivare subito il piano Pro del cantiere con una delle tue societa Pro gia presenti.',
+                  'You can activate the worksite Pro plan now with one of your participating Pro companies.',
                 )}
               </p>
               <div className="flex flex-wrap gap-2">
@@ -402,7 +402,7 @@ export default function ProjectSponsorshipCard({
               </div>
               <Button className="bg-[#ef6144] hover:bg-[#d9553a]" onClick={() => setSponsorDialogOpen(true)}>
                 <Sparkles className="h-4 w-4" />
-                {tr('Sponsorizza progetto', 'Sponsor project')}
+                {tr('Sponsorizza cantiere', 'Sponsor worksite')}
               </Button>
             </div>
           ) : null}
@@ -411,8 +411,8 @@ export default function ProjectSponsorshipCard({
             <div className="space-y-3 rounded-xl border bg-slate-50 p-4">
               <p className="text-sm text-slate-700">
                 {tr(
-                  'Sei admin di una societa partecipante. Passando a Pro potrai attivare il piano Pro di questo progetto.',
-                  'You are an admin of a participating company. Upgrading to Pro will let you activate this project Pro plan.',
+                  'Sei admin di una societa partecipante. Passando a Pro potrai attivare il piano Pro di questo cantiere.',
+                  'You are an admin of a participating company. Upgrading to Pro will let you activate this worksite Pro plan.',
                 )}
               </p>
               <Button variant="outline" onClick={openUpgradeTarget}>
@@ -436,19 +436,19 @@ export default function ProjectSponsorshipCard({
       <Dialog open={infoOpen} onOpenChange={setInfoOpen}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>{tr('Cosa significa la sponsorship', 'What project sponsorship means')}</DialogTitle>
+            <DialogTitle>{tr('Cosa significa la sponsorship', 'What worksite sponsorship means')}</DialogTitle>
             <DialogDescription>
               {tr(
-                'La sponsorship attiva il piano Pro solo dentro questo progetto.',
-                'Sponsorship activates the Pro plan only inside this project.',
+                'La sponsorship attiva il piano Pro solo dentro questo cantiere.',
+                'Sponsorship activates the Pro plan only inside this worksite.',
               )}
             </DialogDescription>
           </DialogHeader>
           <div className="space-y-3 text-sm text-slate-600">
             <p>
               {tr(
-                'Quando una societa Pro sponsorizza il progetto, tutti i partecipanti vedono le funzioni avanzate del progetto.',
-                'When a Pro company sponsors the project, all participants can use its advanced features.',
+                'Quando una societa Pro sponsorizza il cantiere, tutti i partecipanti vedono le funzioni avanzate del cantiere.',
+                'When a Pro company sponsors the worksite, all participants can use its advanced features.',
               )}
             </p>
             <p>
@@ -467,11 +467,11 @@ export default function ProjectSponsorshipCard({
       <Dialog open={sponsorDialogOpen} onOpenChange={setSponsorDialogOpen}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>{tr('Sponsorizza progetto', 'Sponsor project')}</DialogTitle>
+            <DialogTitle>{tr('Sponsorizza cantiere', 'Sponsor worksite')}</DialogTitle>
             <DialogDescription>
               {tr(
-                'Scegli la societa Pro che deve attivare il piano Pro di questo progetto.',
-                'Choose the Pro company that should activate this project Pro plan.',
+                'Scegli la societa Pro che deve attivare il piano Pro di questo cantiere.',
+                'Choose the Pro company that should activate this worksite Pro plan.',
               )}
             </DialogDescription>
           </DialogHeader>
@@ -488,8 +488,8 @@ export default function ProjectSponsorshipCard({
             </Select>
             <p className="text-sm text-slate-600">
               {tr(
-                'La sponsorship parte subito e resta attiva finche la societa sponsor mantiene il piano Pro e partecipa al progetto.',
-                'Sponsorship starts immediately and stays active while the sponsor company keeps its Pro plan and remains in the project.',
+                'La sponsorship parte subito e resta attiva finche la societa sponsor mantiene il piano Pro e partecipa al cantiere.',
+                'Sponsorship starts immediately and stays active while the sponsor company keeps its Pro plan and remains in the worksite.',
               )}
             </p>
           </div>
@@ -514,8 +514,8 @@ export default function ProjectSponsorshipCard({
             <AlertDialogTitle>{tr('Terminare la sponsorship?', 'End sponsorship?')}</AlertDialogTitle>
             <AlertDialogDescription>
               {tr(
-                'Il progetto perdera subito le feature premium progettuali. Se l owner ha gia un altro progetto non sponsorizzato, il progetto entrera nello stato bloccato finche non arrivera una nuova sponsorship.',
-                'The project will immediately lose premium project features. If the owner already has another unsponsored project, the project will enter the blocked state until a new sponsorship arrives.',
+                'Il cantiere perdera subito le feature premium. Se l owner ha gia un altro cantiere non sponsorizzato, il cantiere entrera nello stato bloccato finche non arrivera una nuova sponsorship.',
+                'The worksite will immediately lose premium features. If the owner already has another unsponsored worksite, the worksite will enter the blocked state until a new sponsorship arrives.',
               )}
             </AlertDialogDescription>
           </AlertDialogHeader>

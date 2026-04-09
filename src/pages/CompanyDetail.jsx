@@ -288,7 +288,7 @@ export default function CompanyDetail() {
               <div className="space-y-1">
                 <p className="text-sm font-semibold text-[#b5432e]">{tr('Sblocca il piano Pro', 'Unlock the Pro plan')}</p>
                 <p className="text-base font-semibold text-slate-900">
-                  {tr('Attiva funzioni avanzate e sponsorship dei progetti della societa.', 'Activate advanced tools and project sponsorship for your company.')}
+                  {tr('Attiva funzioni avanzate e sponsorship dei cantieri della societa.', 'Activate advanced tools and worksite sponsorship for your company.')}
                 </p>
                 <p className="text-sm text-slate-600">
                   {tr('Apri la sezione fatturazione e scopri il piano annuale con 2 mensilita gratuite.', 'Open billing and discover the yearly plan with 2 free months.')}

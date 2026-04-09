@@ -10,7 +10,7 @@ export default function SuggestedMessages({ onSelectMessage }) {
   const suggestions = [
     {
       icon: ListTodo,
-      text: tr('Quali sono i miei progetti in corso?', 'What are my ongoing projects?'),
+      text: tr('Quali sono i miei cantieri in corso?', 'What are my ongoing worksites?'),
     },
     {
       icon: Calendar,
@@ -18,7 +18,7 @@ export default function SuggestedMessages({ onSelectMessage }) {
     },
     {
       icon: Users,
-      text: tr('Chi sono i partecipanti del progetto X?', 'Who are the participants of project X?'),
+      text: tr('Chi sono i partecipanti del cantiere X?', 'Who are the participants of worksite X?'),
     },
     {
       icon: MessageSquare,

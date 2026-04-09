@@ -27,24 +27,24 @@ const contentByLocale = {
   it: {
     seoTitle: 'Funzionalità EdilSync',
     seoDescription:
-      'Tutte le funzionalità EdilSync per coordinare progetti, comunicazione, documentazione, operatività e protezione in cantiere, distinguendo tra strumenti avanzati dell’impresa e strumenti avanzati del progetto sponsorizzato.',
+      'Tutte le funzionalità EdilSync per coordinare cantieri, comunicazione, documentazione, operatività e protezione in cantiere, distinguendo tra strumenti avanzati dell’impresa e strumenti avanzati del cantiere sponsorizzato.',
     badge: 'Funzionalità',
     title: "Tutto in un'unica piattaforma",
     subtitle:
       'Non moduli separati, ma un ecosistema interconnesso che copre ogni aspetto del coordinamento di cantiere - dalla prima foto fino al SAL finale.',
     note:
-      'Privati e collaboratori invitati restano free. Gli strumenti avanzati dell’impresa appartengono alla società Pro; milestone, controllo economico, documenti avanzati e chat progettuale completa si attivano nei progetti sponsorizzati.',
+      'Privati e collaboratori invitati restano free. Gli strumenti avanzati dell’impresa appartengono alla società Pro; milestone, controllo economico, documenti avanzati e chat contestuale completa si attivano nei cantieri sponsorizzati.',
     sections: [
       {
-        title: 'Gestione Progetti',
+        title: 'Gestione Cantieri',
         icon: Layers,
         colorClass: 'bg-blue-500/10 text-blue-600',
-        note: 'Le funzioni più avanzate di progetto qui descritte si attivano nei progetti sponsorizzati.',
+        note: 'Le funzioni più avanzate di cantiere qui descritte si attivano nei cantieri sponsorizzati.',
         cards: [
           {
             title: 'Task e Milestone',
             icon: ListChecks,
-            badge: 'Progetto sponsorizzato',
+            badge: 'Cantiere sponsorizzato',
             description:
               'Organizza il lavoro per fasi, stanze e milestone. Ogni task ha stato, scadenza, assegnatario e può essere bloccato con responsabilità taggata. Vista board e lista disponibili.',
           },
@@ -66,14 +66,14 @@ const contentByLocale = {
         title: 'Comunicazione',
         icon: MessageCircle,
         colorClass: 'bg-purple-500/10 text-purple-600',
-        note: 'Chat e notifiche restano contestuali; i riferimenti avanzati di progetto si espandono nei progetti sponsorizzati.',
+        note: 'Chat e notifiche restano contestuali; i riferimenti avanzati di cantiere si espandono nei cantieri sponsorizzati.',
         cards: [
           {
             title: 'Chat Contestuale',
             icon: MessageCircle,
-            badge: 'Progetto sponsorizzato',
+            badge: 'Cantiere sponsorizzato',
             description:
-              'Messaggi di progetto e di società con riferimenti strutturati a task, milestone, documenti e change request. I riferimenti sono badge cliccabili.',
+              'Messaggi di cantiere e di società con riferimenti strutturati a task, milestone, documenti e change request. I riferimenti sono badge cliccabili.',
           },
           {
             title: 'Notifiche Intelligenti',
@@ -93,27 +93,27 @@ const contentByLocale = {
         title: 'Documentazione',
         icon: Camera,
         colorClass: 'bg-amber-500/10 text-amber-600',
-        note: 'La documentazione più strutturata e la collaborazione tecnica completa si esprimono nei progetti sponsorizzati.',
+        note: 'La documentazione più strutturata e la collaborazione tecnica completa si esprimono nei cantieri sponsorizzati.',
         cards: [
           {
             title: 'Documentazione Fotografica',
             icon: Camera,
             description:
-              'Foto automaticamente associate al progetto, time-stamped, organizzabili per task e area. Protezione legale integrata senza lavoro extra.',
+              'Foto automaticamente associate al cantiere, time-stamped, organizzabili per task e area. Protezione legale integrata senza lavoro extra.',
           },
           {
             title: 'Gestione Documenti Avanzata',
             icon: FileText,
-            badge: 'Progetto sponsorizzato',
+            badge: 'Cantiere sponsorizzato',
             description:
               'Upload, anteprima, download, commenti, revisioni e categorizzazione. Metadati tecnici avanzati: disciplina, fase, stato documento, tag.',
           },
           {
             title: 'BIM e Viewer 3D',
             icon: Globe,
-            badge: 'Progetto sponsorizzato',
+            badge: 'Cantiere sponsorizzato',
             description:
-              'Nei progetti sponsorizzati, supporto IFC, GLB e GLTF con viewer in-app, camera orbitale, parsing IFC e fallback automatico a viewer esterno.',
+              'Nei cantieri sponsorizzati, supporto IFC, GLB e GLTF con viewer in-app, camera orbitale, parsing IFC e fallback automatico a viewer esterno.',
           },
         ],
       },
@@ -121,12 +121,12 @@ const contentByLocale = {
         title: 'Finanza e Operatività',
         icon: Wallet,
         colorClass: 'bg-emerald-500/10 text-emerald-600',
-        note: 'Timbrature societarie appartengono alla società Pro; controllo economico e operatività di progetto dipendono dalla sponsorship attiva.',
+        note: 'Timbrature societarie appartengono alla società Pro; controllo economico e operatività di cantiere dipendono dalla sponsorship attiva.',
         cards: [
           {
             title: 'Controllo Economico',
             icon: Wallet,
-            badge: 'Progetto sponsorizzato',
+            badge: 'Cantiere sponsorizzato',
             description:
               'Budget, costi, tariffe e progress statement. Permessi granulari e visibilità per ruolo su forecast, extra approvati e contestazioni.',
           },
@@ -134,13 +134,13 @@ const contentByLocale = {
             title: 'Timbrature e Presenze',
             icon: Clock3,
             description:
-              'Clock-in/out con GPS opzionale, note entrata/uscita e collegamento al progetto. Export dati e integrazione con il modulo costi.',
+              'Clock-in/out con GPS opzionale, note entrata/uscita e collegamento al cantiere. Export dati e integrazione con il modulo costi.',
           },
           {
             title: 'Dashboard e Analytics',
             icon: ChartNoAxesColumn,
             description:
-              'Dashboard contestuale per ruolo con indicatori su avanzamento, task completati, progetti attivi e membri presenti.',
+              'Dashboard contestuale per ruolo con indicatori su avanzamento, task completati, cantieri attivi e membri presenti.',
           },
         ],
       },
@@ -159,7 +159,7 @@ const contentByLocale = {
             title: 'Permessi Contestuali',
             icon: LockKeyhole,
             description:
-              'Livelli di permesso su applicazione, contesto attivo, ruolo società e ruolo progetto. Tutto relazionale e tracciabile.',
+              'Livelli di permesso su applicazione, contesto attivo, ruolo società e ruolo cantiere. Tutto relazionale e tracciabile.',
           },
           {
             title: 'Documentazione Automatica',
@@ -179,7 +179,7 @@ const contentByLocale = {
             title: 'Area completa',
             icon: Layers,
             description:
-              'Area completa con dashboard, progetti, calendario, aziende, notifiche e impostazioni per la gestione quotidiana e amministrativa.',
+              'Area completa con dashboard, cantieri, calendario, aziende, notifiche e impostazioni per la gestione quotidiana e amministrativa.',
           },
           {
             title: 'Modalità Operativa',
@@ -191,7 +191,7 @@ const contentByLocale = {
             title: 'Accesso contestuale per ruolo',
             icon: Zap,
             description:
-              'La stessa piattaforma adatta visibilità e azioni in base al contesto attivo, al ruolo in impresa e al ruolo nel progetto, senza creare doppioni inutili.',
+              'La stessa piattaforma adatta visibilità e azioni in base al contesto attivo, al ruolo in impresa e al ruolo nel cantiere, senza creare doppioni inutili.',
           },
         ],
       },
@@ -200,24 +200,24 @@ const contentByLocale = {
   en: {
     seoTitle: 'EdilSync Features',
     seoDescription:
-      'All EdilSync features for project coordination, communication, documentation, field operations, and dispute protection, with a clear split between company premium and sponsored-project premium.',
+      'All EdilSync features for worksite coordination, communication, documentation, field operations, and dispute protection, with a clear split between company premium and sponsored-worksite premium.',
     badge: 'Features',
     title: 'Everything in one platform',
     subtitle:
       'Not separate modules, but one connected ecosystem covering every layer of construction coordination from first photo to final progress statement.',
     note:
-      'Private owners and invited collaborators remain free. Company premium belongs to the Pro company; milestones, financial control, advanced documents, and full project chat unlock on sponsored projects.',
+      'Private owners and invited collaborators remain free. Company premium belongs to the Pro company; milestones, financial control, advanced documents, and full worksite chat unlock on sponsored worksites.',
     sections: [
       {
-        title: 'Project Management',
+        title: 'Worksite Management',
         icon: Layers,
         colorClass: 'bg-blue-500/10 text-blue-600',
-        note: 'The premium project surfaces described here unlock on sponsored projects.',
+        note: 'The premium worksite surfaces described here unlock on sponsored worksites.',
         cards: [
           {
             title: 'Tasks and Milestones',
             icon: ListChecks,
-            badge: 'Sponsored project',
+            badge: 'Sponsored worksite',
             description:
               'Organize execution by phases, rooms, and milestones. Each task has status, due date, owner, and optional blocked accountability. Board and list views included.',
           },
@@ -239,14 +239,14 @@ const contentByLocale = {
         title: 'Communication',
         icon: MessageCircle,
         colorClass: 'bg-purple-500/10 text-purple-600',
-        note: 'Chat and notifications stay contextual; advanced project references expand on sponsored projects.',
+        note: 'Chat and notifications stay contextual; advanced worksite references expand on sponsored worksites.',
         cards: [
           {
             title: 'Contextual Chat',
             icon: MessageCircle,
-            badge: 'Sponsored project',
+            badge: 'Sponsored worksite',
             description:
-              'Project and company messages linked to tasks, milestones, documents, and change requests through structured clickable references.',
+              'Worksite and company messages linked to tasks, milestones, documents, and change requests through structured clickable references.',
           },
           {
             title: 'Smart Notifications',
@@ -266,27 +266,27 @@ const contentByLocale = {
         title: 'Documentation',
         icon: Camera,
         colorClass: 'bg-amber-500/10 text-amber-600',
-        note: 'Advanced document workflows and full technical collaboration are strongest on sponsored projects.',
+        note: 'Advanced document workflows and full technical collaboration are strongest on sponsored worksites.',
         cards: [
           {
             title: 'Photo Documentation',
             icon: Camera,
             description:
-              'Photos are automatically linked to the project, time-stamped, and organized by task and area with built-in legal protection.',
+              'Photos are automatically linked to the worksite, time-stamped, and organized by task and area with built-in legal protection.',
           },
           {
             title: 'Advanced Document Management',
             icon: FileText,
-            badge: 'Sponsored project',
+            badge: 'Sponsored worksite',
             description:
               'Upload, preview, download, comments, revisions, and categorization with advanced metadata for discipline, phase, and status.',
           },
           {
             title: 'BIM and 3D Viewer',
             icon: Globe,
-            badge: 'Sponsored project',
+            badge: 'Sponsored worksite',
             description:
-              'On sponsored projects, native support for IFC, GLB, and GLTF with in-app orbit controls, IFC parsing, and automatic fallback to external viewer when needed.',
+              'On sponsored worksites, native support for IFC, GLB, and GLTF with in-app orbit controls, IFC parsing, and automatic fallback to external viewer when needed.',
           },
         ],
       },
@@ -294,12 +294,12 @@ const contentByLocale = {
         title: 'Finance and Operations',
         icon: Wallet,
         colorClass: 'bg-emerald-500/10 text-emerald-600',
-        note: 'Company attendance belongs to the Pro company; project financial control and project operations depend on active sponsorship.',
+        note: 'Company attendance belongs to the Pro company; worksite financial control and worksite operations depend on active sponsorship.',
         cards: [
           {
             title: 'Financial Control',
             icon: Wallet,
-            badge: 'Sponsored project',
+            badge: 'Sponsored worksite',
             description:
               'Budgets, costs, labor rates, and progress statements with role-based visibility on forecasts, approved extras, and contested items.',
           },
@@ -307,13 +307,13 @@ const contentByLocale = {
             title: 'Attendance and Clock-in',
             icon: Clock3,
             description:
-              'Clock-in/out with optional GPS, entry and exit notes, project linkage, data export, and integration with cost control.',
+              'Clock-in/out with optional GPS, entry and exit notes, worksite linkage, data export, and integration with cost control.',
           },
           {
             title: 'Dashboards and Analytics',
             icon: ChartNoAxesColumn,
             description:
-              'Role-aware dashboards showing progress indicators, completed tasks, active projects, and team presence across contexts.',
+              'Role-aware dashboards showing progress indicators, completed tasks, active worksites, and team presence across contexts.',
           },
         ],
       },
@@ -332,13 +332,13 @@ const contentByLocale = {
             title: 'Contextual Permissions',
             icon: LockKeyhole,
             description:
-              'Permission levels across app scope, active context, company role, and project role. Fully relational and traceable.',
+              'Permission levels across app scope, active context, company role, and worksite role. Fully relational and traceable.',
           },
           {
             title: 'Automatic Documentation',
             icon: Zap,
             description:
-              'Daily actions become documentation automatically: status changes, uploads, approvals, and messages are captured in the project feed.',
+              'Daily actions become documentation automatically: status changes, uploads, approvals, and messages are captured in the worksite feed.',
           },
         ],
       },
@@ -352,7 +352,7 @@ const contentByLocale = {
             title: 'Normal workspace',
             icon: Layers,
             description:
-              'Full workspace with dashboards, projects, calendar, companies, notifications, and settings for advanced management.',
+              'Full workspace with dashboards, worksites, calendar, companies, notifications, and settings for advanced management.',
           },
           {
             title: 'Operative Mode',
@@ -364,7 +364,7 @@ const contentByLocale = {
             title: 'Contextual role access',
             icon: Zap,
             description:
-              'The same platform adapts visibility and actions based on active context, company role, and project role without duplicating surfaces.',
+              'The same platform adapts visibility and actions based on active context, company role, and worksite role without duplicating surfaces.',
           },
         ],
       },

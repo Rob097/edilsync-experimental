@@ -12,13 +12,13 @@ const contentByLocale = {
   it: {
     seoTitle: 'Per i Contractor',
     seoDescription:
-      'Pagina dedicata ai contractor: società free o Pro, protezione margini, documentazione automatica, coordinamento subappalti e strumenti avanzati di progetto tramite sponsorship.',
+      'Pagina dedicata ai contractor: società free o Pro, protezione margini, documentazione automatica, coordinamento subappalti e strumenti avanzati di cantiere tramite sponsorship.',
     badge: 'Per i Contractor',
     titleA: 'Proteggi i tuoi margini.',
     titleB: 'Ogni giorno.',
     subtitle:
-      'Con margini del 3-5%, una sola disputa non documentata può azzerare il profitto di un intero progetto. La società può partire free e passare a Pro quando servono strumenti avanzati per l’impresa e la possibilità di sponsorizzare i progetti.',
-    note: 'Società free o Pro. Gli strumenti avanzati di progetto si attivano sui progetti sponsorizzati.',
+      'Con margini del 3-5%, una sola disputa non documentata può azzerare il profitto di un intero cantiere. La società può partire free e passare a Pro quando servono strumenti avanzati per l’impresa e la possibilità di sponsorizzare i cantieri.',
+    note: 'Società free o Pro. Gli strumenti avanzati di cantiere si attivano sui cantieri sponsorizzati.',
     ctaTop: 'Crea account azienda',
     quote:
       'Non sono io in ritardo: sto aspettando che il cliente scelga le piastrelle da tre settimane. Ma quando lascia una recensione negativa, indovina di chi è la colpa?',
@@ -33,7 +33,7 @@ const contentByLocale = {
       },
       {
         title: 'Documentazione automatica',
-        text: 'Le foto che scatti in cantiere diventano automaticamente parte del dossier di progetto. Time-stamped, organizzate, sempre trovabili.',
+        text: 'Le foto che scatti in cantiere diventano automaticamente parte del dossier di cantiere. Time-stamped, organizzate, sempre trovabili.',
         icon: Camera,
       },
       {
@@ -43,7 +43,7 @@ const contentByLocale = {
       },
       {
         title: 'Tracciabilità totale',
-        text: 'Chi ha detto cosa, quando, in quale progetto. Ogni azione è registrata. Protezione legale integrata nel lavoro quotidiano.',
+        text: 'Chi ha detto cosa, quando, in quale cantiere. Ogni azione è registrata. Protezione legale integrata nel lavoro quotidiano.',
         icon: FileText,
       },
       {
@@ -75,13 +75,13 @@ const contentByLocale = {
   en: {
     seoTitle: 'For Contractors',
     seoDescription:
-      'Dedicated contractor page: free or Pro company plans, margin protection, automatic documentation, subcontractor coordination, and project premium through sponsorship.',
+      'Dedicated contractor page: free or Pro company plans, margin protection, automatic documentation, subcontractor coordination, and worksite premium through sponsorship.',
     badge: 'For Contractors',
     titleA: 'Protect your margin.',
     titleB: 'Every day.',
     subtitle:
-      'With 3-5% margins, one undocumented dispute can erase profit on an entire project. Your company can start free and upgrade to Pro when you need company premium and project sponsorship.',
-    note: 'Free or Pro company. Premium project features activate on sponsored projects.',
+      'With 3-5% margins, one undocumented dispute can erase profit on an entire worksite. Your company can start free and upgrade to Pro when you need company premium and worksite sponsorship.',
+    note: 'Free or Pro company. Premium worksite features activate on sponsored worksites.',
     ctaTop: 'Create company account',
     quote:
       'I am not late - I am waiting for the client to choose the tiles for three weeks. But when they leave a bad review, guess who gets blamed?',
@@ -96,7 +96,7 @@ const contentByLocale = {
       },
       {
         title: 'Automatic documentation',
-        text: 'Photos from site become part of the project dossier automatically. Time-stamped, organized, and always retrievable.',
+        text: 'Photos from site become part of the worksite dossier automatically. Time-stamped, organized, and always retrievable.',
         icon: Camera,
       },
       {
@@ -106,7 +106,7 @@ const contentByLocale = {
       },
       {
         title: 'Full traceability',
-        text: 'Who said what, when, and in which project. Every action is logged for legal and operational clarity.',
+        text: 'Who said what, when, and in which worksite. Every action is logged for legal and operational clarity.',
         icon: FileText,
       },
       {
@@ -139,7 +139,6 @@ const contentByLocale = {
 export default function ContractorsPage({ locale = 'it' }) {
   const rootRef = useRef(null);
   const copy = useMemo(() => contentByLocale[locale] || contentByLocale.it, [locale]);
-  const basePath = locale === 'en' ? '/en' : '';
   const canonicalPath = locale === 'en' ? '/en/contractors' : '/contractors';
 
   usePublicGsap(rootRef);
@@ -178,7 +177,7 @@ export default function ContractorsPage({ locale = 'it' }) {
         costLabel={copy.valueCostLabel}
         costValue={copy.valueCost}
         eyebrowLabel={locale === 'en' ? 'Operational value' : 'Valore operativo'}
-        introText={locale === 'en' ? 'Each point below translates EdilSync into measurable operational return: less waste, fewer coordination mistakes, and stronger project control.' : 'Ogni punto qui sotto traduce EdilSync in ritorno operativo concreto: meno dispersione, meno errori di coordinamento e più controllo sul progetto.'}
+        introText={locale === 'en' ? 'Each point below translates EdilSync into measurable operational return: less waste, fewer coordination mistakes, and stronger worksite control.' : 'Ogni punto qui sotto traduce EdilSync in ritorno operativo concreto: meno dispersione, meno errori di coordinamento e più controllo sul cantiere.'}
       />
 
       <MarketingFinalCtaSection

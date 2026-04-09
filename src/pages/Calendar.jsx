@@ -277,9 +277,9 @@ export default function Calendar() {
       {/* Header */}
       <div className="flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
         <div className="app-page-header">
-          <span className="app-page-kicker">Planning</span>
+          <span className="app-page-kicker">{t('calendar.kicker')}</span>
           <h1 className="app-page-title">{t('calendar.title')}</h1>
-          <p className="app-page-subtitle">Vista mensile di attività assegnate ed eventi del contesto selezionato.</p>
+          <p className="app-page-subtitle">{t('calendar.subtitle')}</p>
           <div className="flex items-center gap-2">
             <ContextBadge context={currentContext} companyName={currentCompany?.name} />
           </div>

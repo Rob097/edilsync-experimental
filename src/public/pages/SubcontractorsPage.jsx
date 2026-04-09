@@ -18,14 +18,14 @@ const contentByLocale = {
   it: {
     seoTitle: 'Per i Subappaltatori',
     seoDescription:
-      'Pagina dedicata ai subappaltatori: meno viaggi a vuoto, task contestuali, chat tracciata e accesso gratuito nei progetti EdilSync.',
+      'Pagina dedicata ai subappaltatori: meno viaggi a vuoto, task contestuali, chat tracciata e accesso gratuito nei cantieri EdilSync.',
     badge: 'Per i Subappaltatori',
     titleA: 'Sai esattamente',
     titleB: 'dove e quando',
     titleC: 'essere in cantiere.',
     subtitle:
-      'Gestire 3-5 cantieri contemporaneamente è una sfida di coordinamento. EdilSync ti dà il contesto giusto per ogni progetto senza confusione.',
-    note: 'Accesso gratuito nei progetti in cui vieni invitato',
+      'Gestire 3-5 cantieri contemporaneamente è una sfida di coordinamento. EdilSync ti dà il contesto giusto per ogni cantiere senza confusione.',
+    note: 'Accesso gratuito nei cantieri in cui vieni invitato',
     ctaTop: 'Apri account gratis',
     quote:
       'Arrivo in cantiere e il lavoro precedente non è finito. Un altro viaggio a vuoto. 150 euro di costo, zero fatturato. E nessuno mi aveva avvisato.',
@@ -45,7 +45,7 @@ const contentByLocale = {
       },
       {
         title: 'Chat senza numero personale',
-        text: 'Comunica con il contractor e il team di progetto tramite la chat di EdilSync. Non devi dare il tuo numero di telefono personale.',
+        text: 'Comunica con il contractor e il team di cantiere tramite la chat di EdilSync. Non devi dare il tuo numero di telefono personale.',
         icon: MessageCircle,
       },
       {
@@ -55,12 +55,12 @@ const contentByLocale = {
       },
       {
         title: 'Accesso contestuale',
-        text: 'Entri nel progetto solo quando sei stato invitato, con accesso limitato a ciò che è rilevante per il tuo ambito di lavoro.',
+        text: 'Entri nel cantiere solo quando sei stato invitato, con accesso limitato a ciò che è rilevante per il tuo ambito di lavoro.',
         icon: Navigation,
       },
       {
         title: 'Accesso gratuito su invito',
-        text: 'Come subappaltatore, entri gratis nei progetti a cui vieni invitato. Se il progetto è sponsorizzato, sblocchi anche gli strumenti avanzati disponibili in quel progetto.',
+        text: 'Come subappaltatore, entri gratis nei cantieri a cui vieni invitato. Se il cantiere è sponsorizzato, sblocchi anche gli strumenti avanzati disponibili in quel cantiere.',
         icon: ArrowRight,
       },
     ],
@@ -68,19 +68,19 @@ const contentByLocale = {
     finalText:
       'Smetti di perdere tempo tra chat, email e telefonate. Inizia oggi con EdilSync e vedi la differenza dal primo giorno.',
     finalCta: 'Apri account gratis',
-    finalNote: 'Accesso solo ai progetti invitati · Nessuna carta per iniziare · Collaborazione immediata',
+    finalNote: 'Accesso solo ai cantieri invitati · Nessuna carta per iniziare · Collaborazione immediata',
   },
   en: {
     seoTitle: 'For Subcontractors',
     seoDescription:
-      'Dedicated page for subcontractors: fewer wasted trips, contextual tasks, traceable chat, and free project access in EdilSync.',
+      'Dedicated page for subcontractors: fewer wasted trips, contextual tasks, traceable chat, and free worksite access in EdilSync.',
     badge: 'For Subcontractors',
     titleA: 'Know exactly',
     titleB: 'where and when',
     titleC: 'to be on site.',
     subtitle:
-      'Managing 3-5 active jobs at once is a coordination challenge. EdilSync gives you the right context for each project without confusion.',
-    note: 'Free access on projects where you are invited',
+      'Managing 3-5 active jobs at once is a coordination challenge. EdilSync gives you the right context for each worksite without confusion.',
+    note: 'Free access on worksites where you are invited',
     ctaTop: 'Open free account',
     quote:
       'I arrive on site and the previous work is not finished. Another wasted trip. €150 cost, zero revenue. And nobody warned me.',
@@ -100,7 +100,7 @@ const contentByLocale = {
       },
       {
         title: 'Chat without sharing personal number',
-        text: 'Communicate with contractor and project team in EdilSync chat. No need to expose your personal phone number.',
+        text: 'Communicate with contractor and worksite team in EdilSync chat. No need to expose your personal phone number.',
         icon: MessageCircle,
       },
       {
@@ -110,19 +110,19 @@ const contentByLocale = {
       },
       {
         title: 'Contextual access',
-        text: 'You enter projects only when invited, with visibility limited to what matters for your work package.',
+        text: 'You enter worksites only when invited, with visibility limited to what matters for your work package.',
         icon: Navigation,
       },
       {
         title: 'Free invited access',
-        text: 'As a subcontractor, you join invited projects for free. If the project is sponsored, you also unlock the premium project capabilities available inside that project.',
+        text: 'As a subcontractor, you join invited worksites for free. If the worksite is sponsored, you also unlock the premium worksite capabilities available inside that worksite.',
         icon: ArrowRight,
       },
     ],
     finalTitle: 'Ready to bring order to your construction site?',
     finalText: 'Stop wasting time across chats, emails, and calls. Start today with EdilSync and feel the difference from day one.',
     finalCta: 'Open free account',
-    finalNote: 'Only invited-project access · No card required to start · Fast collaboration',
+    finalNote: 'Only invited-worksite access · No card required to start · Fast collaboration',
   },
 };
 

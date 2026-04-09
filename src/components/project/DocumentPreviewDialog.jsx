@@ -13,8 +13,11 @@ import { Download, ChevronLeft, ChevronRight, MessageSquare, FileText, History, 
 import DocumentComments from './DocumentComments';
 import BimViewer from './BimViewer';
 import InAppIfcViewer from './InAppIfcViewer';
+import { useLanguage } from '@/components/i18n/useLanguage';
 
 export default function DocumentPreviewDialog({ document, open, onOpenChange, allDocuments = [], onNavigate, scopeType = 'project', featureAccess }) {
+  const { currentLanguage } = useLanguage();
+  const tr = (itText, enText) => (currentLanguage === 'it' ? itText : enText);
   const [activeTab, setActiveTab] = useState('preview');
   const [isBimFullscreen, setIsBimFullscreen] = useState(false);
   const bimContainerRef = useRef(null);
@@ -96,6 +99,25 @@ export default function DocumentPreviewDialog({ document, open, onOpenChange, al
   };
 
   const downloadUrl = accessUrl || safeDocument.access_url || safeDocument.file_url;
+
+  const getDocumentStatusLabel = (status) => {
+    switch (status) {
+      case 'draft':
+        return tr('Bozza', 'Draft');
+      case 'in_review':
+        return tr('In revisione', 'In review');
+      case 'approved':
+        return tr('Approvato', 'Approved');
+      case 'rejected':
+        return tr('Respinto', 'Rejected');
+      case 'superseded':
+        return tr('Superato', 'Superseded');
+      case 'archived':
+        return tr('Archiviato', 'Archived');
+      default:
+        return status || tr('Bozza', 'Draft');
+    }
+  };
 
   if (!document) return null;
 
@@ -205,12 +227,12 @@ export default function DocumentPreviewDialog({ document, open, onOpenChange, al
                     <div className="max-w-md rounded-2xl border border-amber-200 bg-white p-6 text-center shadow-sm">
                       <Cuboid className="mx-auto h-10 w-10 text-amber-600" />
                       <p className="mt-4 text-base font-semibold text-slate-900">
-                        {scopeType === 'company' ? 'Preview BIM disponibile solo con società Pro' : 'Preview BIM disponibile solo nei progetti sponsorizzati'}
+                        {scopeType === 'company' ? 'Preview BIM disponibile solo con società Pro' : 'Preview BIM disponibile solo nei cantieri sponsorizzati'}
                       </p>
                       <p className="mt-2 text-sm text-slate-600">
                         {scopeType === 'company'
                           ? 'I file IFC, GLB e GLTF già presenti restano archiviati, ma la visualizzazione 3D è disponibile solo con le funzioni premium della società.'
-                          : 'I file IFC, GLB e GLTF già presenti restano archiviati, ma la visualizzazione 3D è disponibile solo quando il progetto ha una sponsorship attiva.'}
+                          : 'I file IFC, GLB e GLTF già presenti restano archiviati, ma la visualizzazione 3D è disponibile solo quando il cantiere ha una sponsorship attiva.'}
                       </p>
                     </div>
                   </div>
@@ -275,7 +297,7 @@ export default function DocumentPreviewDialog({ document, open, onOpenChange, al
                   <div className="flex items-center justify-between gap-2">
                     <p className="font-medium text-sm">Rev {revision.revision_number || 1} - {revision.name}</p>
                     <span className="text-xs uppercase bg-slate-100 px-2 py-1 rounded">
-                      {revision.document_status || 'draft'}
+                      {getDocumentStatusLabel(revision.document_status)}
                     </span>
                   </div>
                   <p className="text-xs text-slate-500 mt-1">

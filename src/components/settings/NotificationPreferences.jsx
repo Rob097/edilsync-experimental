@@ -35,9 +35,9 @@ const DEFAULT_PREFERENCES = {
 
 const NOTIFICATION_GROUPS = [
   {
-    group: { it: 'Gestione Progetti', en: 'Project Management' },
+    group: { it: 'Gestione Cantieri', en: 'Worksite Management' },
     actions: [
-      { key: 'project_invite', label: { it: 'Invito a nuovo progetto', en: 'Invitation to a new project' } },
+      { key: 'project_invite', label: { it: 'Invito a nuovo cantiere', en: 'Invitation to a new worksite' } },
       { key: 'task_assigned', label: { it: 'Assegnazione task', en: 'Task assignment' } },
       { key: 'task_status_changed', label: { it: 'Cambio stato task', en: 'Task status change' } },
       { key: 'change_request_assigned', label: { it: 'Assegnazione richiesta di modifica', en: 'Change request assignment' } },
@@ -55,10 +55,10 @@ const NOTIFICATION_GROUPS = [
     ],
   },
   {
-    group: { it: 'Piano Progetto', en: 'Project Plan' },
+    group: { it: 'Piano Cantiere', en: 'Worksite Plan' },
     actions: [
-      { key: 'project_sponsorship_activated', label: { it: 'Sponsorship progetto attivata', en: 'Project sponsorship activated' } },
-      { key: 'project_sponsorship_revoked', label: { it: 'Sponsorship progetto revocata', en: 'Project sponsorship revoked' } },
+      { key: 'project_sponsorship_activated', label: { it: 'Sponsorship cantiere attivata', en: 'Worksite sponsorship activated' } },
+      { key: 'project_sponsorship_revoked', label: { it: 'Sponsorship cantiere revocata', en: 'Worksite sponsorship revoked' } },
     ],
   },
   {

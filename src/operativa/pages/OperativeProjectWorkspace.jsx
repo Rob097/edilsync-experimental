@@ -334,7 +334,7 @@ export default function OperativeProjectWorkspace() {
     if (bimBlocked && isBimFileType(document.file_type || document.model_format)) {
       toast({
         title: tr('Preview BIM non disponibile', 'BIM preview unavailable'),
-        description: tr('Nei progetti non sponsorizzati i file IFC, GLB e GLTF non sono apribili in anteprima.', 'On unsponsored projects, IFC, GLB, and GLTF files cannot be previewed.'),
+        description: tr('Nei cantieri non sponsorizzati i file IFC, GLB e GLTF non sono apribili in anteprima.', 'On unsponsored worksites, IFC, GLB, and GLTF files cannot be previewed.'),
       });
       return;
     }
@@ -370,7 +370,7 @@ export default function OperativeProjectWorkspace() {
       if (!uploadFile) return;
       const fileType = uploadFile.name.split('.').pop()?.toLowerCase() || 'file';
       if (bimBlocked && isBimFileType(fileType)) {
-        throw new Error(tr('I file BIM sono disponibili solo nei progetti sponsorizzati.', 'BIM files are available only on sponsored projects.'));
+        throw new Error(tr('I file BIM sono disponibili solo nei cantieri sponsorizzati.', 'BIM files are available only on sponsored worksites.'));
       }
       const uploaded = await appClient.integrations.Core.UploadFile({ file: uploadFile });
       await appClient.entities.ProjectDocument.create({
@@ -668,10 +668,10 @@ export default function OperativeProjectWorkspace() {
                           compact
                           title={tr('Milestone premium', 'Premium milestones')}
                           description={tr(
-                            'Le milestone sono disponibili solo nei progetti sponsorizzati.',
-                            'Milestones are available only on sponsored projects.',
+                            'Le milestone sono disponibili solo nei cantieri sponsorizzati.',
+                            'Milestones are available only on sponsored worksites.',
                           )}
-                          badgeLabel={tr('Progetto sponsorizzato', 'Sponsored project')}
+                          badgeLabel={tr('Cantiere sponsorizzato', 'Sponsored worksite')}
                         />
                       ) : orderedMilestones.length > 0 ? (
                         orderedMilestones.map((milestone) => (
@@ -859,8 +859,8 @@ export default function OperativeProjectWorkspace() {
             compact
             title={tr('Documenti premium', 'Premium documents')}
             description={tr(
-              'I documenti avanzati del progetto si sbloccano solo quando il progetto è sponsorizzato.',
-              'Advanced project documents unlock only when the project is sponsored.',
+              'I documenti avanzati del cantiere si sbloccano solo quando il cantiere è sponsorizzato.',
+              'Advanced worksite documents unlock only when the worksite is sponsored.',
             )}
             badgeLabel={tr('Richiede sponsorship', 'Requires sponsorship')}
           />
@@ -1019,7 +1019,7 @@ export default function OperativeProjectWorkspace() {
           <DialogHeader>
             <DialogTitle>{t('operational.projectDetails')}</DialogTitle>
             <DialogDescription>
-              {tr('Dettagli sintetici del progetto corrente in modalità operativa.', 'Summary details for the current project in operational mode.')}
+              {tr('Dettagli sintetici del cantiere corrente in modalità operativa.', 'Summary details for the current worksite in operational mode.')}
             </DialogDescription>
           </DialogHeader>
           <div className="space-y-4 text-sm">
@@ -1117,12 +1117,12 @@ export default function OperativeProjectWorkspace() {
           <DialogHeader>
             <DialogTitle>{t('operational.uploadTitle')}</DialogTitle>
             <DialogDescription>
-              {tr('Carica un file nel progetto corrente dalla modalità operativa.', 'Upload a file to the current project from operational mode.')}
+              {tr('Carica un file nel cantiere corrente dalla modalità operativa.', 'Upload a file to the current worksite from operational mode.')}
             </DialogDescription>
           </DialogHeader>
           <div className="space-y-3">
             <Input type="file" accept={bimBlocked ? 'image/*,.pdf,.doc,.docx,.xls,.xlsx,.txt,.csv,.dwg,.dxf,.zip,.rar' : 'image/*,.pdf,.doc,.docx,.xls,.xlsx,.txt,.csv,.dwg,.dxf,.ifc,.glb,.gltf,.zip,.rar'} onChange={(event) => setUploadFile(event.target.files?.[0] || null)} />
-            {bimBlocked ? <p className="text-xs text-amber-700">{tr('IFC, GLB e GLTF si attivano solo quando il progetto è sponsorizzato.', 'IFC, GLB, and GLTF unlock only when the project is sponsored.')}</p> : null}
+            {bimBlocked ? <p className="text-xs text-amber-700">{tr('IFC, GLB e GLTF si attivano solo quando il cantiere è sponsorizzato.', 'IFC, GLB, and GLTF unlock only when the worksite is sponsored.')}</p> : null}
             <Select value={uploadCategory} onValueChange={setUploadCategory}>
               <SelectTrigger>
                 <SelectValue />

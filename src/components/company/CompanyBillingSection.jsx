@@ -360,7 +360,7 @@ export default function CompanyBillingSection({ companyId, companyName, isAdmin 
                   <p className="text-sm text-slate-500">
                     {isProPlan
                       ? [billingStatusLabel, cycleLabel, periodEndLabel].filter(Boolean).join(' • ')
-                      : tr('Sponsorship progetto, strumenti avanzati e gestione semplice del piano.', 'Project sponsorship, advanced tools, and simple plan management.')}
+                      : tr('Sponsorship cantiere, strumenti avanzati e gestione semplice del piano.', 'Worksite sponsorship, advanced tools, and simple plan management.')}
                   </p>
                 </div>
                   <div className="flex items-center gap-2">
@@ -491,8 +491,8 @@ export default function CompanyBillingSection({ companyId, companyName, isAdmin 
 
                     <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-4">
                       <div className="rounded-xl border bg-white/80 p-4">
-                        <p className="text-sm font-semibold text-slate-900">{tr('Sponsorship progetto', 'Project sponsorship')}</p>
-                        <p className="mt-1 text-sm text-slate-600">{tr('Sblocchi i progetti a cui partecipa la societa.', 'Unlock projects your company participates in.')}</p>
+                        <p className="text-sm font-semibold text-slate-900">{tr('Sponsorship cantiere', 'Worksite sponsorship')}</p>
+                        <p className="mt-1 text-sm text-slate-600">{tr('Sblocchi i cantieri a cui partecipa la societa.', 'Unlock worksites your company participates in.')}</p>
                       </div>
                       <div className="rounded-xl border bg-white/80 p-4">
                         <p className="text-sm font-semibold text-slate-900">{tr('Strumenti avanzati', 'Advanced tools')}</p>
@@ -545,8 +545,8 @@ export default function CompanyBillingSection({ companyId, companyName, isAdmin 
             <CardTitle className="text-lg">{tr('Sponsorship attive', 'Active sponsorships')}</CardTitle>
             <p className="mt-1 text-sm text-gray-500">
               {tr(
-                'Progetti attualmente sbloccati da questa societa.',
-                'Projects currently unlocked by this company.',
+                'Cantieri attualmente sbloccati da questa societa.',
+                'Worksites currently unlocked by this company.',
               )}
             </p>
           </div>
@@ -578,7 +578,7 @@ export default function CompanyBillingSection({ companyId, companyName, isAdmin 
                       onClick={() => navigate(createPageUrl('ProjectDetail') + `?id=${sponsorship.project_id}`)}
                     >
                       <ExternalLink className="h-4 w-4" />
-                      {tr('Apri progetto', 'Open project')}
+                      {tr('Apri cantiere', 'Open worksite')}
                     </Button>
                   </div>
                 );
@@ -588,12 +588,12 @@ export default function CompanyBillingSection({ companyId, companyName, isAdmin 
             <div className="rounded-xl border border-dashed p-5 text-sm text-slate-600">
               {canSponsorProjects
                 ? tr(
-                  'Questa societa puo sponsorizzare i progetti a cui partecipa, ma al momento non ha sponsorship attive.',
-                  'This company can sponsor the projects it participates in, but it currently has no active sponsorships.',
+                  'Questa societa puo sponsorizzare i cantieri a cui partecipa, ma al momento non ha sponsorship attive.',
+                  'This company can sponsor the worksites it participates in, but it currently has no active sponsorships.',
                 )
                 : tr(
-                  'Con il piano Pro potrai sponsorizzare i progetti a cui la societa partecipa.',
-                  'With the Pro plan, you will be able to sponsor the projects your company joins.',
+                  'Con il piano Pro potrai sponsorizzare i cantieri a cui la societa partecipa.',
+                  'With the Pro plan, you will be able to sponsor the worksites your company joins.',
                 )}
             </div>
           )}
@@ -603,12 +603,12 @@ export default function CompanyBillingSection({ companyId, companyName, isAdmin 
             <p className="mt-1">
               {canSponsorProjects
                 ? tr(
-                  'Puo sponsorizzare un progetto solo se e gia partecipante attivo del progetto stesso.',
-                  'It can sponsor a project only if it is already an active participant in that project.',
+                  'Puo sponsorizzare un cantiere solo se e gia partecipante attivo dello stesso cantiere.',
+                  'It can sponsor a worksite only if it is already an active participant in that worksite.',
                 )
                 : tr(
-                  'Per sponsorizzare un progetto serve un piano Pro attivo.',
-                  'Sponsoring a project requires an active Pro plan.',
+                  'Per sponsorizzare un cantiere serve un piano Pro attivo.',
+                  'Sponsoring a worksite requires an active Pro plan.',
                 )}
             </p>
           </div>

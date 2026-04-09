@@ -78,7 +78,7 @@ export default function Companies() {
       {/* Header */}
       <div className="flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
         <div className="app-page-header">
-          <span className="app-page-kicker">Company network</span>
+          <span className="app-page-kicker">{t('companies.kicker')}</span>
           <h1 className="app-page-title">{t('dashboard.yourCompanies')}</h1>
           <p className="app-page-subtitle">{t('companies.manageCompanies')}</p>
         </div>

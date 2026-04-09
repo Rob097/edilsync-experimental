@@ -5,20 +5,20 @@ export const getProjectTour = (language = 'it') => {
       steps: [
         {
           target: null,
-          title: 'Benvenuto nel tuo primo progetto! 🏗️',
+          title: 'Benvenuto nel tuo primo cantiere! 🏗️',
           content: 'Ti mostreremo le funzionalità essenziali per gestire il cantiere in modo efficace.',
           placement: 'center',
         },
         {
           target: 'h1',
-          title: 'Nome del Progetto',
+          title: 'Nome del Cantiere',
           content: 'Questo è il tuo cantiere. Qui troverai tutte le informazioni e gli strumenti per gestirlo.',
           placement: 'bottom',
           padding: 12,
         },
         {
           target: '[role="tablist"]',
-          title: 'Sezioni del Progetto',
+          title: 'Sezioni del Cantiere',
           content: 'Organizza il lavoro in sezioni: Cantiere (panoramica), Lavori (task e milestone) e Info & Team (partecipanti e documenti).',
           placement: 'bottom',
           padding: 8,
@@ -44,7 +44,7 @@ export const getProjectTour = (language = 'it') => {
         {
           target: null,
           title: 'Messaggistica del Team 💬',
-          content: 'Comunica con il team tramite la chat. Ogni progetto ha il suo canale generale più eventuali canali custom.',
+          content: 'Comunica con il team tramite la chat. Ogni cantiere ha il suo canale generale più eventuali canali custom.',
           placement: 'center',
         },
         {
@@ -68,20 +68,20 @@ export const getProjectTour = (language = 'it') => {
     steps: [
       {
         target: null,
-        title: 'Welcome to your first project! 🏗️',
+        title: 'Welcome to your first worksite! 🏗️',
         content: 'We will show you the essential features to manage your construction site effectively.',
         placement: 'center',
       },
       {
         target: 'h1',
-        title: 'Project Name',
-        content: 'This is your project. Here you will find all information and tools to manage it.',
+        title: 'Worksite Name',
+        content: 'This is your worksite. Here you will find all information and tools to manage it.',
         placement: 'bottom',
         padding: 12,
       },
       {
         target: '[role="tablist"]',
-        title: 'Project Sections',
+        title: 'Worksite Sections',
         content: 'Organize work in sections: Site (overview), Work (tasks and milestones), and Info & Team (participants and documents).',
         placement: 'bottom',
         padding: 8,
@@ -95,7 +95,7 @@ export const getProjectTour = (language = 'it') => {
       {
         target: null,
         title: 'Task Management ✅',
-        content: 'In the Work section you can create, assign, and track project tasks. Each task has an owner and a due date.',
+          content: 'In the Work section you can create, assign, and track worksite tasks. Each task has an owner and a due date.',
         placement: 'center',
       },
       {
@@ -107,7 +107,7 @@ export const getProjectTour = (language = 'it') => {
       {
         target: null,
         title: 'Team Messaging 💬',
-        content: 'Communicate with your team through chat. Each project has a general channel and optional custom channels.',
+          content: 'Communicate with your team through chat. Each worksite has a general channel and optional custom channels.',
         placement: 'center',
       },
       {
@@ -119,7 +119,7 @@ export const getProjectTour = (language = 'it') => {
       {
         target: null,
         title: 'Ready to Start! 🚀',
-        content: 'Invite team members, create your tasks, and start organizing your project. Good work!',
+          content: 'Invite team members, create your tasks, and start organizing your worksite. Good work!',
         placement: 'center',
       },
     ],

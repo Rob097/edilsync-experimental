@@ -11,13 +11,13 @@ const contentByLocale = {
   it: {
     seoTitle: 'Trasparenza Committente',
     seoDescription:
-      'Segui il cantiere in tempo reale senza chiamare: feed progetto, notifiche utili e, nei progetti sponsorizzati, milestone chiare e trasparenza su costi e varianti.',
+      'Segui il cantiere in tempo reale senza chiamare: feed cantiere, notifiche utili e, nei cantieri sponsorizzati, milestone chiare e trasparenza su costi e varianti.',
     badge: 'Trasparenza del Cantiere',
     title: 'Sai sempre cosa succede.',
     titleHighlight: 'Senza chiamare.',
     subtitle:
-      'Stai investendo una somma importante nella tua casa o nel tuo immobile. Hai visibilità sul cantiere in tempo reale e, quando il progetto è sponsorizzato, hai anche strumenti in più per seguire tempi, costi e decisioni.',
-    note: 'Committente sempre gratis. Milestone, costi approvati e chat strutturata si attivano nei progetti sponsorizzati.',
+      'Stai investendo una somma importante nella tua casa o nel tuo immobile. Hai visibilità sul cantiere in tempo reale e, quando il cantiere è sponsorizzato, hai anche strumenti in più per seguire tempi, costi e decisioni.',
+    note: 'Committente sempre gratis. Milestone, costi approvati e chat strutturata si attivano nei cantieri sponsorizzati.',
     cta: 'Apri account gratis',
     quote:
       '"Ho speso €65.000 per ristrutturare l’appartamento. Per tre mesi ho chiamato il contractor ogni due giorni per sapere a che punto erano. Mi sentivo fastidiosa, ma non avevo altra scelta."',
@@ -32,10 +32,10 @@ const contentByLocale = {
       ['Fai un sopralluogo non annunciato perché non ti fidi', 'Hai visibilità piena senza dover disturbare nessuno'],
     ],
     featuresTitle: 'Tutto ciò che vedi come committente',
-    featuresSubtitle: 'Visibilità immediata sul progetto, con strumenti in più che si attivano quando una società Pro sponsorizza il progetto.',
+    featuresSubtitle: 'Visibilità immediata sul cantiere, con strumenti in più che si attivano quando una società Pro sponsorizza il cantiere.',
     features: [
       {
-        title: 'Feed del progetto in tempo reale',
+        title: 'Feed del cantiere in tempo reale',
         text: 'Ogni azione - foto caricata, task completato, variante approvata - compare nel feed. Il committente vede lo stesso cantiere che vede il contractor, senza dover chiamare.',
         icon: Eye,
       },
@@ -46,26 +46,26 @@ const contentByLocale = {
       },
       {
         title: 'Documentazione fotografica',
-        text: 'Le foto scattate dal cantiere sono automaticamente visibili nel progetto. Vedi lo stato di ogni area, ogni giorno, senza sopralluoghi non programmati.',
+        text: 'Le foto scattate dal cantiere sono automaticamente visibili nel cantiere. Vedi lo stato di ogni area, ogni giorno, senza sopralluoghi non programmati.',
         icon: Camera,
       },
       {
         title: 'Milestone e scadenze chiare',
-        text: 'Nei progetti sponsorizzati, la timeline del progetto è condivisa con milestone e scadenze chiare. Sai quando aspettarti ogni fase completata e ricevi un avviso se qualcosa è in ritardo, con la causa documentata.',
+        text: 'Nei cantieri sponsorizzati, la timeline del cantiere è condivisa con milestone e scadenze chiare. Sai quando aspettarti ogni fase completata e ricevi un avviso se qualcosa è in ritardo, con la causa documentata.',
         icon: CalendarDays,
-        badge: 'Progetto sponsorizzato',
+        badge: 'Cantiere sponsorizzato',
       },
       {
         title: 'Trasparenza economica',
-        text: 'Nei progetti sponsorizzati, vedi budget, costi approvati e stato avanzamento lavori. Le varianti arrivano come change request formali con impatto su costi e tempistiche.',
+        text: 'Nei cantieri sponsorizzati, vedi budget, costi approvati e stato avanzamento lavori. Le varianti arrivano come change request formali con impatto su costi e tempistiche.',
         icon: Wallet,
-        badge: 'Progetto sponsorizzato',
+        badge: 'Cantiere sponsorizzato',
       },
       {
         title: 'Canale diretto con l’impresa',
-        text: 'Nei progetti sponsorizzati, la chat di progetto mantiene tutta la comunicazione nel contesto giusto, collegata a task e documenti specifici. Fine alle email perse e ai messaggi senza risposta.',
+        text: 'Nei cantieri sponsorizzati, la chat di cantiere mantiene tutta la comunicazione nel contesto giusto, collegata a task e documenti specifici. Fine alle email perse e ai messaggi senza risposta.',
         icon: MessageCircle,
-        badge: 'Progetto sponsorizzato',
+        badge: 'Cantiere sponsorizzato',
       },
     ],
     finalTitle: 'Pronto a portare ordine nel tuo cantiere?',
@@ -77,13 +77,13 @@ const contentByLocale = {
   en: {
     seoTitle: 'Client Transparency',
     seoDescription:
-      'Follow your project in real time without constant calls: live feed, meaningful alerts and, on sponsored projects, clear milestones and visibility on costs and changes.',
+      'Follow your worksite in real time without constant calls: live feed, meaningful alerts and, on sponsored worksites, clear milestones and visibility on costs and changes.',
     badge: 'Jobsite Transparency',
     title: 'Always know what is happening.',
     titleHighlight: 'Without calling.',
     subtitle:
-      'You are investing serious money in your home or property. You get real-time visibility on the jobsite and, when the project is sponsored, access to premium coordination and financial transparency areas.',
-    note: 'Homeowners always stay free. Milestones, approved costs, and structured chat unlock on sponsored projects.',
+      'You are investing serious money in your home or property. You get real-time visibility on the jobsite and, when the worksite is sponsored, access to premium coordination and financial transparency areas.',
+    note: 'Homeowners always stay free. Milestones, approved costs, and structured chat unlock on sponsored worksites.',
     cta: 'Open free account',
     quote:
       '"I spent €65,000 to renovate my apartment. For three months I called the contractor every two days just to understand progress. I felt annoying, but I had no alternative."',
@@ -98,11 +98,11 @@ const contentByLocale = {
       ['You do surprise site visits because you do not trust updates', 'You get full visibility without disturbing anyone'],
     ],
     featuresTitle: 'Everything you can see as a homeowner',
-    featuresSubtitle: 'Immediate project visibility, with premium areas enabled when a Pro company sponsors the project.',
+    featuresSubtitle: 'Immediate worksite visibility, with premium areas enabled when a Pro company sponsors the worksite.',
     features: [
       {
-        title: 'Real-time project feed',
-        text: 'Every action - photo uploaded, task completed, change approved - appears in the feed. You see the same project reality as the contractor.',
+        title: 'Real-time worksite feed',
+        text: 'Every action - photo uploaded, task completed, change approved - appears in the feed. You see the same worksite reality as the contractor.',
         icon: Eye,
       },
       {
@@ -112,26 +112,26 @@ const contentByLocale = {
       },
       {
         title: 'Photo documentation',
-        text: 'Site photos become automatically visible in the project. Track each area day by day without unscheduled inspections.',
+        text: 'Site photos become automatically visible in the worksite. Track each area day by day without unscheduled inspections.',
         icon: Camera,
       },
       {
         title: 'Clear milestones and deadlines',
-        text: 'On sponsored projects, the shared timeline includes clear milestones and deadlines. You know what to expect and receive alerts if something slips, with documented cause.',
+        text: 'On sponsored worksites, the shared timeline includes clear milestones and deadlines. You know what to expect and receive alerts if something slips, with documented cause.',
         icon: CalendarDays,
-        badge: 'Sponsored project',
+        badge: 'Sponsored worksite',
       },
       {
         title: 'Financial transparency',
-        text: 'On sponsored projects, you can see budget, approved costs, and progress status. Scope changes arrive as formal change requests with explicit impact.',
+        text: 'On sponsored worksites, you can see budget, approved costs, and progress status. Scope changes arrive as formal change requests with explicit impact.',
         icon: Wallet,
-        badge: 'Sponsored project',
+        badge: 'Sponsored worksite',
       },
       {
-        title: 'Direct project channel',
-        text: 'On sponsored projects, project chat keeps communication in context, linked to tasks and documents. No more lost emails or scattered messages.',
+        title: 'Direct worksite channel',
+        text: 'On sponsored worksites, worksite chat keeps communication in context, linked to tasks and documents. No more lost emails or scattered messages.',
         icon: MessageCircle,
-        badge: 'Sponsored project',
+        badge: 'Sponsored worksite',
       },
     ],
     finalTitle: 'Ready to bring order to your construction site?',

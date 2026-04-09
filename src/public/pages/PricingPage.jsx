@@ -11,12 +11,12 @@ const contentByLocale = {
   it: {
     seoTitle: 'Prezzi',
     seoDescription:
-      'Prezzi chiari per società e progetti: piano società free o paid, sponsorship progetto e accesso gratuito per committente e collaboratori invitati.',
+      'Prezzi chiari per società e cantieri: piano società free o paid, sponsorship cantiere e accesso gratuito per committente e collaboratori invitati.',
     badge: 'Prezzi',
-    title: 'Prezzi chiari per società e progetti.',
-    subtitle: 'Gli strumenti avanzati dell’impresa appartengono alla società Pro. Quelli di progetto si attivano con una sponsorship attiva.',
+    title: 'Prezzi chiari per società e cantieri.',
+    subtitle: 'Gli strumenti avanzati dell’impresa appartengono alla società Pro. Quelli di cantiere si attivano con una sponsorship attiva.',
     planName: 'EdilSync Pro per società',
-    planDesc: 'Per avere strumenti avanzati per l’impresa e sponsorizzare i progetti',
+    planDesc: 'Per avere strumenti avanzati per l’impresa e sponsorizzare i cantieri',
     trialBadge: '€190/anno disponibile',
     price: '€19',
     priceSuffix: '/mese',
@@ -26,17 +26,17 @@ const contentByLocale = {
       {
         badge: 'Sempre free',
         title: 'Privati e invitati',
-        text: 'Il committente resta free. Anche subappaltatori e professionisti partecipano gratis ai progetti in cui vengono invitati.',
+        text: 'Il committente resta free. Anche subappaltatori e professionisti partecipano gratis ai cantieri in cui vengono invitati.',
       },
       {
         badge: 'Società Pro',
         title: 'Chi paga',
-        text: 'Paga solo la società che sceglie il piano Pro: ha strumenti avanzati per l’impresa, un’area operativa più completa e la possibilità di sponsorizzare i progetti.',
+        text: 'Paga solo la società che sceglie il piano Pro: ha strumenti avanzati per l’impresa, un’area operativa più completa e la possibilità di sponsorizzare i cantieri.',
       },
       {
-        badge: 'Progetto sponsorizzato',
+        badge: 'Cantiere sponsorizzato',
         title: 'Cosa si sblocca',
-        text: 'Milestone, economia, dispute, documenti avanzati e chat progettuale completa si attivano sul singolo progetto sponsorizzato.',
+        text: 'Milestone, economia, dispute, documenti avanzati e chat contestuale completa si attivano sul singolo cantiere sponsorizzato.',
       },
     ],
     cta: 'Crea account società',
@@ -46,34 +46,34 @@ const contentByLocale = {
       'Timbrature societarie',
       'Chat società multi-canale',
       'Documenti società completi',
-      'Sponsorship del progetto',
-      'Milestone nei progetti sponsorizzati',
-      'Economia di progetto nei progetti sponsorizzati',
-      'Chat progetto avanzata nei progetti sponsorizzati',
-      'Documenti progetto avanzati nei progetti sponsorizzati',
+      'Sponsorship del cantiere',
+      'Milestone nei cantieri sponsorizzati',
+      'Economia di cantiere nei cantieri sponsorizzati',
+      'Chat cantiere avanzata nei cantieri sponsorizzati',
+      'Documenti cantiere avanzati nei cantieri sponsorizzati',
       'Area operativa avanzata per l’impresa',
       'Fatturazione e gestione abbonamento',
     ],
     freeAccessTitle: 'Chi entra gratis e cosa resta free',
     freeAccessText:
-      'Il privato resta gratis. Le società possono restare free o passare a Pro. Committente, subappaltatori e professionisti entrano gratis nei progetti a cui sono invitati; gli strumenti avanzati di progetto dipendono dalla sponsorship attiva.',
+      'Il privato resta gratis. Le società possono restare free o passare a Pro. Committente, subappaltatori e professionisti entrano gratis nei cantieri a cui sono invitati; gli strumenti avanzati di cantiere dipendono dalla sponsorship attiva.',
     roles: [
-      { label: 'Privato / committente', value: 'Gratis', note: 'Puoi avere 1 progetto non sponsorizzato alla volta' },
-      { label: 'Società free', value: 'Gratis', note: 'Partecipa ai progetti e può avere 1 progetto owner non sponsorizzato alla volta' },
-      { label: 'Società Pro', value: '€19/mese o €190/anno', note: 'Sponsorizza i progetti e attiva gli strumenti avanzati dell’impresa' },
+      { label: 'Privato / committente', value: 'Gratis', note: 'Puoi avere 1 cantiere non sponsorizzato alla volta' },
+      { label: 'Società free', value: 'Gratis', note: 'Partecipa ai cantieri e può avere 1 cantiere owner non sponsorizzato alla volta' },
+      { label: 'Società Pro', value: '€19/mese o €190/anno', note: 'Sponsorizza i cantieri e attiva gli strumenti avanzati dell’impresa' },
     ],
     worthTitle: 'Quando ha senso passare a Pro',
     worthItems: [
-      'Vuoi sponsorizzare un progetto e attivare milestone, economia, chat e documenti avanzati per tutti i partecipanti',
+      'Vuoi sponsorizzare un cantiere e attivare milestone, economia, chat e documenti avanzati per tutti i partecipanti',
       'Ti servono timbrature e altri strumenti avanzati per l’impresa',
-      'Gestisci più progetti e vuoi evitare che il coordinamento resti bloccato nella modalità free',
+      'Gestisci più cantieri e vuoi evitare che il coordinamento resti bloccato nella modalità free',
       'Una sola disputa evitata o un solo viaggio a vuoto risparmiato copre facilmente il costo del piano',
     ],
     faqTitle: 'Domande sui prezzi',
     faqs: [
       {
         q: 'Il committente deve pagare?',
-        a: 'No. Il committente resta free. Anche subappaltatori e professionisti possono entrare gratis nei progetti a cui vengono invitati.',
+        a: 'No. Il committente resta free. Anche subappaltatori e professionisti possono entrare gratis nei cantieri a cui vengono invitati.',
       },
       {
         q: 'Posso cancellare quando voglio?',
@@ -81,7 +81,7 @@ const contentByLocale = {
       },
       {
         q: 'Cosa succede ai dati se cancello?',
-        a: 'I dati restano nel sistema, ma le aree avanzate dell’impresa e del progetto non sono più accessibili finché non riattivi un piano Pro o una sponsorship valida.',
+        a: 'I dati restano nel sistema, ma le aree avanzate dell’impresa e del cantiere non sono più accessibili finché non riattivi un piano Pro o una sponsorship valida.',
       },
       {
         q: 'C’è un contratto a lungo termine?',
@@ -104,12 +104,12 @@ const contentByLocale = {
   en: {
     seoTitle: 'Pricing',
     seoDescription:
-      'Clear pricing for companies and projects: free or paid company plan, project sponsorship, and free access for homeowners and invited collaborators.',
+      'Clear pricing for companies and worksites: free or paid company plan, worksite sponsorship, and free access for homeowners and invited collaborators.',
     badge: 'Pricing',
-    title: 'Clear pricing for companies and projects.',
-    subtitle: 'Company premium belongs to the company. Project premium unlocks through active sponsorship.',
+    title: 'Clear pricing for companies and worksites.',
+    subtitle: 'Company premium belongs to the company. Worksite premium unlocks through active sponsorship.',
     planName: 'EdilSync Pro for companies',
-    planDesc: 'Unlock company premium and project sponsorship',
+    planDesc: 'Unlock company premium and worksite sponsorship',
     trialBadge: 'Yearly plan at €190',
     price: '€19',
     priceSuffix: '/month',
@@ -119,17 +119,17 @@ const contentByLocale = {
       {
         badge: 'Always free',
         title: 'Owners and invitees',
-        text: 'Homeowners stay free. Subcontractors and professionals also join invited projects for free.',
+        text: 'Homeowners stay free. Subcontractors and professionals also join invited worksites for free.',
       },
       {
         badge: 'Pro company',
         title: 'Who pays',
-        text: 'Only the company that wants the Pro plan pays: it unlocks company premium, the premium operative workspace, and the ability to sponsor projects.',
+        text: 'Only the company that wants the Pro plan pays: it unlocks company premium, the premium operative workspace, and the ability to sponsor worksites.',
       },
       {
-        badge: 'Sponsored project',
+        badge: 'Sponsored worksite',
         title: 'What unlocks',
-        text: 'Milestones, finance, disputes, advanced documents, and full project chat activate on each sponsored project.',
+        text: 'Milestones, finance, disputes, advanced documents, and full worksite chat activate on each sponsored worksite.',
       },
     ],
     cta: 'Create company account',
@@ -139,25 +139,25 @@ const contentByLocale = {
       'Company time tracking',
       'Multi-channel company chat',
       'Full company documents',
-      'Project sponsorship',
-      'Milestones on sponsored projects',
-      'Project finance on sponsored projects',
-      'Advanced project chat on sponsored projects',
-      'Advanced project documents on sponsored projects',
+      'Worksite sponsorship',
+      'Milestones on sponsored worksites',
+      'Worksite finance on sponsored worksites',
+      'Advanced worksite chat on sponsored worksites',
+      'Advanced worksite documents on sponsored worksites',
       'Premium company operative workspace',
       'Billing and subscription management',
     ],
     freeAccessTitle: 'Who stays free and what remains free',
     freeAccessText:
-      'Private owners remain free. Companies can stay free or upgrade to Pro. Homeowners, subcontractors, and professionals can join invited projects for free; premium project features depend on active sponsorship.',
+      'Private owners remain free. Companies can stay free or upgrade to Pro. Homeowners, subcontractors, and professionals can join invited worksites for free; premium worksite features depend on active sponsorship.',
     roles: [
-      { label: 'Private owner / homeowner', value: 'Free', note: 'Can have 1 unsponsored project at a time' },
-      { label: 'Free company', value: 'Free', note: 'Can join projects and own 1 unsponsored project at a time' },
-      { label: 'Paid company', value: '€19/month or €190/year', note: 'Can sponsor projects and unlock company premium' },
+      { label: 'Private owner / homeowner', value: 'Free', note: 'Can have 1 unsponsored worksite at a time' },
+      { label: 'Free company', value: 'Free', note: 'Can join worksites and own 1 unsponsored worksite at a time' },
+      { label: 'Paid company', value: '€19/month or €190/year', note: 'Can sponsor worksites and unlock company premium' },
     ],
     worthTitle: 'When Pro makes sense',
     worthItems: [
-      'You want to sponsor a project and unlock milestones, finance, premium chat, and premium documents for all project participants',
+      'You want to sponsor a worksite and unlock milestones, finance, premium chat, and premium documents for all worksite participants',
       'You need company time tracking and other company premium capabilities',
       'You manage more than a minimal free setup and do not want coordination blocked by free-plan limits',
       'One avoided dispute or one avoided wasted trip can already justify the plan cost',
@@ -166,7 +166,7 @@ const contentByLocale = {
     faqs: [
       {
         q: 'Does the homeowner need to pay?',
-        a: 'No. Homeowners remain free. Subcontractors and professionals can also join invited projects for free.',
+        a: 'No. Homeowners remain free. Subcontractors and professionals can also join invited worksites for free.',
       },
       {
         q: 'Can I cancel anytime?',
@@ -174,7 +174,7 @@ const contentByLocale = {
       },
       {
         q: 'What happens to data if I cancel?',
-        a: 'Data stays in the system, but company and project premium areas become inaccessible until a paid plan or valid sponsorship is restored.',
+        a: 'Data stays in the system, but company and worksite premium areas become inaccessible until a paid plan or valid sponsorship is restored.',
       },
       {
         q: 'Is there a long-term contract?',
@@ -243,8 +243,8 @@ export default function PricingPage({ locale = 'it' }) {
                   </h2>
                   <p className="mt-4 text-sm leading-relaxed text-[var(--public-muted)]">
                     {locale === 'en'
-                      ? 'EdilSync does not charge every person on the project. The company upgrades when it needs premium company tools and project sponsorship.'
-                      : 'EdilSync non fa pagare ogni persona del progetto. La società passa a Pro quando le servono strumenti avanzati per l’impresa e la sponsorship del progetto.'}
+                      ? 'EdilSync does not charge every person on the worksite. The company upgrades when it needs premium company tools and worksite sponsorship.'
+                      : 'EdilSync non fa pagare ogni persona del cantiere. La società passa a Pro quando le servono strumenti avanzati per l’impresa e la sponsorship del cantiere.'}
                   </p>
                 </div>
                 <div className="space-y-3">
@@ -301,8 +301,8 @@ export default function PricingPage({ locale = 'it' }) {
                 </div>
                 <p className="mt-4 text-xs leading-relaxed text-[var(--public-muted)]">
                   {locale === 'en'
-                    ? 'The rest of the advanced project capabilities unlock as soon as a Pro company sponsors the project.'
-                    : 'Le altre aree avanzate di progetto si attivano non appena una società Pro sponsorizza il progetto.'}
+                    ? 'The rest of the advanced worksite capabilities unlock as soon as a Pro company sponsors the worksite.'
+                    : 'Le altre aree avanzate di cantiere si attivano non appena una società Pro sponsorizza il cantiere.'}
                 </p>
               </div>
             </div>

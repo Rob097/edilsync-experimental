@@ -373,7 +373,7 @@ export default function AssistantFloatingButton({ className }) {
                         {tr('Assistente AI in lavorazione', 'AI assistant in progress')}
                       </h3>
                       <p className="text-sm text-gray-600 max-w-sm">
-                        {tr('Stiamo preparando uno strumento che ti aiutera a trovare piu in fretta informazioni su progetti, documenti e attivita di cantiere.', 'We are preparing a tool that will help you find information about projects, documents, and site activities faster.')}
+                        {tr('Stiamo preparando uno strumento che ti aiutera a trovare piu in fretta informazioni su cantieri, documenti e attivita di cantiere.', 'We are preparing a tool that will help you find information about worksites, documents, and site activities faster.')}
                       </p>
                       <p className="text-sm text-gray-500 max-w-sm mt-3">
                         {tr('Per ora non funziona ancora. Quando sara pronto, potrai scrivergli da questo pannello.', 'For now, it does not work yet. When it is ready, you will be able to write to it from this panel.')}

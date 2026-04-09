@@ -15,12 +15,12 @@ const contentByLocale = {
     title: 'Ogni parola è scritta.',
     titleHighlight: 'Ogni accordo è provato.',
     subtitle:
-      'Nel settore edile, i margini sono del 3-5%. Una sola disputa non documentata può azzerare il profitto di un intero progetto. EdilSync ti protegge automaticamente, senza lavoro extra.',
+      'Nel settore edile, i margini sono del 3-5%. Una sola disputa non documentata può azzerare il profitto di un intero cantiere. EdilSync ti protegge automaticamente, senza lavoro extra.',
     cta: 'Crea account azienda',
     note: 'Funziona per contractor, committenti, subappaltatori e professionisti.',
     scenarioLabel: 'Lo scenario tipico',
     scenarioQuote:
-      '"Ho perso €4.200 su un progetto da €28.000 per una disputa su due stanze che erano già incluse secondo il cliente. Non avevo niente di scritto. Avevo solo la mia parola."',
+      '"Ho perso €4.200 su un cantiere da €28.000 per una disputa su due stanze che erano già incluse secondo il cliente. Non avevo niente di scritto. Avevo solo la mia parola."',
     scenarioAuthor: 'Giuseppe',
     scenarioRole: 'Contractor, Torino - prima di EdilSync',
     issuesTitle: 'Le dispute più frequenti - e come le elimini',
@@ -52,7 +52,7 @@ const contentByLocale = {
     flowSteps: [
       {
         title: 'Le tue azioni diventano prove',
-        text: 'Ogni foto scattata, ogni task aggiornato, ogni approvazione ricevuta viene registrata automaticamente con timestamp nel feed del progetto. Non devi fare nulla di extra.',
+        text: 'Ogni foto scattata, ogni task aggiornato, ogni approvazione ricevuta viene registrata automaticamente con timestamp nel feed del cantiere. Non devi fare nulla di extra.',
       },
       {
         title: 'Le varianti sono formalizzate',
@@ -89,12 +89,12 @@ const contentByLocale = {
     title: 'Every word is written.',
     titleHighlight: 'Every agreement is provable.',
     subtitle:
-      'In construction, margins are often 3-5%. One undocumented dispute can erase profit on an entire project. EdilSync protects you automatically, without extra admin work.',
+      'In construction, margins are often 3-5%. One undocumented dispute can erase profit on an entire worksite. EdilSync protects you automatically, without extra admin work.',
     cta: 'Create company account',
     note: 'Built for contractors, owners, subcontractors, and technical professionals.',
     scenarioLabel: 'Typical scenario',
     scenarioQuote:
-      '"I lost €4,200 on a €28,000 project because of a dispute on two rooms the client said were already included. I had nothing documented. Only my word."',
+      '"I lost €4,200 on a €28,000 worksite because of a dispute on two rooms the client said were already included. I had nothing documented. Only my word."',
     scenarioAuthor: 'Giuseppe',
     scenarioRole: 'Contractor, Turin - before EdilSync',
     issuesTitle: 'The most common disputes - and how you prevent them',
@@ -126,7 +126,7 @@ const contentByLocale = {
     flowSteps: [
       {
         title: 'Your actions become evidence',
-        text: 'Every photo, task update, and approval is automatically recorded with timestamp in the project feed. No extra effort required.',
+        text: 'Every photo, task update, and approval is automatically recorded with timestamp in the worksite feed. No extra effort required.',
       },
       {
         title: 'Variations are formalized',
