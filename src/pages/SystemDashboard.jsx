@@ -111,7 +111,7 @@ export default function SystemDashboard() {
 
     // User stats
     const adminUsers = allUsers.filter(u => u.role === 'admin').length;
-    const regularUsers = allUsers.filter(u => u.role === 'user').length;
+    const regularUsers = allUsers.filter(u => u.role === 'normal').length;
     
     // Get users registered in last 30 days
     const thirtyDaysAgo = subDays(new Date(), 30);

@@ -69,6 +69,16 @@ export default function TaskBoard({ projectId, canEdit, onTaskCreate, filteredTa
     staleTime: 2 * 60 * 1000,
   });
 
+  const { data: project } = useQuery({
+    queryKey: ['project', projectId],
+    queryFn: async () => {
+      const projects = await appClient.entities.Project.filter({ id: projectId });
+      return projects[0] || null;
+    },
+    enabled: !!projectId,
+    staleTime: 60 * 1000,
+  });
+
   const { data: companies = [] } = useQuery({
     queryKey: ['companies'],
     queryFn: () => appClient.entities.Company.list(),

@@ -8,6 +8,7 @@ import { Badge } from "@/components/ui/badge";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Plus, X, User, Building2 } from "lucide-react";
 import { useLanguage } from '@/components/i18n/useLanguage';
+import { getUserDisplayName } from '@/lib/userDisplay';
 
 export default function ParticipantSelector({ participants, onChange }) {
   const { currentLanguage } = useLanguage();
@@ -36,7 +37,7 @@ export default function ParticipantSelector({ participants, onChange }) {
             type: 'user',
             user_id: user.id,
             email: user.email,
-            name: user.full_name,
+            name: getUserDisplayName(user, user.email),
           }]);
         }
         setSelectedUserId('');
@@ -94,7 +95,7 @@ export default function ParticipantSelector({ participants, onChange }) {
               <SelectContent>
                 {allUsers.map(user => (
                   <SelectItem key={user.id} value={user.id}>
-                    {user.full_name || user.email}
+                    {getUserDisplayName(user, user.email)}
                   </SelectItem>
                 ))}
               </SelectContent>

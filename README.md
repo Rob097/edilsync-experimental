@@ -17,6 +17,8 @@ Applicazione React + Vite con backend completo su Supabase (Postgres, RLS, Auth,
 - Node.js 20+
 - npm
 
+Usare `nvm use` se hai `nvm` installato: il repository ora include `.nvmrc`.
+
 ## Configurazione ambiente
 
 Creare `.env.local` (oppure `.env`) con:
@@ -48,6 +50,42 @@ Build produzione:
 npm run build
 npm run preview
 ```
+
+## QA e testing
+
+Per tutto cio che riguarda i test usare come riferimento unico:
+
+- `tests/README.md`
+
+Comandi principali:
+
+```bash
+npm run dev
+npm run qa
+npm run test:unit
+npm run test:integration:qa
+npm run test:db
+npm run test:e2e
+npm run test:e2e:smoke
+npm run test:all
+```
+
+Documentazione di copertura:
+
+- `public/Docs/qa/README.md`
+- `public/Docs/qa/scenario-matrix.md`
+- `public/Docs/qa/vitest-backlog.md`
+- `public/Docs/qa/integration-backlog.md`
+- `public/Docs/qa/pgtap-backlog.md`
+- `public/Docs/qa/playwright-backlog.md`
+
+Report test aggregati:
+
+- `tests/reports/index.html`
+- `tests/playwright-report/`
+- `tests/test-results/`
+
+I workflow automatici di test sono stati rimossi: il flusso QA e manuale.
 
 ## Migrazioni database
 

@@ -70,10 +70,9 @@ export default function NewProject() {
       const result = await appClient.functions.invoke('createProjectWithContext', data);
       return result.project;
     },
-    onSuccess: async (project) => {
-      await queryClient.invalidateQueries(['projects']);
-      await queryClient.invalidateQueries(['userProjectParticipations']);
-      await queryClient.refetchQueries(['userProjectParticipations']);
+    onSuccess: (project) => {
+      queryClient.invalidateQueries({ queryKey: ['projects'] });
+      queryClient.invalidateQueries({ queryKey: ['userProjectParticipations'] });
       navigate(createPageUrl('ProjectDetail') + `?id=${project.id}`);
     },
   });

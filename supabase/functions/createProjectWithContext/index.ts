@@ -1,6 +1,6 @@
 // @ts-nocheck
 import { adminClient, corsHeaders, getAuthenticatedContext, jsonResponse } from "../_shared/supabase.ts";
-import { assertNoUnexpectedKeys, getErrorStatus, optionalDate, optionalEmail, optionalIdentifier, optionalText, parseJsonBody, requiredEnum, requiredText } from "../_shared/input.ts";
+import { assertNoUnexpectedKeys, getErrorStatus, optionalDate, optionalEmail, optionalEnum, optionalIdentifier, optionalText, parseJsonBody, requiredEnum, requiredText } from "../_shared/input.ts";
 import { isCompanyAdmin, syncUserAccessByEmail } from "../_shared/access.ts";
 
 const CREATOR_PROJECT_ROLES = ["homeowner", "contractor"];

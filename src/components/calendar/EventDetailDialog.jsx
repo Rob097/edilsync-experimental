@@ -23,8 +23,9 @@ import {
 } from "lucide-react";
 import { format } from 'date-fns';
 import { enUS, it } from 'date-fns/locale';
-import { getUserDisplayNameByEmail } from '@/lib/userDisplay';
+import { getUserDisplayNameByIdentity } from '@/lib/userDisplay';
 import { useLanguage } from '@/components/i18n/useLanguage';
+import { buildEventNotificationPayload } from '@/lib/eventNotifications';
 
 export default function EventDetailDialog({ open, onOpenChange, event, user, companyMemberships, onEdit }) {
   const { t, currentLanguage } = useLanguage();
@@ -78,23 +79,29 @@ export default function EventDetailDialog({ open, onOpenChange, event, user, com
         
         // Notify about conflict resolution
         await appClient.entities.Notification.create({
-          user_email: event.creator_email,
-          type: 'conflict_resolved',
-          title: t('eventDetailDialog.conflictResolvedTitle'),
-          message: t('eventDetailDialog.conflictResolvedMessage', { name: user?.full_name, title: event.title }),
-          related_event_id: event.id,
-          is_read: false,
+          ...buildEventNotificationPayload({
+            ownerType: event.owner_type,
+            ownerCompanyId: event.owner_company_id,
+            userEmail: event.creator_email,
+            type: 'conflict_resolved',
+            title: t('eventDetailDialog.conflictResolvedTitle'),
+            message: t('eventDetailDialog.conflictResolvedMessage', { name: user?.full_name, title: event.title }),
+            relatedEventId: event.id,
+          }),
         });
       }
 
       if (status === 'declined') {
         await appClient.entities.Notification.create({
-          user_email: event.creator_email,
-          type: 'participant_declined',
-          title: t('eventDetailDialog.participantDeclinedTitle'),
-          message: t('eventDetailDialog.participantDeclinedMessage', { name: user?.full_name, title: event.title }),
-          related_event_id: event.id,
-          is_read: false,
+          ...buildEventNotificationPayload({
+            ownerType: event.owner_type,
+            ownerCompanyId: event.owner_company_id,
+            userEmail: event.creator_email,
+            type: 'participant_declined',
+            title: t('eventDetailDialog.participantDeclinedTitle'),
+            message: t('eventDetailDialog.participantDeclinedMessage', { name: user?.full_name, title: event.title }),
+            relatedEventId: event.id,
+          }),
         });
       }
     },
@@ -113,12 +120,16 @@ export default function EventDetailDialog({ open, onOpenChange, event, user, com
       for (const p of participants) {
         if (p.user_email) {
           await appClient.entities.Notification.create({
-            user_email: p.user_email,
-            type: 'event_cancelled',
-            title: t('eventDetailDialog.eventCancelledTitle'),
-            message: t('eventDetailDialog.eventCancelledMessage', { title: event.title }),
-            related_event_id: event.id,
-            is_read: false,
+            ...buildEventNotificationPayload({
+              ownerType: event.owner_type,
+              ownerCompanyId: event.owner_company_id,
+              contextType: 'personal',
+              userEmail: p.user_email,
+              type: 'event_cancelled',
+              title: t('eventDetailDialog.eventCancelledTitle'),
+              message: t('eventDetailDialog.eventCancelledMessage', { title: event.title }),
+              relatedEventId: event.id,
+            }),
           });
         }
       }
@@ -145,6 +156,22 @@ export default function EventDetailDialog({ open, onOpenChange, event, user, com
   const getCompanyName = (companyId) => {
     return companies.find(c => c.id === companyId)?.name || t('eventDetailDialog.companyFallback');
   };
+
+  const getParticipantDisplayName = (participant) => {
+    if (participant.participant_type !== 'user') {
+      return getCompanyName(participant.company_id);
+    }
+
+    return getUserDisplayNameByIdentity({
+      email: participant.user_email,
+      userId: participant.user_id,
+    }, allUsers);
+  };
+
+  const creatorDisplayName = getUserDisplayNameByIdentity({
+    email: event.creator_email,
+    fallbackName: event.creator_name,
+  }, allUsers);
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -183,7 +210,7 @@ export default function EventDetailDialog({ open, onOpenChange, event, user, com
           {/* Creator */}
           <div className="flex items-center gap-2 text-sm text-gray-500">
             <span>{t('eventDetailDialog.createdBy')}</span>
-            <Badge variant="outline">{event.creator_name || event.creator_email}</Badge>
+            <Badge variant="outline">{creatorDisplayName}</Badge>
           </div>
 
           {/* Participants */}
@@ -204,9 +231,7 @@ export default function EventDetailDialog({ open, onOpenChange, event, user, com
                             <Building2 className="h-4 w-4 text-gray-400" />
                           )}
                           <span className="text-sm">
-                            {p.participant_type === 'user' 
-                              ? getUserDisplayNameByEmail(p.user_email, allUsers)
-                              : getCompanyName(p.company_id)}
+                            {getParticipantDisplayName(p)}
                           </span>
                           {p.has_conflict && (
                             <AlertTriangle className="h-3.5 w-3.5 text-yellow-500" />

@@ -18,6 +18,7 @@ import { Loader2, AlertTriangle } from "lucide-react";
 import { format } from 'date-fns';
 import ParticipantSelector from './ParticipantSelector';
 import { useLanguage } from '@/components/i18n/useLanguage';
+import { buildEventNotificationPayload } from '@/lib/eventNotifications';
 
 export default function EventDialog({ 
   open, 
@@ -144,6 +145,7 @@ export default function EventDialog({
     mutationFn: async ({ cancelConflicting }) => {
       const startDt = new Date(`${formData.start_date}T${formData.start_time}`);
       const endDt = new Date(`${formData.end_date}T${formData.end_time}`);
+      const inviteNotifications = [];
 
       // Cancel creator's conflicting event if confirmed
       if (cancelConflicting && conflicts.creator) {
@@ -154,12 +156,16 @@ export default function EventDialog({
         for (const p of cancelledParticipants) {
           if (p.user_email) {
             await appClient.entities.Notification.create({
-              user_email: p.user_email,
-              type: 'event_cancelled',
-              title: t('eventDetailDialog.eventCancelledTitle'),
-              message: t('eventDialog.cancelledForConflictMessage', { title: conflicts.creator.title }),
-              related_event_id: conflicts.creator.id,
-              is_read: false,
+              ...buildEventNotificationPayload({
+                ownerType: conflicts.creator.owner_type,
+                ownerCompanyId: conflicts.creator.owner_company_id,
+                contextType: 'personal',
+                userEmail: p.user_email,
+                type: 'event_cancelled',
+                title: t('eventDetailDialog.eventCancelledTitle'),
+                message: t('eventDialog.cancelledForConflictMessage', { title: conflicts.creator.title }),
+                relatedEventId: conflicts.creator.id,
+              }),
             });
           }
         }
@@ -177,7 +183,7 @@ export default function EventDialog({
         owner_company_id: formData.owner_type === 'company' ? currentCompany?.id : null,
         status: 'scheduled',
         creator_email: user?.email,
-        creator_name: user?.full_name,
+        creator_name: user?.full_name || user?.display_name || null,
       };
 
       const newEvent = event 
@@ -192,12 +198,16 @@ export default function EventDialog({
         for (const p of existingParticipants) {
           if (p.user_email) {
             await appClient.entities.Notification.create({
-              user_email: p.user_email,
-              type: 'event_updated',
-              title: t('eventDialog.updatedTitle'),
-              message: t('eventDialog.updatedMessage', { title: formData.title }),
-              related_event_id: eventId,
-              is_read: false,
+              ...buildEventNotificationPayload({
+                ownerType: event.owner_type,
+                ownerCompanyId: event.owner_company_id,
+                contextType: 'personal',
+                userEmail: p.user_email,
+                type: 'event_updated',
+                title: t('eventDialog.updatedTitle'),
+                message: t('eventDialog.updatedMessage', { title: formData.title }),
+                relatedEventId: eventId,
+              }),
             });
           }
         }
@@ -222,28 +232,46 @@ export default function EventDialog({
             conflict_event_id: conflict?.conflictingEvents[0]?.id || null,
           });
 
-          // Send notification
           if (p.type === 'user' && p.email) {
-            await appClient.entities.Notification.create({
-              user_email: p.email,
-              type: 'event_invite',
-              title: t('eventDialog.inviteTitle'),
-              message: conflict 
-                ? t('eventDialog.inviteConflictMessage', { title: formData.title, conflictTitle: conflict.conflictingEvents[0]?.title })
-                : t('eventDialog.inviteMessage', { title: formData.title }),
-              related_event_id: eventId,
-              is_read: false,
-            });
+            inviteNotifications.push(buildEventNotificationPayload({
+                ownerType: formData.owner_type,
+                ownerCompanyId: currentCompany?.id,
+                contextType: 'personal',
+                userEmail: p.email,
+                type: 'event_invite',
+                title: t('eventDialog.inviteTitle'),
+                message: conflict 
+                  ? t('eventDialog.inviteConflictMessage', { title: formData.title, conflictTitle: conflict.conflictingEvents[0]?.title })
+                  : t('eventDialog.inviteMessage', { title: formData.title }),
+                relatedEventId: eventId,
+              }));
+          }
+        }
+
+        for (const notificationPayload of inviteNotifications) {
+          try {
+            await appClient.entities.Notification.create(notificationPayload);
+          } catch (error) {
+            console.error('Failed to create event invite notification', error);
           }
         }
       }
 
       return newEvent;
     },
-    onSuccess: () => {
-      queryClient.invalidateQueries(['events']);
-      queryClient.invalidateQueries(['eventParticipants']);
-      queryClient.invalidateQueries(['notifications']);
+    onSuccess: (savedEvent) => {
+      queryClient.setQueryData(['events'], (currentEvents = []) => {
+        if (!Array.isArray(currentEvents)) {
+          return [savedEvent];
+        }
+
+        const nextEvents = currentEvents.filter((currentEvent) => currentEvent.id !== savedEvent.id);
+        return savedEvent.status === 'scheduled' ? [...nextEvents, savedEvent] : nextEvents;
+      });
+      queryClient.invalidateQueries({ queryKey: ['events'] });
+      queryClient.invalidateQueries({ queryKey: ['allEvents'] });
+      queryClient.invalidateQueries({ queryKey: ['eventParticipants'] });
+      queryClient.invalidateQueries({ queryKey: ['notifications'] });
       onOpenChange(false);
     },
   });

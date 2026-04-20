@@ -1,11 +1,10 @@
 import React, { useState, useMemo } from 'react';
 import { appClient } from '@/api/appClient';
 import { useQuery } from '@tanstack/react-query';
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Flag, CheckCircle2, Clock, AlertCircle, Play, ChevronLeft, ChevronRight } from "lucide-react";
-import { format, startOfYear, endOfYear, eachMonthOfInterval, differenceInDays, getMonth, getDaysInMonth, getDate, startOfMonth } from 'date-fns';
+import { format, startOfYear, endOfYear, eachMonthOfInterval, getMonth, getDaysInMonth, getDate } from 'date-fns';
 import { it, enUS } from 'date-fns/locale';
 import EmptyState from '@/components/ui/EmptyState';
 import MilestoneDialog from './MilestoneDialog';

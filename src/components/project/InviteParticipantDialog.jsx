@@ -211,7 +211,7 @@ export default function InviteParticipantDialog({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-md">
+      <DialogContent className="overflow-x-hidden sm:max-w-md">
         <DialogHeader>
           <DialogTitle>{t('inviteParticipantDialog.title')}</DialogTitle>
           <DialogDescription>
@@ -219,7 +219,7 @@ export default function InviteParticipantDialog({
           </DialogDescription>
         </DialogHeader>
 
-        <form onSubmit={handleSubmit} className="space-y-6 mt-4">
+        <form onSubmit={handleSubmit} className="mt-4 min-w-0 space-y-6">
           {/* Participant Type */}
           <div className="space-y-3">
             <Label>{t('inviteParticipantDialog.participantType')}</Label>
@@ -255,10 +255,10 @@ export default function InviteParticipantDialog({
 
           {/* Company or Email */}
           {participantType === 'company' ? (
-            <div className="space-y-2">
+            <div className="min-w-0 space-y-2">
               <Label>{t('inviteParticipantDialog.selectCompany')}</Label>
               <Select value={selectedCompanyId} onValueChange={setSelectedCompanyId}>
-                <SelectTrigger>
+                <SelectTrigger className="min-w-0 max-w-full">
                   <SelectValue placeholder={t('inviteParticipantDialog.selectCompanyPlaceholder')} />
                 </SelectTrigger>
                 <SelectContent>

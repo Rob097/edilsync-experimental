@@ -111,10 +111,14 @@ export default function CompanyDetail() {
   const isAdmin = currentUserMembership?.role === 'admin';
 
   React.useEffect(() => {
+    if (membersLoading) {
+      return;
+    }
+
     if (activeTab === 'billing' && !isAdmin) {
       setActiveTab('panoramica');
     }
-  }, [activeTab, isAdmin]);
+  }, [activeTab, isAdmin, membersLoading]);
 
   const activeMembers = useMemo(
     () => members.filter((member) => member.status === 'active'),
@@ -188,13 +192,16 @@ export default function CompanyDetail() {
     <div className="space-y-6">
       <TourLauncher
         tourId="companies"
-        steps={getCompanyTour(currentLanguage).steps}
+        steps={getCompanyTour(currentLanguage, {
+          navigateToSection,
+          isAdmin,
+        }).steps}
         trigger={shouldStartCompanyTour}
         delay={1000}
       />
 
       <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-4">
-        <div className="flex-1 min-w-0">
+        <div className="flex-1 min-w-0" data-tour="company-header">
           {!isViewingActiveCompany && (
             <Button
               variant="ghost"
@@ -316,7 +323,7 @@ export default function CompanyDetail() {
           window.scrollTo({ top: offsetPosition, behavior: 'smooth' });
         }, 100);
       }}>
-        <TabsList className="mb-4 flex-wrap h-auto">
+        <TabsList className="mb-4 flex-wrap h-auto" data-tour="company-tabs">
           <TabsTrigger value="panoramica" className="flex items-center gap-2">
             <Activity className="h-4 w-4" />
             {tr('Panoramica', 'Overview')}
@@ -359,7 +366,7 @@ export default function CompanyDetail() {
             </Card>
           </div>
 
-          <Card>
+          <Card data-tour="company-quick-actions">
             <CardHeader>
               <CardTitle className="text-lg">{tr('Azioni rapide', 'Quick actions')}</CardTitle>
             </CardHeader>
@@ -512,6 +519,7 @@ export default function CompanyDetail() {
                   <Button
                     onClick={() => setInviteDialogOpen(true)}
                     className="bg-[#ef6144] hover:bg-[#d9553a]"
+                    data-tour="company-invite-button"
                   >
                     <UserPlus className="h-4 w-4 mr-2" />
                     {t('companyDetail.invite')}
@@ -570,11 +578,13 @@ export default function CompanyDetail() {
 
         {isAdmin && (
           <TabsContent value="billing" className="space-y-6">
-            <CompanyBillingSection
-              companyId={companyId}
-              companyName={company.name}
-              isAdmin={isAdmin}
-            />
+            <div data-tour="company-billing-section">
+              <CompanyBillingSection
+                companyId={companyId}
+                companyName={company.name}
+                isAdmin={isAdmin}
+              />
+            </div>
           </TabsContent>
         )}
       </Tabs>

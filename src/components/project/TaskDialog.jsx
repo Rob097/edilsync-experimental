@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { appClient } from '@/api/appClient';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useLanguage } from '@/components/i18n/useLanguage';
@@ -25,6 +25,7 @@ export default function TaskDialog({ open, onOpenChange, task, projectId, showMi
   const { t, currentLanguage } = useLanguage();
   const tr = (itText, enText) => currentLanguage === 'it' ? itText : enText;
   const queryClient = useQueryClient();
+  const initializedTaskKeyRef = useRef(null);
   const [formData, setFormData] = useState({
     title: '',
     description: '',
@@ -59,6 +60,27 @@ export default function TaskDialog({ open, onOpenChange, task, projectId, showMi
     enabled: !!projectId,
   });
 
+  const participantCompanyIds = [...new Set(
+    participants
+      .filter((participant) => participant.participant_type === 'company' && participant.company_id)
+      .map((participant) => participant.company_id),
+  )];
+
+  const participantUserEmails = [...new Set(
+    participants
+      .filter((participant) => participant.participant_type === 'personal' && participant.user_email)
+      .map((participant) => participant.user_email),
+  )];
+
+  const { data: project } = useQuery({
+    queryKey: ['project', projectId],
+    queryFn: async () => {
+      const projects = await appClient.entities.Project.filter({ id: projectId });
+      return projects[0] || null;
+    },
+    enabled: !!projectId,
+  });
+
   const { data: milestones = [] } = useQuery({
     queryKey: ['milestones', projectId],
     queryFn: () => appClient.entities.Milestone.filter({ project_id: projectId }),
@@ -66,8 +88,9 @@ export default function TaskDialog({ open, onOpenChange, task, projectId, showMi
   });
 
   const { data: companies = [] } = useQuery({
-    queryKey: ['companies'],
-    queryFn: () => appClient.entities.Company.list(),
+    queryKey: ['taskDialogCompanies', participantCompanyIds],
+    queryFn: () => appClient.entities.Company.filter({ id: participantCompanyIds }),
+    enabled: participantCompanyIds.length > 0,
   });
 
   const { data: linkedDisputes = [] } = useQuery({
@@ -77,49 +100,61 @@ export default function TaskDialog({ open, onOpenChange, task, projectId, showMi
   });
 
   const { data: allUsers = [] } = useQuery({
-    queryKey: ['allUsers'],
-    queryFn: () => appClient.entities.User.list(),
-    enabled: !!user?.email,
+    queryKey: ['taskDialogUsers', participantUserEmails],
+    queryFn: () => appClient.entities.User.filter({ email: participantUserEmails }),
+    enabled: !!user?.email && participantUserEmails.length > 0,
   });
 
-  useEffect(() => {
-    const resolveBlockedBySelection = (sourceTask) => {
-      if (!sourceTask) return { selection: '', otherName: '' };
+  const resolveBlockedBySelection = (sourceTask) => {
+    if (!sourceTask) return { selection: '', otherName: '' };
 
-      if (sourceTask.blocked_by_email) {
-        const personalParticipant = participants.find((participant) =>
-          participant.participant_type === 'personal' && participant.user_email === sourceTask.blocked_by_email);
+    if (sourceTask.blocked_by_email) {
+      const personalParticipant = participants.find((participant) =>
+        participant.participant_type === 'personal' && participant.user_email === sourceTask.blocked_by_email);
 
-        if (personalParticipant) {
-          return {
-            selection: `participant:${personalParticipant.id}`,
-            otherName: '',
-          };
-        }
-      }
-
-      if (sourceTask.blocked_by_name) {
-        const companyMatch = participants.find((participant) => {
-          if (participant.participant_type !== 'company') return false;
-          const companyName = companies.find((company) => company.id === participant.company_id)?.name || participant.company_name;
-          return companyName === sourceTask.blocked_by_name;
-        });
-
-        if (companyMatch) {
-          return {
-            selection: `participant:${companyMatch.id}`,
-            otherName: '',
-          };
-        }
-
+      if (personalParticipant) {
         return {
-          selection: 'other',
-          otherName: sourceTask.blocked_by_name,
+          selection: `participant:${personalParticipant.id}`,
+          otherName: '',
+        };
+      }
+    }
+
+    if (sourceTask.blocked_by_name) {
+      const companyMatch = participants.find((participant) => {
+        if (participant.participant_type !== 'company') return false;
+        const companyName = companies.find((company) => company.id === participant.company_id)?.name || participant.company_name;
+        return companyName === sourceTask.blocked_by_name;
+      });
+
+      if (companyMatch) {
+        return {
+          selection: `participant:${companyMatch.id}`,
+          otherName: '',
         };
       }
 
-      return { selection: '', otherName: '' };
-    };
+      return {
+        selection: 'other',
+        otherName: sourceTask.blocked_by_name,
+      };
+    }
+
+    return { selection: '', otherName: '' };
+  };
+
+  useEffect(() => {
+    if (!open) {
+      initializedTaskKeyRef.current = null;
+      return;
+    }
+
+    const taskKey = task?.id || 'new';
+    if (initializedTaskKeyRef.current === taskKey) {
+      return;
+    }
+
+    initializedTaskKeyRef.current = taskKey;
 
     if (task) {
       const blockedState = resolveBlockedBySelection(task);
@@ -169,7 +204,29 @@ export default function TaskDialog({ open, onOpenChange, task, projectId, showMi
         timeImpactDays: '',
       });
     }
-  }, [task, open, user, participants, companies, t]);
+  }, [open, task?.id]);
+
+  useEffect(() => {
+    if (!open || !task) return;
+    if ((task.status || 'not_started') !== 'blocked') return;
+    if (formData.status !== (task.status || 'not_started')) return;
+    if (blockedBySelection || blockedByOtherName) return;
+
+    const blockedState = resolveBlockedBySelection(task);
+    if (!blockedState.selection && !blockedState.otherName) return;
+
+    setBlockedBySelection(blockedState.selection);
+    setBlockedByOtherName(blockedState.otherName);
+  }, [
+    open,
+    task,
+    task?.status,
+    participants,
+    companies,
+    blockedBySelection,
+    blockedByOtherName,
+    formData.status,
+  ]);
 
   const blockedByOptions = participants.map((participant) => {
     if (participant.participant_type === 'personal') {

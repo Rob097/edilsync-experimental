@@ -55,3 +55,124 @@
     - [X] Phase 7 - Downgrade behavior e invisibilita premium
     - [X] Phase 8 - Allineamento sito pubblico
     - [X] Phase 9 - Cleanup finale modalita e hardening
+
+- QA rollout iniziale: 47 test concordati
+    - Stato sintetico: rollout iniziale chiuso 47/47. Estensione Playwright oltre il pacchetto iniziale gia avviata e riallineata sotto.
+    - Matrice base (10/10 coperti)
+        - [X] 01. AuthContext: bootstrap sessione, sign-in, sign-up, logout
+        - [X] 02. WebAdminGuard: blocco utenti non admin
+        - [X] 03. ContextSwitcher: cambio contesto e conferma
+        - [X] 04. PublicSiteRouter: routing locale IT/EN
+        - [X] 05. PublicSiteRouter: redirect legacy pagine legali
+        - [X] 06. ContactPage: validazione e submit richiesta
+        - [X] 07. OperativeAppRouter: routing area operativa
+        - [X] 08. WebAdminRouter: routing area web admin
+        - [X] 09. QA target helper: rifiuto esplicito del project ref `main`
+        - [X] 10. BlogIndexPage: empty state e lista post pubblicati
+    - Flussi completi del rollout iniziale (47/47 coperti)
+        - [X] 01. appClient: creazione record `public.users` se mancante
+        - [X] 02. appClient: recovery da race `409 conflict` sul bootstrap utente
+        - [X] 03. domainRoles: compatibilita company type -> project role
+        - [X] 04. useFeatureAccess: stati `enabled` / `limited` / `disabled`
+        - [X] 05. useFeatureAccess: rilevazione `blocked_for_sponsor_loss`
+        - [X] 06. financePermissions: permessi finance per ruolo e contesto
+        - [X] 07. notificationPreferences: default coerenti con schema entity
+        - [X] 08. notificationPreferences: merge preferenze senza perdere chiavi
+        - [X] 09. notificationRouting: target corretti per mention, billing, eventi e progetto
+        - [X] 10. disputeFromTask: payload, evento iniziale e notifica da task bloccato
+        - [X] 11. operativeDataSelectors: filtri membership, progetti ed eventi di contesto
+        - [X] 12. frontend-env: blocco variabili frontend con nomi da segreto
+        - [X] 13. Notifications page: filtro per contesto personale/company
+        - [X] 14. Notifications page: navigazione a chat progetto e billing societa
+        - [X] 15. Settings page: persistenza profilo e apertura preferenze comunicazioni
+        - [X] 16. OperativeDaySummary: task ed eventi del giorno
+        - [X] 17. Pricing page: coerenza copy IT con modello free/paid/sponsorship
+        - [X] 18. Pricing page: coerenza copy EN con modello free/paid/sponsorship
+        - [X] 19. Calendar: filtro contesto personale su task/eventi
+        - [X] 20. Calendar: filtro contesto company su task/eventi
+        - [X] 21. CompanyDetail: deep link billing negato a non-admin
+        - [X] 22. CompanyDetail: CTA admin apre sezione billing
+        - [X] 23. CompanyDetail: gating premium su time tracking, chat e documenti
+        - [X] 24. Integration QA: `createCompanyWithInitialization` crea grafo base societa
+        - [X] 25. Integration QA: `createProjectWithContext` crea progetto personale homeowner
+        - [X] 26. Integration QA: `createProjectWithContext` in contesto company invita homeowner
+        - [X] 27. Integration QA: sponsor loss blocca inviti personali
+        - [X] 28. Integration QA: `notifyTaskBlockedResponsible` instrada al responsabile corretto
+        - [X] 29. Playwright smoke: render schermata auth
+        - [X] 30. Playwright smoke: creazione societa da UI
+        - [X] 31. Playwright smoke: creazione progetto personale da UI
+        - [X] 32. Playwright: admin societa apre billing da Company Detail
+        - [X] 33. Playwright: login fallito mostra errore corretto
+        - [X] 34. Playwright: logout torna ad auth
+        - [X] 35. Playwright: sessione persistita al reload
+        - [X] 36. Playwright: cambio contesto personale -> societa aggiorna i dati visibili
+        - [X] 37. Playwright: cambio contesto societa -> personale aggiorna i dati visibili
+        - [X] 38. Playwright: create company mostra canale General e piano free
+        - [X] 39. Playwright: member societa non admin non vede billing tab
+        - [X] 40. Playwright: invito membro societa da UI
+        - [X] 41. Playwright: utente invitato vede la societa dopo attivazione
+        - [X] 42. Playwright: lista partecipanti progetto aggiornata dopo inviti
+        - [X] 43. Playwright: duplicate homeowner bloccato
+        - [X] 44. Playwright: duplicate participant bloccato
+        - [X] 45. Playwright: company free mostra gating chat/documents/time tracking
+        - [X] 46. Playwright: checkout / billing portal / sync billing end-to-end
+        - [X] 47. Playwright: notifiche `company_plan_*` / `project_sponsorship_*` / `event_*` navigano al target corretto
+    - Estensione Playwright oltre i 47 iniziali (45/45 coperti)
+        - [X] 48. Playwright: utente personale bloccato in `/app/operativa` vede il company guard
+        - [X] 49. Playwright: create project societario contractor da UI
+        - [X] 50. Playwright: contractor invita homeowner durante la creazione progetto
+        - [X] 51. Playwright: sponsor loss blocca superfici premium del progetto
+        - [X] 52. Playwright: sponsor loss limita gli inviti a company only
+        - [X] 53. Playwright: detail evento mostra nominativi risolti invece delle raw email
+        - [X] 54. Playwright: membro societa vede i controlli pending su evento societario nel detail dialog
+        - [X] 55. Playwright: il creatore evento puo modificare un evento dal detail dialog
+        - [X] 56. Playwright: il creatore evento puo cancellare un evento dal detail dialog
+        - [X] 57. Playwright: owner progetto crea un task con assignee personale da UI
+        - [X] 58. Playwright: owner progetto blocca un task con motivo e responsabile da UI
+        - [X] 59. Playwright: owner progetto crea un task con assignee company da UI
+        - [X] 60. Playwright: owner progetto cambia stato task standard da UI
+        - [X] 61. Playwright: progetto free mostra la milestone premium visibile ma bloccata
+        - [X] 62. Playwright: progetto free mostra il gate finance premium invece dei controlli finanziari
+        - [X] 63. Playwright: milestone create se entitled
+        - [X] 64. Playwright: create event con partecipanti
+        - [X] 65. Playwright: cambio societa attiva quando l'utente appartiene a piu societa
+        - [X] 66. Playwright: paid company vede feature complete
+        - [X] 67. Playwright: update profilo in browser
+        - [X] 68. Playwright: toggle notification preferences in browser
+        - [X] 69. Playwright: switch lingua in browser
+        - [X] 70. Playwright: pricing page IT coerente con modello reale in browser
+        - [X] 71. Playwright: pricing page EN coerente con modello reale in browser
+        - [X] 72. Playwright: contact form valida e invia in browser
+        - [X] 73. Playwright: demo request valida e invia
+    - Altri spec browser gia presenti e non esplicitati nel conteggio iniziale
+        - [X] Public site: role alias routes risolvono la pagina contractors
+        - [X] Public site: unknown localized routes fanno fallback alla localized home
+    - Backlog Playwright chiuso
+        - [X] Playwright: link/unlink task a milestone
+        - [X] Playwright: dispute create da progetto
+        - [X] Playwright: dispute create da task bloccato
+        - [X] Playwright: dispute comment e change status
+        - [X] Playwright: create project channel
+        - [X] Playwright: create company channel
+        - [X] Playwright: send message
+        - [X] Playwright: mention user e artefatti
+        - [X] Playwright: upload document
+        - [X] Playwright: preview documento
+        - [X] Playwright: comment documento
+        - [X] Playwright: apertura viewer BIM o visualizzazione gate premium
+        - [X] Playwright: homeowner vede finance in sola lettura dove consentito
+        - [X] Playwright: admin societa vede finance completa
+        - [X] Playwright: member societa con permessi insufficienti vede blocco corretto
+        - [X] Playwright: clock in/out o creazione work session
+        - [X] Playwright: day summary operativo mostra task ed eventi del giorno nel browser
+        - [X] Playwright: company workspace operativo carica correttamente
+        - [X] Playwright: project workspace operativo carica correttamente
+- [x] Review tutorials per assicurarci che siano allineati con tutte le nuove funzionalità introdotte di recente e che i vari highlight siano corretti e che durante il tutorial venga mostrata la pagina/sezione effettivamente interessata dalla slide corrente
+- [x] Invitati eventi si vedono con email invece che nominativo
+- [x] Creatore evento si vede con email invece che nominativo
+- [x] Allineare le azioni rapide dei cantiere alle varie funzionalità possibili (adesso sono rimaste indietro con i nuovi sviluppi)
+- [x] Quando si apre la modale per invitare qualcuno in un cantiere, se per esempio si seleziona una società che ha un nome molto lungo, tutto il componente "form" si espande fino ad uscire dalla modale
+- [x] Come società se ricevo un invito ad un cantiere e provo ad accettarlo, la chimata `PATCH: https://csjphzmyacnfmhllgqnq.supabase.co/rest/v1/project_participants?id=eq.c7528692-8ec9-49e6-bd60-3d4592d754db&select=*` con body `{"status":"active"}` fallisce con `406 Not Acceptable` e body `{ "code": "PGRST116", "details": "The result contains 0 rows", "hint": null, "message": "Cannot coerce the result to a single JSON object" }`
+- [x] Se ho una notifica non letta per esempio di un invito ad un cantiere e premo sulla notifica vengo riportato all'invito ma la notifica non viene segnata come letta ammeno che non premo il pulsante "segna come letta" o "segna tutte come lette".
+- [x] Nella modalità operativa, allinea la sezione delle dispute nel caso non ci siano dispute a tutte le altre sezioni come Richieste di modifica, attività, calendario, ecc con una semplice scritta "Nessuna disputa" invece che la sezione presente al momento.
+- [x] Nella dashboard, sotto a "Ciao, Rob" vedo "Stai operando come Non hai ancora cantieri personali. Crea il tuo primo cantiere." e nella riga sotto c'è il badge "Privato". Rimovi la frase "Non hai ancora cantieri personali. Crea il tuo primo cantiere.".

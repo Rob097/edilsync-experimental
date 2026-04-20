@@ -77,7 +77,7 @@ export default function Companies() {
 
       {/* Header */}
       <div className="flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
-        <div className="app-page-header">
+        <div className="app-page-header" data-tour="companies-header">
           <span className="app-page-kicker">{t('companies.kicker')}</span>
           <h1 className="app-page-title">{t('dashboard.yourCompanies')}</h1>
           <p className="app-page-subtitle">{t('companies.manageCompanies')}</p>
@@ -107,13 +107,13 @@ export default function Companies() {
 
       {/* Company list */}
       {isLoading ? (
-        <div className="grid gap-4 md:grid-cols-2">
+        <div className="grid gap-4 md:grid-cols-2" data-tour="companies-list">
           {[1, 2, 3, 4].map(i => (
             <Skeleton key={i} className="h-24 w-full" />
           ))}
         </div>
       ) : filteredCompanies.length > 0 ? (
-        <div className="grid gap-4 md:grid-cols-2">
+        <div className="grid gap-4 md:grid-cols-2" data-tour="companies-list">
           {filteredCompanies.map(company => (
             <CompanyCard
               key={company.id}
@@ -124,17 +124,19 @@ export default function Companies() {
           ))}
         </div>
       ) : (
-        <EmptyState
-          icon={Building2}
-          title={searchQuery ? t('common.noResults') : t('dashboard.noCompanies')}
-          description={
-            searchQuery
-              ? t('common.tryModifyingSearchTerms')
-              : t('dashboard.noCompaniesDescription')
-          }
-          actionLabel={!searchQuery ? t('common.newCompany') : undefined}
-          onAction={!searchQuery ? () => navigate(createPageUrl('NewCompany')) : undefined}
-        />
+        <div data-tour="companies-list">
+          <EmptyState
+            icon={Building2}
+            title={searchQuery ? t('common.noResults') : t('dashboard.noCompanies')}
+            description={
+              searchQuery
+                ? t('common.tryModifyingSearchTerms')
+                : t('dashboard.noCompaniesDescription')
+            }
+            actionLabel={!searchQuery ? t('common.newCompany') : undefined}
+            onAction={!searchQuery ? () => navigate(createPageUrl('NewCompany')) : undefined}
+          />
+        </div>
       )}
     </div>
   );

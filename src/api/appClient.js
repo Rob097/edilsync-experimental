@@ -80,6 +80,20 @@ const applyFilters = (query, filters = {}) => {
   return nextQuery;
 };
 
+const getExistingUserRecordByEmail = async (email) => {
+  const { data, error } = await supabase
+    .from('users')
+    .select('*')
+    .eq('email', email)
+    .maybeSingle();
+
+  if (error) throw error;
+  return data;
+};
+
+const isUserInsertConflict = (error) =>
+  error?.status === 409 || error?.code === '23505' || /duplicate|conflict/i.test(error?.message || '');
+
 const getUserRecord = async () => {
   const {
     data: { user },
@@ -90,13 +104,7 @@ const getUserRecord = async () => {
     throw userError || new Error('User not authenticated');
   }
 
-  const { data: existing, error: existingError } = await supabase
-    .from('users')
-    .select('*')
-    .eq('email', user.email)
-    .maybeSingle();
-
-  if (existingError) throw existingError;
+  const existing = await getExistingUserRecordByEmail(user.email);
 
   if (existing) {
     if (!existing.auth_user_id) {
@@ -114,7 +122,7 @@ const getUserRecord = async () => {
     email: user.email,
     full_name: user.user_metadata?.full_name || user.user_metadata?.name || null,
     display_name: user.user_metadata?.display_name || user.user_metadata?.name || null,
-    role: 'user',
+    role: 'normal',
     company_ids: [],
     admin_company_ids: [],
     project_ids: [],
@@ -127,7 +135,17 @@ const getUserRecord = async () => {
     .select('*')
     .single();
 
-  if (insertError) throw insertError;
+  if (insertError) {
+    if (isUserInsertConflict(insertError)) {
+      const conflictedRecord = await getExistingUserRecordByEmail(user.email);
+      if (conflictedRecord) {
+        return conflictedRecord;
+      }
+    }
+
+    throw insertError;
+  }
+
   return inserted;
 };
 

@@ -1,6 +1,8 @@
 import { describe, expect, it } from 'vitest';
 import { canManageProjectFinancials, getProjectFinancialPermissions } from './financePermissions';
 
+// Scenario IDs: finance.permissions.follow-role-and-context
+
 describe('canManageProjectFinancials', () => {
   it('returns false for inactive participants', () => {
     expect(canManageProjectFinancials({
@@ -60,6 +62,33 @@ describe('canManageProjectFinancials', () => {
     expect(permissions.canManageBudget).toBe(false);
     expect(permissions.canManageRates).toBe(false);
     expect(permissions.canManageSettings).toBe(false);
+  });
+
+  it('returns full manager permissions for personal contractors too', () => {
+    const permissions = getProjectFinancialPermissions({
+      isActiveParticipant: true,
+      participantType: 'personal',
+      projectRole: 'contractor',
+    });
+
+    expect(permissions.scope).toBe('manager');
+    expect(permissions.canManageBudget).toBe(true);
+    expect(permissions.canManageRates).toBe(true);
+    expect(canManageProjectFinancials({
+      isActiveParticipant: true,
+      participantType: 'personal',
+      projectRole: 'contractor',
+    })).toBe(true);
+  });
+
+  it('returns empty permissions for missing or malformed context', () => {
+    expect(getProjectFinancialPermissions({})).toMatchObject({
+      scope: 'none',
+      canViewSection: false,
+      canRecordCosts: false,
+      canManageSettings: false,
+    });
+    expect(canManageProjectFinancials({})).toBe(false);
   });
 
   it('returns no finance access for unsupported external roles', () => {

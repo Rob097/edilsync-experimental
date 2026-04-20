@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { I18nextProvider } from 'react-i18next';
 import { initializeI18n } from '@/components/i18n/i18nConfig';
 import i18next from '@/components/i18n/i18nConfig';

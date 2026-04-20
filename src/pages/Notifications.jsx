@@ -20,6 +20,11 @@ import {
 import { format } from 'date-fns';
 import { enUS, it } from 'date-fns/locale';
 import EmptyState from '@/components/ui/EmptyState';
+import {
+  filterNotificationsForContext,
+  resolveNotificationProjectName,
+  resolveNotificationTarget,
+} from '@/lib/notificationRouting';
 
 const typeIcons = {
   event_invite: Calendar,
@@ -54,23 +59,6 @@ const typeColors = {
   project_sponsorship_activated: 'bg-emerald-100 text-emerald-700',
   project_sponsorship_revoked: 'bg-red-100 text-red-700',
 };
-
-const DIRECT_PROJECT_NOTIFICATION_TYPES = new Set([
-  'project_invite',
-  'dispute_opened',
-  'dispute_status_changed',
-  'dispute_commented',
-  'task_status_changed',
-  'project_sponsorship_activated',
-  'project_sponsorship_revoked',
-]);
-
-const EVENT_BASED_NOTIFICATION_TYPES = new Set([
-  'event_invite',
-  'event_cancelled',
-  'event_updated',
-  'conflict_resolved',
-]);
 
 export default function Notifications() {
   const { t, currentLanguage } = useLanguage();
@@ -117,23 +105,43 @@ export default function Notifications() {
   });
 
   const currentContext = user?.active_context || 'personal';
+  const allNotificationsQueryKey = ['allNotifications', user?.email];
 
   // Filter notifications based on current context
-  const notifications = allNotifications.filter(notif => {
-    if (currentContext === 'personal') {
-      // Show personal notifications or notifications without a specific company context
-      return notif.context_type === 'personal' || !notif.context_type;
-    } else {
-      // Show company notifications matching the active company
-      return notif.context_type === 'company' && notif.context_company_id === user?.active_company_id;
-    }
+  const notifications = filterNotificationsForContext({
+    notifications: allNotifications,
+    currentContext,
+    activeCompanyId: user?.active_company_id,
   });
 
   const markAsReadMutation = useMutation({
     mutationFn: (id) => appClient.entities.Notification.update(id, { is_read: true }),
+    onMutate: async (id) => {
+      await queryClient.cancelQueries({ queryKey: allNotificationsQueryKey });
+      const previousNotifications = queryClient.getQueryData(allNotificationsQueryKey);
+
+      queryClient.setQueryData(allNotificationsQueryKey, (currentNotifications) => {
+        if (!Array.isArray(currentNotifications)) {
+          return currentNotifications;
+        }
+
+        return currentNotifications.map((notification) => (
+          notification.id === id
+            ? { ...notification, is_read: true }
+            : notification
+        ));
+      });
+
+      return { previousNotifications };
+    },
+    onError: (_error, _id, context) => {
+      if (context?.previousNotifications) {
+        queryClient.setQueryData(allNotificationsQueryKey, context.previousNotifications);
+      }
+    },
     onSuccess: () => {
-      queryClient.invalidateQueries(['notifications']);
-      queryClient.invalidateQueries(['allNotifications']);
+      queryClient.invalidateQueries({ queryKey: ['notifications'] });
+      queryClient.invalidateQueries({ queryKey: allNotificationsQueryKey });
     },
   });
 
@@ -145,8 +153,8 @@ export default function Notifications() {
       }
     },
     onSuccess: () => {
-      queryClient.invalidateQueries(['notifications']);
-      queryClient.invalidateQueries(['allNotifications']);
+      queryClient.invalidateQueries({ queryKey: ['notifications'] });
+      queryClient.invalidateQueries({ queryKey: allNotificationsQueryKey });
     },
   });
 
@@ -171,83 +179,23 @@ export default function Notifications() {
     }, {});
   }, [messages]);
 
-  const resolveNotificationProjectId = (notification) => {
-    if (!notification?.related_event_id) return null;
-
-    if (DIRECT_PROJECT_NOTIFICATION_TYPES.has(notification.type)) {
-      return notification.related_event_id;
-    }
-
-    if (EVENT_BASED_NOTIFICATION_TYPES.has(notification.type)) {
-      return eventsById[notification.related_event_id]?.project_id || null;
-    }
-
-    if (notification.type === 'message_mention') {
-      return messagesById[notification.related_event_id]?.project_id || null;
-    }
-
-    return null;
-  };
-
-  const resolveNotificationProjectName = (notification) => {
-    const projectId = resolveNotificationProjectId(notification);
-    if (!projectId) return null;
-    return projectsById[projectId]?.name || null;
-  };
-
-  const handleNotificationClick = (notification) => {
-    // Navigate based on notification type
-    if (!notification.related_event_id) return;
-
-    switch (notification.type) {
-      case 'project_invite':
-        // Navigate to project detail page
-        navigate(createPageUrl('ProjectDetail') + `?id=${notification.related_event_id}`);
-        break;
-      
-      case 'event_invite':
-      case 'event_cancelled':
-      case 'event_updated':
-      case 'conflict_resolved':
-        // Navigate to calendar
-        navigate(createPageUrl('Calendar'));
-        break;
-      
-      case 'message_mention':
-        // Navigate to project detail using message project if available
-        if (messagesById[notification.related_event_id]?.project_id) {
-          navigate(createPageUrl('ProjectDetail') + `?id=${messagesById[notification.related_event_id].project_id}&tab=info&section=chat`);
-        }
-        break;
-
-      case 'task_status_changed':
-        navigate(createPageUrl('ProjectDetail') + `?id=${notification.related_event_id}&tab=lavori&section=tasks`);
-        break;
-
-      case 'dispute_opened':
-      case 'dispute_status_changed':
-      case 'dispute_commented':
-        navigate(createPageUrl('ProjectDetail') + `?id=${notification.related_event_id}&tab=lavori&section=disputes`);
-        break;
-
-      case 'project_sponsorship_activated':
-      case 'project_sponsorship_revoked':
-        navigate(createPageUrl('ProjectDetail') + `?id=${notification.related_event_id}`);
-        break;
-
-      case 'company_plan_activated':
-      case 'company_plan_changed':
-      case 'company_plan_canceled': {
-        const companyId = notification.context_company_id || notification.related_event_id;
-        if (companyId) {
-          navigate(createPageUrl('CompanyDetail') + `?id=${companyId}&tab=billing`);
-        }
-        break;
+  const handleNotificationClick = async (notification) => {
+    if (!notification.is_read) {
+      try {
+        await markAsReadMutation.mutateAsync(notification.id);
+      } catch {
+        // Keep navigation available even if the read-state update fails.
       }
-      
-      default:
-        // No specific navigation
-        break;
+    }
+
+    const target = resolveNotificationTarget({
+      notification,
+      createPageUrl,
+      messagesById,
+    });
+
+    if (target) {
+      navigate(target);
     }
   };
 
@@ -260,7 +208,7 @@ export default function Notifications() {
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="flex items-center justify-between">
+      <div className="flex items-center justify-between" data-tour="notifications-header">
         <div>
           <h1 className="text-2xl font-bold text-gray-900">{t('notificationsPage.title')}</h1>
           <p className="text-gray-500 mt-1">
@@ -280,7 +228,7 @@ export default function Notifications() {
       </div>
 
       {/* Notifications list */}
-      <Card>
+      <Card data-tour="notifications-list">
         <CardContent className="p-0">
           {isLoading ? (
             <div className="p-4 space-y-3">
@@ -310,9 +258,11 @@ export default function Notifications() {
                           <p className="text-sm text-gray-500 mt-0.5">
                             {notification.message}
                           </p>
-                          {resolveNotificationProjectName(notification) ? (
+                          {resolveNotificationProjectName({ notification, eventsById, messagesById, projectsById }) ? (
                             <p className="text-xs text-gray-500 mt-1">
-                              {t('notificationsPage.projectContext', { project: resolveNotificationProjectName(notification) })}
+                              {t('notificationsPage.projectContext', {
+                                project: resolveNotificationProjectName({ notification, eventsById, messagesById, projectsById }),
+                              })}
                             </p>
                           ) : null}
                         </div>

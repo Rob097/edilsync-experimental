@@ -43,10 +43,10 @@ export default function TourOverlay() {
           inline: 'center'
         });
       } else {
-        if (allowRetry && attempt < 6) {
+        if (allowRetry && attempt < 20) {
           const timeoutId = setTimeout(() => {
             updateHighlight(true, attempt + 1);
-          }, 120);
+          }, 150);
           retryTimeouts.push(timeoutId);
           return;
         }
@@ -68,7 +68,7 @@ export default function TourOverlay() {
       window.removeEventListener('resize', handleWindowChange);
       window.removeEventListener('scroll', handleWindowChange, true);
     };
-  }, [isVisible, activeTour, currentStep, location.pathname]);
+  }, [isVisible, activeTour, currentStep, location.pathname, location.search]);
 
   if (!isVisible || !activeTour) return null;
 

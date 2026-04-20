@@ -1,0 +1,771 @@
+{
+  "config": {
+    "configFile": "/home/roberto/personal-projects/MVPs/edilsync-experimental/playwright.config.ts",
+    "rootDir": "/home/roberto/personal-projects/MVPs/edilsync-experimental/tests/e2e",
+    "forbidOnly": false,
+    "fullyParallel": false,
+    "globalSetup": null,
+    "globalTeardown": null,
+    "globalTimeout": 0,
+    "grep": {},
+    "grepInvert": null,
+    "maxFailures": 0,
+    "metadata": {
+      "actualWorkers": 7
+    },
+    "preserveOutput": "always",
+    "projects": [
+      {
+        "outputDir": "/home/roberto/personal-projects/MVPs/edilsync-experimental/tests/.artifacts/critical-targeted-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 7
+        },
+        "id": "smoke",
+        "name": "smoke",
+        "testDir": "/home/roberto/personal-projects/MVPs/edilsync-experimental/tests/e2e",
+        "testIgnore": [],
+        "testMatch": [
+          "**/*.smoke.spec.ts"
+        ],
+        "timeout": 60000
+      },
+      {
+        "outputDir": "/home/roberto/personal-projects/MVPs/edilsync-experimental/tests/.artifacts/critical-targeted-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 7
+        },
+        "id": "critical",
+        "name": "critical",
+        "testDir": "/home/roberto/personal-projects/MVPs/edilsync-experimental/tests/e2e",
+        "testIgnore": [],
+        "testMatch": [
+          "**/auth.regression.spec.ts",
+          "**/context-switch.regression.spec.ts",
+          "**/company-invitations.regression.spec.ts",
+          "**/calendar-event-details.regression.spec.ts",
+          "**/project-invite-response.regression.spec.ts",
+          "**/project-participants.regression.spec.ts",
+          "**/notifications-targets.regression.spec.ts"
+        ],
+        "timeout": 60000
+      },
+      {
+        "outputDir": "/home/roberto/personal-projects/MVPs/edilsync-experimental/tests/.artifacts/critical-targeted-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 7
+        },
+        "id": "regression",
+        "name": "regression",
+        "testDir": "/home/roberto/personal-projects/MVPs/edilsync-experimental/tests/e2e",
+        "testIgnore": [
+          "**/*.smoke.spec.ts",
+          "**/auth.regression.spec.ts",
+          "**/context-switch.regression.spec.ts",
+          "**/company-invitations.regression.spec.ts",
+          "**/calendar-event-details.regression.spec.ts",
+          "**/project-invite-response.regression.spec.ts",
+          "**/project-participants.regression.spec.ts",
+          "**/notifications-targets.regression.spec.ts"
+        ],
+        "testMatch": [
+          "**/*.spec.ts"
+        ],
+        "timeout": 60000
+      }
+    ],
+    "quiet": false,
+    "reporter": [
+      [
+        "list",
+        null
+      ],
+      [
+        "html",
+        {
+          "outputFolder": "/home/roberto/personal-projects/MVPs/edilsync-experimental/tests/.artifacts/critical-targeted-report",
+          "open": "never"
+        }
+      ],
+      [
+        "json",
+        {
+          "outputFile": "/home/roberto/personal-projects/MVPs/edilsync-experimental/tests/.artifacts/critical-targeted.json"
+        }
+      ]
+    ],
+    "reportSlowTests": {
+      "max": 5,
+      "threshold": 300000
+    },
+    "shard": null,
+    "tags": [],
+    "updateSnapshots": "missing",
+    "updateSourceMethod": "patch",
+    "version": "1.59.1",
+    "workers": 8,
+    "webServer": {
+      "command": "npm run dev -- --host 127.0.0.1 --port 4173",
+      "url": "http://127.0.0.1:4173",
+      "reuseExistingServer": true,
+      "timeout": 120000
+    }
+  },
+  "suites": [
+    {
+      "title": "auth.regression.spec.ts",
+      "file": "auth.regression.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "invalid login shows the auth error and keeps the user on the sign-in screen",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "critical",
+              "projectName": "critical",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "interrupted",
+                  "duration": 10629,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-04-17T11:04:46.592Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "screenshot",
+                      "contentType": "image/png",
+                      "path": "/home/roberto/personal-projects/MVPs/edilsync-experimental/tests/.artifacts/critical-targeted-results/auth.regression-invalid-lo-a8770--user-on-the-sign-in-screen-critical/test-failed-1.png"
+                    },
+                    {
+                      "name": "trace",
+                      "contentType": "application/zip",
+                      "path": "/home/roberto/personal-projects/MVPs/edilsync-experimental/tests/.artifacts/critical-targeted-results/auth.regression-invalid-lo-a8770--user-on-the-sign-in-screen-critical/trace.zip"
+                    }
+                  ]
+                }
+              ],
+              "status": "skipped"
+            }
+          ],
+          "id": "3180f43058996fbabaf1-f35819a2ce6e3217db31",
+          "file": "auth.regression.spec.ts",
+          "line": 8,
+          "column": 1
+        },
+        {
+          "title": "authenticated user can reload the app and keep the active session",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "critical",
+              "projectName": "critical",
+              "results": [],
+              "status": "skipped"
+            }
+          ],
+          "id": "3180f43058996fbabaf1-1d30a040685bf3478a4b",
+          "file": "auth.regression.spec.ts",
+          "line": 31,
+          "column": 1
+        },
+        {
+          "title": "authenticated user can log out and return to the auth screen",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "critical",
+              "projectName": "critical",
+              "results": [],
+              "status": "skipped"
+            }
+          ],
+          "id": "3180f43058996fbabaf1-1714e2221e830c10b689",
+          "file": "auth.regression.spec.ts",
+          "line": 47,
+          "column": 1
+        }
+      ]
+    },
+    {
+      "title": "calendar-event-details.regression.spec.ts",
+      "file": "calendar-event-details.regression.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "calendar event detail shows resolved display names instead of raw emails",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "critical",
+              "projectName": "critical",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 1,
+                  "status": "interrupted",
+                  "duration": 12643,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-04-17T11:04:46.624Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "screenshot",
+                      "contentType": "image/png",
+                      "path": "/home/roberto/personal-projects/MVPs/edilsync-experimental/tests/.artifacts/critical-targeted-results/calendar-event-details.reg-eda67-names-instead-of-raw-emails-critical/test-failed-1.png"
+                    },
+                    {
+                      "name": "video",
+                      "contentType": "video/webm",
+                      "path": "/home/roberto/personal-projects/MVPs/edilsync-experimental/tests/.artifacts/critical-targeted-results/calendar-event-details.reg-eda67-names-instead-of-raw-emails-critical/video.webm"
+                    },
+                    {
+                      "name": "trace",
+                      "contentType": "application/zip",
+                      "path": "/home/roberto/personal-projects/MVPs/edilsync-experimental/tests/.artifacts/critical-targeted-results/calendar-event-details.reg-eda67-names-instead-of-raw-emails-critical/trace.zip"
+                    }
+                  ]
+                }
+              ],
+              "status": "skipped"
+            }
+          ],
+          "id": "f026123be7b0c4ee657a-2f20821e1537b3fd9b2d",
+          "file": "calendar-event-details.regression.spec.ts",
+          "line": 23,
+          "column": 1
+        },
+        {
+          "title": "a company member can open a company-owned event and see pending response controls in the detail dialog",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "critical",
+              "projectName": "critical",
+              "results": [],
+              "status": "skipped"
+            }
+          ],
+          "id": "f026123be7b0c4ee657a-9c305c5fea2ccf29ed0b",
+          "file": "calendar-event-details.regression.spec.ts",
+          "line": 77,
+          "column": 1
+        },
+        {
+          "title": "the event creator can edit an existing calendar event from the detail dialog",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "critical",
+              "projectName": "critical",
+              "results": [],
+              "status": "skipped"
+            }
+          ],
+          "id": "f026123be7b0c4ee657a-3228b1e4556543f926f5",
+          "file": "calendar-event-details.regression.spec.ts",
+          "line": 151,
+          "column": 1
+        },
+        {
+          "title": "the event creator can cancel a scheduled calendar event from the detail dialog",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "critical",
+              "projectName": "critical",
+              "results": [],
+              "status": "skipped"
+            }
+          ],
+          "id": "f026123be7b0c4ee657a-cb1e495b7899bbec51e3",
+          "file": "calendar-event-details.regression.spec.ts",
+          "line": 225,
+          "column": 1
+        }
+      ]
+    },
+    {
+      "title": "company-invitations.regression.spec.ts",
+      "file": "company-invitations.regression.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "company admin can invite a member from the UI and see the pending membership",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "critical",
+              "projectName": "critical",
+              "results": [
+                {
+                  "workerIndex": 2,
+                  "parallelIndex": 2,
+                  "status": "interrupted",
+                  "duration": 13592,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-04-17T11:04:46.624Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "screenshot",
+                      "contentType": "image/png",
+                      "path": "/home/roberto/personal-projects/MVPs/edilsync-experimental/tests/.artifacts/critical-targeted-results/company-invitations.regres-d476f--see-the-pending-membership-critical/test-failed-1.png"
+                    },
+                    {
+                      "name": "video",
+                      "contentType": "video/webm",
+                      "path": "/home/roberto/personal-projects/MVPs/edilsync-experimental/tests/.artifacts/critical-targeted-results/company-invitations.regres-d476f--see-the-pending-membership-critical/video.webm"
+                    },
+                    {
+                      "name": "trace",
+                      "contentType": "application/zip",
+                      "path": "/home/roberto/personal-projects/MVPs/edilsync-experimental/tests/.artifacts/critical-targeted-results/company-invitations.regres-d476f--see-the-pending-membership-critical/trace.zip"
+                    }
+                  ]
+                }
+              ],
+              "status": "skipped"
+            }
+          ],
+          "id": "6e9ff54edcb88bc080ff-9314ca885cddda59aa33",
+          "file": "company-invitations.regression.spec.ts",
+          "line": 19,
+          "column": 1
+        },
+        {
+          "title": "an invited company user sees the company in the personal workspace after activation",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "critical",
+              "projectName": "critical",
+              "results": [],
+              "status": "skipped"
+            }
+          ],
+          "id": "6e9ff54edcb88bc080ff-c6eb907ca8f3c022530c",
+          "file": "company-invitations.regression.spec.ts",
+          "line": 63,
+          "column": 1
+        }
+      ]
+    },
+    {
+      "title": "context-switch.regression.spec.ts",
+      "file": "context-switch.regression.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "user can switch from personal to company context and see the active company reflected in UI",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "critical",
+              "projectName": "critical",
+              "results": [
+                {
+                  "workerIndex": 3,
+                  "parallelIndex": 3,
+                  "status": "interrupted",
+                  "duration": 12696,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-04-17T11:04:46.584Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "screenshot",
+                      "contentType": "image/png",
+                      "path": "/home/roberto/personal-projects/MVPs/edilsync-experimental/tests/.artifacts/critical-targeted-results/context-switch.regression--21b0f-ive-company-reflected-in-UI-critical/test-failed-1.png"
+                    },
+                    {
+                      "name": "video",
+                      "contentType": "video/webm",
+                      "path": "/home/roberto/personal-projects/MVPs/edilsync-experimental/tests/.artifacts/critical-targeted-results/context-switch.regression--21b0f-ive-company-reflected-in-UI-critical/video.webm"
+                    },
+                    {
+                      "name": "trace",
+                      "contentType": "application/zip",
+                      "path": "/home/roberto/personal-projects/MVPs/edilsync-experimental/tests/.artifacts/critical-targeted-results/context-switch.regression--21b0f-ive-company-reflected-in-UI-critical/trace.zip"
+                    }
+                  ]
+                }
+              ],
+              "status": "skipped"
+            }
+          ],
+          "id": "edf9c5bcfec73f8599aa-cad7e6aa29529e31b066",
+          "file": "context-switch.regression.spec.ts",
+          "line": 23,
+          "column": 1
+        },
+        {
+          "title": "user can switch from company back to personal context and restore the private workspace",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "critical",
+              "projectName": "critical",
+              "results": [],
+              "status": "skipped"
+            }
+          ],
+          "id": "edf9c5bcfec73f8599aa-5b1617ac2f9c25d039ad",
+          "file": "context-switch.regression.spec.ts",
+          "line": 58,
+          "column": 1
+        },
+        {
+          "title": "user can switch the active company when belonging to multiple companies",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "critical",
+              "projectName": "critical",
+              "results": [],
+              "status": "skipped"
+            }
+          ],
+          "id": "edf9c5bcfec73f8599aa-fb568fdf6bd587a8c8ff",
+          "file": "context-switch.regression.spec.ts",
+          "line": 93,
+          "column": 1
+        }
+      ]
+    },
+    {
+      "title": "notifications-targets.regression.spec.ts",
+      "file": "notifications-targets.regression.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "company-context notifications route billing and sponsorship alerts to the correct targets",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "critical",
+              "projectName": "critical",
+              "results": [
+                {
+                  "workerIndex": 4,
+                  "parallelIndex": 4,
+                  "status": "interrupted",
+                  "duration": 12731,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-04-17T11:04:46.610Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "screenshot",
+                      "contentType": "image/png",
+                      "path": "/home/roberto/personal-projects/MVPs/edilsync-experimental/tests/.artifacts/critical-targeted-results/notifications-targets.regr-be48d-erts-to-the-correct-targets-critical/test-failed-1.png"
+                    },
+                    {
+                      "name": "video",
+                      "contentType": "video/webm",
+                      "path": "/home/roberto/personal-projects/MVPs/edilsync-experimental/tests/.artifacts/critical-targeted-results/notifications-targets.regr-be48d-erts-to-the-correct-targets-critical/video.webm"
+                    },
+                    {
+                      "name": "trace",
+                      "contentType": "application/zip",
+                      "path": "/home/roberto/personal-projects/MVPs/edilsync-experimental/tests/.artifacts/critical-targeted-results/notifications-targets.regr-be48d-erts-to-the-correct-targets-critical/trace.zip"
+                    }
+                  ]
+                }
+              ],
+              "status": "skipped"
+            }
+          ],
+          "id": "913255d5cdbc2b6a9d6c-aba7a38a256b539a5644",
+          "file": "notifications-targets.regression.spec.ts",
+          "line": 25,
+          "column": 1
+        },
+        {
+          "title": "personal event notifications route to the calendar",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "critical",
+              "projectName": "critical",
+              "results": [],
+              "status": "skipped"
+            }
+          ],
+          "id": "913255d5cdbc2b6a9d6c-1592e74f41d4675e64ea",
+          "file": "notifications-targets.regression.spec.ts",
+          "line": 109,
+          "column": 1
+        }
+      ]
+    },
+    {
+      "title": "project-invite-response.regression.spec.ts",
+      "file": "project-invite-response.regression.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "an invited company admin can accept a project invitation from the project detail page",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "critical",
+              "projectName": "critical",
+              "results": [
+                {
+                  "workerIndex": 5,
+                  "parallelIndex": 5,
+                  "status": "interrupted",
+                  "duration": 13866,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-04-17T11:04:46.619Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "screenshot",
+                      "contentType": "image/png",
+                      "path": "/home/roberto/personal-projects/MVPs/edilsync-experimental/tests/.artifacts/critical-targeted-results/project-invite-response.re-e7287-rom-the-project-detail-page-critical/test-failed-1.png"
+                    },
+                    {
+                      "name": "video",
+                      "contentType": "video/webm",
+                      "path": "/home/roberto/personal-projects/MVPs/edilsync-experimental/tests/.artifacts/critical-targeted-results/project-invite-response.re-e7287-rom-the-project-detail-page-critical/video.webm"
+                    },
+                    {
+                      "name": "trace",
+                      "contentType": "application/zip",
+                      "path": "/home/roberto/personal-projects/MVPs/edilsync-experimental/tests/.artifacts/critical-targeted-results/project-invite-response.re-e7287-rom-the-project-detail-page-critical/trace.zip"
+                    }
+                  ]
+                }
+              ],
+              "status": "skipped"
+            }
+          ],
+          "id": "9b00b4864d08ad7078b5-848cf5d72981c4d09f09",
+          "file": "project-invite-response.regression.spec.ts",
+          "line": 26,
+          "column": 1
+        },
+        {
+          "title": "an invited company admin can decline a project invitation from the project detail page",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "critical",
+              "projectName": "critical",
+              "results": [],
+              "status": "skipped"
+            }
+          ],
+          "id": "9b00b4864d08ad7078b5-561a0d7a4888be4c57f0",
+          "file": "project-invite-response.regression.spec.ts",
+          "line": 94,
+          "column": 1
+        }
+      ]
+    },
+    {
+      "title": "project-participants.regression.spec.ts",
+      "file": "project-participants.regression.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "project participant list updates after inviting a company from the UI",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "critical",
+              "projectName": "critical",
+              "results": [
+                {
+                  "workerIndex": 6,
+                  "parallelIndex": 6,
+                  "status": "interrupted",
+                  "duration": 13545,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-04-17T11:04:46.613Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "screenshot",
+                      "contentType": "image/png",
+                      "path": "/home/roberto/personal-projects/MVPs/edilsync-experimental/tests/.artifacts/critical-targeted-results/project-participants.regre-33a09-iting-a-company-from-the-UI-critical/test-failed-1.png"
+                    },
+                    {
+                      "name": "video",
+                      "contentType": "video/webm",
+                      "path": "/home/roberto/personal-projects/MVPs/edilsync-experimental/tests/.artifacts/critical-targeted-results/project-participants.regre-33a09-iting-a-company-from-the-UI-critical/video.webm"
+                    },
+                    {
+                      "name": "trace",
+                      "contentType": "application/zip",
+                      "path": "/home/roberto/personal-projects/MVPs/edilsync-experimental/tests/.artifacts/critical-targeted-results/project-participants.regre-33a09-iting-a-company-from-the-UI-critical/trace.zip"
+                    }
+                  ]
+                }
+              ],
+              "status": "skipped"
+            }
+          ],
+          "id": "c4c3ee056cda9eb7bcc6-1ab403b7945fe0d1af20",
+          "file": "project-participants.regression.spec.ts",
+          "line": 55,
+          "column": 1
+        },
+        {
+          "title": "project invite blocks a duplicate homeowner when one is already canonical",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "critical",
+              "projectName": "critical",
+              "results": [],
+              "status": "skipped"
+            }
+          ],
+          "id": "c4c3ee056cda9eb7bcc6-4dc140644fffc3007b9b",
+          "file": "project-participants.regression.spec.ts",
+          "line": 104,
+          "column": 1
+        },
+        {
+          "title": "project invite blocks a duplicate company participant from the UI",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "critical",
+              "projectName": "critical",
+              "results": [],
+              "status": "skipped"
+            }
+          ],
+          "id": "c4c3ee056cda9eb7bcc6-a4de262e4ea16b7ac440",
+          "file": "project-participants.regression.spec.ts",
+          "line": 139,
+          "column": 1
+        }
+      ]
+    }
+  ],
+  "errors": [],
+  "stats": {
+    "startTime": "2026-04-17T11:04:45.168Z",
+    "duration": 15748.54,
+    "expected": 0,
+    "skipped": 19,
+    "unexpected": 0,
+    "flaky": 0
+  }
+}

@@ -2,7 +2,7 @@ import { useMemo } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { appClient } from '@/api/appClient';
 
-const DEFAULT_FEATURE_ACCESS = {
+export const DEFAULT_FEATURE_ACCESS = {
   feature_key: null,
   scope_type: null,
   plan_code: 'free',
@@ -10,7 +10,7 @@ const DEFAULT_FEATURE_ACCESS = {
   config: {},
 };
 
-const DEFAULT_PROJECT_PRICING_STATUS = {
+export const DEFAULT_PROJECT_PRICING_STATUS = {
   project_id: null,
   status: 'unsponsored',
   is_sponsored: false,
@@ -22,7 +22,7 @@ const DEFAULT_PROJECT_PRICING_STATUS = {
   reason_code: null,
 };
 
-const toFeatureMap = (featureKeys = [], results = []) => {
+export const toFeatureMap = (featureKeys = [], results = []) => {
   const map = {};
   featureKeys.forEach((featureKey, index) => {
     map[featureKey] = results[index] || {

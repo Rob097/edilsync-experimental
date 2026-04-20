@@ -85,6 +85,7 @@ export async function invokeInternalFunction(name: string, payload: unknown) {
     headers: {
       "Content-Type": "application/json",
       apikey: serviceRoleKey,
+      Authorization: `Bearer ${serviceRoleKey}`,
       "x-internal-service-key": serviceRoleKey,
       "x-internal-source": name,
     },

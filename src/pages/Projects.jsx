@@ -132,7 +132,7 @@ export default function Projects() {
 
       {/* Header */}
       <div className="flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
-        <div className="app-page-header">
+        <div className="app-page-header" data-tour="projects-header">
           <span className="app-page-kicker">{t('projects.kicker')}</span>
           <h1 className="app-page-title">{t('common.projects')}</h1>
           <p className="app-page-subtitle">{t('projects.subtitle')}</p>
@@ -171,13 +171,13 @@ export default function Projects() {
 
       {/* Project list */}
       {isLoading ? (
-        <div className="grid gap-4 md:grid-cols-2">
+        <div className="grid gap-4 md:grid-cols-2" data-tour="projects-list">
           {[1, 2, 3, 4].map(i => (
             <Skeleton key={i} className="h-32 w-full" />
           ))}
         </div>
       ) : filteredProjects.length > 0 ? (
-        <div className="grid gap-4 md:grid-cols-2">
+        <div className="grid gap-4 md:grid-cols-2" data-tour="projects-list">
           {filteredProjects.map(project => (
             <ProjectCard
               key={project.id}
@@ -188,19 +188,21 @@ export default function Projects() {
           ))}
         </div>
       ) : (
-        <EmptyState
-          icon={FolderKanban}
-          title={searchQuery || statusFilter !== 'all' ? t('common.noResults') : t('dashboard.noProjects')}
-          description={
-            searchQuery || statusFilter !== 'all'
-              ? t('common.tryModifyingFilters')
-              : currentContext === 'personal'
-                ? t('dashboard.noPersonalProjects')
-                : t('dashboard.noCompanyProjects')
-          }
-          actionLabel={!searchQuery && statusFilter === 'all' ? t('common.newProject') : undefined}
-          onAction={!searchQuery && statusFilter === 'all' ? () => navigate(createPageUrl('NewProject')) : undefined}
-        />
+        <div data-tour="projects-list">
+          <EmptyState
+            icon={FolderKanban}
+            title={searchQuery || statusFilter !== 'all' ? t('common.noResults') : t('dashboard.noProjects')}
+            description={
+              searchQuery || statusFilter !== 'all'
+                ? t('common.tryModifyingFilters')
+                : currentContext === 'personal'
+                  ? t('dashboard.noPersonalProjects')
+                  : t('dashboard.noCompanyProjects')
+            }
+            actionLabel={!searchQuery && statusFilter === 'all' ? t('common.newProject') : undefined}
+            onAction={!searchQuery && statusFilter === 'all' ? () => navigate(createPageUrl('NewProject')) : undefined}
+          />
+        </div>
       )}
     </div>
   );

@@ -427,8 +427,12 @@ const itTranslations = {
     },
     "quickActions": {
       "uploadAttachment": "Carica Allegato",
-      "updateTask": "Aggiorna Task",
-      "newChange": "Nuova Modifica"
+      "openChat": "Apri Chat",
+      "newTask": "Nuova Attività",
+      "newChange": "Nuova Modifica",
+      "newDispute": "Nuova Disputa",
+      "inviteParticipant": "Invita Partecipante",
+      "openFinance": "Apri Economia"
     },
     "invite": "Invita"
   },
@@ -1409,8 +1413,12 @@ const enTranslations = {
     },
     "quickActions": {
       "uploadAttachment": "Upload Attachment",
-      "updateTask": "Update Task",
-      "newChange": "New Change"
+      "openChat": "Open Chat",
+      "newTask": "New Task",
+      "newChange": "New Change",
+      "newDispute": "New Dispute",
+      "inviteParticipant": "Invite Participant",
+      "openFinance": "Open Finance"
     },
     "invite": "Invite"
   },

@@ -1,6 +1,8 @@
 import { describe, expect, it } from 'vitest';
 import { computeLaborSyncCandidates, parseHours, pickRate, toDateOnly } from './financeUtils';
 
+// Scenario IDs: finance.work-session-cost-sync-respects-uniqueness
+
 describe('financeUtils', () => {
   it('toDateOnly returns yyyy-mm-dd for valid dates', () => {
     expect(toDateOnly('2026-03-10T08:15:00.000Z')).toBe('2026-03-10');

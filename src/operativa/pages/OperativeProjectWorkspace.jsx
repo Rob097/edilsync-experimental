@@ -761,6 +761,8 @@ export default function OperativeProjectWorkspace() {
                     currentParticipant={contextParticipation}
                     canCreate={false}
                     canRespond={!!contextParticipation}
+                    compact
+                    emptyStateText={tr('Nessuna disputa', 'No disputes')}
                   />
                 </AccordionContent>
               </AccordionItem>

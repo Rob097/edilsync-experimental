@@ -29,6 +29,8 @@ export default function DisputeCaseList({
   taskContext,
   createDialogOpen,
   onCreateDialogChange,
+  compact = false,
+  emptyStateText,
 }) {
   const { t, currentLanguage } = useLanguage();
   const tr = (itText, enText) => currentLanguage === 'it' ? itText : enText;
@@ -304,6 +306,120 @@ export default function DisputeCaseList({
     escalated: 'bg-purple-100 text-purple-700',
   }), []);
 
+  const canCreateDispute = Boolean(title.trim() && summary.trim());
+  const resolvedEmptyStateText = emptyStateText || tr('Nessuna disputa', 'No disputes');
+
+  const listContent = isLoading ? (
+    <p className="text-sm text-gray-600">{t('common.loading')}</p>
+  ) : disputes.length === 0 ? (
+    compact ? (
+      <p className="text-sm text-gray-600">{resolvedEmptyStateText}</p>
+    ) : (
+      <EmptyState
+        icon={AlertTriangle}
+        title={t('disputes.emptyTitle')}
+        description={t('disputes.emptyDescription')}
+        actionLabel={canCreate ? t('disputes.newDispute') : undefined}
+        onAction={canCreate ? () => setCreateOpen(true) : undefined}
+      />
+    )
+  ) : (
+    <div className="space-y-3">
+      {disputes.map((dispute) => (
+        <div key={dispute.id} id={`dispute-${dispute.id}`} className="w-full text-left rounded-lg border p-3 space-y-2 hover:bg-gray-50 cursor-pointer" onClick={() => openDisputeDetail(dispute)}>
+          <div className="flex items-start justify-between gap-3">
+            <div>
+              <p className="font-medium text-gray-900">{dispute.title}</p>
+              <p className="text-sm text-gray-600 mt-1">{dispute.summary}</p>
+            </div>
+            <Badge className={statusMeta[dispute.status] || statusMeta.open}>
+              {t(`disputes.status.${dispute.status}`)}
+            </Badge>
+          </div>
+          <div className="text-xs text-gray-500 flex flex-wrap gap-x-3 gap-y-1">
+            <span>{t(`disputes.category.${dispute.category}`)}</span>
+            {typeof dispute.amount_impact === 'number' ? <span>€{dispute.amount_impact}</span> : null}
+            {typeof dispute.time_impact_days === 'number' ? <span>{t('disputes.days', { count: dispute.time_impact_days })}</span> : null}
+            <span>{format(new Date(dispute.created_date), 'dd MMM yyyy', { locale: dateLocale })}</span>
+          </div>
+          {canRespond ? (
+            <div onClick={(event) => event.stopPropagation()}>
+              <Select value={dispute.status} onValueChange={(value) => updateStatusMutation.mutate({ disputeId: dispute.id, status: value })}>
+                <SelectTrigger>
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  {statusKeys.map((status) => (
+                    <SelectItem key={status} value={status}>
+                      {t(`disputes.status.${status}`)}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+          ) : null}
+        </div>
+      ))}
+    </div>
+  );
+
+  if (compact) {
+    return (
+      <>
+        {listContent}
+
+        <Dialog open={createOpen} onOpenChange={setCreateOpen}>
+          <DialogContent className="sm:max-w-lg">
+            <DialogHeader>
+              <DialogTitle>{taskContext?.id ? t('disputes.openFromTask') : t('disputes.newDispute')}</DialogTitle>
+            </DialogHeader>
+            <div className="space-y-4">
+              {taskContext?.id ? (
+                <div className="rounded-lg border border-[#ef6144]/20 bg-[#ef6144]/5 p-3 text-sm text-[#231b18]">
+                  {t('disputes.linkedTask', { title: taskContext.title })}
+                </div>
+              ) : null}
+              <div className="space-y-2">
+                <Input value={title} onChange={(event) => setTitle(event.target.value)} placeholder={t('disputes.titlePlaceholder')} />
+                <Textarea value={summary} onChange={(event) => setSummary(event.target.value)} placeholder={t('disputes.summaryPlaceholder')} rows={4} />
+              </div>
+              <div className="grid gap-3 md:grid-cols-3">
+                <div className="space-y-2">
+                  <label className="text-sm font-medium text-gray-700">{t('disputes.categoryLabel')}</label>
+                  <Select value={category} onValueChange={setCategory}>
+                    <SelectTrigger>
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {categoryKeys.map((value) => (
+                        <SelectItem key={value} value={value}>{t(`disputes.category.${value}`)}</SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+                <Input type="number" min="0" value={amountImpact} onChange={(event) => setAmountImpact(event.target.value)} placeholder={t('disputes.amountImpactPlaceholder')} />
+                <Input type="number" min="0" value={timeImpact} onChange={(event) => setTimeImpact(event.target.value)} placeholder={t('disputes.timeImpactPlaceholder')} />
+              </div>
+              <Button className="w-full bg-[#ef6144] hover:bg-[#d9553a]" onClick={() => createDisputeMutation.mutate()} disabled={!canCreateDispute || createDisputeMutation.isPending}>
+                {createDisputeMutation.isPending ? <Loader2 className="h-4 w-4 mr-2 animate-spin" /> : <Plus className="h-4 w-4 mr-2" />}
+                {t('disputes.newDispute')}
+              </Button>
+            </div>
+          </DialogContent>
+        </Dialog>
+
+        <Dialog open={detailOpen} onOpenChange={setDetailOpen}>
+          <DialogContent className="sm:max-w-2xl max-h-[85vh] overflow-y-auto">
+            <DialogHeader>
+              <DialogTitle>{selectedDispute?.title || t('disputes.detailTitle')}</DialogTitle>
+            </DialogHeader>
+            {selectedDispute ? renderDisputeDetail(selectedDispute) : null}
+          </DialogContent>
+        </Dialog>
+      </>
+    );
+  }
+
   return (
     <Card>
       <CardHeader className="flex flex-row items-center justify-between pb-4">
@@ -315,57 +431,7 @@ export default function DisputeCaseList({
           </Button>
         ) : null}
       </CardHeader>
-      <CardContent>
-        {isLoading ? (
-          <p className="text-sm text-gray-600">{t('common.loading')}</p>
-        ) : disputes.length === 0 ? (
-          <EmptyState
-            icon={AlertTriangle}
-            title={t('disputes.emptyTitle')}
-            description={t('disputes.emptyDescription')}
-            actionLabel={canCreate ? t('disputes.newDispute') : undefined}
-            onAction={canCreate ? () => setCreateOpen(true) : undefined}
-          />
-        ) : (
-          <div className="space-y-3">
-            {disputes.map((dispute) => (
-              <div key={dispute.id} id={`dispute-${dispute.id}`} className="w-full text-left rounded-lg border p-3 space-y-2 hover:bg-gray-50 cursor-pointer" onClick={() => openDisputeDetail(dispute)}>
-                <div className="flex items-start justify-between gap-3">
-                  <div>
-                    <p className="font-medium text-gray-900">{dispute.title}</p>
-                    <p className="text-sm text-gray-600 mt-1">{dispute.summary}</p>
-                  </div>
-                  <Badge className={statusMeta[dispute.status] || statusMeta.open}>
-                    {t(`disputes.status.${dispute.status}`)}
-                  </Badge>
-                </div>
-                <div className="text-xs text-gray-500 flex flex-wrap gap-x-3 gap-y-1">
-                  <span>{t(`disputes.category.${dispute.category}`)}</span>
-                  {typeof dispute.amount_impact === 'number' ? <span>€{dispute.amount_impact}</span> : null}
-                  {typeof dispute.time_impact_days === 'number' ? <span>{t('disputes.days', { count: dispute.time_impact_days })}</span> : null}
-                  <span>{format(new Date(dispute.created_date), 'dd MMM yyyy', { locale: dateLocale })}</span>
-                </div>
-                {canRespond ? (
-                  <div onClick={(event) => event.stopPropagation()}>
-                    <Select value={dispute.status} onValueChange={(value) => updateStatusMutation.mutate({ disputeId: dispute.id, status: value })}>
-                      <SelectTrigger>
-                        <SelectValue />
-                      </SelectTrigger>
-                      <SelectContent>
-                        {statusKeys.map((status) => (
-                          <SelectItem key={status} value={status}>
-                            {t(`disputes.status.${status}`)}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                  </div>
-                ) : null}
-              </div>
-            ))}
-          </div>
-        )}
-      </CardContent>
+      <CardContent>{listContent}</CardContent>
 
       <Dialog open={createOpen} onOpenChange={setCreateOpen}>
         <DialogContent>

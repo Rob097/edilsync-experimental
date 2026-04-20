@@ -273,10 +273,10 @@ export default function Calendar() {
   }
 
   return (
-    <div className="space-y-6 overflow-visible">
+    <div className="space-y-6 overflow-visible" data-tour="calendar-shell">
       {/* Header */}
       <div className="flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
-        <div className="app-page-header">
+        <div className="app-page-header" data-tour="calendar-header">
           <span className="app-page-kicker">{t('calendar.kicker')}</span>
           <h1 className="app-page-title">{t('calendar.title')}</h1>
           <p className="app-page-subtitle">{t('calendar.subtitle')}</p>
@@ -313,7 +313,7 @@ export default function Calendar() {
       </div>
 
       {/* Calendar Grid */}
-      <Card className="app-panel">
+      <Card className="app-panel" data-tour="calendar-grid">
         <CardContent className="p-2 sm:p-4">
           {/* Week days header */}
           <div className="grid grid-cols-7 gap-0.5 sm:gap-1 mb-2">

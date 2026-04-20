@@ -1,6 +1,14 @@
 import { useMemo } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { appClient } from '@/api/appClient';
+import {
+  filterCompanyParticipations,
+  filterOperativeCompanies,
+  filterProjectsForParticipations,
+  getContextProjectIds,
+  getCurrentOperativeCompany,
+  resolveOperativeContextEvents,
+} from './operativeDataSelectors';
 
 export function useOperativeData() {
   const { data: user, isLoading: userLoading } = useQuery({
@@ -16,51 +24,58 @@ export function useOperativeData() {
     staleTime: 2 * 60 * 1000,
   });
 
+  const operativeCompanyIds = useMemo(
+    () => [...new Set(companyMemberships.map((membership) => membership.company_id).filter(Boolean))],
+    [companyMemberships],
+  );
+
   const { data: companies = [], isLoading: companiesLoading } = useQuery({
-    queryKey: ['operativeCompanies', companyMemberships],
+    queryKey: ['operativeCompanies', operativeCompanyIds],
     queryFn: async () => {
-      if (companyMemberships.length === 0) return [];
-      const companyIds = companyMemberships.map((membership) => membership.company_id);
-      const allCompanies = await appClient.entities.Company.list();
-      return allCompanies.filter((company) => companyIds.includes(company.id));
+      if (operativeCompanyIds.length === 0) return [];
+      const scopedCompanies = await appClient.entities.Company.filter({ id: operativeCompanyIds });
+      return filterOperativeCompanies({ allCompanies: scopedCompanies, companyMemberships });
     },
-    enabled: companyMemberships.length > 0,
+    enabled: operativeCompanyIds.length > 0,
     staleTime: 5 * 60 * 1000,
   });
 
   const currentContext = user?.active_context || 'personal';
   const activeCompanyId = user?.active_company_id || null;
-  const currentCompany = companies.find((company) => company.id === activeCompanyId) || null;
+  const currentCompany = getCurrentOperativeCompany({ companies, activeCompanyId });
 
   const { data: companyParticipations = [], isLoading: participationsLoading } = useQuery({
     queryKey: ['operativeCompanyParticipations', activeCompanyId],
     queryFn: async () => {
       if (!activeCompanyId) return [];
-      const allParticipations = await appClient.entities.ProjectParticipant.list();
-      return allParticipations.filter((participation) =>
-        (participation.status === 'active' || participation.status === 'invited')
-        && participation.participant_type === 'company'
-        && participation.company_id === activeCompanyId,
-      );
+      const scopedParticipations = await appClient.entities.ProjectParticipant.filter({
+        company_id: activeCompanyId,
+        participant_type: 'company',
+      });
+      return filterCompanyParticipations({ participations: scopedParticipations, activeCompanyId });
     },
     enabled: !!activeCompanyId,
     staleTime: 2 * 60 * 1000,
   });
 
+  const participationProjectIds = useMemo(
+    () => [...new Set(companyParticipations.map((participation) => participation.project_id).filter(Boolean))],
+    [companyParticipations],
+  );
+
   const { data: contextProjects = [], isLoading: projectsLoading } = useQuery({
-    queryKey: ['operativeProjects', companyParticipations],
+    queryKey: ['operativeProjects', participationProjectIds],
     queryFn: async () => {
-      if (companyParticipations.length === 0) return [];
-      const projectIds = [...new Set(companyParticipations.map((participation) => participation.project_id))];
-      const allProjects = await appClient.entities.Project.list('-created_date');
-      return allProjects.filter((project) => projectIds.includes(project.id));
+      if (participationProjectIds.length === 0) return [];
+      const scopedProjects = await appClient.entities.Project.filter({ id: participationProjectIds }, '-created_date');
+      return filterProjectsForParticipations({ projects: scopedProjects, participations: companyParticipations });
     },
-    enabled: companyParticipations.length > 0,
+    enabled: participationProjectIds.length > 0,
     staleTime: 60 * 1000,
   });
 
   const contextProjectIds = useMemo(
-    () => contextProjects.map((project) => project.id),
+    () => getContextProjectIds({ projects: contextProjects }),
     [contextProjects],
   );
 
@@ -88,19 +103,11 @@ export function useOperativeData() {
   });
 
   const contextEvents = useMemo(() => {
-    if (!activeCompanyId) return [];
-
-    const companyEvents = events.filter((event) => {
-      if (event.owner_type === 'company' && event.owner_company_id === activeCompanyId) return true;
-      return eventParticipants.some((participant) =>
-        participant.event_id === event.id
-        && participant.participant_type === 'company'
-        && participant.company_id === activeCompanyId,
-      );
-    });
-
-    return companyEvents;
+    return resolveOperativeContextEvents({ events, eventParticipants, activeCompanyId });
   }, [events, eventParticipants, activeCompanyId]);
+
+  const isContextLoading = userLoading || companiesLoading || participationsLoading || projectsLoading;
+  const isActivityLoading = tasksLoading || eventsLoading || participantsLoading;
 
   return {
     user,
@@ -113,6 +120,8 @@ export function useOperativeData() {
     contextProjectIds,
     contextTasks,
     contextEvents,
-    isLoading: userLoading || companiesLoading || participationsLoading || projectsLoading || tasksLoading || eventsLoading || participantsLoading,
+    isLoading: isContextLoading,
+    isContextLoading,
+    isActivityLoading,
   };
 }

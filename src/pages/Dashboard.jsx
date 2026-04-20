@@ -83,6 +83,9 @@ export default function Dashboard() {
 
   const currentContext = user?.active_context || 'personal';
   const currentCompany = companies.find(c => c.id === user?.active_company_id);
+  const workingAsLabel = currentContext === 'company'
+    ? ` ${currentCompany?.name || t('common.companies')}`
+    : '';
 
   // Filter projects based on context
   const contextProjects = projects.filter(project => {
@@ -138,20 +141,25 @@ export default function Dashboard() {
       {/* Launch onboarding tour */}
       <TourLauncher 
         tourId="onboarding" 
-        steps={getOnboardingTour(currentLanguage).steps} 
+        steps={getOnboardingTour(currentLanguage, {
+          currentContext,
+          activeCompanyId: user?.active_company_id,
+          hasCompanyContext: companyMemberships.length > 0,
+        }).steps} 
         trigger={shouldStartOnboarding}
         delay={1500}
+        afterCompleteRoute={createPageUrl('Dashboard')}
       />
 
       {/* Welcome section */}
       <div className="flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
-        <div className="app-page-header">
+        <div className="app-page-header" data-tour="dashboard-header">
           <span className="app-page-kicker">{t('dashboard.kicker')}</span>
           <h1 className="app-page-title">
             {t('dashboard.greetingPrefix')} {(user?.display_name || user?.full_name)?.split(' ')[0] || 'Utente'}
           </h1>
           <p className="app-page-subtitle">
-            {t('dashboard.workingAs')} {currentContext === 'personal' ? t('dashboard.noPersonalProjects') : currentCompany?.name || t('common.companies')}
+            {t('dashboard.workingAs')}{workingAsLabel}
           </p>
           <div className="flex items-center gap-2">
             <ContextBadge context={currentContext} companyName={currentCompany?.name} />

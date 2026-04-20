@@ -1,84 +1,127 @@
-export const getOnboardingTour = (language = 'it') => {
+import { createPageUrl } from '@/utils';
+
+const goTo = (path) => ({ navigate }) => {
+  const currentPath = `${window.location.pathname}${window.location.search || ''}`;
+  if (currentPath !== path) {
+    navigate(path);
+  }
+};
+
+export const getOnboardingTour = (language = 'it', options = {}) => {
+  const {
+    currentContext = 'personal',
+    activeCompanyId = null,
+    hasCompanyContext = false,
+  } = options;
+
+  const dashboardPath = createPageUrl('Dashboard');
+  const projectsPath = createPageUrl('Projects');
+  const calendarPath = createPageUrl('Calendar');
+  const notificationsPath = createPageUrl('Notifications');
+  const companyWorkspacePath = currentContext === 'company' && activeCompanyId
+    ? `${createPageUrl('CompanyDetail')}?id=${activeCompanyId}`
+    : createPageUrl('Companies');
+  const companyTarget = currentContext === 'company' && activeCompanyId
+    ? '[data-tour="company-header"]'
+    : '[data-tour="companies-header"]';
+
   if (language === 'it') {
     return {
       id: 'onboarding',
       steps: [
         {
           target: null,
-          title: 'Benvenuto in EdilSync! 🎉',
-          content: 'Ti guideremo attraverso le funzionalità principali dell\'app per aiutarti a iniziare subito. Questo tour richiederà solo 2 minuti.',
+          title: 'Benvenuto in EdilSync',
+          content: 'Ti facciamo vedere dove trovi cantieri, calendario, società e notifiche. Così sai subito dove andare quando inizi a lavorare.',
           placement: 'center',
+          onEnter: goTo(dashboardPath),
         },
         {
-          target: '[data-tour="nav-dashboard"]',
-          title: 'Dashboard',
-          content: 'Qui troverai una panoramica generale dei tuoi cantieri, società e attività recenti. È il tuo punto di partenza.',
+          target: '[data-tour="dashboard-header"]',
+          title: 'Dashboard operativa',
+          content: 'Questa è la schermata iniziale. Ti mostra cosa seguire subito e ti porta velocemente nelle aree che usi di più.',
           placement: 'bottom',
           padding: 8,
+          onEnter: goTo(dashboardPath),
         },
         {
-          target: 'a[href*="Projects"]',
+          target: '[data-tour="projects-header"]',
           title: 'Cantieri',
-          content: 'Gestisci tutti i tuoi cantieri: crea nuovi cantieri, monitora lo stato dei lavori, assegna task e collabora con il team.',
+          content: 'Qui trovi tutti i cantieri a cui lavori. Da qui apri un cantiere esistente o ne crei uno nuovo.',
           placement: 'bottom',
           padding: 8,
+          onEnter: goTo(projectsPath),
         },
         {
-          target: 'a[href*="Calendar"]',
+          target: '[data-tour="projects-list"]',
+          title: 'Portfolio cantieri',
+          content: 'In questo elenco vedi i cantieri attivi, quelli fermi e quelli appena creati. Se non ce ne sono ancora, è da qui che parti.',
+          placement: 'top',
+          padding: 8,
+          onEnter: goTo(projectsPath),
+        },
+        {
+          target: '[data-tour="calendar-shell"]',
           title: 'Calendario',
-          content: 'Pianifica appuntamenti, sopralluoghi e scadenze. Tutti gli eventi sono sincronizzati con i tuoi cantieri.',
+          content: 'Qui tieni sotto controllo appuntamenti, sopralluoghi, scadenze e attività del cantiere in un solo colpo d\'occhio.',
           placement: 'bottom',
           padding: 8,
+          onEnter: goTo(calendarPath),
         },
         {
-          target: 'a[href*="Companies"]',
+          target: companyTarget,
           title: 'Società',
-          content: 'Gestisci le tue società, invita membri del team e organizza la collaborazione tra professionisti.',
+          content: currentContext === 'company' && activeCompanyId
+            ? 'Se stai lavorando come società, questo è il tuo spazio aziendale: membri, documenti, chat interna e piano.'
+            : 'Qui trovi le società in cui lavori o che gestisci. Da qui entri nello spazio della tua impresa.',
           placement: 'bottom',
           padding: 8,
+          onEnter: goTo(companyWorkspacePath),
         },
-        {
+        hasCompanyContext ? {
           target: '[data-tour="context-switcher"]',
           title: 'Cambio Contesto',
-          content: 'Passa rapidamente tra lavoro personale e società. Ogni contesto ha i suoi cantieri, membri e dati separati.',
+          content: 'Da qui passi dal profilo personale alla società, e viceversa. È utile quando lavori sia per conto tuo sia per l\'impresa.',
           placement: 'left',
           padding: 8,
-        },
+        } : null,
         {
-          target: '[data-tour="notifications"]',
-          title: 'Notifiche',
-          content: 'Ricevi aggiornamenti in tempo reale su inviti, task assegnati, cambiamenti di stato e messaggi.',
-          placement: 'left',
+          target: '[data-tour="notifications-list"]',
+          title: 'Notifiche operative',
+          content: 'Qui arrivano inviti, aggiornamenti, messaggi e promemoria. Ogni notifica ti porta direttamente nel punto giusto.',
+          placement: 'top',
           padding: 8,
+          onEnter: goTo(notificationsPath),
         },
         {
           target: '[data-tour="messaging"]',
           title: 'Messaggistica',
-          content: 'Comunica con il team tramite canali dedicati per ogni cantiere o società. Ricevi notifiche sui nuovi messaggi.',
+          content: 'Qui apri velocemente le conversazioni. Le chat restano separate tra cantieri e società, così non fai confusione.',
           placement: 'left',
           padding: 8,
         },
         {
           target: '[data-tour="assistant"]',
           title: 'Assistente AI',
-          content: 'Il tuo assistente personale è sempre disponibile per aiutarti con qualsiasi domanda o operazione nell\'app.',
+          content: 'Se hai un dubbio, l\'assistente ti aiuta a trovare funzioni, passaggi e informazioni senza perdere tempo.',
           placement: 'left',
           padding: 12,
         },
         {
           target: '[data-tour="user-menu-trigger"]',
           title: 'Modalità Operativa',
-          content: 'Apri questo menu e usa “Modalità Operativa” per passare a un\'interfaccia mobile-first più rapida, pensata per il lavoro in cantiere.',
+          content: 'Da qui apri le impostazioni rapide del profilo. La Modalità operativa semplifica l\'uso da telefono, utile quando sei in movimento o in cantiere.',
           placement: 'left',
           padding: 8,
         },
         {
           target: null,
-          title: 'Tutto Pronto! 🚀',
-          content: 'Ora sei pronto per iniziare. Crea il tuo primo cantiere o società, oppure esplora liberamente l\'app. Buon lavoro!',
+          title: 'Tutto pronto',
+          content: 'Adesso puoi iniziare davvero: apri un cantiere, entra nella tua società oppure continua a esplorare l\'app. Buon lavoro.',
           placement: 'center',
+          onEnter: goTo(dashboardPath),
         },
-      ],
+      ].filter(Boolean),
     };
   }
 
@@ -87,79 +130,96 @@ export const getOnboardingTour = (language = 'it') => {
     steps: [
       {
         target: null,
-        title: 'Welcome to EdilSync! 🎉',
-        content: 'We will guide you through the main app features so you can get started right away. This tour only takes about 2 minutes.',
+        title: 'Welcome to EdilSync',
+        content: 'We will show you where to find worksites, calendar, companies, and notifications so you can start working right away.',
         placement: 'center',
+        onEnter: goTo(dashboardPath),
       },
       {
-        target: '[data-tour="nav-dashboard"]',
-        title: 'Dashboard',
-        content: 'Here you get a complete overview of your worksites, companies, and recent activity. It is your starting point.',
+        target: '[data-tour="dashboard-header"]',
+        title: 'Operational dashboard',
+        content: 'This is the starting screen. It shows what needs attention and gets you quickly to the areas you use most.',
         placement: 'bottom',
         padding: 8,
+        onEnter: goTo(dashboardPath),
       },
       {
-        target: 'a[href*="Projects"]',
+        target: '[data-tour="projects-header"]',
         title: 'Worksites',
-        content: 'Manage all your worksites: create new ones, monitor progress, assign tasks, and collaborate with your team.',
+        content: 'Here you find all the worksites you are working on. Open an existing one or create a new one from here.',
         placement: 'bottom',
         padding: 8,
+        onEnter: goTo(projectsPath),
       },
       {
-        target: 'a[href*="Calendar"]',
+        target: '[data-tour="projects-list"]',
+        title: 'Worksite portfolio',
+        content: 'This list shows active worksites, paused ones, and newly created ones. If you do not have any yet, this is where you begin.',
+        placement: 'top',
+        padding: 8,
+        onEnter: goTo(projectsPath),
+      },
+      {
+        target: '[data-tour="calendar-shell"]',
         title: 'Calendar',
-        content: 'Plan appointments, inspections, and deadlines. All events are synchronized with your worksites.',
+        content: 'Keep inspections, deadlines, appointments, and worksite activities under control in one place.',
         placement: 'bottom',
         padding: 8,
+        onEnter: goTo(calendarPath),
       },
       {
-        target: 'a[href*="Companies"]',
+        target: companyTarget,
         title: 'Companies',
-        content: 'Manage your companies, invite team members, and organize collaboration across professionals.',
+        content: currentContext === 'company' && activeCompanyId
+          ? 'If you are working as a company, this is your company space: members, documents, internal chat, and plan.'
+          : 'Here you find the companies you work with or manage. Open your company space from here.',
         placement: 'bottom',
         padding: 8,
+        onEnter: goTo(companyWorkspacePath),
       },
-      {
+      hasCompanyContext ? {
         target: '[data-tour="context-switcher"]',
         title: 'Context Switcher',
-        content: 'Quickly switch between personal and company work. Each context has separate worksites, members, and data.',
+        content: 'Switch between personal work and company work from here. Each context keeps its own worksites, people, and data separate.',
         placement: 'left',
         padding: 8,
-      },
+      } : null,
       {
-        target: '[data-tour="notifications"]',
-        title: 'Notifications',
-        content: 'Receive real-time updates for invitations, assigned tasks, status changes, and messages.',
-        placement: 'left',
+        target: '[data-tour="notifications-list"]',
+        title: 'Operational notifications',
+        content: 'This is where invites, updates, messages, and reminders arrive. Each notification opens the right place directly.',
+        placement: 'top',
         padding: 8,
+        onEnter: goTo(notificationsPath),
       },
       {
         target: '[data-tour="messaging"]',
         title: 'Messaging',
-        content: 'Communicate with your team through dedicated channels for each worksite or company. Get notified on new messages.',
+        content: 'Open conversations quickly from here. Chats stay separate between worksites and companies so things stay clear.',
         placement: 'left',
         padding: 8,
       },
       {
         target: '[data-tour="assistant"]',
         title: 'AI Assistant',
-        content: 'Your personal assistant is always available to help you with any question or operation in the app.',
+        content: 'If you are unsure about something, the assistant helps you find the right function, step, or information faster.',
         placement: 'left',
         padding: 12,
       },
       {
         target: '[data-tour="user-menu-trigger"]',
         title: 'Operational Mode',
-        content: 'Open this menu and use “Operational Mode” to switch to a faster mobile-first interface designed for on-site work.',
+        content: 'Open this menu for quick profile actions. Operational Mode makes the app easier to use on a phone while you are on site.',
         placement: 'left',
         padding: 8,
       },
       {
         target: null,
-        title: 'All Set! 🚀',
-        content: 'You are ready to begin. Create your first worksite or company, or simply explore the app. Enjoy your work!',
+        title: 'All set',
+        content: 'You can start for real now: open a worksite, enter your company space, or keep exploring the app.',
         placement: 'center',
+        onEnter: goTo(dashboardPath),
       },
-    ],
+    ].filter(Boolean),
   };
 };

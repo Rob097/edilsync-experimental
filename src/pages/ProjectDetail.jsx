@@ -25,7 +25,9 @@ import {
   Activity,
   ShieldAlert,
   Upload,
-  AlertCircle
+  AlertCircle,
+  MessageSquare,
+  Landmark
 } from "lucide-react";
 import { format } from 'date-fns';
 import { it, enUS } from 'date-fns/locale';
@@ -115,27 +117,10 @@ export default function ProjectDetail() {
 
   const acceptInviteMutation = useMutation({
     mutationFn: async (participantId) => {
-      // Step 1: Accept the invitation
-      await appClient.entities.ProjectParticipant.update(participantId, { status: 'active' });
-
-      // Step 2: Add to General channel
-      const participant = participants.find(p => p.id === participantId);
-      if (participant) {
-        const channels = await appClient.entities.Channel.filter({ 
-          project_id: projectId, 
-          type: 'general'
-        });
-        if (channels.length > 0) {
-          await appClient.entities.ChannelMember.create({
-            channel_id: channels[0].id,
-            project_id: projectId,
-            participant_id: participant.id,
-            user_email: participant.user_email || null,
-            company_id: participant.company_id || null,
-            last_read_at: new Date().toISOString(),
-          });
-        }
-      }
+      await appClient.functions.invoke('respondProjectParticipantInvite', {
+        participant_id: participantId,
+        status: 'active',
+      });
     },
     onSuccess: () => {
       // Stagger invalidations to avoid 429
@@ -150,7 +135,10 @@ export default function ProjectDetail() {
   });
 
   const declineInviteMutation = useMutation({
-    mutationFn: (participantId) => appClient.entities.ProjectParticipant.update(participantId, { status: 'declined' }),
+    mutationFn: (participantId) => appClient.functions.invoke('respondProjectParticipantInvite', {
+      participant_id: participantId,
+      status: 'declined',
+    }),
     onSuccess: () => {
       queryClient.invalidateQueries(['projectParticipants', projectId]);
       queryClient.invalidateQueries(['userProjectParticipations']);
@@ -267,6 +255,77 @@ export default function ProjectDetail() {
   const showFinancePlanGate = isActiveParticipant && projectFinanceFeatureAccess?.access_level === 'disabled';
   const canViewFinanceSection = financeFeatureEnabled && financialPermissions.canViewSection;
   const shouldShowFinanceButton = !isBlockedProject && (showFinancePlanGate || canViewFinanceSection);
+
+  const projectQuickActions = [
+    {
+      key: 'upload-document',
+      visible: isActiveParticipant,
+      icon: Upload,
+      label: t('projectDetail.quickActions.uploadAttachment'),
+      onClick: () => {
+        navigateToSection('info', 'documents');
+        setTimeout(() => setDocumentUploadOpen(true), 200);
+      },
+    },
+    {
+      key: 'open-chat',
+      visible: isActiveParticipant,
+      icon: MessageSquare,
+      label: t('projectDetail.quickActions.openChat'),
+      onClick: () => {
+        navigateToSection('info', 'chat');
+      },
+    },
+    {
+      key: 'new-task',
+      visible: canEditTasks,
+      icon: CheckCircle2,
+      label: t('projectDetail.quickActions.newTask'),
+      onClick: () => {
+        navigateToSection('lavori', 'tasks');
+        setTimeout(() => setTaskCreateOpen(true), 200);
+      },
+    },
+    {
+      key: 'new-change',
+      visible: canCreateChangeRequest,
+      icon: DollarSign,
+      label: t('projectDetail.quickActions.newChange'),
+      onClick: () => {
+        navigateToSection('lavori', 'changes');
+        setTimeout(() => setChangeCreateOpen(true), 200);
+      },
+    },
+    {
+      key: 'new-dispute',
+      visible: canManageDisputes,
+      icon: ShieldAlert,
+      label: t('projectDetail.quickActions.newDispute'),
+      onClick: () => {
+        navigateToSection('lavori', 'disputes');
+        setTimeout(() => setDisputeCreateOpen(true), 200);
+      },
+    },
+    {
+      key: 'invite-participant',
+      visible: canInvite,
+      icon: UserPlus,
+      label: t('projectDetail.quickActions.inviteParticipant'),
+      onClick: () => {
+        navigateToSection('info', 'participants');
+        setTimeout(() => setInviteDialogOpen(true), 200);
+      },
+    },
+    {
+      key: 'open-finance',
+      visible: shouldShowFinanceButton,
+      icon: Landmark,
+      label: t('projectDetail.quickActions.openFinance'),
+      onClick: () => {
+        navigateToSection('info', 'finance');
+      },
+    },
+  ].filter((action) => action.visible);
 
   useEffect(() => {
     if (!isBlockedProject) return;
@@ -400,7 +459,13 @@ export default function ProjectDetail() {
       {/* Launch project tour */}
       <TourLauncher 
         tourId="projects" 
-        steps={getProjectTour(currentLanguage).steps} 
+        steps={getProjectTour(currentLanguage, {
+          navigateToSection,
+          isBlockedProject,
+          canInvite,
+          showFinanceSection: shouldShowFinanceButton,
+          showQuickActions: projectQuickActions.length > 0,
+        }).steps} 
         trigger={shouldStartProjectTour}
         delay={1000}
       />
@@ -438,7 +503,7 @@ export default function ProjectDetail() {
 
       {/* Header */}
       <div className="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
-        <div className="app-page-header min-w-0 flex-1">
+        <div className="app-page-header min-w-0 flex-1" data-tour="project-header">
           <span className="app-page-kicker">{t('projectDetail.kicker')}</span>
           <Button
             variant="ghost"
@@ -581,7 +646,7 @@ export default function ProjectDetail() {
           }
         }, 100);
       }}>
-        <TabsList className="mb-4 h-auto flex-wrap">
+        <TabsList className="mb-4 h-auto flex-wrap" data-tour="project-tabs">
           {!isBlockedProject ? (
           <TabsTrigger value="cantiere" className="flex items-center gap-2">
             <Activity className="h-4 w-4" />
@@ -1040,6 +1105,7 @@ export default function ProjectDetail() {
                   <Button 
                     onClick={() => setInviteDialogOpen(true)}
                     className="bg-[#ef6144] hover:bg-[#d9553a]"
+                    data-tour="project-invite-button"
                   >
                     <UserPlus className="h-4 w-4 mr-2" />
                     {isBlockedProject ? tr('Invita società sponsor', 'Invite sponsor company') : t('projectDetail.invite')}
@@ -1101,6 +1167,8 @@ export default function ProjectDetail() {
       {isActiveParticipant && !isBlockedProject && (
         <button
           onClick={() => setQuickActionOpen(!quickActionOpen)}
+          aria-label={tr('Apri azioni rapide', 'Open quick actions')}
+          data-tour="project-quick-actions-trigger"
           className="fixed bottom-6 right-24 w-14 h-14 rounded-full bg-gray-700 hover:bg-gray-600 text-white shadow-lg flex items-center justify-center z-50 transition-transform hover:scale-110"
         >
           <Plus className={`h-6 w-6 transition-transform ${quickActionOpen ? 'rotate-45' : ''}`} />
@@ -1110,38 +1178,23 @@ export default function ProjectDetail() {
       {/* Quick Action Menu */}
       {quickActionOpen && !isBlockedProject && (
         <div className="fixed bottom-24 right-24 bg-white rounded-lg shadow-xl border p-2 z-50 min-w-[200px]">
-          <button
-            onClick={() => {
-              setQuickActionOpen(false);
-              navigateToSection('info', 'documents');
-              setTimeout(() => setDocumentUploadOpen(true), 200);
-            }}
-            className="w-full flex items-center gap-3 px-4 py-3 hover:bg-gray-50 rounded-lg text-left transition-colors"
-          >
-            <Upload className="h-5 w-5 text-gray-700" />
-            <span className="font-medium">{t('projectDetail.quickActions.uploadAttachment')}</span>
-          </button>
-          <button
-            onClick={() => {
-              setQuickActionOpen(false);
-              navigateToSection('lavori', 'tasks');
-            }}
-            className="w-full flex items-center gap-3 px-4 py-3 hover:bg-gray-50 rounded-lg text-left transition-colors"
-          >
-            <CheckCircle2 className="h-5 w-5 text-gray-700" />
-            <span className="font-medium">{t('projectDetail.quickActions.updateTask')}</span>
-          </button>
-          <button
-            onClick={() => {
-              setQuickActionOpen(false);
-              navigateToSection('lavori', 'changes');
-              setTimeout(() => setChangeCreateOpen(true), 200);
-            }}
-            className="w-full flex items-center gap-3 px-4 py-3 hover:bg-gray-50 rounded-lg text-left transition-colors"
-          >
-            <DollarSign className="h-5 w-5 text-gray-700" />
-            <span className="font-medium">{t('projectDetail.quickActions.newChange')}</span>
-          </button>
+          {projectQuickActions.map((action) => {
+            const Icon = action.icon;
+
+            return (
+              <button
+                key={action.key}
+                onClick={() => {
+                  setQuickActionOpen(false);
+                  action.onClick();
+                }}
+                className="w-full flex items-center gap-3 px-4 py-3 hover:bg-gray-50 rounded-lg text-left transition-colors"
+              >
+                <Icon className="h-5 w-5 text-gray-700" />
+                <span className="font-medium">{action.label}</span>
+              </button>
+            );
+          })}
         </div>
       )}
 

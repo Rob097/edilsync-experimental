@@ -115,7 +115,7 @@ export default function ProjectOverview({ projectId, onNavigate }) {
   }
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6" data-tour="project-overview-panel">
       {/* Stats Overview */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         {/* Tasks Card */}

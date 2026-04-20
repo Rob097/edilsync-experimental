@@ -1,4 +1,5 @@
-import React, { createContext, useContext, useState } from 'react';
+import React, { createContext, useContext, useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { appClient } from '@/api/appClient';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 
@@ -14,6 +15,7 @@ export const useTour = () => {
 
 export default function TourProvider({ children }) {
   const queryClient = useQueryClient();
+  const navigate = useNavigate();
   const [activeTour, setActiveTour] = useState(null);
   const [currentStep, setCurrentStep] = useState(0);
   const [isVisible, setIsVisible] = useState(false);
@@ -40,6 +42,10 @@ export default function TourProvider({ children }) {
   };
 
   const startTour = (tourId, steps, options = {}) => {
+    if (!options.force && activeTour) {
+      return false;
+    }
+
     // Check if tour is already completed or dismissed
     const completedKey = `${tourId}_completed`;
     const dismissedKey = `${tourId}_dismissed`;
@@ -53,6 +59,23 @@ export default function TourProvider({ children }) {
     setIsVisible(true);
     return true;
   };
+
+  useEffect(() => {
+    if (!activeTour || !isVisible) {
+      return;
+    }
+
+    const step = activeTour.steps[currentStep];
+    if (typeof step?.onEnter !== 'function') {
+      return;
+    }
+
+    step.onEnter({
+      navigate,
+      activeTour,
+      currentStep,
+    });
+  }, [activeTour, currentStep, isVisible, navigate]);
 
   const nextStep = () => {
     if (!activeTour) return;
