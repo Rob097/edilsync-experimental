@@ -105,9 +105,6 @@ Questa lista raccoglie i test da implementare contro il branch `qa` usando backe
    - payload valido
    - payload invalido
    - consegna verso canale configurato
-15. `crowToken`:
-   - generazione token valida
-   - denial per configurazione assente o input invalido
 
 ## Regole di implementazione
 

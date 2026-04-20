@@ -147,6 +147,15 @@ npm run test:doctor
 - `tests/scripts/assert-qa-target.sh`: blocca test remoti se puntano a `main`
 - `tests/scripts/run-all-tests.sh`: esegue tutto e stampa il riepilogo finale
 - `tests/scripts/remote/`: utility manuali per sincronizzare il backend del branch `qa`
+- `tests/scripts/remote/precheck-promote-qa-to-main.sh`: precheck per promuovere Supabase `qa` -> `main`
+- `tests/scripts/remote/repair-linked-migration-history.sh`: riallinea `schema_migrations` del progetto linked alle migration locali quando la history protegge il merge
+
+Comandi utili per la promozione backend QA -> produzione:
+
+```bash
+npm run supabase:promote:precheck
+npm run supabase:promote:repair-history
+```
 
 ## Documentazione di copertura
 
@@ -158,6 +167,7 @@ Per la copertura business e i backlog operativi usare:
 - `public/Docs/qa/integration-backlog.md`
 - `public/Docs/qa/pgtap-backlog.md`
 - `public/Docs/qa/playwright-backlog.md`
+- `public/Docs/qa/promote/qa-to-main.md`
 
 ## Nota importante
 

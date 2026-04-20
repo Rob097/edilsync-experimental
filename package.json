@@ -28,6 +28,8 @@
     "playwright:install": "playwright install --with-deps chromium",
     "supabase:login": "supabase login",
     "supabase:link:prod": "supabase link --project-ref eeautkvckrbuorngkvyi",
+    "supabase:promote:precheck": "bash ./tests/scripts/remote/precheck-promote-qa-to-main.sh",
+    "supabase:promote:repair-history": "bash ./tests/scripts/remote/repair-linked-migration-history.sh",
     "supabase:db:pull": "supabase db pull",
     "supabase:start": "supabase start",
     "supabase:stop": "supabase stop"

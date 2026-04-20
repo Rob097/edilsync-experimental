@@ -17,6 +17,7 @@ La guida operativa per avvio app, target `main`/`qa` e comando unico dei test e 
 - `integration-backlog.md`: backlog dei test di integrazione backend contro il branch `qa`
 - `pgtap-backlog.md`: backlog dei test database e RLS con pgTAP
 - `playwright-backlog.md`: backlog dei test browser contro frontend locale + backend `qa`
+- `promote/qa-to-main.md`: procedura operativa per promuovere Supabase `qa` -> `main`
 
 ## Regole operative
 
