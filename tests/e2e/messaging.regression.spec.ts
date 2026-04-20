@@ -19,6 +19,7 @@ import {
   signInThroughUi,
   upsertCompanySubscription,
   waitForAuthenticatedShell,
+  waitForDialogToClose,
 } from './helpers/qa-auth';
 
 // Scenario IDs: messaging.project-channel.create, messaging.company-channel.create, messaging.send, messaging.mention-artifact
@@ -114,7 +115,7 @@ test('project participant can create a custom project channel from the UI', asyn
     await createButton.click();
     const createChannelResponse = await createChannelResponsePromise;
     expect(createChannelResponse.ok()).toBeTruthy();
-    await expect(dialog).toBeHidden();
+    await waitForDialogToClose(dialog);
 
     await expect.poll(async () => {
       const channel = await getChannelRecord({ projectId: project.id, name: channelName, type: 'custom' });
@@ -204,7 +205,7 @@ test('company admin can create an internal company channel from the UI', async (
     await createButton.click();
     const createChannelResponse = await createChannelResponsePromise;
     expect(createChannelResponse.ok()).toBeTruthy();
-    await expect(dialog).toBeHidden();
+    await waitForDialogToClose(dialog);
 
     await expect.poll(async () => {
       const channel = await getChannelRecord({ companyId: company.id, name: channelName, type: 'custom' });

@@ -83,6 +83,17 @@ const renderAuthProvider = () => render(
   </AuthProvider>,
 );
 
+const createDeferred = () => {
+  let resolve;
+  let reject;
+  const promise = new Promise((nextResolve, nextReject) => {
+    resolve = nextResolve;
+    reject = nextReject;
+  });
+
+  return { promise, resolve, reject };
+};
+
 describe('AuthContext', () => {
   beforeEach(() => {
     resetAuthState();
@@ -199,5 +210,49 @@ describe('AuthContext', () => {
       expect(screen.getByTestId('is-authenticated').textContent).toBe('no');
     });
     expect(screen.getByTestId('error-type').textContent).toBe('auth_required');
+  });
+
+  it('does not let a stale initial auth failure override a later successful sign in', async () => {
+    const user = userEvent.setup();
+    const initialAuthCheck = createDeferred();
+
+    authState.me.mockImplementationOnce(() => initialAuthCheck.promise);
+    authState.signInWithPassword.mockResolvedValue({ email: 'qa-login@edilsync.test' });
+
+    renderAuthProvider();
+
+    await user.click(screen.getByRole('button', { name: 'Sign in' }));
+
+    await waitFor(() => {
+      expect(screen.getByTestId('is-authenticated').textContent).toBe('yes');
+    });
+
+    initialAuthCheck.reject(new Error('auth required'));
+
+    await waitFor(() => {
+      expect(screen.getByTestId('is-authenticated').textContent).toBe('yes');
+    });
+    expect(screen.getByTestId('user-email').textContent).toBe('qa-login@edilsync.test');
+    expect(screen.getByTestId('error-type').textContent).toBe('none');
+  });
+
+  it('preserves the active session when a silent auth refresh fails', async () => {
+    authState.me.mockResolvedValueOnce({ email: 'qa-authenticated@edilsync.test' });
+
+    renderAuthProvider();
+
+    await waitFor(() => {
+      expect(screen.getByTestId('is-authenticated').textContent).toBe('yes');
+    });
+
+    authState.me.mockRejectedValueOnce(new Error('temporary auth lookup failure'));
+    authState.authCallback?.('USER_UPDATED', { user: { id: 'qa-user-id' } });
+
+    await waitFor(() => {
+      expect(authState.me).toHaveBeenCalledTimes(2);
+    });
+    expect(screen.getByTestId('is-authenticated').textContent).toBe('yes');
+    expect(screen.getByTestId('user-email').textContent).toBe('qa-authenticated@edilsync.test');
+    expect(screen.getByTestId('error-type').textContent).toBe('none');
   });
 });

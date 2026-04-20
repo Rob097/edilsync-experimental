@@ -1,5 +1,5 @@
 import React, { useMemo, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
 import { appClient } from '@/api/appClient';
 import { useQuery } from '@tanstack/react-query';
@@ -42,17 +42,22 @@ export default function CompanyDetail() {
   const { t, currentLanguage } = useLanguage();
   const tr = (itText, enText) => (currentLanguage === 'it' ? itText : enText);
   const navigate = useNavigate();
-  const urlParams = new URLSearchParams(window.location.search);
+  const location = useLocation();
+  const urlParams = useMemo(() => new URLSearchParams(location.search), [location.search]);
   const companyId = urlParams.get('id');
-  const initialTab = urlParams.get('tab');
-  const initialSection = urlParams.get('section');
+  const rawRequestedTab = urlParams.get('tab');
+  const requestedTab = ['panoramica', 'operativita', 'info', 'billing'].includes(rawRequestedTab || '')
+    ? rawRequestedTab
+    : null;
+  const requestedSection = urlParams.get('section');
 
   const [inviteDialogOpen, setInviteDialogOpen] = useState(false);
   const [editDialogOpen, setEditDialogOpen] = useState(false);
   const [quickActionOpen, setQuickActionOpen] = useState(false);
-  const [activeTab, setActiveTab] = useState(initialTab || 'panoramica');
-  const [operativaSection, setOperativaSection] = useState(initialTab === 'operativita' && initialSection ? initialSection : 'timbrature');
-  const [infoSection, setInfoSection] = useState(initialTab === 'info' && initialSection ? initialSection : 'all');
+  const [activeTab, setActiveTab] = useState(requestedTab || 'panoramica');
+  const [operativaSection, setOperativaSection] = useState(requestedTab === 'operativita' && requestedSection ? requestedSection : 'timbrature');
+  const [infoSection, setInfoSection] = useState(requestedTab === 'info' && requestedSection ? requestedSection : 'all');
+  const routeSyncKeyRef = React.useRef(null);
 
   const { data: user, isLoading: userLoading } = useQuery({
     queryKey: ['currentUser'],
@@ -115,10 +120,27 @@ export default function CompanyDetail() {
       return;
     }
 
-    if (activeTab === 'billing' && !isAdmin) {
-      setActiveTab('panoramica');
+    const routeSyncKey = `${location.pathname}${location.search}|${isAdmin ? 'admin' : 'member'}`;
+    if (routeSyncKeyRef.current === routeSyncKey) {
+      return;
     }
-  }, [activeTab, isAdmin, membersLoading]);
+
+    const nextTab = requestedTab === 'billing' && !isAdmin
+      ? 'panoramica'
+      : requestedTab || 'panoramica';
+
+    setActiveTab(nextTab);
+
+    if (nextTab === 'operativita') {
+      setOperativaSection(requestedSection || 'timbrature');
+    }
+
+    if (nextTab === 'info') {
+      setInfoSection(requestedSection || 'all');
+    }
+
+    routeSyncKeyRef.current = routeSyncKey;
+  }, [isAdmin, location.pathname, location.search, membersLoading, requestedSection, requestedTab]);
 
   const activeMembers = useMemo(
     () => members.filter((member) => member.status === 'active'),

@@ -2,8 +2,14 @@ import { defineConfig, devices } from '@playwright/test';
 
 const baseURL = process.env.PLAYWRIGHT_BASE_URL || 'http://127.0.0.1:4173';
 const isCI = Boolean(process.env.CI);
+const isRemoteQaRun = process.env.EDILSYNC_REMOTE_QA === '1' || Boolean(process.env.EDILSYNC_QA_ENV_FILE);
+const configuredWorkers = process.env.PLAYWRIGHT_WORKERS
+  ? Number.parseInt(process.env.PLAYWRIGHT_WORKERS, 10)
+  : null;
 const htmlOutputFolder = process.env.PLAYWRIGHT_HTML_OUTPUT_FOLDER || 'tests/playwright-report';
 const outputDir = process.env.PLAYWRIGHT_OUTPUT_DIR || 'tests/test-results';
+const testTimeout = isRemoteQaRun ? 120_000 : 60_000;
+const expectTimeout = isRemoteQaRun ? 20_000 : 10_000;
 const criticalTestMatch = [
   '**/auth.regression.spec.ts',
   '**/context-switch.regression.spec.ts',
@@ -26,9 +32,10 @@ if (process.env.PLAYWRIGHT_JSON_OUTPUT_FILE) {
 export default defineConfig({
   testDir: './tests/e2e',
   fullyParallel: false,
-  timeout: 60_000,
+  workers: configuredWorkers && configuredWorkers > 0 ? configuredWorkers : (isRemoteQaRun ? 1 : undefined),
+  timeout: testTimeout,
   expect: {
-    timeout: 10_000,
+    timeout: expectTimeout,
   },
   forbidOnly: isCI,
   retries: isCI ? 1 : 0,
@@ -36,9 +43,19 @@ export default defineConfig({
   outputDir,
   use: {
     baseURL,
+    reducedMotion: 'reduce',
     trace: 'retain-on-failure',
     screenshot: 'only-on-failure',
     video: 'retain-on-failure',
+    ...(isRemoteQaRun
+      ? {
+          actionTimeout: 20_000,
+          navigationTimeout: 45_000,
+          launchOptions: {
+            args: ['--disable-dev-shm-usage'],
+          },
+        }
+      : {}),
   },
   webServer: {
     command: 'npm run dev -- --host 127.0.0.1 --port 4173',

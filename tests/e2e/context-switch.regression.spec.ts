@@ -40,9 +40,7 @@ test('user can switch from personal to company context and see the active compan
 
     await switchContextThroughUi(page, new RegExp(company.name, 'i'));
 
-    await page.waitForLoadState('networkidle');
-    await waitForAuthenticatedShell(page);
-    await expect(page.getByText(new RegExp(`operating as ${company.name}`, 'i'))).toBeVisible();
+    await expect(page.locator('[data-tour="context-switcher"]:visible')).toContainText(new RegExp(company.name, 'i'));
     await expect(page.getByRole('link', { name: /^companies$|^società$/i })).toHaveAttribute(
       'href',
       expect.stringContaining(`id=${company.id}`),
@@ -79,9 +77,11 @@ test('user can switch from company back to personal context and restore the priv
 
     await switchContextThroughUi(page, /privato|private/i);
 
-    await page.waitForLoadState('networkidle');
-    await waitForAuthenticatedShell(page);
-    await expect(page.getByText(/your companies|le tue societa/i)).toBeVisible();
+    await expect(page.locator('[data-tour="context-switcher"]:visible')).toContainText(/privato|private/i);
+    await expect(page.getByRole('link', { name: /^companies$|^società$/i })).toHaveAttribute(
+      'href',
+      /\/app\/Companies(?:\?|$)/,
+    );
   } finally {
     if (companyId) {
       await cleanupCompanyGraph(companyId);
@@ -115,9 +115,7 @@ test('user can switch the active company when belonging to multiple companies', 
 
     await switchContextThroughUi(page, new RegExp(secondCompany.name, 'i'));
 
-    await page.waitForLoadState('networkidle');
-    await waitForAuthenticatedShell(page);
-    await expect(page.getByText(new RegExp(`operating as ${secondCompany.name}`, 'i'))).toBeVisible();
+    await expect(page.locator('[data-tour="context-switcher"]:visible')).toContainText(new RegExp(secondCompany.name, 'i'));
     await expect(page.getByRole('link', { name: /^companies$|^società$/i })).toHaveAttribute(
       'href',
       expect.stringContaining(`id=${secondCompany.id}`),

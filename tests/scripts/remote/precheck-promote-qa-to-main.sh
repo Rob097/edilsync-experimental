@@ -172,12 +172,12 @@ NODE
 printf 'Production migration versions: %s\n' "${#prod_migration_versions[@]}"
 
 local_migrations_file="$tmp_dir/local_migrations.txt"
-prod_migrations_file="$tmp_dir/prod_migrations.txt"
+production_migrations_file="$tmp_dir/production_migrations.txt"
 write_lines_file "$local_migrations_file" "${local_migration_versions[@]}"
-write_lines_file "$prod_migrations_file" "${prod_migration_versions[@]}"
+write_lines_file "$production_migrations_file" "${prod_migration_versions[@]}"
 
-mapfile -t local_only_migrations < <(comm -23 "$local_migrations_file" "$prod_migrations_file")
-mapfile -t prod_only_migrations < <(comm -13 "$local_migrations_file" "$prod_migrations_file")
+mapfile -t local_only_migrations < <(comm -23 "$local_migrations_file" "$production_migrations_file")
+mapfile -t prod_only_migrations < <(comm -13 "$local_migrations_file" "$production_migrations_file")
 
 if [[ ${#local_only_migrations[@]} -gt 0 || ${#prod_only_migrations[@]} -gt 0 ]]; then
   history_drift_failed=1

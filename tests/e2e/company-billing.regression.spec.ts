@@ -1,5 +1,5 @@
 import { expect, test } from '@playwright/test';
-import { cleanupCompanyGraph, cleanupQaUser, createConfirmedQaUser, hasRemoteQaEnv, signInThroughUi } from './helpers/qa-auth';
+import { cleanupCompanyGraph, cleanupQaUser, createConfirmedQaUser, hasRemoteQaEnv, signInThroughUi, waitForAuthenticatedShell } from './helpers/qa-auth';
 
 test.skip(!hasRemoteQaEnv, 'Remote QA browser tests require Supabase branch credentials.');
 
@@ -9,6 +9,7 @@ test('company admin can open the billing tab from company detail', async ({ page
 
   try {
     await signInThroughUi(page, user.email, user.password);
+    await waitForAuthenticatedShell(page);
     await page.goto('/app/NewCompany');
 
     const companyName = `QA Billing Company ${Date.now()}`;

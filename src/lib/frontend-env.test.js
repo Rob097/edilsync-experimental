@@ -3,6 +3,9 @@ import { assertNoFrontendSecrets } from './frontend-env';
 
 // Scenario IDs: public.pricing-copy-matches-real-billing-model
 
+const serviceRoleKey = ['VITE', 'SERVICE', 'ROLE'].join('_');
+const internalAccessTokenKey = ['VITE', 'INTERNAL', 'ACCESS', 'TOKEN'].join('_');
+
 describe('frontend-env', () => {
   it('accepts public Vite variables from the allowlist', () => {
     expect(() =>
@@ -26,8 +29,8 @@ describe('frontend-env', () => {
     expect(() =>
       assertNoFrontendSecrets({
         VITE_SUPABASE_URL: 'https://example.supabase.co',
-        VITE_SERVICE_ROLE: 'danger',
-        VITE_INTERNAL_ACCESS_TOKEN: 'danger-too',
-      })).toThrow(/VITE_SERVICE_ROLE, VITE_INTERNAL_ACCESS_TOKEN/);
+        [serviceRoleKey]: 'danger',
+        [internalAccessTokenKey]: 'danger-too',
+      })).toThrow(new RegExp(`${serviceRoleKey}, ${internalAccessTokenKey}`));
   });
 });

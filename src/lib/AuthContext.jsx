@@ -2,6 +2,10 @@ import React, { createContext, useContext, useEffect, useRef, useState } from 'r
 import { appClient } from '@/api/appClient';
 
 const AuthContext = createContext();
+const createAuthRequiredError = (message = 'Authentication required') => ({
+  type: 'auth_required',
+  message,
+});
 
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
@@ -13,6 +17,44 @@ export const AuthProvider = ({ children }) => {
   const [hasCompletedInitialAuthCheck, setHasCompletedInitialAuthCheck] = useState(false);
   const isAuthenticatedRef = useRef(false);
   const hasCompletedInitialAuthCheckRef = useRef(false);
+  const authEpochRef = useRef(0);
+  const authCheckSequenceRef = useRef(0);
+
+  const markInitialAuthCheckCompleted = () => {
+    if (!hasCompletedInitialAuthCheckRef.current) {
+      setHasCompletedInitialAuthCheck(true);
+      hasCompletedInitialAuthCheckRef.current = true;
+    }
+  };
+
+  const applyAuthenticatedState = (currentUser) => {
+    setUser(currentUser);
+    setIsAuthenticated(true);
+    isAuthenticatedRef.current = true;
+    setAuthError(null);
+    markInitialAuthCheckCompleted();
+  };
+
+  const applyUnauthenticatedState = (message = 'Authentication required') => {
+    setUser(null);
+    setIsAuthenticated(false);
+    isAuthenticatedRef.current = false;
+    setAuthError(createAuthRequiredError(message));
+    markInitialAuthCheckCompleted();
+  };
+
+  const invalidateAuthEpoch = () => {
+    authEpochRef.current += 1;
+    return authEpochRef.current;
+  };
+
+  const beginTrackedAuthCheck = () => ({
+    epoch: authEpochRef.current,
+    checkId: ++authCheckSequenceRef.current,
+  });
+
+  const isTrackedAuthCheckCurrent = (trackedCheck) =>
+    trackedCheck.epoch === authEpochRef.current && trackedCheck.checkId === authCheckSequenceRef.current;
 
   useEffect(() => {
     isAuthenticatedRef.current = isAuthenticated;
@@ -33,19 +75,18 @@ export const AuthProvider = ({ children }) => {
       }
 
       if (event === 'SIGNED_OUT' || !session?.user) {
-        setUser(null);
-        setIsAuthenticated(false);
-        isAuthenticatedRef.current = false;
-        setAuthError({
-          type: 'auth_required',
-          message: 'Authentication required'
-        });
+        invalidateAuthEpoch();
+        setIsLoadingAuth(false);
+        applyUnauthenticatedState();
         return;
       }
 
       if (event === 'SIGNED_IN' || event === 'USER_UPDATED' || event === 'INITIAL_SESSION') {
         const shouldRunSilent = hasCompletedInitialAuthCheckRef.current || isAuthenticatedRef.current;
-        checkUserAuth({ silent: shouldRunSilent });
+        checkUserAuth({
+          silent: shouldRunSilent,
+          preserveSessionOnFailure: shouldRunSilent || isAuthenticatedRef.current,
+        });
       }
     });
 
@@ -60,110 +101,121 @@ export const AuthProvider = ({ children }) => {
       setIsLoadingPublicSettings(true);
       setAppPublicSettings({ provider: 'supabase' });
       await checkUserAuth();
-      setIsLoadingPublicSettings(false);
     } catch (error) {
       console.error('Unexpected error:', error);
       setAuthError({
         type: 'unknown',
         message: error.message || 'An unexpected error occurred'
       });
-      setIsLoadingPublicSettings(false);
       setIsLoadingAuth(false);
+    } finally {
+      setIsLoadingPublicSettings(false);
     }
   };
 
-  const checkUserAuth = async ({ silent = false } = {}) => {
+  const checkUserAuth = async ({
+    silent = false,
+    preserveSessionOnFailure = silent || isAuthenticatedRef.current,
+  } = {}) => {
+    const trackedCheck = beginTrackedAuthCheck();
+
     try {
       if (!silent) {
         setIsLoadingAuth(true);
       }
+
       const currentUser = await appClient.auth.me();
-      setUser(currentUser);
-      setIsAuthenticated(true);
-      isAuthenticatedRef.current = true;
-      setAuthError(null);
-      if (!silent) {
-        setIsLoadingAuth(false);
+
+      if (!isTrackedAuthCheckCurrent(trackedCheck)) {
+        return currentUser;
       }
-      if (!hasCompletedInitialAuthCheck) {
-        setHasCompletedInitialAuthCheck(true);
-        hasCompletedInitialAuthCheckRef.current = true;
-      }
+
+      applyAuthenticatedState(currentUser);
+      return currentUser;
     } catch (error) {
-      console.error('User auth check failed:', error);
-      if (!silent) {
-        setIsLoadingAuth(false);
+      if (!isTrackedAuthCheckCurrent(trackedCheck)) {
+        return null;
       }
-      setIsAuthenticated(false);
-      isAuthenticatedRef.current = false;
-      setAuthError({
-        type: 'auth_required',
-        message: 'Authentication required'
-      });
-      if (!hasCompletedInitialAuthCheck) {
-        setHasCompletedInitialAuthCheck(true);
-        hasCompletedInitialAuthCheckRef.current = true;
+
+      console.error('User auth check failed:', error);
+
+      if (preserveSessionOnFailure && isAuthenticatedRef.current) {
+        setAuthError(null);
+        return null;
+      }
+
+      applyUnauthenticatedState();
+      return null;
+    } finally {
+      if (!silent && isTrackedAuthCheckCurrent(trackedCheck)) {
+        setIsLoadingAuth(false);
       }
     }
   };
 
   const signInWithPassword = async ({ email, password }) => {
+    const authEpoch = invalidateAuthEpoch();
     setIsLoadingAuth(true);
+
     try {
       const currentUser = await appClient.auth.signInWithPassword({ email, password });
-      setUser(currentUser);
-      setIsAuthenticated(true);
-      isAuthenticatedRef.current = true;
-      setAuthError(null);
-      if (!hasCompletedInitialAuthCheckRef.current) {
-        setHasCompletedInitialAuthCheck(true);
-        hasCompletedInitialAuthCheckRef.current = true;
+
+      if (authEpoch === authEpochRef.current) {
+        applyAuthenticatedState(currentUser);
       }
+
       return currentUser;
     } catch (error) {
-      setAuthError({
-        type: 'auth_required',
-        message: error?.message || 'Authentication required'
-      });
+      if (authEpoch === authEpochRef.current) {
+        applyUnauthenticatedState(error?.message || 'Authentication required');
+      }
+
       throw error;
     } finally {
-      setIsLoadingAuth(false);
+      if (authEpoch === authEpochRef.current) {
+        setIsLoadingAuth(false);
+      }
     }
   };
 
   const signUpWithPassword = async ({ email, password }) => {
+    const authEpoch = invalidateAuthEpoch();
     setIsLoadingAuth(true);
+
     try {
       const response = await appClient.auth.signUpWithPassword({ email, password });
 
-      if (!response?.requiresEmailConfirmation) {
-        const currentUser = await appClient.auth.me();
-        setUser(currentUser);
-        setIsAuthenticated(true);
-        isAuthenticatedRef.current = true;
+      if (authEpoch !== authEpochRef.current) {
+        return response;
       }
 
-      setAuthError(null);
-      if (!hasCompletedInitialAuthCheckRef.current) {
-        setHasCompletedInitialAuthCheck(true);
-        hasCompletedInitialAuthCheckRef.current = true;
+      if (!response?.requiresEmailConfirmation) {
+        const currentUser = response.user || await appClient.auth.me();
+        applyAuthenticatedState(currentUser);
+      } else {
+        setAuthError(null);
+        markInitialAuthCheckCompleted();
       }
+
       return response;
     } catch (error) {
-      setAuthError({
-        type: 'auth_required',
-        message: error?.message || 'Authentication required'
-      });
+      if (authEpoch === authEpochRef.current) {
+        setAuthError(createAuthRequiredError(error?.message || 'Authentication required'));
+        markInitialAuthCheckCompleted();
+      }
+
       throw error;
     } finally {
-      setIsLoadingAuth(false);
+      if (authEpoch === authEpochRef.current) {
+        setIsLoadingAuth(false);
+      }
     }
   };
 
   const logout = (shouldRedirect = true) => {
-    setUser(null);
-    setIsAuthenticated(false);
-    isAuthenticatedRef.current = false;
+    invalidateAuthEpoch();
+    setIsLoadingAuth(false);
+    applyUnauthenticatedState();
 
     if (shouldRedirect) {
       appClient.auth.logout(window.location.href);
@@ -175,10 +227,7 @@ export const AuthProvider = ({ children }) => {
   const navigateToLogin = () => {
     appClient.auth.redirectToLogin(window.location.href).catch((error) => {
       console.error('Login redirect failed:', error);
-      setAuthError({
-        type: 'auth_required',
-        message: 'Authentication required'
-      });
+      setAuthError(createAuthRequiredError());
     });
   };
 

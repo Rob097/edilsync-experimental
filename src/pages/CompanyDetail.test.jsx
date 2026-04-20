@@ -145,7 +145,7 @@ vi.mock('@/hooks/useFeatureAccess', () => ({
 
 import CompanyDetail from './CompanyDetail';
 
-function renderCompanyDetail() {
+function renderCompanyDetail(route = '/app/CompanyDetail?id=company-1') {
   const queryClient = new QueryClient({
     defaultOptions: {
       queries: { retry: false },
@@ -154,7 +154,7 @@ function renderCompanyDetail() {
   });
 
   return render(
-    <MemoryRouter>
+    <MemoryRouter initialEntries={[route]}>
       <QueryClientProvider client={queryClient}>
         <CompanyDetail />
       </QueryClientProvider>
@@ -212,9 +212,8 @@ describe('CompanyDetail page', () => {
     companyDetailState.members = [
       { id: 'member-current', company_id: 'company-1', user_email: 'qa-company@edilsync.test', role: 'member', status: 'active' },
     ];
-    window.history.replaceState({}, '', '/app/CompanyDetail?id=company-1&tab=billing');
 
-    renderCompanyDetail();
+    renderCompanyDetail('/app/CompanyDetail?id=company-1&tab=billing');
 
     await waitFor(() => {
       expect(screen.getByText('Active members')).toBeTruthy();
@@ -226,9 +225,8 @@ describe('CompanyDetail page', () => {
 
   it('lets admins open billing from the upgrade banner and renders the billing section', async () => {
     const user = userEvent.setup();
-    window.history.replaceState({}, '', '/app/CompanyDetail?id=company-1');
 
-    renderCompanyDetail();
+    renderCompanyDetail('/app/CompanyDetail?id=company-1');
 
     await waitFor(() => {
       expect(screen.getByRole('tab', { name: 'Billing' })).toBeTruthy();
@@ -240,6 +238,15 @@ describe('CompanyDetail page', () => {
     expect(await screen.findByText('billing-section:company-1:true')).toBeTruthy();
   });
 
+  it('renders billing when an admin opens a billing deep link directly', async () => {
+    renderCompanyDetail('/app/CompanyDetail?id=company-1&tab=billing&stripe_checkout=success');
+
+    await waitFor(() => {
+      expect(screen.getByRole('tab', { name: 'Billing', selected: true })).toBeTruthy();
+    });
+    expect(await screen.findByText('billing-section:company-1:true')).toBeTruthy();
+  });
+
   it('keeps operations visible while locking premium time tracking and restricting chat/documents', async () => {
     const user = userEvent.setup();
     companyDetailState.featureMap = {
@@ -248,9 +255,8 @@ describe('CompanyDetail page', () => {
       company_chat: { access_level: 'limited', config: {} },
       company_documents: { access_level: 'limited', config: {} },
     };
-    window.history.replaceState({}, '', '/app/CompanyDetail?id=company-1&tab=operativita&section=all');
 
-    renderCompanyDetail();
+    renderCompanyDetail('/app/CompanyDetail?id=company-1&tab=operativita&section=all');
 
     await waitFor(() => {
       expect(screen.getByText('Premium time tracking')).toBeTruthy();

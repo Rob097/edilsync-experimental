@@ -109,6 +109,7 @@ test('company admin can complete checkout, sync the plan, and open the Stripe bi
     );
 
     await page.goto(`/app/CompanyDetail?id=${company.id}&tab=billing&stripe_checkout=success`);
+    await openCompanyBillingTab(page);
     const syncResponse = await syncResponsePromise;
     expect(syncResponse.ok()).toBeTruthy();
     await page.waitForLoadState('networkidle');

@@ -14,6 +14,7 @@ import {
   signInThroughUi,
   upsertCompanySubscription,
   waitForAuthenticatedShell,
+  waitForDialogToClose,
 } from './helpers/qa-auth';
 
 // Scenario IDs: project.milestone.create-entitled
@@ -97,7 +98,7 @@ test('company admin can create a milestone on a sponsored paid project from the 
     await dialog.getByRole('button', { name: /^create$|^crea$/i }).click();
     const createResponse = await createResponsePromise;
     expect(createResponse.ok()).toBeTruthy();
-    await expect(dialog).toBeHidden();
+    await waitForDialogToClose(dialog);
 
     await expect.poll(async () => {
       const milestone = await getMilestoneRecordByTitle({ projectId: project.id, title: milestoneTitle });

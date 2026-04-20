@@ -1,5 +1,5 @@
 import { expect, test } from '@playwright/test';
-import { cleanupProjectGraph, cleanupQaUser, createConfirmedQaUser, hasRemoteQaEnv, signInThroughUi } from './helpers/qa-auth';
+import { cleanupProjectGraph, cleanupQaUser, createConfirmedQaUser, hasRemoteQaEnv, signInThroughUi, waitForAuthenticatedShell } from './helpers/qa-auth';
 
 test.skip(!hasRemoteQaEnv, 'Remote QA browser tests require Supabase branch credentials.');
 
@@ -9,6 +9,7 @@ test('signed-in user can create a personal project from the UI', async ({ page }
 
   try {
     await signInThroughUi(page, user.email, user.password);
+    await waitForAuthenticatedShell(page);
     await page.goto('/app/NewProject');
 
     const projectName = `QA UI Project ${Date.now()}`;

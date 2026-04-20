@@ -1,5 +1,5 @@
 import { expect, test } from '@playwright/test';
-import { cleanupCompanyGraph, cleanupQaUser, createConfirmedQaUser, hasRemoteQaEnv, signInThroughUi } from './helpers/qa-auth';
+import { cleanupCompanyGraph, cleanupQaUser, createConfirmedQaUser, hasRemoteQaEnv, signInThroughUi, waitForAuthenticatedShell } from './helpers/qa-auth';
 
 // Scenario IDs: company.create.bootstraps-free-subscription, company.create.bootstraps-general-channel
 
@@ -11,7 +11,9 @@ test('creating a company from the UI exposes the free billing state and the gene
 
   try {
     await signInThroughUi(page, user.email, user.password);
+    await waitForAuthenticatedShell(page);
     await page.goto('/app/NewCompany');
+    await expect(page.locator('#name')).toBeVisible();
 
     const companyName = `QA Baseline Company ${Date.now()}`;
 

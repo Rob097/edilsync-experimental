@@ -16,6 +16,7 @@ import {
   signInThroughUi,
   upsertCompanySubscription,
   waitForAuthenticatedShell,
+  waitForDialogToClose,
 } from './helpers/qa-auth';
 
 // Scenario IDs: task.milestone.link-unlink
@@ -112,7 +113,7 @@ test('project owner can link and unlink a task to a milestone from the UI', asyn
     await dialog.getByRole('button', { name: /^save$|^salva$/i }).click();
     const linkResponse = await linkResponsePromise;
     expect(linkResponse.ok()).toBeTruthy();
-    await expect(dialog).toBeHidden();
+    await waitForDialogToClose(dialog);
 
     await expect.poll(async () => {
       const task = await getTaskRecordByTitle({ projectId: project.id, title: taskTitle });

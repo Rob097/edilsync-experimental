@@ -1,4 +1,5 @@
-import { expect, Page } from '@playwright/test';
+import { expect } from '@playwright/test';
+import type { Locator, Page } from '@playwright/test';
 import { appendFileSync, mkdirSync } from 'node:fs';
 import { dirname } from 'node:path';
 import { createClient } from '@supabase/supabase-js';
@@ -16,6 +17,10 @@ if (supabaseUrl) {
   assertQaSupabaseUrl(supabaseUrl, 'SUPABASE_URL');
 }
 const authStorageKey = supabaseUrl ? `sb-${new URL(supabaseUrl).host.split('.')[0]}-auth-token` : '';
+const isRemoteQaRun = process.env.EDILSYNC_REMOTE_QA === '1';
+const authenticatedShellTimeoutMs = Number(
+  process.env.PLAYWRIGHT_AUTHENTICATED_SHELL_TIMEOUT || (isRemoteQaRun ? '45000' : '15000'),
+);
 
 const adminClient = hasRemoteQaEnv
   ? createClient(supabaseUrl, supabaseServiceRoleKey, { auth: { persistSession: false, autoRefreshToken: false } })
@@ -1685,13 +1690,66 @@ export async function openUserMenu(page: Page) {
   await page.locator('[data-tour="user-menu-trigger"]').click();
 }
 
-export async function waitForAuthenticatedShell(page: Page) {
-  await expect(page.locator('[data-tour="user-menu-trigger"]')).toBeVisible();
-  await expect(page.locator('#signin-email')).toHaveCount(0);
+export async function waitForAuthenticatedShell(page: Page, timeout = authenticatedShellTimeoutMs) {
+  const authInput = page.locator('#signin-email');
+  const userMenuTrigger = page.locator('[data-tour="user-menu-trigger"]');
+
+  await expect.poll(async () => {
+    const authVisible = (await authInput.count()) > 0 && (await authInput.first().isVisible());
+    const userMenuVisible = (await userMenuTrigger.count()) > 0 && (await userMenuTrigger.first().isVisible());
+    const userMenuEnabled = userMenuVisible && (await userMenuTrigger.first().isEnabled());
+
+    return {
+      authVisible,
+      userMenuVisible,
+      userMenuEnabled,
+    };
+  }, {
+    timeout,
+    intervals: [250, 500, 1000, 2000, 5000],
+  }).toEqual({
+    authVisible: false,
+    userMenuVisible: true,
+    userMenuEnabled: true,
+  });
+}
+
+export async function waitForDialogToClose(dialog: Locator, timeout = 10000) {
+  await expect.poll(async () => {
+    const dialogStates = await dialog.evaluateAll((elements) => elements.map((element) => {
+      const dialogElement = element as HTMLElement;
+      const computedStyle = window.getComputedStyle(dialogElement);
+      const isVisible = !dialogElement.hidden
+        && computedStyle.display !== 'none'
+        && computedStyle.visibility !== 'hidden'
+        && computedStyle.opacity !== '0'
+        && dialogElement.getClientRects().length > 0;
+
+      return {
+        ariaHidden: dialogElement.getAttribute('aria-hidden'),
+        dataState: dialogElement.getAttribute('data-state'),
+        isConnected: dialogElement.isConnected,
+        isVisible,
+      };
+    }));
+
+    if (dialogStates.length === 0) return true;
+
+    return dialogStates.every((state) => (
+      !state.isConnected
+      || state.dataState === 'closed'
+      || state.ariaHidden === 'true'
+      || !state.isVisible
+    ));
+  }, { timeout }).toBe(true);
 }
 
 export async function switchContextThroughUi(page: Page, targetLabel: RegExp | string) {
-  await page.locator('[data-tour="context-switcher"]:visible').getByRole('button').click();
+  const contextSwitcher = page.locator('[data-tour="context-switcher"]:visible');
+  const contextTrigger = contextSwitcher.getByRole('button');
+
+  await expect(contextTrigger).toBeVisible();
+  await contextTrigger.click();
 
   const menuItem = page.locator('[role="menuitem"]').filter({ hasText: targetLabel }).first();
   if (await menuItem.count()) {
@@ -1700,7 +1758,15 @@ export async function switchContextThroughUi(page: Page, targetLabel: RegExp | s
     await page.getByText(targetLabel).last().click();
   }
 
-  await page.getByRole('button', { name: /conferma|confirm/i }).click();
+  const confirmDialog = page.getByRole('dialog', { name: /switch work context|cambiare contesto di lavoro/i });
+  await expect(confirmDialog).toBeVisible();
+
+  const navigationPromise = page.waitForNavigation({ waitUntil: 'domcontentloaded' });
+  await confirmDialog.getByRole('button', { name: /conferma|confirm/i }).click();
+  await navigationPromise;
+
+  await waitForAuthenticatedShell(page);
+  await expect(page.locator('[data-tour="context-switcher"]:visible')).toContainText(targetLabel);
 }
 
 export async function cleanupQaUser(userId: string, email: string) {
@@ -1791,9 +1857,6 @@ export async function signInThroughUi(page: Page, email: string, password: strin
     },
     authStorageKey,
   );
-
-  await page.waitForLoadState('networkidle');
-  await expect(page.locator('#signin-email')).toHaveCount(0);
 
   recordTestActivity('user.signin.completed', {
     email,

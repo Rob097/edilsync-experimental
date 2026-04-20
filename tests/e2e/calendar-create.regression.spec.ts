@@ -12,6 +12,7 @@ import {
   signInForAccessToken,
   signInThroughUi,
   waitForAuthenticatedShell,
+  waitForDialogToClose,
 } from './helpers/qa-auth';
 
 // Scenario IDs: calendar.event-create-with-participants
@@ -90,7 +91,7 @@ test('calendar creator can create an event with personal and company participant
     await dialog.getByRole('button', { name: /create event|crea evento/i }).click();
     const createResponse = await createResponsePromise;
     expect(createResponse.ok()).toBeTruthy();
-    await expect(dialog).toBeHidden();
+    await waitForDialogToClose(dialog);
 
     const eventRecord = await expect.poll(async () => {
       const createdEvent = await getEventRecordByTitle({ title: eventTitle, creatorEmail: creator.email });

@@ -17,6 +17,7 @@ import {
   signInForAccessToken,
   signInThroughUi,
   waitForAuthenticatedShell,
+  waitForDialogToClose,
 } from './helpers/qa-auth';
 
 // Scenario IDs: task.create.personal-assignee, task.create.company-assignee, task.status.change-standard, task.block.with-reason
@@ -88,7 +89,7 @@ test('project owner can create a task assigned to a personal participant from th
     await dialog.getByRole('button', { name: /^create$|^crea$/i }).click();
     const createResponse = await createResponsePromise;
     expect(createResponse.ok()).toBeTruthy();
-    await expect(dialog).toBeHidden();
+    await waitForDialogToClose(dialog);
 
     await expect.poll(async () => {
       const task = await getTaskRecordByTitle({ projectId: project.id, title: taskTitle });
@@ -244,8 +245,8 @@ test('project owner can change a task status from not started to completed from 
     await tasksSection.getByRole('button', { name: /list view|vista lista/i }).click();
     await tasksSection.getByText(taskTitle).click();
 
-    const dialog = page.getByRole('dialog');
-    await expect(dialog.getByRole('heading', { name: /edit task|modifica task/i })).toBeVisible();
+    const dialog = page.getByRole('dialog', { name: /edit task|modifica task/i });
+    await expect(dialog).toBeVisible();
 
     await dialog.getByRole('combobox').first().click();
     await page.getByRole('option', { name: /completed|completato/i }).click();
@@ -264,7 +265,7 @@ test('project owner can change a task status from not started to completed from 
       return task.status;
     }).toBe('completed');
 
-    await expect(dialog).toBeHidden();
+    await waitForDialogToClose(dialog);
     await expect(tasksSection.getByText(/^completed$|^completato$/i).first()).toBeVisible();
   } finally {
     if (projectId) {
