@@ -552,7 +552,7 @@ export const ASSISTANT_TOOL_DEFINITIONS = [
     type: "function",
     function: {
       name: "list_context_participants",
-      description: "List the participants or members relevant to the current assistant context.",
+        description: "List the participants or members relevant to the current assistant context, optionally narrowed to a referenced project.",
       parameters: {
         type: "object",
         properties: {
@@ -561,6 +561,12 @@ export const ASSISTANT_TOOL_DEFINITIONS = [
             minimum: 1,
             maximum: 20,
           },
+            project_id: {
+              type: "string",
+            },
+            project_hint: {
+              type: "string",
+            },
         },
         additionalProperties: false,
       },
@@ -1729,7 +1735,7 @@ async function runFallbackToolSelection({ appUser, dbClient, contextType, contex
   const wantsProgressStatementNotes = wantsProgressStatements && /note|annot|memo/i.test(normalizedMessage);
   const wantsCommercials = wantsFinance && /commercial|contratt|accordi economici|importo contratt|lump sum|unit price|time and material/i.test(normalizedMessage);
   const wantsWorkSessions = /timbrat|work session|turni|ore lavorate|clock in|clock out|sessioni aperte|presenze/i.test(normalizedMessage);
-  const wantsMyProfileSummary = /profil|chi sono|mio account|miei dati|recapiti|telefono|email/i.test(normalizedMessage);
+  const wantsMyProfileSummary = /profil|\bchi sono io\b|mio account|miei dati|recapiti|telefono|mia email|mio telefono|email personale/i.test(normalizedMessage);
   const wantsPersonalWorkspaceBrief = /workspace personale|brief personale|riepilogo personale|mio workspace|mia panoramica|mia giornata|cosa mi aspetta/i.test(normalizedMessage);
   const wantsCompanyProjects = /portfolio societ|cantieri della societ|progetti della societ|company projects|portfolio company/i.test(normalizedMessage);
   const wantsCompanyMembers = /membri societ|team societ|organico|staff societ|company members/i.test(normalizedMessage);
@@ -1756,6 +1762,7 @@ async function runFallbackToolSelection({ appUser, dbClient, contextType, contex
   const wantsDisputeDetail = /((dettagli|dettaglio|scheda|info|informazioni).*(disput|controvers|contenz))|((disput|controvers|contenz).*(dettagli|dettaglio|scheda|info|informazioni|timeline|evidenz|impatto))/i.test(normalizedMessage);
   const wantsEventDetail = /((dettagli|dettaglio|scheda|info|informazioni).*(event|riunion|meeting|appuntament))|((event|riunion|meeting|appuntament).*(dettagli|dettaglio|scheda|info|informazioni|partecipant|conflitt|luogo|orario))/i.test(normalizedMessage);
   const wantsOperationalDayBrief = /((brief|riepilog|riassunt|quadro).*(oggi|giornat|operativ))|((oggi|giornat).*(brief|riepilog|riassunt|quadro))|day brief/i.test(normalizedMessage);
+  const shouldListProjectsDirectly = wantsProjects && !(wantsParticipants && !wantsOverview);
   const inferredFeatureKey = inferFeatureKeyFromText(userMessage, contextType);
 
   if (wantsContextState) {
@@ -1930,7 +1937,7 @@ async function runFallbackToolSelection({ appUser, dbClient, contextType, contex
     await addFallbackTool("get_project_summary", {}, () => getProjectSummary(dbClient, contextId));
   }
 
-  if (wantsProjects || (wantsOverview && contextType !== "project")) {
+  if (shouldListProjectsDirectly || (wantsOverview && contextType !== "project")) {
     const includeCompleted = /complet|chius|closed|archiv/.test(normalizedMessage);
     await addFallbackTool(
       "list_accessible_projects",
@@ -1978,11 +1985,11 @@ async function runFallbackToolSelection({ appUser, dbClient, contextType, contex
     );
   }
 
-  if (wantsParticipants && contextType !== "personal") {
+  if (wantsParticipants) {
     await addFallbackTool(
       "list_context_participants",
-      { limit: 10 },
-      () => listContextParticipants(dbClient, appUser, contextType, contextId, { limit: 10 }),
+      { limit: 10, ...(contextType !== "project" && wantsProjects ? { project_hint: userMessage } : {}) },
+      () => listContextParticipants(dbClient, appUser, contextType, contextId, { limit: 10, ...(contextType !== "project" && wantsProjects ? { project_hint: userMessage } : {}) }),
     );
   }
 
@@ -2324,13 +2331,15 @@ async function runFallbackToolSelection({ appUser, dbClient, contextType, contex
     );
   }
 
-  await addFallbackTool(
-    "list_recent_updates",
-    { limit: 5 },
-    () => listRecentUpdates(dbClient, appUser, contextType, contextId, { limit: 5 }),
-  );
+  if (wantsOverview || wantsOperationalDayBrief || wantsNotifications || wantsPendingDecisions || wantsPendingInvites || selectedTools.length === 0) {
+    await addFallbackTool(
+      "list_recent_updates",
+      { limit: 5 },
+      () => listRecentUpdates(dbClient, appUser, contextType, contextId, { limit: 5 }),
+    );
+  }
 
-  if (/nota|note|comment|commento|progress|sal|annot/i.test(normalizedMessage) || contextType !== "personal") {
+  if (/nota|note|comment|commento|progress|sal|annot/i.test(normalizedMessage) || (contextType !== "personal" && (wantsOverview || selectedTools.length === 0))) {
     await addFallbackTool(
       "get_context_notes",
       { limit: 5 },
@@ -4517,14 +4526,75 @@ async function listContextSchedule(dbClient, appUser, contextType, contextId, op
   };
 }
 
+async function resolveAssistantProjectInContext(dbClient, appUser, contextType, contextId, options = {}) {
+  const projectId = String(options?.project_id || options?.projectId || "").trim();
+  const projectHint = String(options?.project_hint || options?.projectHint || "").trim();
+
+  if (!projectId && !projectHint) {
+    return null;
+  }
+
+  const contextProjects = await getContextProjects(dbClient, appUser, contextType, contextId);
+  let scopedProjects = contextProjects;
+
+  if (projectId) {
+    scopedProjects = contextProjects.filter((project) => project.id === projectId);
+  } else if (projectHint) {
+    scopedProjects = contextProjects
+      .map((project) => ({
+        project,
+        score: computeAssistantSearchScore([
+          project.id,
+          project.name,
+          project.address,
+          project.city,
+          project.description,
+          project.status,
+        ], projectHint),
+      }))
+      .filter((entry) => entry.score > 0)
+      .sort((left, right) => right.score - left.score || compareAssistantProjects(left.project, right.project))
+      .map((entry) => entry.project);
+  }
+
+  if (scopedProjects.length === 0) {
+    return null;
+  }
+
+  return {
+    matched_by: projectId ? "project_id" : "project_hint",
+    project: scopedProjects[0],
+  };
+}
+
 async function listContextParticipants(dbClient, appUser, contextType, contextId, options = {}) {
   const limit = clampLimit(options?.limit, 10, 20);
 
-  if (contextType === "project") {
+  const projectResolution = contextType !== "project"
+    ? await resolveAssistantProjectInContext(dbClient, appUser, contextType, contextId, options)
+    : null;
+  const projectTarget = contextType === "project"
+    ? {
+        id: contextId,
+        name: null,
+        address: null,
+        path: buildProjectPath(contextId),
+      }
+    : projectResolution?.project
+      ? {
+          id: projectResolution.project.id,
+          name: projectResolution.project.name || projectResolution.project.id,
+          address: projectResolution.project.address || null,
+          path: buildProjectPath(projectResolution.project.id),
+        }
+      : null;
+  const targetProjectId = projectTarget?.id || null;
+
+  if (targetProjectId) {
     const { data, error } = await dbClient
       .from("project_participants")
       .select("participant_type,user_email,company_id,project_role,status,can_invite")
-      .eq("project_id", contextId)
+      .eq("project_id", targetProjectId)
       .in("status", ["active", "invited"])
       .limit(limit);
 
@@ -4537,6 +4607,8 @@ async function listContextParticipants(dbClient, appUser, contextType, contextId
       context_type: contextType,
       context_id: contextId,
       scope: "project",
+      matched_by: contextType === "project" ? "current_project" : projectResolution?.matched_by,
+      target_project: projectTarget,
       participants: (data || [])
         .sort(compareAssistantParticipants)
         .map((participant) => ({
@@ -4549,8 +4621,19 @@ async function listContextParticipants(dbClient, appUser, contextType, contextId
           role: participant.project_role,
           status: participant.status,
           can_invite: participant.can_invite === true,
-          path: buildProjectPath(contextId),
+          path: buildProjectPath(targetProjectId),
         })),
+    };
+  }
+
+  if (options?.project_id || options?.project_hint) {
+    return {
+      context_type: contextType,
+      context_id: contextId,
+      scope: "project",
+      found: false,
+      message: "Nessun cantiere accessibile nel contesto corrente corrisponde al riferimento indicato.",
+      participants: [],
     };
   }
 
@@ -7423,14 +7506,19 @@ function buildSystemPrompt({ appUser, contextType, contextId, uiMode = "normal",
 
 function buildDeterministicReply({ contextType, userMessage, ragMatches, toolCalls }) {
   const sections = [];
+  const normalizedMessage = String(userMessage || "").toLowerCase();
+  const wantsOverview = /riepilog|summary|overview|quadro|situazion/.test(normalizedMessage);
+  const wantsNotes = /nota|note|comment|commento|progress|sal|annot/i.test(normalizedMessage);
 
-  sections.push(
-    contextType === "project"
-      ? "## Quadro cantiere"
-      : contextType === "company"
-        ? "## Quadro societa"
-        : "## Quadro personale",
-  );
+  if (wantsOverview) {
+    sections.push(
+      contextType === "project"
+        ? "## Quadro cantiere"
+        : contextType === "company"
+          ? "## Quadro societa"
+          : "## Quadro personale",
+    );
+  }
 
   toolCalls.forEach((toolCall) => {
     const rawResults = safeJsonParse(toolCall.results, {});
@@ -7798,13 +7886,28 @@ function buildDeterministicReply({ contextType, userMessage, ragMatches, toolCal
 
     if (toolCall.name === "list_context_participants") {
       const participants = Array.isArray(rawResults?.participants) ? rawResults.participants : [];
-      if (participants.length > 0) {
+      const candidates = Array.isArray(rawResults?.candidates) ? rawResults.candidates : [];
+      if (rawResults?.ambiguous && candidates.length > 0) {
+        sections.push("\n## Cantiere da chiarire");
+        sections.push("- Ho trovato piu cantieri compatibili con la richiesta. Specifica quale vuoi aprire.");
+        candidates.slice(0, 5).forEach((candidate) => {
+          const label = candidate.project_name || candidate.company_name || candidate.project_id || candidate.company_id || "Contesto";
+          const suffix = candidate.path ? ` ([Apri](${candidate.path}))` : "";
+          sections.push(`- ${label}${suffix}`);
+        });
+      } else if (participants.length > 0) {
         sections.push(rawResults.scope === "company" ? "\n## Team societa" : "\n## Partecipanti");
+        if (rawResults.target_project?.name) {
+          sections.push(`- Cantiere: ${rawResults.target_project.name}${rawResults.target_project.address ? ` · ${rawResults.target_project.address}` : ""}${rawResults.target_project.path ? ` ([Apri](${rawResults.target_project.path}))` : ""}`);
+        }
         participants.slice(0, 6).forEach((participant) => {
           const fragments = [participant.role, participant.profession, participant.status].filter(Boolean).join(" · ");
           const suffix = participant.path ? ` ([Apri](${participant.path}))` : "";
           sections.push(`- ${participant.name}: ${fragments}${suffix}`);
         });
+      } else if (rawResults?.message) {
+        sections.push("\n## Partecipanti");
+        sections.push(`- ${rawResults.message}`);
       }
     }
 
@@ -8269,18 +8372,25 @@ function buildDeterministicReply({ contextType, userMessage, ragMatches, toolCal
     }
   });
 
-  if (ragMatches.length > 0) {
+  if (ragMatches.length > 0 && (wantsOverview || wantsNotes || sections.length === 0)) {
     sections.push("\n## Memoria semantica");
     ragMatches.slice(0, 3).forEach((match) => {
       sections.push(`- ${match.title || match.source_type}: ${previewText(match.content, 180)}`);
     });
   }
 
-  if (sections.length === 1) {
+  if (sections.length === 0) {
+    sections.push(
+      contextType === "project"
+        ? "## Quadro cantiere"
+        : contextType === "company"
+          ? "## Quadro societa"
+          : "## Quadro personale",
+    );
     sections.push(`- Non ho trovato abbastanza dati strutturati per rispondere a: ${userMessage}`);
   }
 
-  return sections.join("\n");
+  return sections.join("\n").replace(/^\n+/, "");
 }
 
 function normalizeAssistantContent(content) {
