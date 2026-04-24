@@ -58,6 +58,7 @@ export default function CompanyDetail() {
   const [operativaSection, setOperativaSection] = useState(requestedTab === 'operativita' && requestedSection ? requestedSection : 'timbrature');
   const [infoSection, setInfoSection] = useState(requestedTab === 'info' && requestedSection ? requestedSection : 'all');
   const routeSyncKeyRef = React.useRef(null);
+  const tabsScrollTimeoutRef = React.useRef(null);
 
   const { data: user, isLoading: userLoading } = useQuery({
     queryKey: ['currentUser'],
@@ -142,6 +143,34 @@ export default function CompanyDetail() {
     routeSyncKeyRef.current = routeSyncKey;
   }, [isAdmin, location.pathname, location.search, membersLoading, requestedSection, requestedTab]);
 
+  React.useEffect(() => () => {
+    if (tabsScrollTimeoutRef.current !== null) {
+      clearTimeout(tabsScrollTimeoutRef.current);
+    }
+  }, []);
+
+  const scheduleTabsScroll = React.useCallback(() => {
+    if (tabsScrollTimeoutRef.current !== null) {
+      clearTimeout(tabsScrollTimeoutRef.current);
+    }
+
+    tabsScrollTimeoutRef.current = setTimeout(() => {
+      tabsScrollTimeoutRef.current = null;
+
+      if (typeof window === 'undefined' || typeof document === 'undefined') {
+        return;
+      }
+
+      const tabsElement = document.querySelector('[role="tablist"]');
+      if (!tabsElement) return;
+
+      const offset = 100;
+      const elementPosition = tabsElement.getBoundingClientRect().top;
+      const offsetPosition = elementPosition + window.pageYOffset - offset;
+      window.scrollTo({ top: offsetPosition, behavior: 'smooth' });
+    }, 100);
+  }, []);
+
   const activeMembers = useMemo(
     () => members.filter((member) => member.status === 'active'),
     [members],
@@ -200,14 +229,7 @@ export default function CompanyDetail() {
     if (tab === 'operativita' && section) setOperativaSection(section);
     if (tab === 'info' && section) setInfoSection(section);
 
-    setTimeout(() => {
-      const tabsElement = document.querySelector('[role="tablist"]');
-      if (!tabsElement) return;
-      const offset = 100;
-      const elementPosition = tabsElement.getBoundingClientRect().top;
-      const offsetPosition = elementPosition + window.pageYOffset - offset;
-      window.scrollTo({ top: offsetPosition, behavior: 'smooth' });
-    }, 100);
+    scheduleTabsScroll();
   };
 
   return (
@@ -336,14 +358,7 @@ export default function CompanyDetail() {
 
       <Tabs value={activeTab} onValueChange={(value) => {
         setActiveTab(value);
-        setTimeout(() => {
-          const tabsElement = document.querySelector('[role="tablist"]');
-          if (!tabsElement) return;
-          const offset = 100;
-          const elementPosition = tabsElement.getBoundingClientRect().top;
-          const offsetPosition = elementPosition + window.pageYOffset - offset;
-          window.scrollTo({ top: offsetPosition, behavior: 'smooth' });
-        }, 100);
+        scheduleTabsScroll();
       }}>
         <TabsList className="mb-4 flex-wrap h-auto" data-tour="company-tabs">
           <TabsTrigger value="panoramica" className="flex items-center gap-2">

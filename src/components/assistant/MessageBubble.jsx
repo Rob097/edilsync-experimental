@@ -5,6 +5,35 @@ import { Copy, Zap, CheckCircle2, AlertCircle, Loader2, ChevronRight, Clock } fr
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
 import { useLanguage } from '@/components/i18n/useLanguage';
+import { useNavigate } from 'react-router-dom';
+
+const INTERNAL_APP_PATH_PATTERN = /^\/app(?:\/|$)/;
+
+const resolveAssistantInternalPath = (href = '') => {
+  const normalizedHref = String(href || '').trim();
+  if (!normalizedHref) {
+    return null;
+  }
+
+  if (INTERNAL_APP_PATH_PATTERN.test(normalizedHref)) {
+    return normalizedHref;
+  }
+
+  if (typeof window === 'undefined') {
+    return null;
+  }
+
+  try {
+    const url = new URL(normalizedHref, window.location.origin);
+    if (!INTERNAL_APP_PATH_PATTERN.test(url.pathname)) {
+      return null;
+    }
+
+    return `${url.pathname}${url.search}${url.hash}`;
+  } catch {
+    return null;
+  }
+};
 
 const FunctionDisplay = ({ toolCall }) => {
   const { currentLanguage } = useLanguage();
@@ -95,10 +124,22 @@ const FunctionDisplay = ({ toolCall }) => {
   );
 };
 
-export default function MessageBubble({ message }) {
+export default function MessageBubble({ message, onNavigate, showToolCalls = false }) {
   const { currentLanguage } = useLanguage();
   const tr = (itText, enText) => currentLanguage === 'it' ? itText : enText;
   const isUser = message.role === 'user';
+  const navigate = useNavigate();
+
+  const handleAssistantLinkClick = (event, href) => {
+    const internalPath = resolveAssistantInternalPath(href);
+    if (!internalPath) {
+      return;
+    }
+
+    event.preventDefault();
+    navigate(internalPath);
+    onNavigate?.(internalPath);
+  };
 
   return (
     <div className={cn("flex gap-3", isUser ? "justify-end" : "justify-start")}>
@@ -144,9 +185,28 @@ export default function MessageBubble({ message }) {
                       </code>
                     );
                   },
-                  a: ({ children, ...props }) => (
-                    <a {...props} target="_blank" rel="noopener noreferrer" className="text-[#ef6144] hover:underline">{children}</a>
-                  ),
+                  a: ({ children, href = '', ...props }) => {
+                    const internalPath = resolveAssistantInternalPath(href);
+
+                    if (internalPath) {
+                      return (
+                        <a
+                          {...props}
+                          href={internalPath}
+                          onClick={(event) => handleAssistantLinkClick(event, internalPath)}
+                          className="text-[#ef6144] font-medium hover:underline"
+                        >
+                          {children}
+                        </a>
+                      );
+                    }
+
+                    return (
+                      <a {...props} href={href} target="_blank" rel="noopener noreferrer" className="text-[#ef6144] hover:underline">
+                        {children}
+                      </a>
+                    );
+                  },
                   p: ({ children }) => <p className="my-1 leading-relaxed">{children}</p>,
                   ul: ({ children }) => <ul className="my-1 ml-4 list-disc">{children}</ul>,
                   ol: ({ children }) => <ol className="my-1 ml-4 list-decimal">{children}</ol>,
@@ -167,7 +227,7 @@ export default function MessageBubble({ message }) {
           </div>
         )}
 
-        {message.tool_calls?.length > 0 && (
+        {showToolCalls && message.tool_calls?.length > 0 && (
           <div className="space-y-1 mt-2">
             {message.tool_calls.map((toolCall, idx) => (
               <FunctionDisplay key={idx} toolCall={toolCall} />

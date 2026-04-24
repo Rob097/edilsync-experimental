@@ -12,6 +12,7 @@ const { createClientMock, mockState, resetMockState } = vi.hoisted(() => {
     updateErrors: [],
     insertResponses: [],
     insertPayloads: [],
+    session: null,
   };
 
   const resetMockState = () => {
@@ -22,6 +23,7 @@ const { createClientMock, mockState, resetMockState } = vi.hoisted(() => {
     mockState.updateErrors = [];
     mockState.insertResponses = [];
     mockState.insertPayloads = [];
+    mockState.session = null;
   };
 
   return { createClientMock, mockState, resetMockState };
@@ -71,8 +73,8 @@ const buildSupabaseMock = () => {
       onAuthStateChange: vi.fn(() => ({ data: { subscription: { unsubscribe: vi.fn() } } })),
       signOut: vi.fn(async () => ({ error: null })),
       signInWithOAuth: vi.fn(async () => ({ error: null })),
-      getSession: vi.fn(async () => ({ data: { session: null }, error: null })),
-      refreshSession: vi.fn(async () => ({ data: { session: null }, error: null })),
+      getSession: vi.fn(async () => ({ data: { session: mockState.session }, error: null })),
+      refreshSession: vi.fn(async () => ({ data: { session: mockState.session }, error: null })),
     },
     from: vi.fn(() => ({
       select,
@@ -93,6 +95,9 @@ const buildSupabaseMock = () => {
 const supabaseMock = buildSupabaseMock();
 createClientMock.mockReturnValue(supabaseMock);
 
+const fetchMock = vi.fn();
+vi.stubGlobal('fetch', fetchMock);
+
 const { appClient } = await import('./appClient');
 
 describe('appClient auth bootstrap', () => {
@@ -102,6 +107,7 @@ describe('appClient auth bootstrap', () => {
     Object.values(supabaseMock.auth).forEach((mockFn) => mockFn.mockClear?.());
     supabaseMock.from.mockClear();
     supabaseMock.rpc.mockClear();
+    fetchMock.mockReset();
   });
 
   it('returns an existing user and binds auth_user_id when missing', async () => {
@@ -221,5 +227,52 @@ describe('appClient auth bootstrap', () => {
     mockState.authUser = null;
 
     await expect(appClient.auth.me()).rejects.toThrow('User not authenticated');
+  });
+
+  it('streams edge function events with the bearer token when a session is available', async () => {
+    mockState.session = {
+      access_token: 'stream-token',
+      expires_at: Math.floor(Date.now() / 1000) + 3600,
+      refresh_token: 'refresh-token',
+    };
+
+    fetchMock.mockResolvedValueOnce(new Response(
+      [
+        'event: delta',
+        'data: {"content":"Ciao"}',
+        '',
+        'event: done',
+        'data: {"content":"Ciao mondo"}',
+        '',
+      ].join('\n'),
+      {
+        status: 200,
+        headers: {
+          'Content-Type': 'text/event-stream',
+        },
+      },
+    ));
+
+    const deltas = [];
+    const donePayloads = [];
+
+    await appClient.functions.stream('chat-agent', { message: 'ciao' }, {
+      onDelta: (payload) => deltas.push(payload),
+      onDone: (payload) => donePayloads.push(payload),
+    });
+
+    expect(fetchMock).toHaveBeenCalledWith(
+      'https://example.supabase.co/functions/v1/chat-agent',
+      expect.objectContaining({
+        method: 'POST',
+        headers: expect.objectContaining({
+          Authorization: 'Bearer stream-token',
+          Accept: 'text/event-stream',
+          apikey: 'anon-key',
+        }),
+      }),
+    );
+    expect(deltas).toEqual([{ content: 'Ciao' }]);
+    expect(donePayloads).toEqual([{ content: 'Ciao mondo' }]);
   });
 });

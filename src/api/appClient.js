@@ -16,6 +16,8 @@ export const supabase = createClient(supabaseUrl, supabaseAnonKey, {
 });
 
 const ENTITY_TO_TABLE = {
+  AiChat: 'ai_chats',
+  AiMessage: 'ai_messages',
   BudgetLine: 'budget_lines',
   ChangeRequest: 'change_requests',
   Channel: 'channels',
@@ -318,6 +320,87 @@ const parseFunctionResponse = async (response) => {
   return text || null;
 };
 
+const parseSsePayload = (rawPayload) => {
+  if (!rawPayload) return null;
+
+  try {
+    return JSON.parse(rawPayload);
+  } catch {
+    return rawPayload;
+  }
+};
+
+const dispatchSseEvent = (rawEvent, handlers) => {
+  if (!rawEvent) return null;
+
+  let eventName = 'message';
+  const dataLines = [];
+
+  rawEvent.split(/\r?\n/).forEach((line) => {
+    if (line.startsWith('event:')) {
+      eventName = line.slice(6).trim() || 'message';
+      return;
+    }
+
+    if (line.startsWith('data:')) {
+      dataLines.push(line.slice(5).trimStart());
+    }
+  });
+
+  if (dataLines.length === 0) {
+    return null;
+  }
+
+  const payload = parseSsePayload(dataLines.join('\n'));
+  handlers.onEvent?.({ event: eventName, payload });
+
+  if (eventName === 'delta') {
+    handlers.onDelta?.(payload);
+  }
+
+  if (eventName === 'tool') {
+    handlers.onTool?.(payload);
+  }
+
+  if (eventName === 'done') {
+    handlers.onDone?.(payload);
+  }
+
+  if (eventName === 'error') {
+    handlers.onError?.(payload);
+  }
+
+  return { event: eventName, payload };
+};
+
+const consumeSseBuffer = (buffer, handlers, flush = false) => {
+  let nextBuffer = buffer;
+
+  while (true) {
+    const delimiterIndex = nextBuffer.indexOf('\n\n');
+    if (delimiterIndex === -1) {
+      break;
+    }
+
+    const rawEvent = nextBuffer.slice(0, delimiterIndex).trim();
+    if (rawEvent) {
+      dispatchSseEvent(rawEvent, handlers);
+    }
+
+    nextBuffer = nextBuffer.slice(delimiterIndex + 2);
+  }
+
+  if (flush) {
+    const trailingEvent = nextBuffer.trim();
+    if (trailingEvent) {
+      dispatchSseEvent(trailingEvent, handlers);
+    }
+    return '';
+  }
+
+  return nextBuffer;
+};
+
 const functions = {
   invoke: async (name, body) => {
     const authHeaders = await getFunctionInvokeHeaders();
@@ -341,6 +424,52 @@ const functions = {
     }
 
     return payload;
+  },
+  stream: async (name, body, handlers = {}) => {
+    const authHeaders = await getFunctionInvokeHeaders();
+    const response = await fetch(`${supabaseUrl}/functions/v1/${name}`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Accept: 'text/event-stream',
+        apikey: supabaseAnonKey,
+        ...(authHeaders || {}),
+      },
+      body: JSON.stringify(body ?? {}),
+    });
+
+    if (!response.ok) {
+      const payload = await parseFunctionResponse(response);
+      const message = typeof payload === 'string'
+        ? payload
+        : payload?.error || payload?.message || `Function ${name} failed with status ${response.status}`;
+      throw new Error(message);
+    }
+
+    if (!response.body) {
+      const payload = await parseFunctionResponse(response);
+      handlers.onDone?.(payload);
+      return payload;
+    }
+
+    const reader = response.body.getReader();
+    const decoder = new TextDecoder();
+    let buffer = '';
+
+    while (true) {
+      const { done, value } = await reader.read();
+      if (done) {
+        break;
+      }
+
+      buffer += decoder.decode(value, { stream: true }).replace(/\r\n/g, '\n');
+      buffer = consumeSseBuffer(buffer, handlers);
+    }
+
+    buffer += decoder.decode().replace(/\r\n/g, '\n');
+    consumeSseBuffer(buffer, handlers, true);
+    handlers.onComplete?.();
+    return null;
   },
 };
 

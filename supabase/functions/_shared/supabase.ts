@@ -3,10 +3,26 @@ import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 
 export const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
 export const serviceRoleKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
+export const anonKey = Deno.env.get("SUPABASE_ANON_KEY") || serviceRoleKey;
 
 export const adminClient = createClient(supabaseUrl, serviceRoleKey, {
   auth: { persistSession: false },
 });
+
+export function createAuthenticatedClient(accessToken: string) {
+  return createClient(supabaseUrl, anonKey, {
+    auth: {
+      persistSession: false,
+      autoRefreshToken: false,
+      detectSessionInUrl: false,
+    },
+    global: {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    },
+  });
+}
 
 export const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -76,7 +92,9 @@ export async function getAuthenticatedContext(req: Request) {
     appUser = updatedUser;
   }
 
-  return { authUser, appUser };
+  const userClient = createAuthenticatedClient(token);
+
+  return { authUser, appUser, accessToken: token, userClient };
 }
 
 export async function invokeInternalFunction(name: string, payload: unknown) {

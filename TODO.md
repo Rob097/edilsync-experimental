@@ -21,13 +21,186 @@
     - [ ] Sostituire la select libera dello stato con azioni contestuali (`Invia in revisione`, `Approva`, `Respingi`, `Archivia`)
     - [ ] Allineare revisioni, notifiche e audit trail al nuovo workflow documentale
 - Assistente AI
-    - [ ] Definire i casi d'uso reali dell'assistente dentro EdilSync
-    - [ ] Collegare la UI già presente a un backend reale invece del placeholder attuale
-    - [ ] Dare all'assistente contesto applicativo reale (utente, contesto attivo, società, cantiere)
-    - [ ] Permettere query utili su cantieri, task, eventi, partecipanti e notifiche
+    - [X] Definire i casi d'uso reali dell'assistente dentro EdilSync
+    - [X] Collegare la UI già presente a un backend reale invece del placeholder attuale
+    - [X] Dare all'assistente contesto applicativo reale (utente, contesto attivo, società, cantiere)
+    - [X] Permettere query utili su cantieri, task, eventi, partecipanti e notifiche
     - [ ] Gestire risposte con suggerimenti operativi e link/azioni contestuali nell'app
-    - [ ] Valutare persistenza conversazioni lato server invece del solo localStorage
+    - [X] Valutare persistenza conversazioni lato server invece del solo localStorage
     - [ ] Valutare input vocale reale e non solo scaffolding UI
+    - Tool di lettura assistant
+        - Stato attuale: primo perimetro contestuale attivo su backend reale con tool read-only e RAG limitato.
+        - Obiettivo backlog: coprire il 100% delle superfici leggibili oggi presenti in EdilSync. Alcuni item potranno convergere in tool list/detail/search con parametri riusabili, ma il perimetro informativo da coprire e questo.
+        - Navigazione e contesto
+            - [X] `get_current_context_state` per spiegare contesto attivo, ruolo operativo, route corrente e `ui_mode`
+            - [X] `get_context_capabilities` per capability effettive del contesto attivo
+            - [X] `explain_feature_availability` per spiegare perche una funzione e disponibile, limitata o bloccata
+            - [X] `get_project_summary` per il riepilogo del cantiere corrente
+            - [X] `list_accessible_projects` per elencare i cantieri rilevanti del contesto attivo
+            - [X] `search_context_entities` per trovare rapidamente entita accessibili per nome o riferimento nel contesto attivo
+            - [X] `get_navigation_help` per dire dove trovare una funzione o una sezione nell'app
+            - [X] `list_pending_invites` per inviti aperti a società, cantieri, eventi e membership ancora da gestire
+            - [X] `list_my_memberships` per elencare le società e i ruoli a cui l'utente appartiene
+            - [X] `list_pending_decisions` per approvazioni, review, inviti e decisioni operative che richiedono attenzione
+        - Operatività
+            - [X] `list_recent_updates` per aggiornamenti recenti nel contesto attivo
+            - [X] `get_context_notes` per note operative, commenti documento e note SAL rilevanti
+            - [X] `list_context_tasks` per task rilevanti del contesto attivo
+            - [X] `list_context_schedule` per agenda/eventi rilevanti del contesto attivo
+            - [X] `list_context_participants` per partecipanti cantiere o membri società
+            - [X] `get_today_deadlines` per scadenze del giorno coerenti con la modalita normale
+            - [X] `list_blocked_tasks` per task bloccate con motivo, responsabile e impatto
+            - [X] `get_task_detail` per dettaglio task, assegnazione, blocchi e collegamenti
+            - [x] `list_context_milestones` per milestone del cantiere
+            - [x] `get_milestone_detail` per dettaglio milestone, target date, stato e task collegate
+            - [x] `list_context_change_requests` per richieste di modifica del cantiere
+            - [x] `get_change_request_detail` per dettaglio variante, impatto e stato decisionale
+            - [x] `list_context_disputes` per dispute aperte o recenti del cantiere
+            - [x] `get_dispute_detail` per dettaglio disputa, eventi, evidenze e impatto
+            - [x] `get_event_detail` per dettaglio evento, partecipanti, stato e conflitti
+            - [x] `get_operational_day_brief` per un quadro sintetico operativo giornaliero
+        - Comunicazione e notifiche
+            - [X] `list_context_notifications` per notifiche rilevanti del contesto attivo
+            - [x] `list_context_channels` per canali disponibili nel contesto attivo
+            - [x] `get_channel_detail` per dettaglio canale, membership, limiti e ultimo stato noto
+            - [x] `list_context_messages` per ultimi messaggi rilevanti di progetto/società
+            - [x] `get_message_detail` per dettaglio messaggio, autore, canale, mention e artefatti collegati
+            - [x] `list_mentions_and_followups` per mention e follow-up da non perdere
+            - [x] `get_notification_preferences` per preferenze notifiche correnti dell'utente
+        - Documenti e workflow
+            - [x] `list_context_documents` per documenti recenti o rilevanti
+            - [x] `search_context_documents` per ricerca documenti per nome, tag, disciplina, area o testo rilevante
+            - [x] `get_document_detail` per metadati, revisione e stato di un documento
+            - [x] `get_document_revision_history` per catena revisionale, revisione corrente e superseded
+            - [x] `get_document_workflow_status` per approvazioni, transizioni e `document_approvals`
+            - [x] `list_document_comments` per commenti documento con contesto
+            - [x] `list_document_approvals` per decisioni documentali aperte o storiche sul documento
+            - [x] `list_document_revision_events` per audit trail revisioni, cambio stato e aggiornamenti
+        - Economia e controllo
+            - [x] `get_context_finance_snapshot` per KPI base di economia di commessa
+            - [x] `list_budget_watchpoints` per budget line critiche / scostamenti
+            - [x] `list_cost_entries` per costi recenti o filtrati del contesto
+            - [x] `list_context_labor_rates` per tariffe orarie rilevanti di società/progetto
+            - [x] `get_project_financial_settings` per valuta, visibilita finance, metodo manodopera e regole SAL
+            - [x] `list_progress_statements` per elenco SAL accessibili con stato e data
+            - [x] `get_progress_statement_detail` per dettaglio SAL, note e numerazione
+            - [x] `list_progress_statement_notes` per SAL e note economiche rilevanti
+            - [x] `list_project_company_commercials` per accordi economici tra progetto e imprese partecipanti
+            - [x] `list_context_work_sessions` per timbrature / work session del contesto
+        - Profilo e preferenze personali
+            - [x] `get_my_profile_summary` per profilo utente, contesto attivo, ruoli e recapiti rilevanti
+            - [x] `get_personal_workspace_brief` per riepilogo personale di notifiche, inviti, task ed eventi accessibili
+        - Portfolio società
+            - [x] `list_company_projects` per portafoglio cantieri della società attiva
+            - [x] `list_company_members` per organico e ruoli della società attiva
+            - [x] `list_company_channels` per canali e superfici collaborative della società attiva
+            - [x] `list_company_documents` per documenti societari accessibili nel contesto attivo
+            - [x] `get_company_subscription_status` per piano societario, billing status e periodo corrente
+            - [x] `get_project_sponsorship_status` per sponsor attivo, stato e cronologia sintetica della sponsorizzazione di progetto
+    - Tool di scrittura assistant
+        - Stato attuale: l'assistente resta read-only. Le scritture oggi vive dell'app sono distribuite tra Edge Function dedicate, mutazioni dirette con RLS e flussi composti con side-effect applicativi (notifiche, audit, sync, gating).
+        - Obiettivo backlog: coprire le azioni utente oggi eseguibili nell'app personale/società/cantiere, sempre nel contesto attivo e con enforcement backend dei permessi; per azioni distruttive, ambigue o economicamente sensibili serviranno conferma esplicita e risposta finale con esito verificato.
+        - Perimetro iniziale: questa lista copre l'app contestuale EdilSync. CMS pubblico, blog, demo request e web-admin editoriale restano fuori da questo backlog assistant e richiederebbero eventualmente un assistente separato.
+        - Nota di progettazione: alcuni item potranno convergere in tool azionali riusabili con parametro `action`, ma il perimetro funzionale da coprire oggi è questo.
+        - Navigazione, contesto e preferenze personali
+            - [ ] `switch_active_context` per passare tra contesto personale e società attiva
+            - [ ] `update_my_profile` per aggiornare nome visualizzato, recapiti e dati personali modificabili
+            - [ ] `update_tour_state` per completare, chiudere o riaprire tutorial/onboarding contestuali
+            - [ ] `update_notification_preferences` per salvare preferenze notifiche personali
+            - [ ] `mark_notification_read` per segnare una singola notifica come letta
+            - [ ] `mark_all_notifications_read` per segnare come lette le notifiche visibili nel contesto corrente
+        - Società e membership
+            - [ ] `create_company` per creare una nuova società con inizializzazione del grafo base
+            - [ ] `update_company_profile` per modificare anagrafica e metadati della società attiva
+            - [ ] `invite_company_member` per invitare un membro nella società attiva
+            - [ ] `remove_company_member` per rimuovere un membro dalla società attiva
+        - Cantieri e partecipanti
+            - [ ] `create_project` per creare un nuovo cantiere nel contesto attivo
+            - [ ] `update_project` per modificare i dati base del cantiere corrente
+            - [ ] `invite_project_participant` per invitare partecipanti personali o societari nel cantiere corrente
+            - [ ] `respond_project_participant_invite` per accettare o rifiutare un invito al cantiere nel contesto corrente
+            - [ ] `remove_project_participant` per rimuovere un partecipante dal cantiere corrente
+        - Operatività: task, milestone e varianti
+            - [ ] `create_task` per creare una nuova attività nel cantiere corrente
+            - [ ] `update_task` per modificare dettagli, descrizione, scadenza e area di una attività
+            - [ ] `delete_task` per eliminare una attività
+            - [ ] `update_task_status` per cambiare stato attività (`not_started`, `in_progress`, `blocked`, `completed`)
+            - [ ] `block_task` per bloccare una attività con motivo, responsabile e impatto
+            - [ ] `unblock_task` per sbloccare una attività bloccata e ripristinare uno stato operativo coerente
+            - [ ] `assign_task` per assegnare o riassegnare una attività a persona o società partecipante
+            - [ ] `link_task_to_milestone` per collegare una attività a una milestone
+            - [ ] `unlink_task_from_milestone` per scollegare una attività dalla milestone corrente
+            - [ ] `create_milestone` per creare una milestone nel cantiere corrente
+            - [ ] `update_milestone` per modificare titolo, date e stato di una milestone
+            - [ ] `delete_milestone` per eliminare una milestone mantenendo o sganciando le task collegate secondo scelta esplicita
+            - [ ] `delete_milestone_and_linked_tasks` per eliminare una milestone insieme alle task collegate quando confermato
+            - [ ] `create_change_request` per aprire una richiesta di modifica / variante
+            - [ ] `update_change_request` per aggiornare contenuti e assegnazione di una variante aperta
+            - [ ] `respond_change_request` per approvare, respingere o rispondere a una variante con nota
+            - [ ] `update_change_request_status` per cambiare lo stato operativo di una variante
+        - Calendario ed eventi
+            - [ ] `create_event` per creare un evento con partecipanti nel contesto attivo
+            - [ ] `update_event` per modificare dati, luogo e orari di un evento esistente
+            - [ ] `cancel_event` per annullare un evento e notificare i partecipanti coinvolti
+            - [ ] `respond_event_invitation` per accettare o rifiutare un invito evento nel contesto corrente
+            - [ ] `accept_event_invitation_and_resolve_conflict` per accettare un invito evento e chiudere un conflitto dichiarato quando serve
+            - [ ] `leave_event` per ritirare la propria partecipazione da un evento
+        - Comunicazione, canali e notifiche collaborative
+            - [ ] `create_project_channel` per creare un canale custom di progetto
+            - [ ] `create_company_channel` per creare un canale custom di società
+            - [ ] `add_channel_members` per aggiungere membri a un canale esistente
+            - [ ] `remove_channel_member` per rimuovere un membro da un canale
+            - [ ] `send_channel_message` per inviare un messaggio in un canale
+            - [ ] `send_channel_message_with_mentions` per inviare un messaggio con mention a utenti rilevanti
+            - [ ] `send_channel_message_with_artifact_mentions` per inviare un messaggio con riferimenti a task, milestone, varianti o documenti
+            - [ ] `mark_channel_read` per aggiornare il canale come letto nel contesto corrente
+        - Documenti e workflow
+            - [ ] `upload_project_document` per caricare un documento nel cantiere corrente
+            - [ ] `upload_company_document` per caricare un documento nella società attiva
+            - [ ] `update_document_metadata` per aggiornare nome, descrizione, classificazione e metadati documento
+            - [ ] `change_document_status` per cambiare lo stato documento quando oggi il workflow lo consente
+            - [ ] `upload_document_revision` per creare una nuova revisione e supersedere la precedente
+            - [ ] `delete_document` per eliminare un documento accessibile nel contesto corrente
+            - [ ] `comment_document` per aggiungere un commento a un documento
+        - Dispute e decisioni operative
+            - [ ] `create_dispute` per aprire una disputa dal cantiere corrente
+            - [ ] `create_dispute_from_task_block` per aprire una disputa collegata a una task bloccata con evidenza automatica
+            - [ ] `change_dispute_status` per cambiare stato a una disputa (`open`, `under_review`, `resolved`, ecc.)
+            - [ ] `comment_on_dispute` per pubblicare un commento nella timeline della disputa
+            - [ ] `comment_on_dispute_with_mentions` per commentare una disputa menzionando utenti o riferimenti operativi
+            - [ ] `upload_dispute_attachment` per allegare file o documenti di supporto a una disputa
+            - [ ] `attach_dispute_evidence` per aggiungere evidenze strutturate da task o documenti alla disputa
+        - Economia di commessa, timbrature e controllo
+            - [ ] `update_project_financial_settings` per aggiornare valuta, visibilità finance, metodo manodopera e regole SAL
+            - [ ] `create_budget_line` per creare una voce di budget
+            - [ ] `update_budget_line` per modificare una voce di budget esistente
+            - [ ] `delete_budget_line` per eliminare una voce di budget
+            - [ ] `create_cost_entry` per registrare un costo manuale
+            - [ ] `update_cost_entry` per correggere o aggiornare un costo registrato
+            - [ ] `delete_cost_entry` per eliminare un costo registrato
+            - [ ] `sync_labor_costs_from_work_sessions` per trasformare timbrature in costi manodopera registrati
+            - [ ] `create_labor_rate` per creare una tariffa oraria rilevante per progetto/società
+            - [ ] `update_labor_rate` per aggiornare una tariffa oraria
+            - [ ] `delete_labor_rate` per eliminare una tariffa oraria
+            - [ ] `create_progress_statement` per creare un nuovo SAL
+            - [ ] `update_progress_statement` per correggere dati e note di un SAL
+            - [ ] `update_progress_statement_status` per cambiare stato di un SAL
+            - [ ] `delete_progress_statement` per eliminare un SAL
+            - [ ] `create_project_company_commercial` per registrare un accordo economico tra progetto e impresa partecipante
+            - [ ] `update_project_company_commercial` per modificare un accordo economico esistente
+            - [ ] `delete_project_company_commercial` per eliminare un accordo economico
+            - [ ] `start_work_session` per aprire una timbratura / work session nel contesto corretto
+            - [ ] `stop_my_work_session` per chiudere la propria work session aperta
+            - [ ] `create_manual_work_session` per registrare manualmente una work session con motivazione
+            - [ ] `close_manual_work_session` per chiudere manualmente una work session aperta con motivazione e nota
+        - Billing e sponsorship
+            - [ ] `start_company_checkout` per avviare il checkout Stripe del piano società attiva
+            - [ ] `open_company_billing_portal` per aprire il billing portal della società attiva
+            - [ ] `sync_company_subscription` per riallineare lo stato subscription societario da Stripe
+            - [ ] `activate_project_sponsorship` per attivare la sponsorship di un cantiere da parte di una società idonea
+            - [ ] `end_project_sponsorship` per terminare una sponsorship attiva di progetto
+        - Meta assistant
+            - [ ] `delete_assistant_conversation` per eliminare una conversazione server-side dell'assistente
 - [X] Parte pubblica
     - [X] Landing page
     - [X] Pagine in base al ruolo
