@@ -9,12 +9,12 @@ import { MemoryRouter } from 'react-router-dom';
 
 const invokeMock = vi.hoisted(() => vi.fn());
 
-vi.mock('@/api/appClient', () => ({
-  supabase: {
+vi.mock('@/public/api/publicSupabaseClient', () => ({
+  getPublicSupabaseClient: () => ({
     functions: {
       invoke: invokeMock,
     },
-  },
+  }),
 }));
 
 vi.mock('@/public/hooks/usePublicSeo', () => ({ default: () => {} }));

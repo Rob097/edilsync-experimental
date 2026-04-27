@@ -7,6 +7,7 @@
     "dev": "vite",
     "qa": "vite --mode qa --host 127.0.0.1 --port 4173",
     "build": "vite build",
+    "postbuild": "tsx --tsconfig jsconfig.json scripts/prerender-public.tsx",
     "check:secrets": "bash ./scripts/check-secrets.sh",
     "lint": "NODE_OPTIONS=--max-old-space-size=4096 eslint . --quiet",
     "lint:fix": "NODE_OPTIONS=--max-old-space-size=4096 eslint . --fix",
@@ -127,6 +128,7 @@
     "postcss": "^8.5.3",
     "supabase": "^2.88.1",
     "tailwindcss": "^3.4.17",
+    "tsx": "^4.20.0",
     "typescript": "^5.8.2",
     "vite": "^6.1.0",
     "vitest": "^3.2.4"

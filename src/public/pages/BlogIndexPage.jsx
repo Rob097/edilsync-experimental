@@ -7,6 +7,7 @@ import { getBlogMetaItems } from '@/public/blogMeta';
 import { PUBLIC_CLASSES } from '@/public/designSystem';
 import usePublicSeo from '@/public/hooks/usePublicSeo';
 import usePublicGsap from '@/public/hooks/usePublicGsap';
+import { readPublicPrerenderData } from '@/public/prerenderData';
 import blogIndexIt from '@/public/i18n/blog-index.it.json';
 import blogIndexEn from '@/public/i18n/blog-index.en.json';
 
@@ -16,11 +17,17 @@ function pickLocalized(post, locale, field) {
   return post?.[`${field}_it`] || post?.[`${field}_en`] || '';
 }
 
-export default function BlogIndexPage({ locale = 'it', basePath = '' }) {
+export default function BlogIndexPage({ locale = 'it', basePath = '', initialPosts }) {
   const rootRef = useRef(null);
+  const seededPosts = Array.isArray(initialPosts)
+    ? initialPosts
+    : Array.isArray(readPublicPrerenderData('blogPosts'))
+      ? readPublicPrerenderData('blogPosts')
+      : undefined;
   const { data: posts = [], isLoading, error } = useQuery({
     queryKey: ['public-blog-posts'],
     queryFn: () => contentClient.listPublishedPosts(),
+    initialData: seededPosts,
   });
 
   const copy = locale === 'en' ? blogIndexEn : blogIndexIt;
@@ -38,6 +45,8 @@ export default function BlogIndexPage({ locale = 'it', basePath = '' }) {
 
   usePublicGsap(rootRef);
 
+  const hasPosts = posts.length > 0;
+
   return (
     <div ref={rootRef} className={PUBLIC_CLASSES.page}>
       <section className="relative overflow-hidden border-b border-[var(--public-line)] bg-[linear-gradient(180deg,rgba(255,250,246,0.96),rgba(247,241,235,0.82))]">
@@ -51,9 +60,9 @@ export default function BlogIndexPage({ locale = 'it', basePath = '' }) {
 
       <section className="max-w-6xl mx-auto px-4 sm:px-6 py-16 sm:py-20">
         {isLoading ? <p className="text-[#526071]">{copy.loading}</p> : null}
-        {error ? <p className="text-red-600">{copy.loadError}</p> : null}
+        {error && !hasPosts ? <p className="text-red-600">{copy.loadError}</p> : null}
 
-        {!isLoading && !error && posts.length === 0 ? (
+        {!isLoading && !error && !hasPosts ? (
           <div data-reveal className="public-grid-card p-6 text-[var(--public-muted)]">
             {copy.empty}
           </div>

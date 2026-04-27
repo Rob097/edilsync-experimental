@@ -1,4 +1,4 @@
-import { supabase } from '@/api/appClient';
+import { getPublicSupabaseClient } from '@/public/api/publicSupabaseClient';
 
 const postSelect = `
   id,
@@ -29,6 +29,7 @@ const postSelect = `
 
 export const contentClient = {
   async listPublishedPosts() {
+    const supabase = getPublicSupabaseClient();
     const { data, error } = await supabase
       .from('blog_posts')
       .select(postSelect)
@@ -41,6 +42,7 @@ export const contentClient = {
   },
 
   async getPublishedPostBySlug(slug) {
+    const supabase = getPublicSupabaseClient();
     const { data, error } = await supabase
       .from('blog_posts')
       .select(postSelect)
@@ -54,6 +56,7 @@ export const contentClient = {
   },
 
   async listCategories() {
+    const supabase = getPublicSupabaseClient();
     const { data, error } = await supabase
       .from('blog_categories')
       .select('*')

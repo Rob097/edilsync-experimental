@@ -1986,11 +1986,14 @@ const resources = {
   en: { translation: { ...enTranslations, publicHome: publicHomeEn } },
 };
 
-export const initializeI18n = () => {
-  if (i18next.isInitialized) return;
+export const initializeI18n = ({ lng = 'it', useDetector = typeof window !== 'undefined' } = {}) => {
+  if (i18next.isInitialized) return Promise.resolve(i18next);
 
-  i18next
-    .use(LanguageDetector)
+  const instance = useDetector
+    ? i18next.use(LanguageDetector)
+    : i18next;
+
+  return instance
     .use(initReactI18next)
     .init({
       resources,
@@ -1998,15 +2001,16 @@ export const initializeI18n = () => {
       nonExplicitSupportedLngs: true,
       load: 'languageOnly',
       fallbackLng: 'it',
+      lng: useDetector ? undefined : lng,
       ns: ['translation'],
       defaultNS: 'translation',
       interpolation: {
         escapeValue: false,
       },
-      detection: {
+      detection: useDetector ? {
         order: ['localStorage', 'navigator'],
         caches: ['localStorage'],
-      },
+      } : undefined,
     });
 };
 

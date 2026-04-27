@@ -17,7 +17,6 @@ import Footer from '@/components/legal/Footer';
 import PublicLanguageSelector from '@/public/components/PublicLanguageSelector';
 import publicLayoutIt from '@/public/i18n/layout.it.json';
 import publicLayoutEn from '@/public/i18n/layout.en.json';
-import '@/public/public-site.css';
 
 if (!i18next.isInitialized) {
   initializeI18n();

@@ -7,6 +7,7 @@ import { getBlogMetaItems } from '@/public/blogMeta';
 import { contentClient } from '@/public/api/contentClient';
 import { PUBLIC_CLASSES } from '@/public/designSystem';
 import usePublicSeo from '@/public/hooks/usePublicSeo';
+import { readPublicPrerenderData } from '@/public/prerenderData';
 import StructuredData from '@/public/seo/StructuredData';
 import usePublicGsap from '@/public/hooks/usePublicGsap';
 import blogPostIt from '@/public/i18n/blog-post.it.json';
@@ -18,15 +19,22 @@ function pickLocalized(post, locale, field) {
   return post?.[`${field}_it`] || post?.[`${field}_en`] || '';
 }
 
-export default function BlogPostPage({ locale = 'it', basePath = '' }) {
+export default function BlogPostPage({ locale = 'it', basePath = '', initialPost }) {
   const rootRef = useRef(null);
   const { slug } = useParams();
   const copy = locale === 'en' ? blogPostEn : blogPostIt;
+  const prerenderedPost = readPublicPrerenderData('blogPost');
+  const seededPost = initialPost?.slug === slug
+    ? initialPost
+    : prerenderedPost?.slug === slug
+      ? prerenderedPost
+      : undefined;
 
   const { data: post, isLoading, error } = useQuery({
     queryKey: ['public-blog-post', slug],
     queryFn: () => contentClient.getPublishedPostBySlug(slug),
     enabled: !!slug,
+    initialData: seededPost,
   });
 
   const title = pickLocalized(post, locale, 'title');
@@ -41,16 +49,16 @@ export default function BlogPostPage({ locale = 'it', basePath = '' }) {
     locale,
     alternateItPath: slug ? `/blog/${slug}` : '/blog',
     alternateEnPath: slug ? `/en/blog/${slug}` : '/en/blog',
-    robots: error || (!isLoading && !post) ? 'noindex,nofollow' : 'index,follow',
+    robots: !post && (error || !isLoading) ? 'noindex,nofollow' : 'index,follow',
   });
 
   usePublicGsap(rootRef);
 
-  if (isLoading) {
+  if (isLoading && !post) {
     return <section className="max-w-4xl mx-auto px-4 sm:px-6 py-16 text-[#526071]">{copy.loading}</section>;
   }
 
-  if (error || !post) {
+  if (!post) {
     return (
       <section className="max-w-4xl mx-auto px-4 sm:px-6 py-16">
         <h1 className="text-3xl font-semibold text-[#141821]">{copy.notFound}</h1>

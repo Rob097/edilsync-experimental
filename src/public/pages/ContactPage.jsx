@@ -2,12 +2,12 @@ import React, { useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useMutation } from '@tanstack/react-query';
 import { ArrowRight } from 'lucide-react';
-import { supabase } from '@/api/appClient';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
+import { getPublicSupabaseClient } from '@/public/api/publicSupabaseClient';
 import usePublicSeo from '@/public/hooks/usePublicSeo';
 import { PUBLIC_CLASSES } from '@/public/designSystem';
 import contactIt from '@/public/i18n/contact.it.json';
@@ -44,10 +44,15 @@ export default function ContactPage({ locale = 'it' }) {
 
   const mutation = useMutation({
     mutationFn: async () => {
+      const supabase = getPublicSupabaseClient();
       const payload = {
         ...form,
         locale,
-        source_path: window.location.pathname,
+        source_path: typeof window !== 'undefined'
+          ? window.location.pathname
+          : locale === 'en'
+            ? '/en/contatti'
+            : '/contatti',
       };
 
       const { error } = await supabase.functions.invoke('submitDemoRequest', {
