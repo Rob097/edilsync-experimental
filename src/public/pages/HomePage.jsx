@@ -207,7 +207,7 @@ export default function HomePage({ locale = 'it' }) {
           </div>
         </section>
 
-        <section className="public-deferred-section bg-[#15171c] px-6 py-8 text-[#f8f3ef] md:py-10" data-section-size="compact">
+        <section className="bg-[#15171c] px-6 py-8 text-[#f8f3ef] md:py-10">
           <div className="mx-auto grid max-w-7xl gap-6 sm:grid-cols-2 xl:grid-cols-4 xl:gap-0">
             {[
               { value: t('publicHome.stats.aValue'), label: t('publicHome.stats.aLabel') },
@@ -223,7 +223,7 @@ export default function HomePage({ locale = 'it' }) {
           </div>
         </section>
 
-        <section id="problema" className="public-section-shell public-deferred-section px-6 py-24 md:py-30" data-section-size="feature">
+        <section id="problema" className="public-section-shell px-6 py-24 md:py-30">
           <div className="mx-auto grid max-w-7xl gap-12 lg:grid-cols-[0.88fr_1.12fr] lg:items-start">
             <div className="max-w-xl lg:sticky lg:top-28">
               <span data-reveal className="public-eyebrow">{t('publicHome.problem.chip')}</span>

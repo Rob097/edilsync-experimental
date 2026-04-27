@@ -134,7 +134,7 @@ export default function Projects() {
       <div className="flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
         <div className="app-page-header" data-tour="projects-header">
           <span className="app-page-kicker">{t('projects.kicker')}</span>
-          <h1 className="app-page-title">{t('common.projects')}</h1>
+          <h1 className="text-4xl font-bold text-gray-900 break-words app-page-title">{t('common.projects')}</h1>
           <p className="app-page-subtitle">{t('projects.subtitle')}</p>
           <div className="flex items-center gap-2">
             <ContextBadge context={currentContext} companyName={currentCompany?.name} />

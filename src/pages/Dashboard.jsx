@@ -155,7 +155,7 @@ export default function Dashboard() {
       <div className="flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
         <div className="app-page-header" data-tour="dashboard-header">
           <span className="app-page-kicker">{t('dashboard.kicker')}</span>
-          <h1 className="app-page-title">
+          <h1 className="text-4xl font-bold text-gray-900 break-words app-page-title">
             {t('dashboard.greetingPrefix')} {(user?.display_name || user?.full_name)?.split(' ')[0] || 'Utente'}
           </h1>
           <p className="app-page-subtitle">
