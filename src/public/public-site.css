@@ -31,7 +31,7 @@
   z-index: 0;
 }
 
-.public-site > * {
+.public-site > *:not(header) {
   position: relative;
   z-index: 1;
 }
@@ -169,6 +169,25 @@
 
 .public-site .public-section-shell {
   position: relative;
+}
+
+@supports (content-visibility: auto) {
+  .public-site .public-deferred-section {
+    content-visibility: auto;
+    contain-intrinsic-size: 900px;
+  }
+
+  .public-site .public-deferred-section[data-section-size='compact'] {
+    contain-intrinsic-size: 360px;
+  }
+
+  .public-site .public-deferred-section[data-section-size='feature'] {
+    contain-intrinsic-size: 640px;
+  }
+
+  .public-site .public-deferred-section[data-section-size='pricing'] {
+    contain-intrinsic-size: 900px;
+  }
 }
 
 .public-site main > div > .public-section-shell + .public-section-shell::before {

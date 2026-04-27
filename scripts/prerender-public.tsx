@@ -166,6 +166,15 @@ const upsertHeadTag = (html, marker, tag) => {
   return html.replace('</head>', `  ${tag}\n  </head>`);
 };
 
+const injectHeadPreloads = (html, route) => {
+  if (route.path !== '/' && route.path !== '/en') {
+    return html;
+  }
+
+  const preloadTag = '<link rel="preload" as="image" href="/images/optimized/hero-image-1120.webp" imagesrcset="/images/optimized/hero-image-672.webp 672w, /images/optimized/hero-image-1120.webp 1120w" imagesizes="(max-width: 767px) calc(100vw - 3rem), (max-width: 1279px) 560px, 640px" fetchpriority="high" />';
+  return html.replace('</head>', `  ${preloadTag}\n  </head>`);
+};
+
 const injectHead = (html, route) => {
   const canonicalUrl = `${getSiteOrigin()}${route.path}`;
   let nextHtml = html.replace(/<html[^>]*lang="[^"]*"[^>]*>/i, `<html lang="${route.locale}">`);
@@ -200,7 +209,7 @@ const injectHead = (html, route) => {
     '<link rel="canonical"',
     `<link rel="canonical" href="${escapeHtml(canonicalUrl)}" />`,
   );
-  return nextHtml;
+  return injectHeadPreloads(nextHtml, route);
 };
 
 const injectPrerenderData = (html, data) => {

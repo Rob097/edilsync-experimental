@@ -13,6 +13,8 @@ export default function HomePage({ locale = 'it' }) {
   const { t } = useTranslation();
   const canonicalPath = locale === 'en' ? '/en' : '/';
   const basePrefix = locale === 'en' ? '/en' : '';
+  const heroImageFallback = '/images/hero-image.png';
+  const heroImageSrcSet = '/images/optimized/hero-image-672.webp 672w, /images/optimized/hero-image-1120.webp 1120w';
 
   const problemItems = [
     { icon: MessageSquare, title: t('publicHome.problem.c1t'), description: t('publicHome.problem.c1d') },
@@ -50,21 +52,24 @@ export default function HomePage({ locale = 'it' }) {
   const audienceCards = [
     {
       name: 'Michele',
-      image: '/images/michele.png',
+      image: '/images/optimized/michele-160.webp',
+      fallbackImage: '/images/michele.png',
       role: t('publicHome.audience.micheleRole'),
       quote: t('publicHome.audience.micheleQuote'),
       bullets: [t('publicHome.audience.m1'), t('publicHome.audience.m2'), t('publicHome.audience.m3'), t('publicHome.audience.m4')],
     },
     {
       name: 'Matteo',
-      image: '/images/matteo.png',
+      image: '/images/optimized/matteo-160.webp',
+      fallbackImage: '/images/matteo.png',
       role: t('publicHome.audience.matteoRole'),
       quote: t('publicHome.audience.matteoQuote'),
       bullets: [t('publicHome.audience.t1'), t('publicHome.audience.t2'), t('publicHome.audience.t3'), t('publicHome.audience.t4')],
     },
     {
       name: 'Marco',
-      image: '/images/marco.png',
+      image: '/images/optimized/marco-160.webp',
+      fallbackImage: '/images/marco.png',
       role: t('publicHome.audience.marcoRole'),
       quote: t('publicHome.audience.marcoQuote'),
       bullets: [t('publicHome.audience.r1'), t('publicHome.audience.r2'), t('publicHome.audience.r3'), t('publicHome.audience.r4')],
@@ -167,7 +172,22 @@ export default function HomePage({ locale = 'it' }) {
 
             <div data-reveal className="lg:justify-self-end lg:pt-1 xl:pt-4">
               <div className="public-device-frame max-w-[560px] xl:max-w-none">
-                <img src="/images/hero-image.png" alt={t('publicHome.hero.preview.alt')} className="block w-full border border-white/10 object-cover" />
+                <picture>
+                  <source
+                    type="image/webp"
+                    srcSet={heroImageSrcSet}
+                    sizes="(max-width: 767px) calc(100vw - 3rem), (max-width: 1279px) 560px, 640px"
+                  />
+                  <img
+                    src={heroImageFallback}
+                    alt={t('publicHome.hero.preview.alt')}
+                    width="1344"
+                    height="768"
+                    fetchpriority="high"
+                    decoding="async"
+                    className="block w-full border border-white/10 object-cover"
+                  />
+                </picture>
                 <div className="mt-4 grid gap-3 sm:grid-cols-[1.2fr_0.8fr]">
                   <div className="public-kpi-card rounded-[24px] p-5">
                     <p className="text-[11px] font-extrabold uppercase tracking-[0.14em] text-[#f7b7a8]">{t('publicHome.hero.preview.feedLabel')}</p>
@@ -187,7 +207,7 @@ export default function HomePage({ locale = 'it' }) {
           </div>
         </section>
 
-        <section className="bg-[#15171c] px-6 py-8 text-[#f8f3ef] md:py-10">
+        <section className="public-deferred-section bg-[#15171c] px-6 py-8 text-[#f8f3ef] md:py-10" data-section-size="compact">
           <div className="mx-auto grid max-w-7xl gap-6 sm:grid-cols-2 xl:grid-cols-4 xl:gap-0">
             {[
               { value: t('publicHome.stats.aValue'), label: t('publicHome.stats.aLabel') },
@@ -203,7 +223,7 @@ export default function HomePage({ locale = 'it' }) {
           </div>
         </section>
 
-        <section id="problema" className="public-section-shell px-6 py-24 md:py-30">
+        <section id="problema" className="public-section-shell public-deferred-section px-6 py-24 md:py-30" data-section-size="feature">
           <div className="mx-auto grid max-w-7xl gap-12 lg:grid-cols-[0.88fr_1.12fr] lg:items-start">
             <div className="max-w-xl lg:sticky lg:top-28">
               <span data-reveal className="public-eyebrow">{t('publicHome.problem.chip')}</span>
@@ -238,7 +258,7 @@ export default function HomePage({ locale = 'it' }) {
           </div>
         </section>
 
-        <section id="come-funziona" className="bg-[rgba(255,250,246,0.8)] px-6 py-24 md:py-32">
+        <section id="come-funziona" className="public-deferred-section bg-[rgba(255,250,246,0.8)] px-6 py-24 md:py-32" data-section-size="feature">
           <div className="mx-auto grid max-w-7xl gap-12 lg:grid-cols-[1.05fr_0.95fr] lg:items-start">
             <div>
               <span data-reveal className="public-eyebrow">{t('publicHome.solution.chip')}</span>
@@ -293,7 +313,7 @@ export default function HomePage({ locale = 'it' }) {
           </div>
         </section>
 
-        <section id="features" className="public-section-shell px-6 py-24 md:py-32">
+        <section id="features" className="public-section-shell public-deferred-section px-6 py-24 md:py-32" data-section-size="feature">
           <div className="mx-auto max-w-7xl">
             <div className="max-w-3xl">
               <span data-reveal className="public-eyebrow">{t('publicHome.features.chip')}</span>
@@ -334,7 +354,7 @@ export default function HomePage({ locale = 'it' }) {
           </div>
         </section>
 
-        <section id="perchi" className="public-section-shell px-6 py-24 md:py-32">
+        <section id="perchi" className="public-section-shell public-deferred-section px-6 py-24 md:py-32" data-section-size="feature">
           <div className="mx-auto max-w-7xl">
             <div className="max-w-3xl">
               <span data-reveal className="public-eyebrow">{t('publicHome.audience.chip')}</span>
@@ -349,7 +369,18 @@ export default function HomePage({ locale = 'it' }) {
               {audienceCards.map((card, index) => (
                 <article key={card.name} data-reveal className="public-grid-card flex h-full flex-col p-6">
                   <div className="flex items-center gap-4">
-                    <img src={card.image} alt={card.name} className="h-16 w-16 rounded-full border border-[rgba(239,97,68,0.22)] object-cover" />
+                    <picture>
+                      <source type="image/webp" srcSet={card.image} />
+                      <img
+                        src={card.fallbackImage}
+                        alt={card.name}
+                        width="64"
+                        height="64"
+                        loading="lazy"
+                        decoding="async"
+                        className="h-16 w-16 rounded-full border border-[rgba(239,97,68,0.22)] object-cover"
+                      />
+                    </picture>
                     <div>
                       <p className="text-lg font-semibold tracking-[-0.03em] text-[var(--public-ink)]">{card.name}</p>
                       <p className="mt-1 text-[11px] font-extrabold uppercase tracking-[0.14em] text-[var(--public-accent-dark)]">{card.role}</p>
@@ -370,7 +401,7 @@ export default function HomePage({ locale = 'it' }) {
           </div>
         </section>
 
-        <section id="prezzi" className="bg-[rgba(255,250,246,0.86)] px-6 py-24 md:py-32">
+        <section id="prezzi" className="public-deferred-section bg-[rgba(255,250,246,0.86)] px-6 py-24 md:py-32" data-section-size="pricing">
           <div className="mx-auto max-w-7xl">
             <div className="max-w-3xl">
               <span data-reveal className="public-eyebrow">{t('publicHome.pricing.chip')}</span>
@@ -455,7 +486,7 @@ export default function HomePage({ locale = 'it' }) {
           </div>
         </section>
 
-        <section className="relative overflow-hidden bg-[#15171c] px-6 py-24 text-white md:py-32">
+        <section className="public-deferred-section relative overflow-hidden bg-[#15171c] px-6 py-24 text-white md:py-32" data-section-size="compact">
           <div data-parallax="slow" className="pointer-events-none absolute left-[18%] top-0 h-80 w-80 rounded-full bg-[rgba(239,97,68,0.18)] blur-3xl" aria-hidden />
           <div data-parallax="medium" className="pointer-events-none absolute bottom-0 right-[14%] h-72 w-72 rounded-full bg-[rgba(196,158,108,0.14)] blur-3xl" aria-hidden />
           <div className="relative mx-auto max-w-4xl text-center">
