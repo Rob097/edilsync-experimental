@@ -1,7 +1,4 @@
 import { Suspense, lazy } from 'react';
-import { Toaster } from "@/components/ui/toaster"
-import { QueryClientProvider } from '@tanstack/react-query'
-import { queryClientInstance } from '@/lib/query-client'
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import PublicSiteRouter from '@/public/PublicSiteRouter';
 const ProtectedAppEntry = lazy(() => import('@/ProtectedAppEntry'));
@@ -22,19 +19,16 @@ const RouteFallback = () => (
 function App() {
 
   return (
-    <QueryClientProvider client={queryClientInstance}>
-      <Router>
-        <Suspense fallback={<RouteFallback />}>
-          <Routes>
-            <Route path="/operativa/*" element={<LegacyOperativeRedirect />} />
-            <Route path="/app/*" element={<ProtectedAppEntry />} />
-            <Route path="/web-admin/*" element={<WebAdminEntry />} />
-            <Route path="*" element={<PublicSiteRouter />} />
-          </Routes>
-        </Suspense>
-      </Router>
-      <Toaster />
-    </QueryClientProvider>
+    <Router>
+      <Suspense fallback={<RouteFallback />}>
+        <Routes>
+          <Route path="/operativa/*" element={<LegacyOperativeRedirect />} />
+          <Route path="/app/*" element={<ProtectedAppEntry />} />
+          <Route path="/web-admin/*" element={<WebAdminEntry />} />
+          <Route path="*" element={<PublicSiteRouter />} />
+        </Routes>
+      </Suspense>
+    </Router>
   )
 }
 

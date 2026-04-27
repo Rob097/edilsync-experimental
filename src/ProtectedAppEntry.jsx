@@ -1,5 +1,8 @@
 import NavigationTracker from '@/lib/NavigationTracker';
 import '@/protected-app.css';
+import { QueryClientProvider } from '@tanstack/react-query';
+import { Toaster } from '@/components/ui/toaster';
+import { queryClientInstance } from '@/lib/query-client';
 import { pagesConfig } from './pages.config';
 import { Navigate, Route, Routes, useLocation } from 'react-router-dom';
 import PageNotFound from './lib/PageNotFound';
@@ -18,10 +21,13 @@ const LayoutWrapper = ({ children, currentPageName }) => Layout ?
   : <>{children}</>;
 
 const AppShell = ({ children, withNavigationTracker = false }) => (
-  <AuthProvider>
-    {withNavigationTracker ? <NavigationTracker /> : null}
-    {children}
-  </AuthProvider>
+  <QueryClientProvider client={queryClientInstance}>
+    <AuthProvider>
+      {withNavigationTracker ? <NavigationTracker /> : null}
+      {children}
+      <Toaster />
+    </AuthProvider>
+  </QueryClientProvider>
 );
 
 export const LegacyOperativeRedirect = () => {

@@ -13,9 +13,9 @@ const ProfessionalsPage = lazy(() => import('@/public/pages/ProfessionalsPage'))
 const SubcontractorsPage = lazy(() => import('@/public/pages/SubcontractorsPage'));
 const PricingPage = lazy(() => import('@/public/pages/PricingPage'));
 const FaqPage = lazy(() => import('@/public/pages/FaqPage'));
-const BlogIndexPage = lazy(() => import('@/public/pages/BlogIndexPage'));
-const BlogPostPage = lazy(() => import('@/public/pages/BlogPostPage'));
-const ContactPage = lazy(() => import('@/public/pages/ContactPage'));
+const BlogIndexRoute = lazy(() => import('@/public/routes/BlogIndexRoute'));
+const BlogPostRoute = lazy(() => import('@/public/routes/BlogPostRoute'));
+const ContactRoute = lazy(() => import('@/public/routes/ContactRoute'));
 const PrivacyPolicy = lazy(() => import('@/pages/PrivacyPolicy'));
 const TermsOfService = lazy(() => import('@/pages/TermsOfService'));
 const CookiePolicy = lazy(() => import('@/pages/CookiePolicy'));
@@ -40,9 +40,9 @@ function PublicLocaleRoutes({ locale, basePath }) {
           <Route path="come-funziona" element={<HowItWorksPage locale={locale} />} />
           <Route path="prezzi" element={<PricingPage locale={locale} />} />
           <Route path="faq" element={<FaqPage locale={locale} />} />
-          <Route path="contatti" element={<ContactPage locale={locale} />} />
-          <Route path="blog" element={<BlogIndexPage locale={locale} basePath={basePath} />} />
-          <Route path="blog/:slug" element={<BlogPostPage locale={locale} basePath={basePath} />} />
+          <Route path="contatti" element={<ContactRoute locale={locale} />} />
+          <Route path="blog" element={<BlogIndexRoute locale={locale} basePath={basePath} />} />
+          <Route path="blog/:slug" element={<BlogPostRoute locale={locale} basePath={basePath} />} />
           <Route path="privacy" element={<PrivacyPolicy />} />
           <Route path="termini" element={<TermsOfService />} />
           <Route path="cookie" element={<CookiePolicy />} />

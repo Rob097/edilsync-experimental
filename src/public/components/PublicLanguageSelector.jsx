@@ -1,12 +1,5 @@
 import React from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select';
 import { Globe } from 'lucide-react';
 import { useLanguage } from '@/components/i18n/useLanguage';
 
@@ -37,15 +30,18 @@ export default function PublicLanguageSelector() {
   return (
     <div className="flex items-center gap-2">
       <Globe className="h-4 w-4 text-gray-500" />
-      <Select value={selectedLanguage} onValueChange={onValueChange}>
-        <SelectTrigger className="w-[100px]">
-          <SelectValue placeholder={t('languageSelector.placeholder')} />
-        </SelectTrigger>
-        <SelectContent>
-          <SelectItem value="it">{t('languageSelector.italian')}</SelectItem>
-          <SelectItem value="en">{t('languageSelector.english')}</SelectItem>
-        </SelectContent>
-      </Select>
+      <label className="sr-only" htmlFor="public-language-selector">
+        {t('languageSelector.placeholder')}
+      </label>
+      <select
+        id="public-language-selector"
+        className="h-9 w-[100px] rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-sm focus:outline-none focus:ring-1 focus:ring-ring"
+        value={selectedLanguage}
+        onChange={(event) => onValueChange(event.target.value)}
+      >
+        <option value="it">{t('languageSelector.italian')}</option>
+        <option value="en">{t('languageSelector.english')}</option>
+      </select>
     </div>
   );
 }
