@@ -1,4 +1,5 @@
 import NavigationTracker from '@/lib/NavigationTracker';
+import '@/protected-app.css';
 import { pagesConfig } from './pages.config';
 import { Navigate, Route, Routes, useLocation } from 'react-router-dom';
 import PageNotFound from './lib/PageNotFound';

@@ -2,6 +2,9 @@ import React, { useRef } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import ReactMarkdown from 'react-markdown';
+if (typeof document !== 'undefined') {
+  void import('@/public/blog-post.css');
+}
 import { Button } from '@/components/ui/button';
 import { getBlogMetaItems } from '@/public/blogMeta';
 import { contentClient } from '@/public/api/contentClient';

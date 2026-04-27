@@ -86,6 +86,11 @@
       "sourceType": "github",
       "computedHash": "9b40a1e4326287d873e5d7b02630d339f5e31cfb38b1a6805828cb0076dcfa1e"
     },
+    "pagespeed-insights": {
+      "source": "enderpuentes/ai-agent-skills",
+      "sourceType": "github",
+      "computedHash": "80a9e00c680f7341b442efae1e9d05572681dbf57db1cee0db8cc8d920b14a7c"
+    },
     "polish": {
       "source": "pbakaus/impeccable",
       "sourceType": "github",
