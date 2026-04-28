@@ -2,11 +2,14 @@ import fs from 'node:fs/promises';
 import path from 'node:path';
 import React from 'react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { JSDOM } from 'jsdom';
 import { renderToString } from 'react-dom/server';
 import { StaticRouter } from 'react-router-dom/server';
+import TurndownService from 'turndown';
 import { loadEnv } from 'vite';
 import i18next, { initializeI18n } from '../src/components/i18n/i18nConfig.jsx';
 import { contentClient } from '../src/public/api/contentClient.js';
+import { getMarkdownAssetPath } from '../src/public/lib/agentDiscovery.js';
 import PublicPrerenderRouter from '../src/public/PublicPrerenderRouter.jsx';
 import { PUBLIC_PRERENDER_DATA_KEY } from '../src/public/prerenderData.js';
 
@@ -17,6 +20,25 @@ const defaultDescriptionByLocale = {
   it: 'EdilSync aiuta impresa, committente, subappaltatori e tecnici a coordinare il cantiere in modo chiaro e tracciabile.',
   en: 'EdilSync helps contractors, clients, subcontractors, and professionals coordinate the worksite with clear traceability.',
 };
+
+const turndownService = new TurndownService({
+  bulletListMarker: '-',
+  codeBlockStyle: 'fenced',
+  emDelimiter: '_',
+  headingStyle: 'atx',
+});
+
+turndownService.remove([
+  'button',
+  'form',
+  'header',
+  'footer',
+  'nav',
+  'noscript',
+  'script',
+  'style',
+  'svg',
+]);
 
 const staticRoutes = [
   { path: '/', locale: 'it', title: 'EdilSync', description: defaultDescriptionByLocale.it },
@@ -157,6 +179,11 @@ const getOutputPath = (routePath) => {
   return path.join(distDir, relativePath, 'index.html');
 };
 
+const getMarkdownOutputPath = (routePath) => path.join(
+  distDir,
+  getMarkdownAssetPath(routePath).replace(/^\//, ''),
+);
+
 const upsertHeadTag = (html, marker, tag) => {
   if (html.includes(marker)) {
     const expression = new RegExp(`${marker}[^>]*>`, 'i');
@@ -223,6 +250,44 @@ const injectPrerenderData = (html, data) => {
   );
 };
 
+const yamlString = (value) => JSON.stringify(value ?? '');
+
+const collapseBlankLines = (value) => value.replace(/\n{3,}/g, '\n\n').trim();
+
+const buildMarkdownDocument = (html, route) => {
+  const dom = new JSDOM(html);
+  const { document } = dom.window;
+  const main = document.querySelector('main') ?? document.querySelector('#root');
+
+  if (!main) {
+    return null;
+  }
+
+  const mainClone = main.cloneNode(true);
+  mainClone
+    .querySelectorAll('button, form, header, footer, nav, noscript, script, style, svg, [aria-hidden="true"]')
+    .forEach((node) => node.remove());
+
+  const markdownBody = collapseBlankLines(turndownService.turndown(mainClone.innerHTML || mainClone.textContent || ''));
+  if (!markdownBody) {
+    return null;
+  }
+
+  const canonicalUrl = `${getSiteOrigin()}${route.path}`;
+
+  return [
+    '---',
+    `title: ${yamlString(route.title)}`,
+    `description: ${yamlString(route.description)}`,
+    `url: ${yamlString(canonicalUrl)}`,
+    `lang: ${yamlString(route.locale)}`,
+    '---',
+    '',
+    markdownBody,
+    '',
+  ].join('\n');
+};
+
 const injectMarkup = (html, markup) => html.replace(
   '<div id="root"></div>',
   `<div id="root">${markup}</div>`,
@@ -259,9 +324,16 @@ async function main() {
   for (const route of publicRoutes) {
     const html = await renderRoute(route, template);
     const outputPath = getOutputPath(route.path);
+    const markdownOutputPath = getMarkdownOutputPath(route.path);
+    const markdown = buildMarkdownDocument(html, route);
 
     await fs.mkdir(path.dirname(outputPath), { recursive: true });
     await fs.writeFile(outputPath, html, 'utf8');
+
+    if (markdown) {
+      await fs.mkdir(path.dirname(markdownOutputPath), { recursive: true });
+      await fs.writeFile(markdownOutputPath, markdown, 'utf8');
+    }
   }
 
   console.log(`Prerendered ${publicRoutes.length} public routes.`);
