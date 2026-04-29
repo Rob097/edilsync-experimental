@@ -4,6 +4,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Building2, User, Clock, Trash2, Loader2 } from "lucide-react";
+import { toast } from 'sonner';
 import { useLanguage } from '@/components/i18n/useLanguage';
 
 const roleColors = {
@@ -41,21 +42,17 @@ export default function ParticipantCard({ participant, userDisplayName, companyN
   const resolvedUserName = userDisplayName || participant.user_email;
 
   const removeMutation = useMutation({
-    mutationFn: async () => {
-      // Remove from all channels first
-      const channelMembers = await appClient.entities.ChannelMember.filter({ project_id: projectId });
-      const memberEntries = channelMembers.filter(m => m.participant_id === participant.id);
-      for (const m of memberEntries) {
-        await appClient.entities.ChannelMember.delete(m.id);
-      }
-      // Then remove/decline the participant
-      await appClient.entities.ProjectParticipant.update(participant.id, { status: 'removed' });
-    },
+    mutationFn: async () => appClient.functions.invoke('removeProjectParticipant', {
+      participant_id: participant.id,
+    }),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['projectParticipants', projectId] });
       setTimeout(() => {
         queryClient.invalidateQueries({ queryKey: ['channelMembers', projectId] });
       }, 500);
+    },
+    onError: (error) => {
+      toast.error(error?.message || tr('Impossibile rimuovere il partecipante.', 'Unable to remove participant.'));
     },
   });
 

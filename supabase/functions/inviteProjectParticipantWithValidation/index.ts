@@ -1,6 +1,6 @@
 // @ts-nocheck
 import { adminClient, corsHeaders, getAuthenticatedContext, invokeInternalFunction, jsonResponse } from "../_shared/supabase.ts";
-import { assertNoUnexpectedKeys, getErrorStatus, optionalEmail, optionalEnum, optionalUuid, parseJsonBody, requiredEnum, requiredUuid } from "../_shared/input.ts";
+import { assertNoUnexpectedKeys, getErrorStatus, optionalEmail, optionalEnum, optionalText, parseJsonBody, requiredEnum, requiredUuid } from "../_shared/input.ts";
 import { syncCompanyUsers, syncUserAccessByEmail } from "../_shared/access.ts";
 
 const COMPANY_TYPE_ROLE_COMPATIBILITY = {
@@ -54,7 +54,11 @@ Deno.serve(async (req) => {
     const projectId = requiredUuid(payload.project_id, "project_id");
     const participantType = requiredEnum(payload.participant_type, "participant_type", PARTICIPANT_TYPES);
     const projectRole = requiredEnum(payload.project_role, "project_role", PROJECT_ROLES);
-    const invitedCompanyId = optionalUuid(payload.company_id, "company_id");
+    const invitedCompanyId = optionalText(payload.company_id, {
+      field: "company_id",
+      maxLength: 255,
+      collapseWhitespace: true,
+    });
     const invitedEmail = optionalEmail(payload.user_email, "user_email");
 
     const { data: project, error: projectError } = await adminClient

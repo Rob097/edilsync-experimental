@@ -160,7 +160,11 @@ Deno.serve(async (req) => {
     const action_type = requiredIdentifier(payload.action_type, "action_type", 80);
     const recipient_email = requiredEmail(payload.recipient_email, "recipient_email");
     const context_type = optionalEnum(payload.context_type, "context_type", ["personal", "company", "project"]) || "personal";
-    const context_company_id = optionalUuid(payload.context_company_id, "context_company_id");
+    const context_company_id = optionalText(payload.context_company_id, {
+      field: "context_company_id",
+      maxLength: 255,
+      collapseWhitespace: true,
+    });
     const skip_preferences_check = optionalBoolean(payload.skip_preferences_check, "skip_preferences_check") || false;
 
     const notification_data = payload.notification_data == null

@@ -456,6 +456,152 @@ describeIfRemoteQa('QA branch edge workflows', () => {
     expect(payload.error).toBe('A blocked worksite can invite only companies until sponsorship is restored');
   });
 
+  test('inviteProjectParticipantWithValidation accepts a text company id for personal-context homeowner invites', async () => {
+    const homeownerUser = await createAuthUser('text-company-invite-owner');
+    const accessToken = await signIn(homeownerUser);
+    const companyId = `qa-company-text-${createSuffix()}`;
+    const companyEmail = `qa-text-company-${createSuffix()}@edilsync.test`;
+
+    const projectPayload = await invokeFunctionAsUser('createProjectWithContext', accessToken, {
+      name: `QA Text Company Invite Project ${createSuffix()}`,
+      address: 'Via QA Invite Text 19, Torino',
+      description: 'Remote QA coverage for company invites that use text company ids.',
+      status: 'planning',
+    });
+
+    registerCleanup(async () => {
+      await cleanupProjectGraph(projectPayload.project.id);
+      await adminClient.from('users').delete().eq('email', companyEmail);
+      await cleanupCompanyGraph(companyId);
+    });
+
+    const { error: companyInsertError } = await adminClient
+      .from('companies')
+      .insert({
+        id: companyId,
+        name: `QA Text Company ${createSuffix()}`,
+        company_type: 'general_contractor',
+        address: 'Via QA Azienda 8, Torino',
+        email: companyEmail,
+        created_by: homeownerUser.email,
+      });
+
+    if (companyInsertError) throw companyInsertError;
+
+    const response = await invokeFunctionAsUser('inviteProjectParticipantWithValidation', accessToken, {
+      project_id: projectPayload.project.id,
+      participant_type: 'company',
+      project_role: 'contractor',
+      company_id: companyId,
+      user_email: null,
+    });
+
+    expect(response.participant?.company_id).toBe(companyId);
+    expect(response.participant?.participant_type).toBe('company');
+    expect(response.participant?.project_role).toBe('contractor');
+    expect(response.participant?.status).toBe('invited');
+
+    const { data: participant, error: participantError } = await adminClient
+      .from('project_participants')
+      .select('company_id, participant_type, project_role, status')
+      .eq('project_id', projectPayload.project.id)
+      .eq('company_id', companyId)
+      .maybeSingle();
+
+    if (participantError) throw participantError;
+
+    expect(participant).toMatchObject({
+      company_id: companyId,
+      participant_type: 'company',
+      project_role: 'contractor',
+      status: 'invited',
+    });
+  });
+
+  test('removeProjectParticipant revokes an invited company participant without relying on the PostgREST PATCH representation', async () => {
+    const homeownerUser = await createAuthUser('remove-project-invite-owner');
+    const accessToken = await signIn(homeownerUser);
+    const companyId = `qa-remove-company-${createSuffix()}`;
+    const companyEmail = `qa-remove-company-${createSuffix()}@edilsync.test`;
+
+    const projectPayload = await invokeFunctionAsUser('createProjectWithContext', accessToken, {
+      name: `QA Remove Invite Project ${createSuffix()}`,
+      address: 'Via QA Remove Invite 27, Firenze',
+      description: 'Remote QA coverage for removing invited project participants through the edge function.',
+      status: 'planning',
+    });
+
+    registerCleanup(async () => {
+      await cleanupProjectGraph(projectPayload.project.id);
+      await adminClient.from('users').delete().eq('email', companyEmail);
+      await cleanupCompanyGraph(companyId);
+    });
+
+    const { error: companyInsertError } = await adminClient
+      .from('companies')
+      .insert({
+        id: companyId,
+        name: `QA Remove Company ${createSuffix()}`,
+        company_type: 'general_contractor',
+        address: 'Via QA Remove 7, Firenze',
+        email: companyEmail,
+        created_by: homeownerUser.email,
+      });
+
+    if (companyInsertError) throw companyInsertError;
+
+    const inviteResponse = await invokeFunctionAsUser('inviteProjectParticipantWithValidation', accessToken, {
+      project_id: projectPayload.project.id,
+      participant_type: 'company',
+      project_role: 'contractor',
+      company_id: companyId,
+      user_email: null,
+    });
+
+    const participantId = inviteResponse.participant?.id;
+    expect(participantId).toBeTruthy();
+
+    const { data: channelMemberBeforeRemove, error: channelMemberBeforeRemoveError } = await adminClient
+      .from('channel_members')
+      .select('id')
+      .eq('project_id', projectPayload.project.id)
+      .eq('participant_id', participantId)
+      .maybeSingle();
+
+    if (channelMemberBeforeRemoveError) throw channelMemberBeforeRemoveError;
+    expect(channelMemberBeforeRemove?.id).toBeTruthy();
+
+    const removeResponse = await invokeFunctionAsUser('removeProjectParticipant', accessToken, {
+      participant_id: participantId,
+    });
+
+    expect(removeResponse.participant?.id).toBe(participantId);
+    expect(removeResponse.participant?.status).toBe('removed');
+
+    const { data: removedParticipant, error: removedParticipantError } = await adminClient
+      .from('project_participants')
+      .select('id, status')
+      .eq('id', participantId)
+      .maybeSingle();
+
+    if (removedParticipantError) throw removedParticipantError;
+
+    expect(removedParticipant).toMatchObject({
+      id: participantId,
+      status: 'removed',
+    });
+
+    const { data: channelMemberAfterRemove, error: channelMemberAfterRemoveError } = await adminClient
+      .from('channel_members')
+      .select('id')
+      .eq('project_id', projectPayload.project.id)
+      .eq('participant_id', participantId)
+      .maybeSingle();
+
+    if (channelMemberAfterRemoveError) throw channelMemberAfterRemoveError;
+    expect(channelMemberAfterRemove).toBeNull();
+  });
+
   test('chat-agent retrieves project document context on QA with user-scoped RAG', async () => {
     const user = await createAuthUser('assistant-rag');
     const accessToken = await signIn(user);

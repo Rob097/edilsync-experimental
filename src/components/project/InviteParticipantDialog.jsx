@@ -16,6 +16,7 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Loader2, Building2, User } from "lucide-react";
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
+import { toast } from 'sonner';
 import {
   getProjectRoleLabel,
   getProjectRoleOptions,
@@ -92,6 +93,9 @@ export default function InviteParticipantDialog({
       });
 
       return result.participant;
+    },
+    onError: (error) => {
+      toast.error(error?.message || tr('Impossibile inviare l\'invito', 'Unable to send the invite'));
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['projectParticipants', projectId] });

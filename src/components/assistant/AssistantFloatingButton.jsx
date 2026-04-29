@@ -14,6 +14,8 @@ import { useLanguage } from '@/components/i18n/useLanguage';
 import { useLocation } from 'react-router-dom';
 import { describeAssistantContext, resolveAssistantChatScope, resolveAssistantContext, resolveAssistantUiMode } from '@/lib/assistantContext';
 
+const EMPTY_ITEMS = [];
+
 const replacePendingAssistantMessage = (items, updater) => {
   const assistantIndex = [...items].reverse().findIndex((message) => message.role === 'assistant');
   if (assistantIndex === -1) {
@@ -140,7 +142,7 @@ export default function AssistantFloatingButton({ className }) {
     return normalizedMessage;
   };
 
-  const { data: conversations = [], isLoading: isLoadingConversations, refetch: refetchConversations } = useQuery({
+  const { data: conversations = EMPTY_ITEMS, isLoading: isLoadingConversations, refetch: refetchConversations } = useQuery({
     queryKey: assistantConversationQueryKey,
     queryFn: async () => {
       const scopeConversationsPromise = appClient.entities.AiChat.filter({
@@ -171,7 +173,7 @@ export default function AssistantFloatingButton({ className }) {
     staleTime: 15 * 1000,
   });
 
-  const { data: loadedMessages = [], isLoading: isLoadingMessages } = useQuery({
+  const { data: loadedMessages = EMPTY_ITEMS, isLoading: isLoadingMessages } = useQuery({
     queryKey: ['assistantMessages', conversationId],
     queryFn: () => appClient.entities.AiMessage.filter({ chat_id: conversationId }, 'created_date', 100),
     enabled: isOpen && !!conversationId,
@@ -212,7 +214,7 @@ export default function AssistantFloatingButton({ className }) {
   useEffect(() => {
     if (!conversationId) {
       if (!isDraftConversation) {
-        setMessages([]);
+        setMessages((currentMessages) => (currentMessages.length === 0 ? currentMessages : EMPTY_ITEMS));
       }
       return;
     }
@@ -221,7 +223,7 @@ export default function AssistantFloatingButton({ className }) {
       return;
     }
 
-    setMessages(loadedMessages);
+    setMessages((currentMessages) => (currentMessages === loadedMessages ? currentMessages : loadedMessages));
   }, [conversationId, isDraftConversation, isLoadingMessages, loadedMessages]);
 
   useEffect(() => {
