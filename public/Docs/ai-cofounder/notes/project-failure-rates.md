@@ -1,0 +1,2 @@
+**Project Failure Rates**
+**98% of construction projects fail to meet minimum quality standards**, with 1/3 citing coordination issues as the root cause. Projects with poor communication see only **37% finish on time** vs **71% with effective communication**. The gap between success and failure hinges on communication quality.

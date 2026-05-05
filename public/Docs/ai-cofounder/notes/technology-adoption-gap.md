@@ -1,0 +1,2 @@
+**Technology Adoption Gap**
+**75% of companies provide mobile devices** to field workers, but **only 18% use apps beyond email/text/calls**. Construction leaders are equipping teams with technology but not getting ROI. This reveals a clear gap between having tools and having the *right* integrated solution.

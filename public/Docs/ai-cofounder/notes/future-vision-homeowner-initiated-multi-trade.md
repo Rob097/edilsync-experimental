@@ -1,0 +1,2 @@
+**Future Vision: Homeowner-Initiated Multi-Trade**
+The **full vision** includes homeowner-initiated projects where Matteo coordinates multiple trades directly (GC + electrician + plumber), with each contractor owning their scope of work. EdilSync makes dependencies, timelines, and updates transparent across all parties, reducing coordination chaos. However, this introduces complexity around project ownership, permissions, and dispute mediation—so it's **post-V1**. V1 validates the core workflow with clear single-owner projects first.

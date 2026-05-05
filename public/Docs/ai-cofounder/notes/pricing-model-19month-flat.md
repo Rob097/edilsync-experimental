@@ -1,0 +1,2 @@
+**Pricing Model: €19/Month Flat**
+**€19/month, contractor pays, 30-day free trial.** Homeowners and subcontractors get free access. This sits below the psychological €25 threshold and requires minimal ROI to justify (~€230/year = one avoided dispute). Flat monthly pricing removes friction—no per-project fees, no per-user seats, no hidden costs. Simple and predictable. Contractors under €1M aren't software buyers yet, so the price must feel like a "why not?" decision, not a cost-benefit analysis.

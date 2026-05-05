@@ -1,0 +1,2 @@
+**The Fragmented Reality: Excel + WhatsApp**
+Most contractors under $1M revenue cobble together **spreadsheets, QuickBooks, text messages, and emails**. One user described "winging it with paper + texts." Property managers build DIY apps with AI tools for ~$30/month because existing software costs $200+. Homeowners create Google Sheets with automation. The pain is so severe that **people hire virtual assistants just to manage communication chaos**. This fragmentation is the competitor—and the opportunity.

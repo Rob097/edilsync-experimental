@@ -1,0 +1,2 @@
+**Market Opportunity: $410B+ TAM**
+US home remodeling market valued at **$522.5 billion in 2025**, growing to **$812.8 billion by 2034**. The professional contractor segment (your target) represents **78.51% of the market = $410B** in 2025, expanding to $591.7B by 2034. This is a massive, growing market.

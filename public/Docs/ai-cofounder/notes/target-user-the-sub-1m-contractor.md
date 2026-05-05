@@ -1,0 +1,2 @@
+**Target User: The Sub-€1M Contractor**
+V1 targets contractors like Michele earning under €1M annually, running 8-12 residential remodeling projects per year. This segment is **underserved**—too small for enterprise tools ($200-500/month), but suffering from chaos worse than larger operations. They currently use texts + spreadsheets + QuickBooks, are skeptical of new software, and need tools that work immediately without training. They have 3-5% net margins, so every dispute or miscommunication directly threatens profitability.

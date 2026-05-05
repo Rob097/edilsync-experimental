@@ -1357,6 +1357,147 @@ export const ASSISTANT_TOOL_DEFINITIONS = [
       },
     },
   },
+  {
+    type: "function",
+    function: {
+      name: "switch_active_context",
+      description: "Switch the active user context between personal mode and an accessible company.",
+      parameters: {
+        type: "object",
+        properties: {
+          target_context: {
+            type: "string",
+            enum: ["personal", "company"],
+          },
+          company_id: {
+            type: "string",
+          },
+          company_hint: {
+            type: "string",
+          },
+          request_text: {
+            type: "string",
+          },
+        },
+        additionalProperties: false,
+      },
+    },
+  },
+  {
+    type: "function",
+    function: {
+      name: "update_my_profile",
+      description: "Update the current user's editable profile fields such as display name, full name or phone.",
+      parameters: {
+        type: "object",
+        properties: {
+          display_name: {
+            type: "string",
+          },
+          full_name: {
+            type: "string",
+          },
+          phone: {
+            type: "string",
+          },
+          request_text: {
+            type: "string",
+          },
+        },
+        additionalProperties: false,
+      },
+    },
+  },
+  {
+    type: "function",
+    function: {
+      name: "update_tour_state",
+      description: "Complete, dismiss or reset a contextual onboarding tour for the current user.",
+      parameters: {
+        type: "object",
+        properties: {
+          tour_id: {
+            type: "string",
+            enum: ["onboarding", "projects", "companies"],
+          },
+          action: {
+            type: "string",
+            enum: ["complete", "dismiss", "reset"],
+          },
+          request_text: {
+            type: "string",
+          },
+        },
+        additionalProperties: false,
+      },
+    },
+  },
+  {
+    type: "function",
+    function: {
+      name: "update_notification_preferences",
+      description: "Update notification delivery preferences for the current user, either globally or for a specific notification action.",
+      parameters: {
+        type: "object",
+        properties: {
+          action_key: {
+            type: "string",
+          },
+          notification: {
+            type: "boolean",
+          },
+          email: {
+            type: "boolean",
+          },
+          apply_to_all: {
+            type: "boolean",
+          },
+          request_text: {
+            type: "string",
+          },
+        },
+        additionalProperties: false,
+      },
+    },
+  },
+  {
+    type: "function",
+    function: {
+      name: "mark_notification_read",
+      description: "Mark one accessible notification as read for the current user.",
+      parameters: {
+        type: "object",
+        properties: {
+          notification_id: {
+            type: "string",
+          },
+          notification_hint: {
+            type: "string",
+          },
+          request_text: {
+            type: "string",
+          },
+        },
+        additionalProperties: false,
+      },
+    },
+  },
+  {
+    type: "function",
+    function: {
+      name: "mark_all_notifications_read",
+      description: "Mark all accessible unread notifications as read for the current user.",
+      parameters: {
+        type: "object",
+        properties: {
+          request_text: {
+            type: "string",
+          },
+        },
+        additionalProperties: false,
+      },
+    },
+  },
 ];
 
 const OPENAI_API_KEY = Deno.env.get("OPENAI_API_KEY");
@@ -1690,6 +1831,201 @@ async function getAssistantSemanticMatches({
   }
 }
 
+function extractAssistantQuotedValue(value) {
+  const match = String(value || "").match(/["“«]([^"”»]+)["”»]/);
+  return match?.[1]?.trim() || null;
+}
+
+function extractAssistantPhoneNumber(value) {
+  const match = String(value || "").match(/(\+?\d[\d\s().\/-]{5,}\d)/);
+  return match?.[1]?.replace(/\s+/g, " ").trim() || null;
+}
+
+function extractAssistantPhraseAfter(value, pattern) {
+  const match = String(value || "").match(pattern);
+  return match?.[1]?.trim() || null;
+}
+
+function inferAssistantContextSwitchArgs(userMessage) {
+  const rawText = String(userMessage || "").trim();
+  const normalizedText = rawText.toLowerCase();
+  if (!rawText || !/(passa|cambia|imposta|usa|attiva|torna|lavora|spostati|porta(mi)?)/.test(normalizedText)) {
+    return null;
+  }
+
+  if (/\b(privat|personal|personale)\b/.test(normalizedText)) {
+    return {
+      target_context: "personal",
+      request_text: rawText,
+    };
+  }
+
+  if (/\b(societ|company|impresa|azienda)\b/.test(normalizedText)) {
+    return {
+      target_context: "company",
+      company_hint: extractAssistantQuotedValue(rawText) || rawText,
+      request_text: rawText,
+    };
+  }
+
+  return null;
+}
+
+function inferAssistantProfileUpdateArgs(userMessage) {
+  const rawText = String(userMessage || "").trim();
+  const normalizedText = rawText.toLowerCase();
+  const hasUpdateIntent = /(aggiorna|cambia|modifica|imposta|salva|setta|usa|chiamami|rinomina)/.test(normalizedText);
+  if (!rawText || !hasUpdateIntent) {
+    return null;
+  }
+
+  const quotedValue = extractAssistantQuotedValue(rawText);
+  const phone = extractAssistantPhoneNumber(rawText);
+  const displayName = extractAssistantPhraseAfter(
+    rawText,
+    /(?:display\s*name|nome visualizzato|chiamami|usa come nome|mostrami come)\s+(?:a|come)?\s*([^,.\n]+)/i,
+  ) || (quotedValue && /display\s*name|nome visualizzato|chiamami|\bnome\b/.test(normalizedText) ? quotedValue : null);
+  const fullName = extractAssistantPhraseAfter(
+    rawText,
+    /(?:nome completo|full\s*name|anagrafica)\s+(?:a|come)?\s*([^,.\n]+)/i,
+  ) || (quotedValue && /nome completo|full\s*name|anagrafica/.test(normalizedText) ? quotedValue : null);
+
+  const args = {
+    ...(displayName ? { display_name: displayName } : {}),
+    ...(fullName ? { full_name: fullName } : {}),
+    ...(phone && (/telefon|cellular|numero|recapit/.test(normalizedText) || !displayName) ? { phone } : {}),
+    request_text: rawText,
+  };
+
+  return Object.keys(args).length > 1 ? args : null;
+}
+
+function inferAssistantTourStateArgs(userMessage) {
+  const rawText = String(userMessage || "").trim();
+  const normalizedText = rawText.toLowerCase();
+  if (!rawText || !/(tour|guida|tutorial|onboarding)/.test(normalizedText)) {
+    return null;
+  }
+
+  const action = /reset|riapri|ricomincia|riparti|ripristina/.test(normalizedText)
+    ? "reset"
+    : /chiudi|nascondi|salta|dismiss/.test(normalizedText)
+      ? "dismiss"
+      : /completa|finisci|termina/.test(normalizedText)
+        ? "complete"
+        : null;
+
+  if (!action) {
+    return null;
+  }
+
+  const tourId = /societ|company|impresa/.test(normalizedText)
+    ? "companies"
+    : /progett|cantier/.test(normalizedText)
+      ? "projects"
+      : "onboarding";
+
+  return {
+    tour_id: tourId,
+    action,
+    request_text: rawText,
+  };
+}
+
+function inferAssistantNotificationActionKey(normalizedText) {
+  if (/\btask\b/.test(normalizedText)) {
+    if (/status|stato/.test(normalizedText)) return "task_status_changed";
+    if (/assegn/.test(normalizedText)) return "task_assigned";
+  }
+  if (/invit/.test(normalizedText)) {
+    return /societ|company|impresa/.test(normalizedText) ? "company_invite" : "project_invite";
+  }
+  if (/milestone/.test(normalizedText)) return "milestone_status_changed";
+  if (/event|riunion|meeting|calendar|calend/.test(normalizedText)) {
+    if (/cancell/.test(normalizedText)) return "event_cancelled";
+    if (/aggiorn|modific/.test(normalizedText)) return "event_updated";
+    if (/invit/.test(normalizedText)) return "event_invite";
+  }
+  if (/mention|menzion|chat|messagg/.test(normalizedText)) return "message_mention";
+  if (/comment.*document|document.*comment/.test(normalizedText)) return "document_comment";
+  if (/sponsor/.test(normalizedText)) {
+    return /revocat|tolt|rimoss/.test(normalizedText) ? "project_sponsorship_revoked" : "project_sponsorship_activated";
+  }
+  if (/disput|controvers|claim/.test(normalizedText)) {
+    if (/comment/.test(normalizedText)) return "dispute_commented";
+    if (/status|stato/.test(normalizedText)) return "dispute_status_changed";
+    return "dispute_opened";
+  }
+  if (/abbonament|billing|piano societ/.test(normalizedText)) {
+    if (/disdett|cancel/.test(normalizedText)) return "company_plan_canceled";
+    if (/modific|cambi/.test(normalizedText)) return "company_plan_changed";
+    return "company_plan_activated";
+  }
+  return null;
+}
+
+function inferAssistantNotificationPreferenceArgs(userMessage) {
+  const rawText = String(userMessage || "").trim();
+  const normalizedText = rawText.toLowerCase();
+  if (!rawText || !/(notific|email|avvis)/.test(normalizedText)) {
+    return null;
+  }
+
+  const disable = /disattiva|disabilita|spegni|togli|stop|ferma|non mandare/.test(normalizedText);
+  const enable = !disable && /attiva|abilita|accendi|riattiva|manda|invia/.test(normalizedText);
+  if (!disable && !enable) {
+    return null;
+  }
+
+  const nextValue = enable ? true : false;
+  const applyToAll = /tutte|tutti|ovunque|global|generale|in generale/.test(normalizedText);
+  const actionKey = inferAssistantNotificationActionKey(normalizedText);
+  const affectsEmail = /email|mail/.test(normalizedText);
+  const mentionsNotificationGeneric = /notific|avvis/.test(normalizedText);
+  const mentionsInApp = /in app|push/.test(normalizedText);
+  const mentionsBothChannels = /entramb|tutte e due|sia .*email.*(notific|avvis)|email.*\be\b.*(notific|avvis)|(notific|avvis).*\be\b.*email/.test(normalizedText);
+  const affectsNotification = mentionsInApp || mentionsBothChannels || (mentionsNotificationGeneric && !affectsEmail);
+
+  return {
+    ...(actionKey ? { action_key: actionKey } : {}),
+    ...(applyToAll || !actionKey ? { apply_to_all: true } : {}),
+    ...(affectsNotification ? { notification: nextValue } : {}),
+    ...(affectsEmail ? { email: nextValue } : {}),
+    request_text: rawText,
+  };
+}
+
+function inferAssistantNotificationReadArgs(userMessage) {
+  const rawText = String(userMessage || "").trim();
+  const normalizedText = rawText.toLowerCase();
+  if (!rawText || !/(notific|avvis)/.test(normalizedText) || !/(segna|marca|imposta|metti|considera|svuota|azzera)/.test(normalizedText)) {
+    return { markAll: null, markOne: null };
+  }
+
+  const wantsAll = /(tutte|tutti|tutto).*(lette|read)/.test(normalizedText)
+    || (/\bnotifiche\b/.test(normalizedText) && /come lette|lette/.test(normalizedText) && !extractAssistantQuotedValue(rawText))
+    || /svuota.*notific|azzera.*notific/.test(normalizedText);
+
+  if (wantsAll) {
+    return {
+      markAll: { request_text: rawText },
+      markOne: null,
+    };
+  }
+
+  if (/letta|lette|read/.test(normalizedText)) {
+    return {
+      markAll: null,
+      markOne: {
+        notification_hint: extractAssistantQuotedValue(rawText) || rawText,
+        request_text: rawText,
+      },
+    };
+  }
+
+  return { markAll: null, markOne: null };
+}
+
 async function runFallbackToolSelection({ appUser, dbClient, contextType, contextId, uiMode, routePath, routeSearch, userMessage }) {
   const normalizedMessage = String(userMessage || "").toLowerCase();
   const selectedTools = [];
@@ -1764,8 +2100,67 @@ async function runFallbackToolSelection({ appUser, dbClient, contextType, contex
   const wantsOperationalDayBrief = /((brief|riepilog|riassunt|quadro).*(oggi|giornat|operativ))|((oggi|giornat).*(brief|riepilog|riassunt|quadro))|day brief/i.test(normalizedMessage);
   const shouldListProjectsDirectly = wantsProjects && !(wantsParticipants && !wantsOverview);
   const inferredFeatureKey = inferFeatureKeyFromText(userMessage, contextType);
+  const contextSwitchArgs = inferAssistantContextSwitchArgs(userMessage);
+  const profileUpdateArgs = inferAssistantProfileUpdateArgs(userMessage);
+  const tourStateArgs = inferAssistantTourStateArgs(userMessage);
+  const notificationPreferenceUpdateArgs = inferAssistantNotificationPreferenceArgs(userMessage);
+  const notificationReadArgs = inferAssistantNotificationReadArgs(userMessage);
+  const hasWriteIntent = Boolean(
+    contextSwitchArgs
+    || profileUpdateArgs
+    || tourStateArgs
+    || notificationPreferenceUpdateArgs
+    || notificationReadArgs.markAll
+    || notificationReadArgs.markOne,
+  );
 
-  if (wantsContextState) {
+  if (contextSwitchArgs) {
+    await addFallbackTool(
+      "switch_active_context",
+      contextSwitchArgs,
+      () => switchActiveContext(dbClient, appUser, contextType, contextId, contextSwitchArgs),
+    );
+  }
+
+  if (profileUpdateArgs) {
+    await addFallbackTool(
+      "update_my_profile",
+      profileUpdateArgs,
+      () => updateMyProfile(dbClient, appUser, contextType, contextId, profileUpdateArgs),
+    );
+  }
+
+  if (tourStateArgs) {
+    await addFallbackTool(
+      "update_tour_state",
+      tourStateArgs,
+      () => updateTourState(dbClient, appUser, contextType, contextId, tourStateArgs),
+    );
+  }
+
+  if (notificationPreferenceUpdateArgs) {
+    await addFallbackTool(
+      "update_notification_preferences",
+      notificationPreferenceUpdateArgs,
+      () => updateNotificationPreferences(dbClient, appUser, contextType, contextId, notificationPreferenceUpdateArgs),
+    );
+  }
+
+  if (notificationReadArgs.markAll) {
+    await addFallbackTool(
+      "mark_all_notifications_read",
+      notificationReadArgs.markAll,
+      () => markAllNotificationsRead(dbClient, appUser, contextType, contextId, notificationReadArgs.markAll),
+    );
+  } else if (notificationReadArgs.markOne) {
+    await addFallbackTool(
+      "mark_notification_read",
+      notificationReadArgs.markOne,
+      () => markNotificationRead(dbClient, appUser, contextType, contextId, notificationReadArgs.markOne),
+    );
+  }
+
+  if (wantsContextState && !contextSwitchArgs) {
     await addFallbackTool(
       "get_current_context_state",
       {},
@@ -1993,7 +2388,7 @@ async function runFallbackToolSelection({ appUser, dbClient, contextType, contex
     );
   }
 
-  if (wantsNotifications) {
+  if (wantsNotifications && !notificationReadArgs.markAll && !notificationReadArgs.markOne) {
     const unreadOnly = /non lette|da leggere|unread/.test(normalizedMessage);
     await addFallbackTool(
       "list_context_notifications",
@@ -2052,7 +2447,7 @@ async function runFallbackToolSelection({ appUser, dbClient, contextType, contex
     );
   }
 
-  if (wantsNotificationPreferences) {
+  if (wantsNotificationPreferences && !notificationPreferenceUpdateArgs) {
     await addFallbackTool(
       "get_notification_preferences",
       {},
@@ -2246,7 +2641,7 @@ async function runFallbackToolSelection({ appUser, dbClient, contextType, contex
     );
   }
 
-  if (wantsMyProfileSummary) {
+  if (wantsMyProfileSummary && !profileUpdateArgs) {
     await addFallbackTool(
       "get_my_profile_summary",
       {},
@@ -2331,7 +2726,7 @@ async function runFallbackToolSelection({ appUser, dbClient, contextType, contex
     );
   }
 
-  if (wantsOverview || wantsOperationalDayBrief || wantsNotifications || wantsPendingDecisions || wantsPendingInvites || selectedTools.length === 0) {
+  if (!hasWriteIntent && (wantsOverview || wantsOperationalDayBrief || wantsNotifications || wantsPendingDecisions || wantsPendingInvites || selectedTools.length === 0)) {
     await addFallbackTool(
       "list_recent_updates",
       { limit: 5 },
@@ -2339,7 +2734,7 @@ async function runFallbackToolSelection({ appUser, dbClient, contextType, contex
     );
   }
 
-  if (/nota|note|comment|commento|progress|sal|annot/i.test(normalizedMessage) || (contextType !== "personal" && (wantsOverview || selectedTools.length === 0))) {
+  if (!hasWriteIntent && (/nota|note|comment|commento|progress|sal|annot/i.test(normalizedMessage) || (contextType !== "personal" && (wantsOverview || selectedTools.length === 0)))) {
     await addFallbackTool(
       "get_context_notes",
       { limit: 5 },
@@ -2475,6 +2870,18 @@ async function executeAssistantTool({ appUser, dbClient, toolName, args, context
       return getCompanySubscriptionStatus(dbClient, appUser, contextType, contextId);
     case "get_project_sponsorship_status":
       return getProjectSponsorshipStatus(dbClient, appUser, contextType, contextId, args);
+    case "switch_active_context":
+      return switchActiveContext(dbClient, appUser, contextType, contextId, args);
+    case "update_my_profile":
+      return updateMyProfile(dbClient, appUser, contextType, contextId, args);
+    case "update_tour_state":
+      return updateTourState(dbClient, appUser, contextType, contextId, args);
+    case "update_notification_preferences":
+      return updateNotificationPreferences(dbClient, appUser, contextType, contextId, args);
+    case "mark_notification_read":
+      return markNotificationRead(dbClient, appUser, contextType, contextId, args);
+    case "mark_all_notifications_read":
+      return markAllNotificationsRead(dbClient, appUser, contextType, contextId, args);
     case "list_recent_updates":
       return listRecentUpdates(dbClient, appUser, contextType, contextId, args);
     case "get_context_notes":
@@ -6268,6 +6675,633 @@ async function getMyProfileSummary(dbClient, appUser, contextType, contextId) {
   };
 }
 
+function hasAssistantOwnProperty(value, key) {
+  return value != null && Object.prototype.hasOwnProperty.call(value, key);
+}
+
+function normalizeAssistantNullableText(value) {
+  if (value == null) {
+    return null;
+  }
+
+  const normalizedValue = String(value).trim();
+  return normalizedValue || null;
+}
+
+async function updateAssistantUserRecord(dbClient, appUser, payload) {
+  if (!appUser?.id && !appUser?.email) {
+    throw new InputValidationError("No authenticated user is available for this assistant action.");
+  }
+
+  let query = dbClient
+    .from("users")
+    .update(payload)
+    .select("id,email,full_name,display_name,phone,active_context,active_company_id,tour_state")
+    .limit(1);
+
+  query = appUser?.id
+    ? query.eq("id", appUser.id)
+    : query.eq("email", appUser.email);
+
+  const { data, error } = await query.maybeSingle();
+  if (error) throw error;
+  if (!data) {
+    throw new Error("The authenticated user record could not be updated.");
+  }
+
+  return data;
+}
+
+async function switchActiveContext(dbClient, appUser, contextType, contextId, args = {}) {
+  const inferredArgs = !args?.target_context ? inferAssistantContextSwitchArgs(args?.request_text || "") : null;
+  const targetContext = String(args?.target_context || inferredArgs?.target_context || "").trim();
+
+  if (!["personal", "company"].includes(targetContext)) {
+    return {
+      success: false,
+      context_type: contextType,
+      context_id: contextId,
+      message: "Dimmi se devo passare al contesto personale o a una societa accessibile.",
+    };
+  }
+
+  if (targetContext === "personal") {
+    const alreadyActive = appUser?.active_context !== "company" && !appUser?.active_company_id;
+    if (!alreadyActive) {
+      await updateAssistantUserRecord(dbClient, appUser, {
+        active_context: "personal",
+        active_company_id: null,
+      });
+    }
+
+    return {
+      success: true,
+      changed: !alreadyActive,
+      context_type: contextType,
+      context_id: contextId,
+      target_context: "personal",
+      message: alreadyActive
+        ? "Sei gia nel contesto personale."
+        : "Ho impostato il contesto personale come attivo.",
+      navigation: {
+        label: "Dashboard",
+        path: "/app/Dashboard",
+      },
+    };
+  }
+
+  const companyTarget = await resolveAssistantCompanyTarget(dbClient, appUser, contextType, contextId, {
+    company_id: args?.company_id || inferredArgs?.company_id,
+    company_hint: args?.company_hint || inferredArgs?.company_hint,
+  });
+
+  if (!companyTarget) {
+    return {
+      success: false,
+      context_type: contextType,
+      context_id: contextId,
+      message: "Non ho trovato una societa accessibile che corrisponda alla richiesta.",
+    };
+  }
+
+  if (companyTarget.ambiguous) {
+    return {
+      success: false,
+      ambiguous: true,
+      context_type: contextType,
+      context_id: contextId,
+      message: "Ho trovato piu societa compatibili. Indicami quale vuoi usare come contesto attivo.",
+      candidates: companyTarget.candidates,
+    };
+  }
+
+  const alreadyActive = appUser?.active_context === "company" && appUser?.active_company_id === companyTarget.company_id;
+  if (!alreadyActive) {
+    await updateAssistantUserRecord(dbClient, appUser, {
+      active_context: "company",
+      active_company_id: companyTarget.company_id,
+    });
+  }
+
+  return {
+    success: true,
+    changed: !alreadyActive,
+    context_type: contextType,
+    context_id: contextId,
+    target_context: "company",
+    company: {
+      company_id: companyTarget.company_id,
+      company_name: companyTarget.company_name,
+      matched_by: companyTarget.matched_by || null,
+    },
+    message: alreadyActive
+      ? `Stai gia lavorando come ${companyTarget.company_name}.`
+      : `Ho impostato ${companyTarget.company_name} come societa attiva.`,
+    navigation: {
+      label: companyTarget.company_name || "Scheda societa",
+      path: buildCompanyPath(companyTarget.company_id),
+    },
+  };
+}
+
+async function updateMyProfile(dbClient, appUser, contextType, contextId, args = {}) {
+  const inferredArgs = inferAssistantProfileUpdateArgs(args?.request_text || "") || {};
+  const payload = {};
+
+  ["display_name", "full_name", "phone"].forEach((fieldName) => {
+    if (hasAssistantOwnProperty(args, fieldName) || hasAssistantOwnProperty(inferredArgs, fieldName)) {
+      payload[fieldName] = normalizeAssistantNullableText(
+        hasAssistantOwnProperty(args, fieldName) ? args[fieldName] : inferredArgs[fieldName],
+      );
+    }
+  });
+
+  const fieldsToUpdate = Object.keys(payload);
+  if (fieldsToUpdate.length === 0) {
+    return {
+      success: false,
+      context_type: contextType,
+      context_id: contextId,
+      message: "Indicami quali dati del profilo vuoi aggiornare, per esempio nome visualizzato o telefono.",
+    };
+  }
+
+  const currentProfile = {
+    display_name: normalizeAssistantNullableText(appUser?.display_name),
+    full_name: normalizeAssistantNullableText(appUser?.full_name),
+    phone: normalizeAssistantNullableText(appUser?.phone),
+  };
+  const changedFields = fieldsToUpdate.filter((fieldName) => currentProfile[fieldName] !== payload[fieldName]);
+
+  const updatedProfile = changedFields.length > 0
+    ? await updateAssistantUserRecord(dbClient, appUser, payload)
+    : {
+      id: appUser?.id || null,
+      email: appUser?.email || null,
+      full_name: appUser?.full_name || null,
+      display_name: appUser?.display_name || null,
+      phone: appUser?.phone || null,
+    };
+
+  return {
+    success: true,
+    changed: changedFields.length > 0,
+    context_type: contextType,
+    context_id: contextId,
+    updated_fields: fieldsToUpdate,
+    message: changedFields.length > 0
+      ? `Ho aggiornato ${fieldsToUpdate.map((fieldName) => fieldName.replaceAll("_", " ")).join(", ")}.`
+      : "I dati richiesti erano gia allineati.",
+    profile: {
+      email: updatedProfile.email || appUser?.email || null,
+      full_name: updatedProfile.full_name || null,
+      display_name: updatedProfile.display_name || updatedProfile.full_name || updatedProfile.email || null,
+      phone: updatedProfile.phone || null,
+    },
+    navigation: {
+      label: "Impostazioni",
+      path: "/app/Settings",
+    },
+  };
+}
+
+function describeAssistantTourLabel(tourId) {
+  if (tourId === "projects") return "tour cantieri";
+  if (tourId === "companies") return "tour societa";
+  return "tour onboarding";
+}
+
+async function updateTourState(dbClient, appUser, contextType, contextId, args = {}) {
+  const inferredArgs = (!args?.tour_id || !args?.action) ? inferAssistantTourStateArgs(args?.request_text || "") : null;
+  const tourId = String(args?.tour_id || inferredArgs?.tour_id || "").trim();
+  const action = String(args?.action || inferredArgs?.action || "").trim();
+
+  if (!["onboarding", "projects", "companies"].includes(tourId) || !["complete", "dismiss", "reset"].includes(action)) {
+    return {
+      success: false,
+      context_type: contextType,
+      context_id: contextId,
+      message: "Dimmi quale tour vuoi aggiornare e se devo completarlo, chiuderlo o resettarlo.",
+    };
+  }
+
+  const currentTourState = appUser?.tour_state && typeof appUser.tour_state === "object" ? appUser.tour_state : {};
+  const nextTourState = {
+    ...currentTourState,
+    [tourId]: {
+      ...(currentTourState?.[tourId] || {}),
+    },
+  };
+
+  if (action === "complete") {
+    nextTourState[tourId].completed = true;
+  }
+  if (action === "dismiss") {
+    nextTourState[tourId].dismissed = true;
+  }
+  if (action === "reset") {
+    nextTourState[tourId].completed = false;
+    nextTourState[tourId].dismissed = false;
+  }
+
+  const didChange = JSON.stringify(currentTourState?.[tourId] || {}) !== JSON.stringify(nextTourState[tourId]);
+  const updatedUser = didChange
+    ? await updateAssistantUserRecord(dbClient, appUser, { tour_state: nextTourState })
+    : { tour_state: currentTourState };
+
+  return {
+    success: true,
+    changed: didChange,
+    context_type: contextType,
+    context_id: contextId,
+    tour_id: tourId,
+    action,
+    message: didChange
+      ? `Ho aggiornato il ${describeAssistantTourLabel(tourId)}.`
+      : `Il ${describeAssistantTourLabel(tourId)} era gia in quello stato.`,
+    tour_state: updatedUser.tour_state?.[tourId] || nextTourState[tourId],
+    navigation: {
+      label: "Dashboard",
+      path: "/app/Dashboard",
+    },
+  };
+}
+
+async function updateNotificationPreferences(dbClient, appUser, contextType, contextId, args = {}) {
+  if (!appUser?.email) {
+    return {
+      success: false,
+      context_type: contextType,
+      context_id: contextId,
+      message: "Non trovo un utente autenticato su cui salvare le preferenze notifiche.",
+    };
+  }
+
+  const inferredArgs = inferAssistantNotificationPreferenceArgs(args?.request_text || "") || {};
+  const actionKey = String(args?.action_key || inferredArgs?.action_key || "").trim() || null;
+  const applyToAll = args?.apply_to_all === true || inferredArgs?.apply_to_all === true;
+  const nextNotification = typeof args?.notification === "boolean"
+    ? args.notification
+    : typeof inferredArgs?.notification === "boolean"
+      ? inferredArgs.notification
+      : undefined;
+  const nextEmail = typeof args?.email === "boolean"
+    ? args.email
+    : typeof inferredArgs?.email === "boolean"
+      ? inferredArgs.email
+      : undefined;
+
+  if (typeof nextNotification !== "boolean" && typeof nextEmail !== "boolean") {
+    return {
+      success: false,
+      context_type: contextType,
+      context_id: contextId,
+      message: "Dimmi se vuoi attivare o disattivare le notifiche in-app, le email o entrambe.",
+    };
+  }
+
+  const { data: existingPreferenceRow, error: existingPreferenceError } = await dbClient
+    .from("notification_preferences")
+    .select("id,preferences")
+    .eq("user_email", appUser.email)
+    .maybeSingle();
+
+  if (existingPreferenceError) throw existingPreferenceError;
+
+  const currentPreferences = mergeAssistantNotificationPreferences(existingPreferenceRow?.preferences);
+  const validActionKeys = Object.keys(currentPreferences);
+  if (actionKey && !validActionKeys.includes(actionKey)) {
+    return {
+      success: false,
+      context_type: contextType,
+      context_id: contextId,
+      message: "La categoria di notifica richiesta non e riconosciuta nelle preferenze attuali.",
+    };
+  }
+
+  const targetActionKeys = applyToAll
+    ? validActionKeys
+    : actionKey
+      ? [actionKey]
+      : [];
+
+  if (targetActionKeys.length === 0) {
+    return {
+      success: false,
+      context_type: contextType,
+      context_id: contextId,
+      message: "Specifica se vuoi modificare una singola categoria di notifica o tutte le preferenze.",
+    };
+  }
+
+  const nextPreferences = { ...currentPreferences };
+  targetActionKeys.forEach((entryKey) => {
+    nextPreferences[entryKey] = {
+      ...currentPreferences[entryKey],
+      ...(typeof nextNotification === "boolean" ? { notification: nextNotification } : {}),
+      ...(typeof nextEmail === "boolean" ? { email: nextEmail } : {}),
+    };
+  });
+
+  const didChange = targetActionKeys.some((entryKey) => {
+    const previousValue = currentPreferences[entryKey] || {};
+    const nextValue = nextPreferences[entryKey] || {};
+    return previousValue.notification !== nextValue.notification || previousValue.email !== nextValue.email;
+  });
+
+  if (didChange) {
+    const mutation = existingPreferenceRow?.id
+      ? dbClient.from("notification_preferences").update({ preferences: nextPreferences }).eq("id", existingPreferenceRow.id)
+      : dbClient.from("notification_preferences").insert({ user_email: appUser.email, preferences: nextPreferences });
+    const { error } = await mutation;
+    if (error) throw error;
+  }
+
+  const effectivePreferences = didChange ? nextPreferences : currentPreferences;
+  const affectedEntries = targetActionKeys.slice(0, 8).map((entryKey) => ({
+    action_key: entryKey,
+    label: describeAssistantNotificationPreference(entryKey),
+    notification: effectivePreferences[entryKey]?.notification === true,
+    email: effectivePreferences[entryKey]?.email === true,
+    group: describeAssistantNotificationPreferenceGroup(entryKey),
+  }));
+
+  return {
+    success: true,
+    changed: didChange,
+    context_type: contextType,
+    context_id: contextId,
+    action_scope: applyToAll ? "all" : "single",
+    updated_action_keys: targetActionKeys,
+    message: didChange
+      ? applyToAll
+        ? "Ho aggiornato le preferenze notifiche globali."
+        : `Ho aggiornato le preferenze per ${describeAssistantNotificationPreference(targetActionKeys[0])}.`
+      : "Le preferenze richieste erano gia impostate cosi.",
+    summary: {
+      total_actions: validActionKeys.length,
+      notification_enabled_count: validActionKeys.filter((entryKey) => effectivePreferences[entryKey]?.notification === true).length,
+      email_enabled_count: validActionKeys.filter((entryKey) => effectivePreferences[entryKey]?.email === true).length,
+    },
+    entries: affectedEntries,
+    navigation: {
+      label: "Impostazioni notifiche",
+      path: "/app/Settings",
+    },
+  };
+}
+
+async function loadAccessibleNotificationRows(dbClient, appUser, contextType, contextId, options = {}) {
+  const limit = Math.min(Math.max(Number(options?.limit) || 40, 1), 200);
+  const unreadOnly = options?.unreadOnly === true;
+
+  if (!appUser?.email) {
+    return {
+      notifications: [],
+      eventProjectById: new Map(),
+      messageProjectById: new Map(),
+    };
+  }
+
+  if (contextType === "personal" || contextType === "company") {
+    let notificationsQuery = dbClient
+      .from("notifications")
+      .select("id,type,title,message,created_date,is_read,context_type,context_company_id,related_event_id")
+      .eq("user_email", appUser.email)
+      .eq("context_type", contextType);
+
+    if (contextType === "company") {
+      notificationsQuery = notificationsQuery.eq("context_company_id", contextId);
+    }
+
+    if (unreadOnly) {
+      notificationsQuery = notificationsQuery.eq("is_read", false);
+    }
+
+    const { data, error } = await notificationsQuery.order("created_date", { ascending: false }).limit(limit);
+    if (error) throw error;
+
+    return {
+      notifications: data || [],
+      eventProjectById: new Map(),
+      messageProjectById: new Map(),
+    };
+  }
+
+  let notificationsQuery = dbClient
+    .from("notifications")
+    .select("id,type,title,message,created_date,is_read,context_type,context_company_id,related_event_id")
+    .eq("user_email", appUser.email);
+
+  if (unreadOnly) {
+    notificationsQuery = notificationsQuery.eq("is_read", false);
+  }
+
+  const scanLimit = Math.min(Math.max(limit * 4, 80), 200);
+  const { data: recentNotifications, error: notificationsError } = await notificationsQuery
+    .order("created_date", { ascending: false })
+    .limit(scanLimit);
+
+  if (notificationsError) throw notificationsError;
+
+  const eventIds = uniqueValues((recentNotifications || [])
+    .filter((notification) => EVENT_BASED_NOTIFICATION_TYPES.has(notification.type))
+    .map((notification) => notification.related_event_id));
+  const messageIds = uniqueValues((recentNotifications || [])
+    .filter((notification) => notification.type === "message_mention")
+    .map((notification) => notification.related_event_id));
+  const [eventProjectById, messageProjectById] = await Promise.all([
+    loadEventProjectIdByEventId(dbClient, eventIds),
+    loadMessageProjectIdByMessageId(dbClient, messageIds),
+  ]);
+
+  return {
+    notifications: (recentNotifications || [])
+      .filter((notification) => isNotificationRelevantToProject(notification, contextId, eventProjectById, messageProjectById))
+      .slice(0, limit),
+    eventProjectById,
+    messageProjectById,
+  };
+}
+
+async function resolveAccessibleNotification(dbClient, appUser, contextType, contextId, options = {}) {
+  const notificationId = String(options?.notification_id || options?.notificationId || "").trim();
+  const notificationHint = String(options?.notification_hint || options?.notificationHint || "").trim();
+  const { notifications, eventProjectById, messageProjectById } = await loadAccessibleNotificationRows(dbClient, appUser, contextType, contextId, {
+    limit: 120,
+    unreadOnly: options?.unread_only === true,
+  });
+
+  if (notificationId) {
+    const exactNotification = notifications.find((notification) => notification.id === notificationId);
+    if (exactNotification) {
+      return {
+        matched_by: "notification_id",
+        notification: {
+          ...exactNotification,
+          path: buildNotificationTarget(exactNotification, { eventProjectById, messageProjectById }),
+        },
+      };
+    }
+  }
+
+  if (!notificationHint) {
+    return null;
+  }
+
+  const rankedNotifications = notifications
+    .map((notification) => ({
+      notification,
+      score: computeAssistantSearchScore([
+        notification.id,
+        notification.title,
+        notification.message,
+        notification.type,
+      ], notificationHint),
+    }))
+    .filter((entry) => entry.score > 0)
+    .sort((left, right) => right.score - left.score || String(right.notification.created_date || "").localeCompare(String(left.notification.created_date || "")));
+
+  if (!rankedNotifications[0]) {
+    return null;
+  }
+
+  return {
+    matched_by: "notification_hint",
+    notification: {
+      ...rankedNotifications[0].notification,
+      path: buildNotificationTarget(rankedNotifications[0].notification, { eventProjectById, messageProjectById }),
+    },
+  };
+}
+
+async function markNotificationRead(dbClient, appUser, contextType, contextId, args = {}) {
+  if (!appUser?.email) {
+    return {
+      success: false,
+      context_type: contextType,
+      context_id: contextId,
+      message: "Non trovo un utente autenticato su cui aggiornare le notifiche.",
+    };
+  }
+
+  const inferredArgs = (!args?.notification_id && !args?.notification_hint)
+    ? inferAssistantNotificationReadArgs(args?.request_text || "").markOne || {}
+    : {};
+  const resolution = await resolveAccessibleNotification(dbClient, appUser, contextType, contextId, {
+    notification_id: args?.notification_id || inferredArgs?.notification_id,
+    notification_hint: args?.notification_hint || inferredArgs?.notification_hint,
+  });
+
+  if (!resolution?.notification) {
+    return {
+      success: false,
+      context_type: contextType,
+      context_id: contextId,
+      message: "Non ho trovato una notifica accessibile che corrisponda alla richiesta.",
+    };
+  }
+
+  if (resolution.notification.is_read === true) {
+    return {
+      success: true,
+      changed: false,
+      context_type: contextType,
+      context_id: contextId,
+      message: "La notifica era gia segnata come letta.",
+      notification: {
+        id: resolution.notification.id,
+        title: resolution.notification.title,
+        summary: previewText(resolution.notification.message, 160),
+        is_read: true,
+        path: resolution.notification.path,
+      },
+    };
+  }
+
+  const { error } = await dbClient
+    .from("notifications")
+    .update({ is_read: true })
+    .eq("id", resolution.notification.id)
+    .eq("user_email", appUser.email);
+
+  if (error) throw error;
+
+  return {
+    success: true,
+    changed: true,
+    context_type: contextType,
+    context_id: contextId,
+    message: `Ho segnato come letta la notifica \"${resolution.notification.title || "senza titolo"}\".`,
+    notification: {
+      id: resolution.notification.id,
+      title: resolution.notification.title,
+      summary: previewText(resolution.notification.message, 160),
+      is_read: true,
+      path: resolution.notification.path,
+    },
+    navigation: {
+      label: "Notifiche",
+      path: "/app/Notifications",
+    },
+  };
+}
+
+async function markAllNotificationsRead(dbClient, appUser, contextType, contextId) {
+  if (!appUser?.email) {
+    return {
+      success: false,
+      context_type: contextType,
+      context_id: contextId,
+      message: "Non trovo un utente autenticato su cui aggiornare le notifiche.",
+    };
+  }
+
+  const { notifications } = await loadAccessibleNotificationRows(dbClient, appUser, contextType, contextId, {
+    limit: 200,
+    unreadOnly: true,
+  });
+  const notificationIds = notifications.map((notification) => notification.id).filter(Boolean);
+
+  if (notificationIds.length === 0) {
+    return {
+      success: true,
+      changed: false,
+      context_type: contextType,
+      context_id: contextId,
+      updated_count: 0,
+      message: "Non ci sono notifiche non lette da segnare nel contesto corrente.",
+      navigation: {
+        label: "Notifiche",
+        path: "/app/Notifications",
+      },
+    };
+  }
+
+  const { error } = await dbClient
+    .from("notifications")
+    .update({ is_read: true })
+    .eq("user_email", appUser.email)
+    .in("id", notificationIds);
+
+  if (error) throw error;
+
+  return {
+    success: true,
+    changed: true,
+    context_type: contextType,
+    context_id: contextId,
+    updated_count: notificationIds.length,
+    message: notificationIds.length === 1
+      ? "Ho segnato 1 notifica come letta."
+      : `Ho segnato ${notificationIds.length} notifiche come lette.`,
+    navigation: {
+      label: "Notifiche",
+      path: "/app/Notifications",
+    },
+  };
+}
+
 async function getPersonalWorkspaceBrief(dbClient, appUser, contextType, contextId, options = {}) {
   const limit = clampLimit(options?.limit, 5, 10);
   if (!appUser?.email) {
@@ -6288,13 +7322,66 @@ async function getPersonalWorkspaceBrief(dbClient, appUser, contextType, context
   }
 
 
-async function resolveAssistantCompanyTarget(dbClient, appUser, contextType, contextId) {
+async function resolveAssistantCompanyTarget(dbClient, appUser, contextType, contextId, options = {}) {
   const accessibleCompanyIds = await loadAssistantAccessibleCompanyIds(dbClient, appUser, contextType, contextId);
   if (accessibleCompanyIds.length === 0) {
     return null;
   }
 
+  const requestedCompanyId = String(options?.company_id || options?.companyId || "").trim();
+  const companyHint = String(options?.company_hint || options?.companyHint || "").trim();
   const companyNameById = await loadCompanyNameById(dbClient, accessibleCompanyIds);
+  const candidates = accessibleCompanyIds.map((companyId) => ({
+    company_id: companyId,
+    company_name: companyNameById.get(companyId) || companyId,
+    path: buildCompanyPath(companyId),
+  }));
+
+  if (requestedCompanyId) {
+    const exactMatch = candidates.find((candidate) => candidate.company_id === requestedCompanyId);
+    return exactMatch
+      ? {
+        company_id: exactMatch.company_id,
+        company_name: exactMatch.company_name,
+        matched_by: "company_id",
+      }
+      : null;
+  }
+
+  if (companyHint) {
+    const rankedCandidates = candidates
+      .map((candidate) => ({
+        ...candidate,
+        score: computeAssistantSearchScore([
+          candidate.company_id,
+          candidate.company_name,
+        ], companyHint),
+      }))
+      .filter((candidate) => candidate.score > 0)
+      .sort((left, right) => right.score - left.score || String(left.company_name || "").localeCompare(String(right.company_name || "")));
+
+    if (!rankedCandidates[0]) {
+      return null;
+    }
+
+    if (rankedCandidates[1] && rankedCandidates[0].score === rankedCandidates[1].score) {
+      return {
+        ambiguous: true,
+        candidates: rankedCandidates.slice(0, 6).map((candidate) => ({
+          company_id: candidate.company_id,
+          company_name: candidate.company_name,
+          path: candidate.path,
+        })),
+      };
+    }
+
+    return {
+      company_id: rankedCandidates[0].company_id,
+      company_name: rankedCandidates[0].company_name,
+      matched_by: "company_hint",
+    };
+  }
+
   if (contextType === "company" && contextId) {
     return {
       company_id: contextId,
@@ -6322,11 +7409,7 @@ async function resolveAssistantCompanyTarget(dbClient, appUser, contextType, con
 
   return {
     ambiguous: true,
-    candidates: accessibleCompanyIds.slice(0, 6).map((companyId) => ({
-      company_id: companyId,
-      company_name: companyNameById.get(companyId) || companyId,
-      path: buildCompanyPath(companyId),
-    })),
+    candidates: candidates.slice(0, 6),
   };
 }
 
@@ -6850,71 +7933,10 @@ async function getProjectSponsorshipStatus(dbClient, appUser, contextType, conte
 
 async function listContextNotifications(dbClient, appUser, contextType, contextId, options = {}) {
   const limit = clampLimit(options?.limit, 5, 10);
-  const unreadOnly = options?.unread_only === true;
-
-  if (!appUser?.email) {
-    return {
-      context_type: contextType,
-      context_id: contextId,
-      notifications: [],
-    };
-  }
-
-  if (contextType === "personal" || contextType === "company") {
-    let notificationsQuery = dbClient
-      .from("notifications")
-      .select("id,type,title,message,created_date,is_read,context_type,context_company_id,related_event_id")
-      .eq("user_email", appUser.email)
-      .eq("context_type", contextType);
-
-    if (contextType === "company") {
-      notificationsQuery = notificationsQuery.eq("context_company_id", contextId);
-    }
-
-    if (unreadOnly) {
-      notificationsQuery = notificationsQuery.eq("is_read", false);
-    }
-
-    const { data, error } = await notificationsQuery.order("created_date", { ascending: false }).limit(limit);
-    if (error) throw error;
-
-    return formatAssistantNotifications({
-      contextType,
-      contextId,
-      notifications: data || [],
-    });
-  }
-
-  let notificationsQuery = dbClient
-    .from("notifications")
-    .select("id,type,title,message,created_date,is_read,context_type,context_company_id,related_event_id")
-    .eq("user_email", appUser.email);
-
-  if (unreadOnly) {
-    notificationsQuery = notificationsQuery.eq("is_read", false);
-  }
-
-  const { data: recentNotifications, error: notificationsError } = await notificationsQuery
-    .order("created_date", { ascending: false })
-    .limit(40);
-
-  if (notificationsError) throw notificationsError;
-
-  const eventIds = uniqueValues((recentNotifications || [])
-    .filter((notification) => EVENT_BASED_NOTIFICATION_TYPES.has(notification.type))
-    .map((notification) => notification.related_event_id));
-  const messageIds = uniqueValues((recentNotifications || [])
-    .filter((notification) => notification.type === "message_mention")
-    .map((notification) => notification.related_event_id));
-
-  const [eventProjectById, messageProjectById] = await Promise.all([
-    loadEventProjectIdByEventId(dbClient, eventIds),
-    loadMessageProjectIdByMessageId(dbClient, messageIds),
-  ]);
-
-  const notifications = (recentNotifications || [])
-    .filter((notification) => isNotificationRelevantToProject(notification, contextId, eventProjectById, messageProjectById))
-    .slice(0, limit);
+  const { notifications, eventProjectById, messageProjectById } = await loadAccessibleNotificationRows(dbClient, appUser, contextType, contextId, {
+    limit,
+    unreadOnly: options?.unread_only === true,
+  });
 
   return formatAssistantNotifications({
     contextType,
@@ -7539,6 +8561,23 @@ function buildDeterministicReply({ contextType, userMessage, ragMatches, toolCal
       }
     }
 
+    if (toolCall.name === "switch_active_context") {
+      sections.push("\n## Cambio contesto");
+      if (rawResults.message) {
+        sections.push(`- ${rawResults.message}`);
+      }
+      if (rawResults.company?.company_name) {
+        sections.push(`- Societa attiva: ${rawResults.company.company_name}`);
+      }
+      const candidates = Array.isArray(rawResults?.candidates) ? rawResults.candidates : [];
+      candidates.slice(0, 5).forEach((candidate) => {
+        sections.push(`- Alternativa: ${candidate.company_name || candidate.company_id || "Societa"}${candidate.path ? ` ([Apri](${candidate.path}))` : ""}`);
+      });
+      if (rawResults.navigation?.path) {
+        sections.push(`- Apri: [${rawResults.navigation.label || "Apri contesto"}](${rawResults.navigation.path})`);
+      }
+    }
+
     if (toolCall.name === "get_context_capabilities") {
       const capabilities = Array.isArray(rawResults?.capabilities) ? rawResults.capabilities : [];
       if (capabilities.length > 0) {
@@ -7923,6 +8962,32 @@ function buildDeterministicReply({ contextType, userMessage, ragMatches, toolCal
       }
     }
 
+    if (toolCall.name === "mark_notification_read") {
+      sections.push("\n## Notifiche");
+      if (rawResults.message) {
+        sections.push(`- ${rawResults.message}`);
+      }
+      if (rawResults.notification?.title) {
+        sections.push(`- Notifica: ${rawResults.notification.title}${rawResults.notification.path ? ` ([Apri](${rawResults.notification.path}))` : ""}`);
+      }
+      if (rawResults.navigation?.path) {
+        sections.push(`- Apri notifiche: [${rawResults.navigation.label || "Notifiche"}](${rawResults.navigation.path})`);
+      }
+    }
+
+    if (toolCall.name === "mark_all_notifications_read") {
+      sections.push("\n## Notifiche");
+      if (rawResults.message) {
+        sections.push(`- ${rawResults.message}`);
+      }
+      if (rawResults.updated_count != null) {
+        sections.push(`- Notifiche aggiornate: ${rawResults.updated_count}`);
+      }
+      if (rawResults.navigation?.path) {
+        sections.push(`- Apri notifiche: [${rawResults.navigation.label || "Notifiche"}](${rawResults.navigation.path})`);
+      }
+    }
+
     if (toolCall.name === "list_context_channels") {
       const channels = Array.isArray(rawResults?.channels) ? rawResults.channels : [];
       if (channels.length > 0) {
@@ -8018,6 +9083,24 @@ function buildDeterministicReply({ contextType, userMessage, ragMatches, toolCal
         entries.slice(0, 6).forEach((entry) => {
           sections.push(`- ${entry.label}: app ${entry.notification ? "on" : "off"} · email ${entry.email ? "on" : "off"}`);
         });
+      }
+    }
+
+    if (toolCall.name === "update_notification_preferences") {
+      sections.push("\n## Preferenze notifiche");
+      if (rawResults.message) {
+        sections.push(`- ${rawResults.message}`);
+      }
+      if (rawResults.summary) {
+        sections.push(`- Notifiche in-app attive: ${rawResults.summary.notification_enabled_count || 0}/${rawResults.summary.total_actions || 0}`);
+        sections.push(`- Email attive: ${rawResults.summary.email_enabled_count || 0}/${rawResults.summary.total_actions || 0}`);
+      }
+      const entries = Array.isArray(rawResults?.entries) ? rawResults.entries : [];
+      entries.slice(0, 6).forEach((entry) => {
+        sections.push(`- ${entry.label}: app ${entry.notification ? "on" : "off"} · email ${entry.email ? "on" : "off"}`);
+      });
+      if (rawResults.navigation?.path) {
+        sections.push(`- Apri impostazioni: [${rawResults.navigation.label || "Impostazioni notifiche"}](${rawResults.navigation.path})`);
       }
     }
 
@@ -8264,6 +9347,38 @@ function buildDeterministicReply({ contextType, userMessage, ragMatches, toolCal
       sections.push(`- Membership attive: ${rawResults.counts?.memberships || 0} · Inviti in attesa: ${rawResults.counts?.pending_invites || 0}`);
       if (rawResults.navigation?.path) {
         sections.push(`- Apri profilo: [${rawResults.navigation.label || "Impostazioni"}](${rawResults.navigation.path})`);
+      }
+    }
+
+    if (toolCall.name === "update_my_profile") {
+      sections.push("\n## Profilo aggiornato");
+      if (rawResults.message) {
+        sections.push(`- ${rawResults.message}`);
+      }
+      if (rawResults.profile?.display_name || rawResults.profile?.full_name) {
+        sections.push(`- Nome: ${rawResults.profile.display_name || rawResults.profile.full_name}`);
+      }
+      if (rawResults.profile?.phone) {
+        sections.push(`- Telefono: ${rawResults.profile.phone}`);
+      }
+      if (rawResults.navigation?.path) {
+        sections.push(`- Apri profilo: [${rawResults.navigation.label || "Impostazioni"}](${rawResults.navigation.path})`);
+      }
+    }
+
+    if (toolCall.name === "update_tour_state") {
+      sections.push("\n## Tour guidato");
+      if (rawResults.message) {
+        sections.push(`- ${rawResults.message}`);
+      }
+      if (rawResults.tour_id) {
+        sections.push(`- Tour: ${rawResults.tour_id}`);
+      }
+      if (rawResults.action) {
+        sections.push(`- Azione: ${rawResults.action}`);
+      }
+      if (rawResults.navigation?.path) {
+        sections.push(`- Apri dashboard: [${rawResults.navigation.label || "Dashboard"}](${rawResults.navigation.path})`);
       }
     }
 

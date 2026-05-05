@@ -103,12 +103,12 @@
         - Perimetro iniziale: questa lista copre l'app contestuale EdilSync. CMS pubblico, blog, demo request e web-admin editoriale restano fuori da questo backlog assistant e richiederebbero eventualmente un assistente separato.
         - Nota di progettazione: alcuni item potranno convergere in tool azionali riusabili con parametro `action`, ma il perimetro funzionale da coprire oggi è questo.
         - Navigazione, contesto e preferenze personali
-            - [ ] `switch_active_context` per passare tra contesto personale e società attiva
-            - [ ] `update_my_profile` per aggiornare nome visualizzato, recapiti e dati personali modificabili
-            - [ ] `update_tour_state` per completare, chiudere o riaprire tutorial/onboarding contestuali
-            - [ ] `update_notification_preferences` per salvare preferenze notifiche personali
-            - [ ] `mark_notification_read` per segnare una singola notifica come letta
-            - [ ] `mark_all_notifications_read` per segnare come lette le notifiche visibili nel contesto corrente
+            - [x] `switch_active_context` per passare tra contesto personale e società attiva
+            - [x] `update_my_profile` per aggiornare nome visualizzato, recapiti e dati personali modificabili
+            - [x] `update_tour_state` per completare, chiudere o riaprire tutorial/onboarding contestuali
+            - [x] `update_notification_preferences` per salvare preferenze notifiche personali
+            - [x] `mark_notification_read` per segnare una singola notifica come letta
+            - [x] `mark_all_notifications_read` per segnare come lette le notifiche visibili nel contesto corrente
         - Società e membership
             - [ ] `create_company` per creare una nuova società con inizializzazione del grafo base
             - [ ] `update_company_profile` per modificare anagrafica e metadati della società attiva
@@ -217,15 +217,8 @@
     - [X] Telemetria base (open success/fail, first render time, fallback rate)
     - [X] Test comparativi IFC small/medium/large + decisione cutover
 
-- Pricing / access model rollout
-    - [X] Phase 0 - Freeze the contract (`public/Docs/edilsync_pricing_phase0_contract.md`)
-    - [X] Phase 1 - Schema piani / sponsorship / feature rules
-    - [X] Phase 2 - Backend authorization e capability resolution
-    - [X] Phase 3 - Migrazione write sensibili FE -> BE
-    - [X] Phase 4 - Gating frontend in modalita normale
-    - [X] Phase 5 - Billing UX societa + sponsor UX progetto
-    - [X] Phase 6 - Stripe checkout / portal / webhook
-    - [X] Phase 7 - Downgrade behavior e invisibilita premium
+- Pricing / access model
+    - [X] Modello pricing completato e documentato in `public/Docs/edilsync_pricing_model.md`
     - [X] Phase 8 - Allineamento sito pubblico
     - [X] Phase 9 - Cleanup finale modalita e hardening
 
@@ -349,3 +342,133 @@
 - [x] Se ho una notifica non letta per esempio di un invito ad un cantiere e premo sulla notifica vengo riportato all'invito ma la notifica non viene segnata come letta ammeno che non premo il pulsante "segna come letta" o "segna tutte come lette".
 - [x] Nella modalità operativa, allinea la sezione delle dispute nel caso non ci siano dispute a tutte le altre sezioni come Richieste di modifica, attività, calendario, ecc con una semplice scritta "Nessuna disputa" invece che la sezione presente al momento.
 - [x] Nella dashboard, sotto a "Ciao, Rob" vedo "Stai operando come Non hai ancora cantieri personali. Crea il tuo primo cantiere." e nella riga sotto c'è il badge "Privato". Rimovi la frase "Non hai ancora cantieri personali. Crea il tuo primo cantiere.".
+
+
+
+
+
+
+---
+
+# Prompt #1 --- COMPLETATO
+Provando ad analizzare il sito pubblico di edilsync su PageSpeed, questo è il risultato:
+- https://pagespeed.web.dev/analysis/https-edilsync-rdlabs-digital/ayqstaarhc?form_factor=mobile
+
+Come vedi abbiamo un punteggio basso sulle prestazioni dovuto da:
+- "First Contentful Paint" di quasi 10 secondi
+- "Largest Contentful Paint" di più di 10 secondi
+- "Speed Index" anche di quasi 10 secondi
+
+Da quello che penso io il motivo è che il sito viene caricato come app client-side (SPA) e il contenuto reale arriva via JavaScript.
+Questo implica:
+- HTML iniziale ≈ vuoto
+- contenuti renderizzati dopo
+- crawler vedono poco o niente
+- Google lo indicizza male o lentamente
+
+Dobbiamo risolvere questa cosa.
+Per tutta l'app questo problema è irrilevante in quanto è protetta da login e non deve essere indicizzata.
+Quindi dobbiamo risolvere il problema SOLO per la parte pubblica del sito.
+
+---
+
+# Prompt #2 --- COMPLETATO
+Testando edilsync su "https://isitagentready.com/" ha trovato diversi problemi, e mi ha generato questo prompt:
+
+```
+Goal: Include Link response headers for agent discovery (RFC 8288)
+
+Issue: No Link headers found on homepage
+
+Fix: Add Link response headers to your homepage that point agents to useful resources. For example: Link: </.well-known/api-catalog>; rel="api-catalog" to advertise your API catalog, or Link: </docs/api>; rel="service-doc" for API documentation. See RFC 8288 for the Link header format and IANA Link Relations for registered relation types.
+
+Skill: https://isitagentready.com/.well-known/agent-skills/link-headers/SKILL.md
+
+Docs: https://www.rfc-editor.org/rfc/rfc8288, https://www.rfc-editor.org/rfc/rfc9727#section-3
+
+---
+
+Goal: Return HTML responses as markdown when agents request it
+
+Issue: Site does not support Markdown for Agents
+
+Fix: Enable Markdown for Agents so requests with Accept: text/markdown return a markdown version of your HTML response while HTML stays the default for browsers. Confirm the response uses Content-Type: text/markdown (and x-markdown-tokens if available).
+
+Skill: https://isitagentready.com/.well-known/agent-skills/markdown-negotiation/SKILL.md
+
+Docs: https://developers.cloudflare.com/fundamentals/reference/markdown-for-agents/
+
+---
+
+Goal: Publish an API catalog for automated API discovery (RFC 9727)
+
+Issue: API Catalog returned HTML instead of JSON
+
+Fix: Create /.well-known/api-catalog returning application/linkset+json with a "linkset" array. Each entry should include an "anchor" URL for the API and link relations for service-desc (OpenAPI spec), service-doc (documentation), and status (health endpoint). See RFC 9727 Appendix A for examples.
+
+Skill: https://isitagentready.com/.well-known/agent-skills/api-catalog/SKILL.md
+
+Docs: https://www.rfc-editor.org/rfc/rfc9727, https://www.rfc-editor.org/rfc/rfc9264
+
+---
+
+Goal: Publish OAuth/OIDC discovery metadata so agents can authenticate with your APIs
+
+Issue: No OAuth/OIDC discovery metadata found
+
+Fix: If your site has protected APIs, publish /.well-known/openid-configuration (for OpenID Connect) or /.well-known/oauth-authorization-server (for pure OAuth 2.0) with your issuer, authorization_endpoint, token_endpoint, jwks_uri, and grant_types_supported. This allows AI agents to programmatically discover how to authenticate.
+
+Skill: https://isitagentready.com/.well-known/agent-skills/oauth-discovery/SKILL.md
+
+Docs: http://openid.net/specs/openid-connect-discovery-1_0.html, https://www.rfc-editor.org/rfc/rfc8414
+
+---
+
+Goal: Publish OAuth Protected Resource Metadata so agents can discover how to authenticate
+
+Issue: No OAuth Protected Resource Metadata found
+
+Fix: Publish /.well-known/oauth-protected-resource with your resource identifier, authorization_servers (list of OAuth/OIDC issuer URLs that can issue tokens for this resource), and scopes_supported. This tells agents how to obtain access tokens for your protected APIs.
+
+Skill: https://isitagentready.com/.well-known/agent-skills/oauth-protected-resource/SKILL.md
+
+Docs: https://www.rfc-editor.org/rfc/rfc9728
+
+---
+
+Goal: Publish an MCP Server Card for agent discovery
+
+Issue: MCP Server Card not found
+
+Fix: Serve an MCP Server Card (SEP-1649) at /.well-known/mcp/server-card.json with serverInfo (name, version), transport endpoint, and capabilities. The schema is being standardized at https://github.com/modelcontextprotocol/modelcontextprotocol/pull/2127
+
+Skill: https://isitagentready.com/.well-known/agent-skills/mcp-server-card/SKILL.md
+
+Docs: https://github.com/modelcontextprotocol/modelcontextprotocol/pull/2127
+
+---
+
+Goal: Publish an agent skills discovery index
+
+Issue: Agent Skills index returned HTML instead of JSON
+
+Fix: Publish a skills discovery index at /.well-known/agent-skills/index.json (per the Agent Skills Discovery RFC v0.2.0). Include a $schema field, and a skills array where each entry has name, type, description, url, and a sha256 digest.
+
+Skill: https://isitagentready.com/.well-known/agent-skills/agent-skills/SKILL.md
+
+Docs: https://github.com/cloudflare/agent-skills-discovery-rfc, https://agentskills.io/
+
+---
+
+Goal: Support WebMCP to expose site tools to AI agents via the browser
+
+Issue: No WebMCP tools detected on page load
+
+Fix: Implement the WebMCP API by calling navigator.modelContext.provideContext() with tool definitions that expose your site's key actions to AI agents. Each tool needs a name, description, inputSchema (JSON Schema), and an execute callback function.
+
+Skill: https://isitagentready.com/.well-known/agent-skills/webmcp/SKILL.md
+
+Docs: https://webmachinelearning.github.io/webmcp/, https://developer.chrome.com/blog/webmcp-epp
+```
+
+Analizzalo e procedi a risolvere i problemi del sito pubblico. I problemi che riguardano l'app protetta da login NON li risolvere in quanto quella parte deve rimanere chiusa, non dobbiamo esporre APIs, MCP, o nient'altro. Dobbiamo risolvere SOLO i problemi del sito pubblico

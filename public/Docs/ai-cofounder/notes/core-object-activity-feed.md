@@ -1,0 +1,2 @@
+**Core Object: Activity Feed**
+The activity feed is the **single source of truth**—a chronological timeline showing task updates, photo uploads, appointments scheduled, change orders submitted/approved, and blocked/unblocked events. Both Michele and Matteo see the same reality. No ambiguity, no "he said / she said." This feed replaces the need for status-update calls and gives Matteo the reassurance he craves without Michele doing extra work.

@@ -1,0 +1,2 @@
+**Core Positioning: Protection-First Communication**
+EdilSync is positioned as a **protection-first communication platform** for small residential contractors, not a marketplace or traditional project management tool. The primary pitch: **"Stop losing money to 'I thought you said' disputes."** Every feature is designed around contractor self-protection through automatic documentation, with homeowner transparency as a valuable side effect. This sharp positioning cuts through market noise by speaking directly to the financial pain contractors feel from miscommunication.

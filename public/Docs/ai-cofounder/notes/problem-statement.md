@@ -1,0 +1,2 @@
+**Problem statement**
+Homeowners, contractors, and tradespeople struggle with fragmented communication and coordination during construction projects, making it difficult for all parties to stay aligned, leading to delays and misunderstandings.

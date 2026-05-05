@@ -1,0 +1,2 @@
+**UI-First, Not AI-First**
+V1 is **UI-first with optional AI assistance**, not a conversational interface. Michele needs explicit, visible affordances—not hidden features he has to guess at. The core experience is clean screens for tasks, photos, calendar, and change requests. AI supports only **well-bounded actions**: generating descriptions from photos, summarizing daily activity, cleaning up notes, translating messages. No task/request creation via AI without UI confirmation. This keeps the product predictable, fast, and trustworthy.

@@ -1,0 +1,2 @@
+**Core Object: Tasks & Status Tracking**
+Tasks are the structural backbone of each project, grouped by room/phase when needed. Each task has: **status** (not started, in progress, complete, blocked), **assigned party**, **photos**, and **short updates**. The critical feature: **blocked state with tagged responsibility**. When Michele marks a task blocked and tags the electrician or homeowner, it documents exactly why work stopped—protecting him from blame and giving Matteo clarity on delays.

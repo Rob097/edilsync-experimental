@@ -1,0 +1,2 @@
+**Entry Flow: Contractor-Initiated Projects**
+V1 starts with **contractor-initiated projects only**. Michele creates a new project in EdilSync (description, photos, basic details), then invites Matteo (homeowner) via link. This ensures: **(1)** the professional controls adoption, **(2)** clear project ownership from day one, **(3)** simpler permissions model, and **(4)** contractor demonstrates professionalism during sales process. Future versions can add homeowner-initiated multi-trade coordination, but V1 keeps it simple with one clear project owner.

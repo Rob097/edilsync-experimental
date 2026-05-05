@@ -1,0 +1,2 @@
+**Core Object: Change Requests**
+Structured, lightweight change-order workflow solves the **biggest dispute trigger** identified in research. When scope changes, Michele creates a change request with: description, photos, optional time/cost impact. Matteo approves or requests clarification. Everything is **timestamped and documented**. No more "I thought that was included" arguments over $200 charges. This protects Michele's margins (3-5% are razor-thin) and reduces relationship damage from small disputes.

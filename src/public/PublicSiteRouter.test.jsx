@@ -54,7 +54,9 @@ describe('PublicSiteRouter', () => {
   it('resolves english localized pages under /en', () => {
     renderRouter('/en/prezzi');
 
-    expect(screen.getByText('pricing:en')).toBeTruthy();
+    return screen.findByText('pricing:en').then((element) => {
+      expect(element).toBeTruthy();
+    });
   });
 
   it('redirects legacy legal paths to the localized public legal pages', async () => {

@@ -1,0 +1,2 @@
+**Role-Aware Simplicity**
+EdilSync uses **one interface structure** for all roles, but adjusts visibility and permissions based on role. Contractors see tasks assigned to them, their calendar, their photos, and change requests they submitted. Homeowners see progress indicators, recent updates, upcoming appointments, and items requiring their approval (change requests). Subcontractors see only tasks/calendar items relevant to their trade. Same mental model, different data density—**no one has to learn a new UI**.

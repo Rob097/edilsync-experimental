@@ -1,0 +1,2 @@
+**Core Object: Shared Calendar**
+One unified project calendar handles: **(1)** homeowner ↔ contractor appointments (walkthroughs, material selections), **(2)** multi-contractor coordination slots (plumber + electrician need to be on-site same day), and **(3)** rescheduling with automatic impact notifications. This replaces the chaos of group texts and missed appointments. Each trade's team lead gets calendar access. Goal: reduce wasted trips and scheduling conflicts—a direct ROI for Michele.

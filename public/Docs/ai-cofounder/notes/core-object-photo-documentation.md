@@ -1,0 +1,2 @@
+**Core Object: Photo Documentation**
+Photos are the **foundation** of EdilSync's value. Contractors take photos to **protect themselves**: before/after conditions, proof of work completed, evidence for change orders, documentation of delays or blockers. These photos automatically appear in the homeowner's timeline, solving the visibility problem without requiring Michele to "post updates." The system reframes documentation from "extra work" to **self-protection**, aligning incentives perfectly.

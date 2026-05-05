@@ -1,0 +1,1 @@
+Author background: High school focused on becoming a surveyor. No direct construction experience. Motivation: Heard consistent complaints from people building/renovating homes about contractor issues (timing, coordination, cost overruns). Built EdilS

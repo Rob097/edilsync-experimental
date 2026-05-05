@@ -1,0 +1,2 @@
+**Mobile-First Design Philosophy**
+The V1 experience is **mobile-first** because contractors like Michele work on-site with their phone, not at a desk. The mobile interface prioritizes speed: photo upload, status updates, appointment requests, and approvals must be fast (under 3 taps). Desktop/web becomes the "advanced mode" for detailed views, reports, and administrative tasks. If the mobile experience has friction, contractors won't adopt—period.

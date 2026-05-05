@@ -1,0 +1,2 @@
+**Two Competitor Categories: Both Miss the Mark**
+The market splits into two camps: **(1) High-end PM platforms** (Procore, Buildertrend, Autodesk) at $499-1099/month that require $500K+ in construction volume, offer comprehensive features but suffer from complexity and poor mobile reliability, and **(2) Lead-gen marketplaces** (HomeAdvisor, Thumbtack) that charge $50+ per lead, sell leads to multiple contractors creating fierce competition, and abandon users after the initial connection—no project management included.

@@ -1,0 +1,2 @@
+**Productivity Drain**
+Construction workers lose **almost 2 full working days each week** solving avoidable issues. Each team member spends **14+ hours weekly** on conflict, rework, and searching for information: 5.5 hours hunting for project data, 5 hours on conflict resolution, and 4 hours on rework activities.

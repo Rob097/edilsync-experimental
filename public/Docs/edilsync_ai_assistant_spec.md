@@ -148,7 +148,7 @@ Documentazione prodotto e contratto:
 
 - [edil_sync_product_domain_overview.md](./edil_sync_product_domain_overview.md)
 - [edilsync_complete_application_map.md](./edilsync_complete_application_map.md)
-- [edilsync_pricing_phase0_contract.md](./edilsync_pricing_phase0_contract.md)
+- [edilsync_pricing_model.md](./edilsync_pricing_model.md)
 - [edilsync_document_workflow_analysis.md](./edilsync_document_workflow_analysis.md)
 
 Codice che definisce i comportamenti reali dell'app:

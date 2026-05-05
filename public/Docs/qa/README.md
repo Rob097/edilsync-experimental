@@ -30,14 +30,7 @@ La guida operativa per avvio app, target `main`/`qa` e comando unico dei test e 
 
 - `public/Docs/edilsync_complete_application_map.md`
 - `public/Docs/edil_sync_product_domain_overview.md`
-- `public/Docs/edilsync_pricing_phase0_contract.md`
-- `public/Docs/edilsync_pricing_phase1_schema.md`
-- `public/Docs/edilsync_pricing_phase2_authorization.md`
-- `public/Docs/edilsync_pricing_phase3_server_writes.md`
-- `public/Docs/edilsync_pricing_phase4_frontend_gating.md`
-- `public/Docs/edilsync_pricing_phase5_billing_sponsor_ux.md`
-- `public/Docs/edilsync_pricing_phase6_stripe.md`
-- `public/Docs/edilsync_pricing_phase7_downgrade_visibility.md`
+- `public/Docs/edilsync_pricing_model.md`
 - `src/pages.config.js`
 - `src/operativa/OperativeAppRouter.jsx`
 - `src/web-admin/WebAdminRouter.jsx`

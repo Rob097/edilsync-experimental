@@ -1,0 +1,2 @@
+**Core Object: Built-In Messaging**
+Project-specific chat is essential to **replace WhatsApp/text** and centralize all communication inside EdilSync. Each project has a dedicated message thread. All project participants (contractor, homeowner, subcontractors) can communicate in real-time. Messages are searchable and tied to the project record, so nothing gets lost in personal text threads. This keeps context intact and ensures all communication is documented alongside tasks and photos.

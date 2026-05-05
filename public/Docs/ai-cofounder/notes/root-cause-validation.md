@@ -1,0 +1,2 @@
+**Root Cause Validation**
+**48% of all rework** is caused by miscommunication and poor project data, with **26% specifically from poor team communication**. Top causes: unresponsive team members, inability to collaborate effectively, and *lack of a common platform* - exactly what your solution addresses.

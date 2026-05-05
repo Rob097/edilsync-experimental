@@ -1,8 +1,10 @@
-# EdilSync - Modello Pricing e Accessi
+# EdilSync - Note Storiche sul Modello Pricing e Accessi
 
-> Nota: questo documento resta utile come analisi e razionalizzazione iniziale.
+> Nota: il rollout pricing e completo.
 >
-> Il documento canonico congelato per l'implementazione e ora `public/Docs/edilsync_pricing_phase0_contract.md`.
+> La fonte canonica attuale e `public/Docs/edilsync_pricing_model.md`.
+>
+> Questo documento resta utile come analisi e razionalizzazione iniziale del modello.
 
 ## Scopo di questo documento
 

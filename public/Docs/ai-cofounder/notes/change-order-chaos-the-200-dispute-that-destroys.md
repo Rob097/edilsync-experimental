@@ -1,0 +1,2 @@
+**Change Order Chaos: The $200 Dispute That Destroys Relationships**
+Users report **3+ weeks to get change orders approved**, documentation scattered across 50+ emails/PDFs/photos, no visibility into what's approved vs pending, and small charges ($90, $100, $250) adding up to thousands lost. The aftermath: **profit margins drop 3-4%**, relationships destroyed over minor disputes, work completed but unpaid, litigation, and project delays. Current tools don't solve this—it's all manual tracking and endless email threads.

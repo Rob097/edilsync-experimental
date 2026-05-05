@@ -1,0 +1,2 @@
+**Idea**
+A SaaS platform that centralizes communication, scheduling, task tracking, and appointments for homeowners, contractors, and construction professionals to reduce project delays and misunderstandings, plus a lightweight marketplace to browse and connect with local construction companies and tradespeople.

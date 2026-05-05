@@ -1,0 +1,2 @@
+**The Marketplace Problem: Paying for Leads That Go Nowhere**
+Contractors **hate** existing marketplaces. They pay $50-100+ per lead with **no guarantee of conversion**, leads are sold to 5+ contractors simultaneously, and jobs go to whoever responds first. One mover paid ~$100 across bids without getting chosen. Homeowners get bombarded with calls immediately after submitting requests. Contractors report **bad ROI, price-shopping customers, and platform fees eating into thin margins**. Quote: "Any handyman who needs these sites isn't one you want working in your house."

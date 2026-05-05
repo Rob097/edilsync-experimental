@@ -1,0 +1,2 @@
+**Team Lead Model: Minimal Friction**
+Only **team leads for each trade** use the platform—not entire crews. A crew of three bricklayers doesn't need three accounts; just the foreman. Same for electricians, plumbers, etc. This keeps adoption friction extremely low while enabling real multi-party coordination. Each trade involved in the project has one responsible user accessing via mobile or web app. Crew members continue working as they always have—the team lead relays information through EdilSync.

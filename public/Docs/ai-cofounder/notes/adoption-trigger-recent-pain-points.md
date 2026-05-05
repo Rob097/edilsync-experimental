@@ -1,0 +1,2 @@
+**Adoption Trigger: Recent Pain Points**
+The strongest forcing function for adoption is a **recent dispute or miscommunication**—a change-order argument, a "he said / she said" situation, or a wasted trip. Michele is most open to a tool when he just felt the pain. Secondary trigger: **professionalism during sales**. When quoting a job, Michele can say "I manage projects through a dedicated platform that documents everything," positioning himself above competitors still using texts. Combined with 30-day free trial, the "why not?" moment becomes real.

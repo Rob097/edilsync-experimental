@@ -1,0 +1,2 @@
+**Economic Impact: $31B+ Lost Annually**
+Poor communication costs the US construction industry **$31 billion annually in rework alone**. Additionally, time spent on non-optimal activities accounts for **$177.5 billion in labor costs per year**. Communication breakdowns are the primary contributor to these massive losses.
