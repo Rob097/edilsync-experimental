@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { AlertTriangle, ArrowRight, CalendarDays, Camera, Check, ChevronRight, ClipboardList, Clock3, FileQuestion, FileText, ListChecks, MessageCircle, MessageSquare, Phone, Shield, Users, Wallet } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { PUBLIC_SIGNUP_PATH } from '@/lib/authRouting';
 import usePublicSeo from '@/public/hooks/usePublicSeo';
 import usePublicGsap from '@/public/hooks/usePublicGsap';
 import StructuredData from '@/public/seo/StructuredData';
@@ -146,7 +147,7 @@ export default function HomePage({ locale = 'it' }) {
               </p>
               <div data-reveal className="mt-7 flex flex-col gap-3 sm:flex-row sm:items-center">
                 <Button asChild className={`${PUBLIC_CLASSES.primaryCta} h-12 px-7 text-base`}>
-                  <Link to="/app">
+                  <Link to={PUBLIC_SIGNUP_PATH}>
                     {t('publicHome.hero.ctaPrimary')}
                     <ArrowRight className="h-4 w-4" />
                   </Link>
@@ -464,7 +465,7 @@ export default function HomePage({ locale = 'it' }) {
                 <p className="mt-4 max-w-[30ch] text-sm leading-[1.7] text-[var(--public-muted)]">{t('publicHome.pricing.priceNote')}</p>
                 <div className="mt-6">
                   <Button asChild className={`${PUBLIC_CLASSES.primaryCta} h-12 w-full text-base`}>
-                    <Link to="/app">{t('publicHome.pricing.cta')}</Link>
+                    <Link to={PUBLIC_SIGNUP_PATH}>{t('publicHome.pricing.cta')}</Link>
                   </Button>
                 </div>
                 <p className="mt-3 text-center text-xs leading-[1.6] text-[var(--public-muted)]/85">{t('publicHome.pricing.noCard')}</p>
@@ -498,7 +499,7 @@ export default function HomePage({ locale = 'it' }) {
             </p>
             <div data-reveal className="mt-10 flex justify-center">
               <Button asChild className={PUBLIC_CLASSES.darkPrimaryCta}>
-                <Link to="/app">{t('publicHome.final.ctaPrimary')}</Link>
+                <Link to={PUBLIC_SIGNUP_PATH}>{t('publicHome.final.ctaPrimary')}</Link>
               </Button>
             </div>
             <p data-reveal className={`${PUBLIC_CLASSES.darkNote} mt-5`}>{t('publicHome.hero.note')}</p>

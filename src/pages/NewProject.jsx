@@ -4,6 +4,7 @@ import { createPageUrl } from '@/utils';
 import { appClient } from '@/api/appClient';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useLanguage } from '@/components/i18n/useLanguage';
+import { hasInvalidProjectDateRange } from '@/lib/projectDateRange';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -11,6 +12,7 @@ import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { ArrowLeft, Loader2 } from "lucide-react";
+import { toast } from 'sonner';
 import ContextBadge from '@/components/context/ContextBadge';
 
 export default function NewProject() {
@@ -75,10 +77,21 @@ export default function NewProject() {
       queryClient.invalidateQueries({ queryKey: ['userProjectParticipations'] });
       navigate(createPageUrl('ProjectDetail') + `?id=${project.id}`);
     },
+    onError: (error) => {
+      toast.error(error?.message || t('newProject.createError'));
+    },
   });
+
+  const hasInvalidDateRange = hasInvalidProjectDateRange(formData.start_date, formData.end_date);
 
   const handleSubmit = (e) => {
     e.preventDefault();
+
+    if (hasInvalidDateRange) {
+      toast.error(t('newProject.invalidDateRange'));
+      return;
+    }
+
     createProjectMutation.mutate(formData);
   };
 
@@ -195,7 +208,7 @@ export default function NewProject() {
               </Select>
             </div>
 
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
               <div className="space-y-2">
                 <Label htmlFor="start_date">{t('newProject.startDate')}</Label>
                 <Input
@@ -211,10 +224,15 @@ export default function NewProject() {
                   id="end_date"
                   type="date"
                   value={formData.end_date}
+                  min={formData.start_date || undefined}
                   onChange={(e) => handleChange('end_date', e.target.value)}
                 />
               </div>
             </div>
+
+            {hasInvalidDateRange ? (
+              <p className="text-sm font-medium text-[#b54732]">{t('newProject.invalidDateRange')}</p>
+            ) : null}
 
             <div className="flex gap-3 pt-4">
               <Button

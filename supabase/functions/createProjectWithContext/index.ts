@@ -28,6 +28,10 @@ Deno.serve(async (req) => {
     const creatorRole = optionalEnum(payload.my_role, "my_role", CREATOR_PROJECT_ROLES);
     const homeownerEmail = optionalEmail(payload.homeowner_email, "homeowner_email");
 
+    if (startDate && endDate && endDate < startDate) {
+      return jsonResponse({ error: "End date cannot be earlier than start date" }, 400);
+    }
+
     const currentContext = appUser.active_context || "personal";
     const activeCompanyId = appUser.active_company_id || null;
 

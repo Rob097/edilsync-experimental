@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { appClient } from '@/api/appClient';
 import { useMutation, useQueryClient, useQuery } from '@tanstack/react-query';
 import { useLanguage } from '@/components/i18n/useLanguage';
+import { hasInvalidProjectDateRange } from '@/lib/projectDateRange';
 import {
   Dialog,
   DialogContent,
@@ -15,6 +16,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Loader2 } from "lucide-react";
+import { toast } from 'sonner';
 
 export default function EditProjectDialog({ open, onOpenChange, project }) {
   const { t } = useLanguage();
@@ -77,10 +79,21 @@ export default function EditProjectDialog({ open, onOpenChange, project }) {
       queryClient.invalidateQueries(['projects']);
       onOpenChange(false);
     },
+    onError: (error) => {
+      toast.error(error?.message || t('editProjectDialog.saveError'));
+    },
   });
+
+  const hasInvalidDateRange = hasInvalidProjectDateRange(formData.start_date, formData.end_date);
 
   const handleSubmit = (e) => {
     e.preventDefault();
+
+    if (hasInvalidDateRange) {
+      toast.error(t('editProjectDialog.invalidDateRange'));
+      return;
+    }
+
     updateProjectMutation.mutate(formData);
   };
 
@@ -144,7 +157,7 @@ export default function EditProjectDialog({ open, onOpenChange, project }) {
             </Select>
           </div>
 
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
             <div className="space-y-2">
               <Label htmlFor="start_date">{t('editProjectDialog.startDate')}</Label>
               <Input
@@ -160,10 +173,15 @@ export default function EditProjectDialog({ open, onOpenChange, project }) {
                 id="end_date"
                 type="date"
                 value={formData.end_date}
+                min={formData.start_date || undefined}
                 onChange={(e) => handleChange('end_date', e.target.value)}
               />
             </div>
           </div>
+
+          {hasInvalidDateRange ? (
+            <p className="text-sm font-medium text-[#b54732]">{t('editProjectDialog.invalidDateRange')}</p>
+          ) : null}
 
           <div className="flex gap-3 pt-2">
             <Button

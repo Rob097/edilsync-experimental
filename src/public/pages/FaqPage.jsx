@@ -2,6 +2,7 @@ import React, { useMemo, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { ArrowRight, ChevronDown } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { PUBLIC_SIGNUP_PATH } from '@/lib/authRouting';
 import usePublicSeo from '@/public/hooks/usePublicSeo';
 import usePublicGsap from '@/public/hooks/usePublicGsap';
 import { PUBLIC_CLASSES } from '@/public/designSystem';
@@ -267,7 +268,7 @@ export default function FaqPage({ locale = 'it' }) {
           <p className={`mt-6 ${PUBLIC_CLASSES.darkBodyLead}`}>{copy.finalText}</p>
           <div className="mt-10 flex justify-center">
             <Button asChild className="bg-[#ef6144] hover:bg-[#d9553a] text-white h-10 rounded-full px-10 text-base gap-2 shadow-lg shadow-[rgba(239,97,68,0.4)]">
-              <Link to="/app">
+              <Link to={PUBLIC_SIGNUP_PATH}>
                 {copy.finalCta}
                 <ArrowRight className="h-4 w-4" />
               </Link>

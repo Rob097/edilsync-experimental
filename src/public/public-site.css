@@ -31,7 +31,7 @@
   z-index: 0;
 }
 
-.public-site > *:not(header) {
+.public-site > *:not(header):not(.public-cookie-banner) {
   position: relative;
   z-index: 1;
 }

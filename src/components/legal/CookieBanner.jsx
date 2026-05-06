@@ -34,9 +34,9 @@ export default function CookieBanner() {
   if (!visible) return null;
 
   return (
-    <div className="fixed bottom-0 left-0 right-0 z-[100] bg-white border-t border-gray-200 shadow-lg p-4 sm:p-6">
-      <div className="max-w-5xl mx-auto flex flex-col sm:flex-row items-start sm:items-center gap-4">
-        <div className="flex items-start gap-3 flex-1">
+    <div className="public-cookie-banner fixed bottom-0 left-0 right-0 z-[140] border-t border-gray-200 bg-white/95 p-4 shadow-[0_-18px_40px_rgba(34,24,20,0.12)] backdrop-blur">
+      <div className="max-w-5xl mx-auto flex flex-col gap-4 sm:flex-row sm:items-center">
+        <div className="order-2 flex items-start gap-3 sm:order-1 sm:flex-1">
           <Cookie className="h-5 w-5 text-[#ef6144] mt-0.5 flex-shrink-0" />
           <p className="text-sm text-gray-600">
             {tr('Utilizziamo cookie tecnici necessari per il funzionamento del servizio e cookie analitici per migliorare la tua esperienza. Per maggiori informazioni consulta la nostra', 'We use technical cookies necessary for the service and analytics cookies to improve your experience. For more information, see our')}{' '}
@@ -45,7 +45,7 @@ export default function CookieBanner() {
             </Link>.
           </p>
         </div>
-        <div className="flex gap-2 flex-shrink-0 w-full sm:w-auto">
+        <div className="order-1 flex w-full gap-2 sm:order-2 sm:w-auto sm:flex-shrink-0">
           <Button
             variant="outline"
             size="sm"

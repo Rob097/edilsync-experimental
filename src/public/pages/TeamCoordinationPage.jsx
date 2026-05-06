@@ -2,6 +2,7 @@ import React, { useMemo, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { ArrowRight, Bell, CalendarDays, ListChecks, MessageCircle, Navigation, Quote, Zap } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { PUBLIC_SIGNUP_PATH } from '@/lib/authRouting';
 import usePublicSeo from '@/public/hooks/usePublicSeo';
 import usePublicGsap from '@/public/hooks/usePublicGsap';
 import { PUBLIC_CLASSES } from '@/public/designSystem';
@@ -228,7 +229,7 @@ export default function TeamCoordinationPage({ locale = 'it' }) {
           </p>
           <div className="mt-8" data-reveal>
             <Button asChild className="h-11 rounded-full bg-[linear-gradient(135deg,#ef6144,#d9553a)] px-8 text-white shadow-[0_20px_44px_rgba(223,88,59,0.28)] hover:bg-[linear-gradient(135deg,#e55a3d,#c94d35)]">
-              <Link to="/app">
+              <Link to={PUBLIC_SIGNUP_PATH}>
                 {copy.cta}
                 <ArrowRight className="h-4 w-4" />
               </Link>
@@ -306,7 +307,7 @@ export default function TeamCoordinationPage({ locale = 'it' }) {
           <p className={`mt-6 ${PUBLIC_CLASSES.darkBodyLead}`}>{copy.finalText}</p>
           <div className="mt-10 flex justify-center">
             <Button asChild className="bg-[#ef6144] hover:bg-[#d9553a] text-white h-10 rounded-full px-10 text-base gap-2 shadow-lg shadow-[rgba(239,97,68,0.4)]">
-              <Link to="/app">
+              <Link to={PUBLIC_SIGNUP_PATH}>
                 {copy.finalCta}
                 <ArrowRight className="h-4 w-4" />
               </Link>

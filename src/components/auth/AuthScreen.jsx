@@ -1,10 +1,21 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { useSearchParams } from 'react-router-dom';
 import { useAuth } from '@/lib/AuthContext';
+import {
+  AUTH_CONFIRM_EMAIL_NOTICE,
+  AUTH_EMAIL_QUERY_KEY,
+  AUTH_NOTICE_QUERY_KEY,
+  AUTH_SIGNIN_TAB,
+  AUTH_SIGNUP_TAB,
+  AUTH_TAB_QUERY_KEY,
+  buildAuthSearchParams,
+  normalizeAuthTab,
+} from '@/lib/authRouting';
 import { useLanguage } from '@/components/i18n/useLanguage';
 import { Loader2 } from 'lucide-react';
 import { toast } from 'sonner';
@@ -12,6 +23,7 @@ import { toast } from 'sonner';
 export default function AuthScreen() {
   const { signInWithPassword, signUpWithPassword } = useAuth();
   const { t } = useLanguage();
+  const [searchParams, setSearchParams] = useSearchParams();
   const [isLoading, setIsLoading] = useState(false);
 
   const [signinEmail, setSigninEmail] = useState('');
@@ -20,6 +32,34 @@ export default function AuthScreen() {
   const [signupEmail, setSignupEmail] = useState('');
   const [signupPassword, setSignupPassword] = useState('');
   const [signupConfirmPassword, setSignupConfirmPassword] = useState('');
+
+  const activeTab = normalizeAuthTab(searchParams.get(AUTH_TAB_QUERY_KEY));
+  const activeNotice = searchParams.get(AUTH_NOTICE_QUERY_KEY);
+  const pendingEmailConfirmation = searchParams.get(AUTH_EMAIL_QUERY_KEY) || '';
+  const showConfirmationNotice = activeTab === AUTH_SIGNIN_TAB && activeNotice === AUTH_CONFIRM_EMAIL_NOTICE;
+
+  useEffect(() => {
+    if (!pendingEmailConfirmation) {
+      return;
+    }
+
+    setSigninEmail((currentValue) => currentValue || pendingEmailConfirmation);
+  }, [pendingEmailConfirmation]);
+
+  const updateAuthSearch = ({ tab = activeTab, notice, email, replace = true } = {}) => {
+    const nextSearchParams = new URLSearchParams(searchParams);
+    const authSearchParams = buildAuthSearchParams({ tab, notice, email });
+
+    nextSearchParams.delete(AUTH_TAB_QUERY_KEY);
+    nextSearchParams.delete(AUTH_NOTICE_QUERY_KEY);
+    nextSearchParams.delete(AUTH_EMAIL_QUERY_KEY);
+
+    authSearchParams.forEach((value, key) => {
+      nextSearchParams.set(key, value);
+    });
+
+    setSearchParams(nextSearchParams, { replace });
+  };
 
   const handleSignIn = async (event) => {
     event.preventDefault();
@@ -31,6 +71,9 @@ export default function AuthScreen() {
         email: signinEmail,
         password: signinPassword,
       });
+      if (showConfirmationNotice) {
+        updateAuthSearch({ tab: AUTH_SIGNIN_TAB, notice: null, email: null });
+      }
       toast.success(t('authScreen.signInSuccess'));
     } catch (error) {
       toast.error(error?.message || t('authScreen.invalidCredentials'));
@@ -56,6 +99,13 @@ export default function AuthScreen() {
       });
 
       if (result?.requiresEmailConfirmation) {
+        updateAuthSearch({
+          tab: AUTH_SIGNIN_TAB,
+          notice: AUTH_CONFIRM_EMAIL_NOTICE,
+          email: signupEmail.trim(),
+        });
+        setSignupPassword('');
+        setSignupConfirmPassword('');
         toast.success(t('authScreen.signUpConfirmationRequired'));
       } else {
         toast.success(t('authScreen.signUpSuccess'));
@@ -77,7 +127,22 @@ export default function AuthScreen() {
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <Tabs defaultValue="signin" className="w-full">
+          {showConfirmationNotice ? (
+            <div className="mb-4 rounded-2xl border border-[rgba(239,97,68,0.22)] bg-[rgba(255,243,237,0.92)] px-4 py-3 text-sm text-[#6a2d1f]">
+              <p className="font-semibold text-[#231b18]">{t('authScreen.confirmationNoticeTitle')}</p>
+              <p className="mt-1 leading-6">{t('authScreen.confirmationNoticeHint')}</p>
+              {pendingEmailConfirmation ? (
+                <p className="mt-2 break-all font-semibold text-[#231b18]">{pendingEmailConfirmation}</p>
+              ) : null}
+              <p className="mt-2 leading-6 text-[#7a4a3b]">{t('authScreen.confirmationNoticeFollowUp')}</p>
+            </div>
+          ) : null}
+
+          <Tabs
+            value={activeTab}
+            onValueChange={(nextValue) => updateAuthSearch({ tab: nextValue, notice: null, email: null })}
+            className="w-full"
+          >
             <TabsList className="grid w-full grid-cols-2">
               <TabsTrigger value="signin">{t('authScreen.signInTab')}</TabsTrigger>
               <TabsTrigger value="signup">{t('authScreen.signUpTab')}</TabsTrigger>

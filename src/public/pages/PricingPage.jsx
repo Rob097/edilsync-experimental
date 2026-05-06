@@ -2,6 +2,7 @@ import React, { useMemo, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { ArrowRight, CircleCheck, CircleHelp, Users } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { PUBLIC_SIGNUP_PATH } from '@/lib/authRouting';
 import usePublicSeo from '@/public/hooks/usePublicSeo';
 import usePublicGsap from '@/public/hooks/usePublicGsap';
 import { PUBLIC_CLASSES } from '@/public/designSystem';
@@ -281,7 +282,7 @@ export default function PricingPage({ locale = 'it' }) {
               <p className="mt-2 text-xs text-[var(--public-muted)]">{copy.priceNote}</p>
 
               <Button asChild className="mt-8 h-12 w-full gap-2 rounded-full bg-[linear-gradient(135deg,#ef6144,#d9553a)] px-8 text-base font-semibold text-white shadow-[0_20px_44px_rgba(223,88,59,0.28)] hover:bg-[linear-gradient(135deg,#e55a3d,#c94d35)]">
-                <Link to="/app">
+                <Link to={PUBLIC_SIGNUP_PATH}>
                   {copy.cta}
                   <ArrowRight className="h-4 w-4" />
                 </Link>

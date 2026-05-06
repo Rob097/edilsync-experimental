@@ -12,6 +12,15 @@ const settingsState = vi.hoisted(() => ({
   user: null,
   updateMe: vi.fn(),
   toastSuccess: vi.fn(),
+  navigate: vi.fn(),
+}));
+
+vi.mock('react-router-dom', () => ({
+  useNavigate: () => settingsState.navigate,
+}));
+
+vi.mock('@/utils', () => ({
+  createPageUrl: () => '/app',
 }));
 
 vi.mock('@/api/appClient', () => ({
@@ -83,6 +92,7 @@ describe('Settings page', () => {
     settingsState.updateMe.mockReset();
     settingsState.updateMe.mockResolvedValue({});
     settingsState.toastSuccess.mockReset();
+    settingsState.navigate.mockReset();
   });
 
   afterEach(() => {
@@ -98,8 +108,10 @@ describe('Settings page', () => {
     const phoneInput = screen.getByLabelText('Phone');
     const saveButton = screen.getByRole('button', { name: 'Save changes' });
 
-    expect(fullNameInput.value).toBe('QA Display');
-    expect(phoneInput.value).toBe('+39 111 222 333');
+    await waitFor(() => {
+      expect(fullNameInput.value).toBe('QA Display');
+      expect(phoneInput.value).toBe('+39 111 222 333');
+    });
     expect(saveButton.hasAttribute('disabled')).toBe(true);
 
     await user.clear(phoneInput);
@@ -113,6 +125,7 @@ describe('Settings page', () => {
       });
     });
     expect(settingsState.toastSuccess).toHaveBeenCalledWith('Profile updated successfully');
+    expect(settingsState.navigate).toHaveBeenCalledWith('/app');
   });
 
   it('opens the notifications tab and passes the current user email to preferences', async () => {

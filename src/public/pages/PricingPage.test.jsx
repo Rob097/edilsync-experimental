@@ -58,7 +58,7 @@ describe('PricingPage', () => {
     expect(screen.getByText('Prezzi chiari per società e cantieri.')).toBeTruthy();
     expect(screen.getByText('Il committente resta free. Anche subappaltatori e professionisti partecipano gratis ai cantieri in cui vengono invitati.')).toBeTruthy();
     expect(screen.getByText('EdilSync Pro per società')).toBeTruthy();
-    expect(screen.getByRole('link', { name: 'Crea account società' }).getAttribute('href')).toBe('/app');
+    expect(screen.getByRole('link', { name: 'Crea account società' }).getAttribute('href')).toBe('/app?auth=signup');
     expect(screen.getByRole('link', { name: 'Vai alla pagina FAQ completa' }).getAttribute('href')).toBe('/faq');
     expect(screen.getByRole('link', { name: 'contattaci' }).getAttribute('href')).toBe('/contatti');
     expect(screen.getByText('/contatti')).toBeTruthy();
@@ -75,7 +75,7 @@ describe('PricingPage', () => {
     expect(screen.getByText('Clear pricing for companies and worksites.')).toBeTruthy();
     expect(screen.getByText('Homeowners stay free. Subcontractors and professionals also join invited worksites for free.')).toBeTruthy();
     expect(screen.getByText('EdilSync Pro for companies')).toBeTruthy();
-    expect(screen.getByRole('link', { name: 'Create company account' }).getAttribute('href')).toBe('/app');
+    expect(screen.getByRole('link', { name: 'Create company account' }).getAttribute('href')).toBe('/app?auth=signup');
     expect(screen.getByRole('link', { name: 'Go to full FAQ page' }).getAttribute('href')).toBe('/en/faq');
     expect(screen.getByRole('link', { name: 'contact us' }).getAttribute('href')).toBe('/en/contatti');
     expect(screen.getByText('/en/contatti')).toBeTruthy();

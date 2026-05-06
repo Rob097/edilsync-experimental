@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { appClient } from '@/api/appClient';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { createPageUrl } from '@/utils';
 import { useLanguage } from '@/components/i18n/useLanguage';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -14,6 +16,7 @@ import NotificationPreferences from '@/components/settings/NotificationPreferenc
 export default function Settings() {
   const { t, currentLanguage } = useLanguage();
   const tr = (itText, enText) => (currentLanguage === 'it' ? itText : enText);
+  const navigate = useNavigate();
   const queryClient = useQueryClient();
   
   const [formData, setFormData] = useState({
@@ -44,6 +47,7 @@ export default function Settings() {
       queryClient.invalidateQueries(['currentUser']);
       setHasChanges(false);
       toast.success(t('settings.profileUpdated'));
+      navigate(createPageUrl('Dashboard'));
     },
   });
 
