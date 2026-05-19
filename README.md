@@ -1,27 +1,34 @@
-# EdilSync Experimental
+# EdilSync
 
-Applicazione React + Vite con backend completo su Supabase (Postgres, RLS, Auth, Storage, Edge Functions).
+Web platform to coordinate residential construction and renovation projects. The idea is to keep the contractor, client, subcontractors and professionals all aligned in one place, with communications, decisions, tasks, appointments and documents always tracked, so delays, misunderstandings and disputes are reduced.
+
+Live at [edilsync.rdlabs.digital](https://edilsync.rdlabs.digital/).
+
+---
 
 ## Stack
 
-- Frontend: React, Vite, TanStack Query, Tailwind
-- Backend: Supabase Postgres + RLS
-- Auth: Supabase Auth
-- Storage: bucket `project-files`
-- Edge Functions:
-  - `syncUserAccess`
-  - `sendNotificationOrEmail`
+- **Frontend:** React, Vite, TanStack Query, Tailwind CSS
+- **Backend:** Supabase (PostgreSQL, RLS, Auth, Storage, Edge Functions)
+- **Auth:** Supabase Auth (Google OAuth)
+- **Storage:** `project-files` bucket
+- **Edge Functions:** `syncUserAccess`, `sendNotificationOrEmail`
+- **Testing:** Vitest, Playwright
 
-## Requisiti
+---
+
+## Requirements
 
 - Node.js 20+
 - npm
 
-Usare `nvm use` se hai `nvm` installato: il repository ora include `.nvmrc`.
+If you use `nvm`, the repository includes `.nvmrc` — just run `nvm use`.
 
-## Configurazione ambiente
+---
 
-Creare `.env.local` (oppure `.env`) con:
+## Environment setup
+
+Create a `.env.local` (or `.env`) file with:
 
 ```bash
 VITE_SUPABASE_URL=https://<project-ref>.supabase.co
@@ -29,101 +36,53 @@ VITE_SUPABASE_ANON_KEY=<supabase-anon-or-publishable-key>
 VITE_SUPABASE_AUTH_PROVIDER=google
 ```
 
-Variabili `VITE_*`:
+`VITE_*` variables are always included in the frontend bundle and should never contain secrets, tokens or server-side keys. The app blocks startup if it detects variables matching patterns like `VITE_*SECRET*`, `VITE_*ACCESS_TOKEN*` or `VITE_*SERVICE_ROLE*`.
 
-- sono sempre incluse nel bundle frontend
-- possono contenere solo configurazione pubblica
-- non devono mai contenere token, secret, password o chiavi server-side
+---
 
-Il frontend ora blocca l'avvio se trova variabili `VITE_*` con nomi da segreto come `VITE_*SECRET*`, `VITE_*ACCESS_TOKEN*`, `VITE_*SERVICE_ROLE*`.
-
-## Avvio locale
+## Running locally
 
 ```bash
 npm install
 npm run dev
 ```
 
-Build produzione:
+Production build:
 
 ```bash
 npm run build
 npm run preview
 ```
 
-## QA e testing
+---
 
-Per tutto cio che riguarda i test usare come riferimento unico:
+## Testing
 
-- `tests/README.md`
-
-Comandi principali:
+All test-related documentation is in `tests/README.md`. Main commands:
 
 ```bash
-npm run dev
-npm run qa
-npm run test:unit
-npm run test:integration:qa
-npm run test:db
-npm run test:e2e
-npm run test:e2e:smoke
-npm run test:all
+npm run qa                      # full QA run
+npm run test:unit               # unit tests (Vitest)
+npm run test:integration:qa     # integration tests
+npm run test:db                 # database tests (pgTAP)
+npm run test:e2e                # end-to-end tests (Playwright)
+npm run test:e2e:smoke          # smoke tests only
+npm run test:all                # everything
 ```
 
-Documentazione di copertura:
-
+Additional docs:
 - `public/Docs/qa/README.md`
 - `public/Docs/qa/scenario-matrix.md`
 - `public/Docs/qa/vitest-backlog.md`
-- `public/Docs/qa/integration-backlog.md`
-- `public/Docs/qa/pgtap-backlog.md`
 - `public/Docs/qa/playwright-backlog.md`
 
-Report test aggregati:
-
+Test reports:
 - `tests/reports/index.html`
 - `tests/playwright-report/`
 - `tests/test-results/`
 
-I workflow automatici di test sono stati rimossi: il flusso QA e manuale.
+---
 
-## Migrazioni database
+## Database migrations
 
-Le migrazioni sono in `supabase/migrations` e includono:
-
-- schema applicativo
-- policy RLS
-- trigger di audit
-- trigger di sincronizzazione accessi utente
-
-## Edge Functions
-
-### `syncUserAccess`
-
-Sincronizza i campi di accesso utente (`company_ids`, `admin_company_ids`, `project_ids`) in base a membership e partecipazioni.
-
-### `sendNotificationOrEmail`
-
-Gestisce notifiche in-app e invio email.
-
-Variabili supportate:
-
-- `RESEND_API_KEY`
-- `RESEND_FROM_EMAIL`
-- `EMAIL_WEBHOOK_URL` (fallback se Resend non è configurato)
-
-Per le funzioni Stripe servono anche:
-
-- `STRIPE_SECRET_KEY`
-- `STRIPE_PRODUCT_ID`
-- `STRIPE_PRICE_MONTHLY`
-- `STRIPE_PRICE_YEARLY`
-- `STRIPE_WEBHOOK_SIGNING_SECRET`
-
-Queste variabili sono server-side e non devono mai essere prefissate con `VITE_`.
-
-## Note operative
-
-- Le automazioni di accesso sono gestite via trigger DB su `company_members` e `project_participants`.
-- In caso di OAuth, ricordarsi di configurare in Supabase `Site URL` e `Redirect URLs` del dominio frontend.
-- L’assistente `edilsync_assistant` è in modalità placeholder e può essere esteso con logica dedicata.
+Migrations live in `supabase/migrations` and cover the application schema, RLS policies, audit triggers and related stored procedures.
