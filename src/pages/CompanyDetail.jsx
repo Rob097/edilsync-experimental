@@ -39,8 +39,7 @@ import FeatureGateCard from '@/components/ui/FeatureGateCard';
 import { isFeatureAccessible, isFeatureFullyEnabled, useCompanyFeatureAccess } from '@/hooks/useFeatureAccess';
 
 export default function CompanyDetail() {
-  const { t, currentLanguage } = useLanguage();
-  const tr = (itText, enText) => (currentLanguage === 'it' ? itText : enText);
+  const { t, currentLanguage } = useLanguage();const tx = (key, options) => t(`completeScoped.pages_CompanyDetail.${key}`, options);
   const navigate = useNavigate();
   const location = useLocation();
   const urlParams = useMemo(() => new URLSearchParams(location.search), [location.search]);
@@ -337,17 +336,17 @@ export default function CompanyDetail() {
           <Card className="border-[#ef6144]/20 bg-[linear-gradient(135deg,rgba(239,97,68,0.08),rgba(255,244,235,0.95))] shadow-sm">
             <CardContent className="flex flex-col gap-4 p-4 lg:flex-row lg:items-center lg:justify-between">
               <div className="space-y-1">
-                <p className="text-sm font-semibold text-[#b5432e]">{tr('Sblocca il piano Pro', 'Unlock the Pro plan')}</p>
+                <p className="text-sm font-semibold text-[#b5432e]">{tx('k1')}</p>
                 <p className="text-base font-semibold text-slate-900">
-                  {tr('Attiva funzioni avanzate e sponsorship dei cantieri della societa.', 'Activate advanced tools and worksite sponsorship for your company.')}
+                  {tx('k2')}
                 </p>
                 <p className="text-sm text-slate-600">
-                  {tr('Apri la sezione fatturazione e scopri il piano annuale con 2 mensilita gratuite.', 'Open billing and discover the yearly plan with 2 free months.')}
+                  {tx('k3')}
                 </p>
               </div>
               <Button className="bg-[#ef6144] shadow-[0_16px_32px_-18px_rgba(239,97,68,0.95)] hover:bg-[#d9553a]" onClick={() => navigateToSection('billing')}>
                 <CreditCard className="h-4 w-4" />
-                {tr('Vai alla fatturazione', 'Go to billing')}
+                {tx('k4')}
               </Button>
             </CardContent>
           </Card>
@@ -363,20 +362,20 @@ export default function CompanyDetail() {
         <TabsList className="mb-4 flex-wrap h-auto" data-tour="company-tabs">
           <TabsTrigger value="panoramica" className="flex items-center gap-2">
             <Activity className="h-4 w-4" />
-            {tr('Panoramica', 'Overview')}
+            {tx('k5')}
           </TabsTrigger>
           <TabsTrigger value="operativita" className="flex items-center gap-2">
             <Clock3 className="h-4 w-4" />
-            {tr('Operatività', 'Operations')}
+            {tx('k6')}
           </TabsTrigger>
           <TabsTrigger value="info" className="flex items-center gap-2">
             <Users className="h-4 w-4" />
-            {tr('Info', 'Info')}
+            {tx('k7')}
           </TabsTrigger>
           {isAdmin && (
             <TabsTrigger value="billing" className="flex items-center gap-2">
               <CreditCard className="h-4 w-4" />
-              {tr('Fatturazione', 'Billing')}
+              {tx('k8')}
             </TabsTrigger>
           )}
         </TabsList>
@@ -385,19 +384,19 @@ export default function CompanyDetail() {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <Card>
               <CardContent className="p-4">
-                <p className="text-sm text-gray-500">{tr('Membri attivi', 'Active members')}</p>
+                <p className="text-sm text-gray-500">{tx('k9')}</p>
                 <p className="text-2xl font-bold mt-1">{activeMembers.length}</p>
               </CardContent>
             </Card>
             <Card>
               <CardContent className="p-4">
-                <p className="text-sm text-gray-500">{tr('Inviti pendenti', 'Pending invites')}</p>
+                <p className="text-sm text-gray-500">{tx('k10')}</p>
                 <p className="text-2xl font-bold mt-1">{invitedMembers.length}</p>
               </CardContent>
             </Card>
             <Card>
               <CardContent className="p-4">
-                <p className="text-sm text-gray-500">{tr('Timbrature aperte', 'Open sessions')}</p>
+                <p className="text-sm text-gray-500">{tx('k11')}</p>
                 <p className="text-2xl font-bold mt-1">{canUseCompanyTimeTracking ? openSessions.length : 'Premium'}</p>
               </CardContent>
             </Card>
@@ -405,31 +404,31 @@ export default function CompanyDetail() {
 
           <Card data-tour="company-quick-actions">
             <CardHeader>
-              <CardTitle className="text-lg">{tr('Azioni rapide', 'Quick actions')}</CardTitle>
+              <CardTitle className="text-lg">{tx('k12')}</CardTitle>
             </CardHeader>
             <CardContent className="flex flex-wrap gap-2">
               <Button variant="outline" onClick={() => navigateToSection('operativita', 'timbrature')}>
                 <Clock3 className="h-4 w-4 mr-2" />
-                {tr('Apri timbrature', 'Open time tracking')}
+                {tx('k13')}
               </Button>
               <Button variant="outline" onClick={() => navigateToSection('operativita', 'chat')}>
                 <MessageSquare className="h-4 w-4 mr-2" />
-                {tr('Apri chat interna', 'Open internal chat')}
+                {tx('k14')}
               </Button>
               <Button variant="outline" onClick={() => navigateToSection('info', 'documenti')}>
                 <FileText className="h-4 w-4 mr-2" />
-                {tr('Apri documenti', 'Open documents')}
+                {tx('k15')}
               </Button>
               {isAdmin && (
                 <Button variant="outline" onClick={() => setInviteDialogOpen(true)}>
                   <UserPlus className="h-4 w-4 mr-2" />
-                  {tr('Invita membro', 'Invite member')}
+                  {tx('k16')}
                 </Button>
               )}
               {isAdmin && (
                 <Button variant="outline" onClick={() => navigateToSection('billing')}>
                   <CreditCard className="h-4 w-4 mr-2" />
-                  {tr('Apri fatturazione', 'Open billing')}
+                  {tx('k17')}
                 </Button>
               )}
             </CardContent>
@@ -440,9 +439,9 @@ export default function CompanyDetail() {
           <Card>
             <CardContent className="p-4">
               <div className="flex flex-wrap items-center gap-4 text-sm">
-                <p className="font-medium text-gray-800">{tr('Area operativa società', 'Company operations area')}</p>
-                <p className="text-gray-500">{tr('Timbrature aperte', 'Open sessions')}: <span className="font-semibold text-gray-700">{openSessions.length}</span></p>
-                <p className="text-gray-500">{tr('Membri attivi', 'Active members')}: <span className="font-semibold text-gray-700">{activeMembers.length}</span></p>
+                <p className="font-medium text-gray-800">{tx('k18')}</p>
+                <p className="text-gray-500">{tx('k19')}: <span className="font-semibold text-gray-700">{openSessions.length}</span></p>
+                <p className="text-gray-500">{tx('k20')}: <span className="font-semibold text-gray-700">{activeMembers.length}</span></p>
               </div>
             </CardContent>
           </Card>
@@ -453,21 +452,21 @@ export default function CompanyDetail() {
               onClick={() => navigateToSection('operativita', 'all')}
               className={operativaSection === 'all' ? 'bg-[#ef6144] hover:bg-[#d9553a]' : ''}
             >
-              {tr('Vista completa', 'Full view')}
+              {tx('k21')}
             </Button>
             <Button
               variant={operativaSection === 'timbrature' ? 'default' : 'outline'}
               onClick={() => navigateToSection('operativita', 'timbrature')}
               className={operativaSection === 'timbrature' ? 'bg-[#ef6144] hover:bg-[#d9553a]' : ''}
             >
-              {tr('Timbrature e presenze', 'Time tracking')}
+              {tx('k22')}
             </Button>
             <Button
               variant={operativaSection === 'chat' ? 'default' : 'outline'}
               onClick={() => navigateToSection('operativita', 'chat')}
               className={operativaSection === 'chat' ? 'bg-[#ef6144] hover:bg-[#d9553a]' : ''}
             >
-              {tr('Chat interna', 'Internal chat')}
+              {tx('k23')}
             </Button>
           </div>
 
@@ -483,12 +482,9 @@ export default function CompanyDetail() {
                 />
               ) : (
                 <FeatureGateCard
-                  title={tr('Timbrature premium', 'Premium time tracking')}
-                  description={tr(
-                    'Le timbrature societarie fanno parte delle feature premium della società. In piano free la sezione resta visibile ma bloccata.',
-                    'Company time tracking is part of the company premium features. On the free plan the section stays visible but locked.',
-                  )}
-                  badgeLabel={tr('Società paid', 'Paid company')}
+                  title={tx('k24')}
+                  description={tx('k36')}
+                  badgeLabel={tx('k25')}
                 />
               )}
             </div>
@@ -496,7 +492,7 @@ export default function CompanyDetail() {
 
           {(operativaSection === 'all' || operativaSection === 'chat') && (
             <div id="section-chat-operativita" className={operativaSection === 'all' ? 'border-t pt-4' : ''}>
-              <h3 className="text-lg font-semibold mb-3">{tr('Chat interna società', 'Company internal chat')}</h3>
+              <h3 className="text-lg font-semibold mb-3">{tx('k26')}</h3>
               <ProjectMessaging
                 companyId={companyId}
                 companyName={company.name}
@@ -517,27 +513,27 @@ export default function CompanyDetail() {
               onClick={() => navigateToSection('info', 'all')}
               className={infoSection === 'all' ? 'bg-[#ef6144] hover:bg-[#d9553a]' : ''}
             >
-              {tr('Vedi tutto', 'View all')}
+              {tx('k27')}
             </Button>
             <Button
               variant={infoSection === 'documenti' ? 'default' : 'outline'}
               onClick={() => navigateToSection('info', 'documenti')}
               className={infoSection === 'documenti' ? 'bg-[#ef6144] hover:bg-[#d9553a]' : ''}
             >
-              {tr('Documenti', 'Documents')}
+              {tx('k28')}
             </Button>
             <Button
               variant={infoSection === 'membri' ? 'default' : 'outline'}
               onClick={() => navigateToSection('info', 'membri')}
               className={infoSection === 'membri' ? 'bg-[#ef6144] hover:bg-[#d9553a]' : ''}
             >
-              {tr('Membri e inviti', 'Members and invites')}
+              {tx('k29')}
             </Button>
           </div>
 
           {(infoSection === 'all' || infoSection === 'documenti') && (
             <div id="section-documenti" className="rounded-lg border bg-white p-4">
-              <h3 className="text-lg font-semibold mb-3">{tr('Documenti società', 'Company documents')}</h3>
+              <h3 className="text-lg font-semibold mb-3">{tx('k30')}</h3>
               <DocumentList
                 companyId={companyId}
                 scopeType="company"
@@ -643,7 +639,7 @@ export default function CompanyDetail() {
             className="w-full flex items-center gap-3 px-4 py-3 hover:bg-gray-50 rounded-lg text-left transition-colors"
           >
             <Clock3 className="h-5 w-5 text-gray-700" />
-            <span className="font-medium">{tr('Apri timbrature', 'Open time tracking')}</span>
+            <span className="font-medium">{tx('k31')}</span>
           </button>
           <button
             onClick={() => {
@@ -653,7 +649,7 @@ export default function CompanyDetail() {
             className="w-full flex items-center gap-3 px-4 py-3 hover:bg-gray-50 rounded-lg text-left transition-colors"
           >
             <MessageSquare className="h-5 w-5 text-gray-700" />
-            <span className="font-medium">{tr('Apri chat interna', 'Open internal chat')}</span>
+            <span className="font-medium">{tx('k32')}</span>
           </button>
           <button
             onClick={() => {
@@ -663,7 +659,7 @@ export default function CompanyDetail() {
             className="w-full flex items-center gap-3 px-4 py-3 hover:bg-gray-50 rounded-lg text-left transition-colors"
           >
             <FileText className="h-5 w-5 text-gray-700" />
-            <span className="font-medium">{tr('Apri documenti', 'Open documents')}</span>
+            <span className="font-medium">{tx('k33')}</span>
           </button>
           {isAdmin && (
             <button
@@ -674,7 +670,7 @@ export default function CompanyDetail() {
               className="w-full flex items-center gap-3 px-4 py-3 hover:bg-gray-50 rounded-lg text-left transition-colors"
             >
               <CreditCard className="h-5 w-5 text-gray-700" />
-              <span className="font-medium">{tr('Apri fatturazione', 'Open billing')}</span>
+              <span className="font-medium">{tx('k34')}</span>
             </button>
           )}
           {isAdmin && (
@@ -686,7 +682,7 @@ export default function CompanyDetail() {
               className="w-full flex items-center gap-3 px-4 py-3 hover:bg-gray-50 rounded-lg text-left transition-colors"
             >
               <UserPlus className="h-5 w-5 text-gray-700" />
-              <span className="font-medium">{tr('Invita membro', 'Invite member')}</span>
+              <span className="font-medium">{tx('k35')}</span>
             </button>
           )}
         </div>

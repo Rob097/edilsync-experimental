@@ -40,12 +40,12 @@ const BIM_FILE_TYPES = new Set(['ifc', 'glb', 'gltf']);
 const normalizeCategory = (value) => (LEGACY_TECHNICAL_CATEGORIES.has(value) ? 'technical' : (value || 'other'));
 const isBimFile = (document) => BIM_FILE_TYPES.has((document?.file_type || document?.model_format || '').toLowerCase());
 
-const getCategoryLabels = (tr) => ({
-  technical: tr('Documentazione tecnica', 'Technical documentation'),
-  contract: tr('Contratti', 'Contracts'),
-  photo: tr('Foto', 'Photo'),
+const getCategoryLabels = (tx) => ({
+  technical: tx('k1'),
+  contract: tx('k2'),
+  photo: tx('k3'),
   report: 'Report',
-  other: tr('Altro', 'Other'),
+  other: tx('k4'),
 });
 
 const getFileIcon = (fileType) => {
@@ -66,22 +66,22 @@ const formatFileSize = (bytes) => {
   return (bytes / (1024 * 1024)).toFixed(1) + ' MB';
 };
 
-const getDocumentStatusLabel = (status, tr) => {
+const getDocumentStatusLabel = (status, tx) => {
   switch (status) {
     case 'draft':
-      return tr('Bozza', 'Draft');
+      return tx('k5');
     case 'in_review':
-      return tr('In revisione', 'In review');
+      return tx('k6');
     case 'approved':
-      return tr('Approvato', 'Approved');
+      return tx('k7');
     case 'rejected':
-      return tr('Respinto', 'Rejected');
+      return tx('k8');
     case 'superseded':
-      return tr('Superato', 'Superseded');
+      return tx('k9');
     case 'archived':
-      return tr('Archiviato', 'Archived');
+      return tx('k10');
     default:
-      return status || tr('Bozza', 'Draft');
+      return status || tx('k11');
   }
 };
 
@@ -96,8 +96,8 @@ export default function DocumentList({
   featureAccess,
 }) {
   const { currentLanguage, t } = useLanguage();
-  const tr = (itText, enText) => currentLanguage === 'it' ? itText : enText;
-  const categoryLabels = getCategoryLabels(tr);
+  const tx = (key, options) => t(`completeScoped.components_project_DocumentList.${key}`, options);
+  const categoryLabels = getCategoryLabels(tx);
   const dateLocale = currentLanguage === 'it' ? it : enUS;
   const queryClient = useQueryClient();
   const isCompanyScope = scopeType === 'company';
@@ -105,7 +105,7 @@ export default function DocumentList({
   const featureMode = featureAccess?.config?.mode || null;
   const isBasicMode = featureAccess?.access_level === 'limited' && ['basic', 'basic_chronological'].includes(featureMode);
   const documentsQueryKey = isCompanyScope ? ['companyDocuments', companyId] : ['projectDocuments', projectId];
-  const scopeLabel = isCompanyScope ? tr('società', 'company') : tr('cantiere', 'worksite');
+  const scopeLabel = isCompanyScope ? tx('k12') : tx('k13');
   const [searchQuery, setSearchQuery] = useState('');
   const [filterCategory, setFilterCategory] = useState('all');
   const [filterType, setFilterType] = useState('all');
@@ -246,7 +246,7 @@ export default function DocumentList({
               className="sm:w-auto"
             >
               <ArrowLeft className="h-4 w-4 mr-2" />
-              {tr('Indietro', 'Back')}
+              {tx('k14')}
             </Button>
           )}
           
@@ -269,7 +269,7 @@ export default function DocumentList({
                   setViewMode('grid');
                   setOpenFolder(null);
                 }}
-                title={tr('Vista a griglia', 'Grid view')}
+                title={tx('k15')}
               >
                 <Grid3x3 className="h-4 w-4" />
               </Button>
@@ -280,7 +280,7 @@ export default function DocumentList({
                   setViewMode('list');
                   setOpenFolder(null);
                 }}
-                title={tr('Vista a lista', 'List view')}
+                title={tx('k16')}
               >
                 <List className="h-4 w-4" />
               </Button>
@@ -296,7 +296,7 @@ export default function DocumentList({
               className="bg-[#ef6144] hover:bg-[#d9553a]"
             >
               <Upload className="h-4 w-4 mr-2" />
-              {tr('Carica', 'Upload')}
+              {tx('k17')}
             </Button>
           )}
         </div>
@@ -309,22 +309,22 @@ export default function DocumentList({
               <SelectValue placeholder={t('documents.category')} />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="all">{tr('Tutte', 'All')}</SelectItem>
-              <SelectItem value="technical">{tr('Documentazione tecnica', 'Technical documentation')}</SelectItem>
-              <SelectItem value="contract">{tr('Contratti', 'Contracts')}</SelectItem>
-              <SelectItem value="photo">{tr('Foto', 'Photo')}</SelectItem>
+              <SelectItem value="all">{tx('k18')}</SelectItem>
+              <SelectItem value="technical">{tx('k19')}</SelectItem>
+              <SelectItem value="contract">{tx('k20')}</SelectItem>
+              <SelectItem value="photo">{tx('k21')}</SelectItem>
               <SelectItem value="report">Report</SelectItem>
-              <SelectItem value="other">{tr('Altro', 'Other')}</SelectItem>
+              <SelectItem value="other">{tx('k22')}</SelectItem>
             </SelectContent>
           </Select>
           
           {uniqueFileTypes.length > 0 && (
             <Select value={filterType} onValueChange={setFilterType}>
               <SelectTrigger className="w-28">
-                <SelectValue placeholder={tr('Tipo', 'Type')} />
+                <SelectValue placeholder={tx('k23')} />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="all">{tr('Tutti', 'All')}</SelectItem>
+                <SelectItem value="all">{tx('k24')}</SelectItem>
                 {uniqueFileTypes.map(type => (
                   <SelectItem key={type} value={type}>{type.toUpperCase()}</SelectItem>
                 ))}
@@ -334,26 +334,26 @@ export default function DocumentList({
 
           <Select value={filterStatus} onValueChange={setFilterStatus}>
             <SelectTrigger className="w-40">
-              <SelectValue placeholder={tr('Stato', 'Status')} />
+              <SelectValue placeholder={tx('k25')} />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="all">{tr('Tutti gli stati', 'All statuses')}</SelectItem>
-              <SelectItem value="draft">{tr('Bozza', 'Draft')}</SelectItem>
-              <SelectItem value="in_review">{tr('In revisione', 'In review')}</SelectItem>
-              <SelectItem value="approved">{tr('Approvato', 'Approved')}</SelectItem>
-              <SelectItem value="rejected">{tr('Respinto', 'Rejected')}</SelectItem>
-              <SelectItem value="archived">{tr('Archiviato', 'Archived')}</SelectItem>
+              <SelectItem value="all">{tx('k26')}</SelectItem>
+              <SelectItem value="draft">{tx('k27')}</SelectItem>
+              <SelectItem value="in_review">{tx('k28')}</SelectItem>
+              <SelectItem value="approved">{tx('k29')}</SelectItem>
+              <SelectItem value="rejected">{tx('k30')}</SelectItem>
+              <SelectItem value="archived">{tx('k31')}</SelectItem>
             </SelectContent>
           </Select>
           
           <Select value={sortBy} onValueChange={setSortBy}>
             <SelectTrigger className="w-36">
-              <SelectValue placeholder={tr('Ordina', 'Sort')} />
+              <SelectValue placeholder={tx('k32')} />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="date_desc">{tr('Più recenti', 'Newest')}</SelectItem>
-              <SelectItem value="date_asc">{tr('Meno recenti', 'Oldest')}</SelectItem>
-              <SelectItem value="name_asc">{tr('Nome A-Z', 'Name A-Z')}</SelectItem>
+              <SelectItem value="date_desc">{tx('k33')}</SelectItem>
+              <SelectItem value="date_asc">{tx('k34')}</SelectItem>
+              <SelectItem value="name_asc">{tx('k35')}</SelectItem>
             </SelectContent>
           </Select>
         </div>
@@ -378,7 +378,7 @@ export default function DocumentList({
                   <div>
                     <p className="font-medium text-gray-900">{category.label}</p>
                     <p className="text-sm text-gray-500 mt-1">
-                      {category.count} {tr('file', 'files')}
+                      {category.count} {tx('k36')}
                     </p>
                   </div>
                 </div>
@@ -388,9 +388,9 @@ export default function DocumentList({
         ) : (
           <EmptyState
             icon={Folder}
-            title={tr('Nessun documento', 'No documents')}
-            description={tr(`Carica il primo documento della ${scopeLabel}.`, `Upload the first ${scopeLabel} document.`)}
-            actionLabel={canUpload ? tr('Carica documento', 'Upload document') : undefined}
+            title={tx('k37')}
+            description={tx('k53', { value1: scopeLabel })}
+            actionLabel={canUpload ? tx('k38') : undefined}
             onAction={canUpload ? () => {
               setUploadDialogOpen(true);
               onUploadDialogChange?.(true);
@@ -406,7 +406,7 @@ export default function DocumentList({
                 {categoryLabels[openFolder]}
               </h3>
               <p className="text-sm text-gray-500">
-                {folderDocuments.length} {folderDocuments.length === 1 ? tr('documento', 'document') : tr('documenti', 'documents')}
+                {folderDocuments.length} {folderDocuments.length === 1 ? tx('k39') : tx('k40')}
               </p>
             </div>
             <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
@@ -455,7 +455,7 @@ export default function DocumentList({
                           size="icon"
                           className="h-7 w-7"
                           asChild
-                          title={tr('Scarica', 'Download')}
+                          title={tx('k41')}
                         >
                           <a href={doc.access_url} target="_blank" rel="noopener noreferrer" download>
                             <Download className="h-3.5 w-3.5 text-gray-500" />
@@ -471,14 +471,14 @@ export default function DocumentList({
                             <DropdownMenuContent align="end">
                               <DropdownMenuItem onClick={() => setEditingDocument(doc)}>
                                 <Pencil className="h-4 w-4 mr-2" />
-                                {tr('Modifica', 'Edit')}
+                                {tx('k42')}
                               </DropdownMenuItem>
                               <DropdownMenuItem
                                 onClick={() => deleteMutation.mutate(doc.id)}
                                 className="text-red-600"
                               >
                                 <Trash2 className="h-4 w-4 mr-2" />
-                                {tr('Elimina', 'Delete')}
+                                {tx('k43')}
                               </DropdownMenuItem>
                             </DropdownMenuContent>
                           </DropdownMenu>
@@ -493,9 +493,9 @@ export default function DocumentList({
         ) : (
           <EmptyState
             icon={FileText}
-            title={tr('Nessun documento in questa cartella', 'No documents in this folder')}
-            description={tr('Carica documenti in questa categoria.', 'Upload documents in this category.')}
-            actionLabel={canUpload ? tr('Carica documento', 'Upload document') : undefined}
+            title={tx('k44')}
+            description={tx('k45')}
+            actionLabel={canUpload ? tx('k46') : undefined}
             onAction={canUpload ? () => {
               setUploadDialogOpen(true);
               onUploadDialogChange?.(true);
@@ -525,7 +525,7 @@ export default function DocumentList({
                       )}
                       {!isBasicMode && doc.document_status && (
                         <span className="bg-orange-50 text-orange-700 px-2 py-0.5 rounded text-xs uppercase">
-                          {getDocumentStatusLabel(doc.document_status, tr)}
+                          {getDocumentStatusLabel(doc.document_status, tx)}
                         </span>
                       )}
                       {!isBasicMode && doc.revision_number && (
@@ -555,7 +555,7 @@ export default function DocumentList({
                     variant="ghost"
                     size="icon"
                     onClick={() => setPreviewDocument(doc)}
-                    title={tr('Anteprima', 'Preview')}
+                    title={tx('k47')}
                   >
                     <Eye className="h-4 w-4 text-gray-500" />
                   </Button>
@@ -563,7 +563,7 @@ export default function DocumentList({
                     variant="ghost"
                     size="icon"
                     asChild
-                    title={tr('Scarica', 'Download')}
+                    title={tx('k48')}
                   >
                     <a href={doc.access_url} target="_blank" rel="noopener noreferrer" download>
                       <Download className="h-4 w-4 text-gray-500" />
@@ -580,14 +580,14 @@ export default function DocumentList({
                       <DropdownMenuContent align="end">
                         <DropdownMenuItem onClick={() => setEditingDocument(doc)}>
                           <Pencil className="h-4 w-4 mr-2" />
-                          {tr('Modifica', 'Edit')}
+                          {tx('k49')}
                         </DropdownMenuItem>
                         <DropdownMenuItem
                           onClick={() => deleteMutation.mutate(doc.id)}
                           className="text-red-600"
                         >
                           <Trash2 className="h-4 w-4 mr-2" />
-                          {tr('Elimina', 'Delete')}
+                          {tx('k50')}
                         </DropdownMenuItem>
                       </DropdownMenuContent>
                     </DropdownMenu>
@@ -599,13 +599,13 @@ export default function DocumentList({
         ) : (
           <EmptyState
             icon={FileText}
-            title={searchQuery ? t('common.noResults') : tr('Nessun documento', 'No documents')}
+            title={searchQuery ? t('common.noResults') : tx('k51')}
             description={
               searchQuery
                 ? t('common.tryModifyingSearchTerms')
-                : tr(`Carica il primo documento della ${scopeLabel}.`, `Upload the first ${scopeLabel} document.`)
+                : tx('k54', { value1: scopeLabel })
             }
-            actionLabel={!searchQuery && canUpload ? tr('Carica documento', 'Upload document') : undefined}
+            actionLabel={!searchQuery && canUpload ? tx('k52') : undefined}
             onAction={!searchQuery && canUpload ? () => {
               setUploadDialogOpen(true);
               onUploadDialogChange?.(true);

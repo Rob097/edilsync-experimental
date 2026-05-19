@@ -28,8 +28,7 @@ const BIM_FILE_TYPES = new Set(['ifc', 'glb', 'gltf']);
 export default function OperativeCompanyWorkspace() {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
-  const { currentLanguage, t } = useLanguage();
-  const tr = (itText, enText) => (currentLanguage === 'it' ? itText : enText);
+  const { currentLanguage, t } = useLanguage();const tx = (key, options) => t(`operationalScoped.operativa_pages_OperativeCompanyWorkspace.${key}`, options);
   const dateLocale = currentLanguage === 'it' ? it : enUS;
 
   const {
@@ -131,7 +130,7 @@ export default function OperativeCompanyWorkspace() {
       if (!uploadFile || !activeCompanyId) return;
       const fileType = uploadFile.name.split('.').pop()?.toLowerCase() || 'file';
       if (bimBlocked && isBimFileType(fileType)) {
-        throw new Error(tr('I file BIM sono disponibili solo con la società Pro.', 'BIM files are available only with the Pro company plan.'));
+        throw new Error(tx('k1'));
       }
       const uploaded = await appClient.integrations.Core.UploadFile({ file: uploadFile });
       await appClient.entities.ProjectDocument.create({
@@ -154,8 +153,8 @@ export default function OperativeCompanyWorkspace() {
     },
     onError: (error) => {
       toast({
-        title: tr('Upload non disponibile', 'Upload unavailable'),
-        description: error?.message || tr('Impossibile caricare il documento.', 'Unable to upload the document.'),
+        title: tx('k2'),
+        description: error?.message || tx('k3'),
       });
     },
   });
@@ -200,7 +199,7 @@ export default function OperativeCompanyWorkspace() {
     return (
       <Card className="operative-simple-card rounded-[1.5rem] border-[rgba(197,177,165,0.44)]">
         <CardContent className="p-4 space-y-3">
-          <p className="text-sm text-[#6d5c55]">{tr('Nessuna società attiva nel contesto operativo.', 'No active company in operational context.')}</p>
+          <p className="text-sm text-[#6d5c55]">{tx('k4')}</p>
           <Button className="w-full" onClick={() => navigate('/app/operativa')}>{t('operational.backToSelection')}</Button>
         </CardContent>
       </Card>
@@ -233,12 +232,9 @@ export default function OperativeCompanyWorkspace() {
         ) : (
           <FeatureGateCard
             compact
-            title={tr('Timbrature premium', 'Premium time tracking')}
-            description={tr(
-              'Le timbrature societarie sono disponibili solo con le funzioni premium della società.',
-              'Company time tracking is available only with the company premium features.',
-            )}
-            badgeLabel={tr('Società Pro', 'Pro company')}
+            title={tx('k5')}
+            description={tx('k17')}
+            badgeLabel={tx('k6')}
           />
         )
       )}
@@ -247,7 +243,7 @@ export default function OperativeCompanyWorkspace() {
         canUseCompanyDocuments ? (
           <Card className="operative-simple-card rounded-[1.5rem] border-[rgba(197,177,165,0.44)]">
             <CardHeader>
-              <CardTitle className="text-base text-[#231b18]">{tr('Documenti società', 'Company documents')}</CardTitle>
+              <CardTitle className="text-base text-[#231b18]">{tx('k7')}</CardTitle>
             </CardHeader>
             <CardContent className="space-y-2 max-h-[58vh] overflow-y-auto">
               <p className="text-xs text-[#8c766e]">{t('operational.docsOrderedInfo')}</p>
@@ -284,8 +280,8 @@ export default function OperativeCompanyWorkspace() {
                       <Button size="sm" variant="outline" className="mt-2" onClick={() => {
                         if (bimBlocked && isBimFileType(document.file_type || document.model_format)) {
                           toast({
-                            title: tr('Preview BIM non disponibile', 'BIM preview unavailable'),
-                            description: tr('Con la società free i file IFC, GLB e GLTF non sono apribili in anteprima.', 'With a free company, IFC, GLB, and GLTF files cannot be previewed.'),
+                            title: tx('k8'),
+                            description: tx('k9'),
                           });
                           return;
                         }
@@ -308,8 +304,8 @@ export default function OperativeCompanyWorkspace() {
                               <Button size="sm" variant="outline" className="mt-2" onClick={() => {
                                 if (bimBlocked && isBimFileType(document.file_type || document.model_format)) {
                                   toast({
-                                    title: tr('Preview BIM non disponibile', 'BIM preview unavailable'),
-                                    description: tr('Con la società free i file IFC, GLB e GLTF non sono apribili in anteprima.', 'With a free company, IFC, GLB, and GLTF files cannot be previewed.'),
+                                    title: tx('k10'),
+                                    description: tx('k11'),
                                   });
                                   return;
                                 }
@@ -330,12 +326,9 @@ export default function OperativeCompanyWorkspace() {
         ) : (
           <FeatureGateCard
             compact
-            title={tr('Documenti premium', 'Premium documents')}
-            description={tr(
-              'I documenti della società sono disponibili solo con le funzioni premium della società.',
-              'Company documents are available only with the company premium features.',
-            )}
-            badgeLabel={tr('Società Pro', 'Pro company')}
+            title={tx('k12')}
+            description={tx('k18')}
+            badgeLabel={tx('k13')}
           />
         )
       )}
@@ -344,7 +337,7 @@ export default function OperativeCompanyWorkspace() {
         <Card className="operative-simple-card flex h-[66vh] flex-col overflow-hidden rounded-[1.5rem] border-[rgba(197,177,165,0.44)]">
           <div className="flex items-center justify-between border-b border-[rgba(197,177,165,0.42)] p-3">
             <div className="min-w-0">
-              <p className="truncate text-sm font-semibold text-[#231b18]">{selectedChannel?.name || tr('Canali società', 'Company channels')}</p>
+              <p className="truncate text-sm font-semibold text-[#231b18]">{selectedChannel?.name || tx('k14')}</p>
             </div>
             {!isGeneralOnlyChat && (
               <Button variant="ghost" size="icon" onClick={() => setChatShowChannels((prev) => !prev)}>
@@ -399,7 +392,7 @@ export default function OperativeCompanyWorkspace() {
           </DialogHeader>
           <div className="space-y-3">
             <Input type="file" accept={bimBlocked ? 'image/*,.pdf,.doc,.docx,.xls,.xlsx,.txt,.csv,.zip,.rar' : 'image/*,.pdf,.doc,.docx,.xls,.xlsx,.txt,.csv,.ifc,.glb,.gltf,.zip,.rar'} onChange={(event) => setUploadFile(event.target.files?.[0] || null)} />
-            {bimBlocked ? <p className="text-xs text-amber-700">{tr('IFC, GLB e GLTF si attivano solo con la società Pro.', 'IFC, GLB, and GLTF unlock only with the Pro company plan.')}</p> : null}
+            {bimBlocked ? <p className="text-xs text-amber-700">{tx('k15')}</p> : null}
             <Select value={uploadCategory} onValueChange={setUploadCategory}>
               <SelectTrigger>
                 <SelectValue />
@@ -432,7 +425,7 @@ export default function OperativeCompanyWorkspace() {
         <div className="max-w-md mx-auto grid grid-cols-3 gap-2">
           <Button variant={activeTab === 'timbrature' ? 'default' : 'ghost'} className="h-12 flex-col rounded-[1rem]" onClick={() => setActiveTab('timbrature')}>
             <Clock className="h-4 w-4" />
-            <span className="text-[10px]">{tr('Timbrature', 'Tracking')}</span>
+            <span className="text-[10px]">{tx('k16')}</span>
           </Button>
           <Button variant={activeTab === 'docs' ? 'default' : 'ghost'} className="h-12 flex-col rounded-[1rem]" onClick={() => setActiveTab('docs')}>
             <FileText className="h-4 w-4" />

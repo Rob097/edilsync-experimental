@@ -23,7 +23,7 @@ import { notifyTaskBlockedResponsible } from '@/lib/taskBlockNotifications';
 
 export default function TaskDialog({ open, onOpenChange, task, projectId, showMilestoneField = true }) {
   const { t, currentLanguage } = useLanguage();
-  const tr = (itText, enText) => currentLanguage === 'it' ? itText : enText;
+  const tx = (key, options) => t(`completeScoped.components_project_TaskDialog.${key}`, options);
   const queryClient = useQueryClient();
   const initializedTaskKeyRef = useRef(null);
   const [formData, setFormData] = useState({
@@ -402,7 +402,7 @@ export default function TaskDialog({ open, onOpenChange, task, projectId, showMi
 
         <form onSubmit={handleSubmit} className="space-y-5 mt-4">
           <div className="rounded-lg border p-4 space-y-4">
-            <h4 className="text-sm font-semibold text-gray-900">{tr('Dettagli attività', 'Task details')}</h4>
+            <h4 className="text-sm font-semibold text-gray-900">{tx('k1')}</h4>
 
             <div className="space-y-2">
               <Label htmlFor="title">{t('taskDialog.title')} *</Label>
@@ -455,7 +455,7 @@ export default function TaskDialog({ open, onOpenChange, task, projectId, showMi
           </div>
 
           <div className="rounded-lg border p-4 space-y-4">
-            <h4 className="text-sm font-semibold text-gray-900">{tr('Pianificazione e assegnazione', 'Planning and assignment')}</h4>
+            <h4 className="text-sm font-semibold text-gray-900">{tx('k2')}</h4>
 
             <AssigneeSelector
               participants={participants}
@@ -523,7 +523,7 @@ export default function TaskDialog({ open, onOpenChange, task, projectId, showMi
 
           {formData.status === 'blocked' ? (
             <div className="rounded-lg border border-red-200 bg-red-50/40 p-4 space-y-4">
-              <h4 className="text-sm font-semibold text-red-800">{tr('Dettagli blocco', 'Blocking details')}</h4>
+              <h4 className="text-sm font-semibold text-red-800">{tx('k3')}</h4>
 
               <div className="space-y-2">
                 <Label htmlFor="blocked_reason">{t('taskDialog.blockedReason')} *</Label>

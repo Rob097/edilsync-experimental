@@ -33,8 +33,7 @@ export default function InviteParticipantDialog({
   currentUserParticipation,
   projectPricingStatus: projectPricingStatusProp,
 }) {
-  const { t, currentLanguage } = useLanguage();
-  const tr = (itText, enText) => (currentLanguage === 'it' ? itText : enText);
+  const { t, currentLanguage } = useLanguage();const tx = (key, options) => t(`completeScoped.components_project_InviteParticipantDialog.${key}`, options);
   const queryClient = useQueryClient();
   
   const [participantType, setParticipantType] = useState('company');
@@ -95,7 +94,7 @@ export default function InviteParticipantDialog({
       return result.participant;
     },
     onError: (error) => {
-      toast.error(error?.message || tr('Impossibile inviare l\'invito', 'Unable to send the invite'));
+      toast.error(error?.message || tx('k1'));
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['projectParticipants', projectId] });
@@ -161,11 +160,8 @@ export default function InviteParticipantDialog({
   const inviteContextNotice = useMemo(() => {
     if (projectIsBlockedForSponsorLoss) {
       return {
-        title: tr('Cantiere bloccato per perdita sponsor', 'Worksite blocked after sponsor loss'),
-        description: tr(
-          'Questo cantiere puo invitare solo societa finche non rientra una sponsorship valida. Le superfici premium restano invisibili fino al recupero sponsor.',
-          'This worksite can invite only companies until a valid sponsorship returns. Premium surfaces stay hidden until sponsor recovery.',
-        ),
+        title: tx('k2'),
+        description: tx('k6'),
         className: 'border-red-200 bg-red-50 text-red-900',
       };
     }
@@ -179,33 +175,24 @@ export default function InviteParticipantDialog({
 
     if (projectIsSponsored && !companyIsPaid) {
       return {
-        title: tr('Societa free, cantiere sponsorizzato', 'Free company, sponsored worksite'),
-        description: tr(
-          'Questa societa restera free a livello globale, ma dentro questo cantiere potra usare le feature premium grazie alla sponsorship attiva.',
-          'This company will remain free globally, but inside this worksite it will be able to use premium features thanks to the active sponsorship.',
-        ),
+        title: tx('k3'),
+        description: tx('k7'),
         className: 'border-green-200 bg-green-50 text-green-900',
       };
     }
 
     if (!projectIsSponsored && !companyIsPaid) {
       return {
-        title: tr('Societa free, cantiere non sponsorizzato', 'Free company, unsponsored worksite'),
-        description: tr(
-          'Questa societa potra partecipare al cantiere solo con le feature gratuite finche nessuna societa paid partecipante non attivera una sponsorship.',
-          'This company will join the worksite with free features only until a paid participant company activates a sponsorship.',
-        ),
+        title: tx('k4'),
+        description: tx('k8'),
         className: 'border-slate-200 bg-slate-50 text-slate-900',
       };
     }
 
     if (!projectIsSponsored && companyIsPaid) {
       return {
-        title: tr('Societa paid, cantiere non sponsorizzato', 'Paid company, unsponsored worksite'),
-        description: tr(
-          'Dopo l ingresso nel cantiere, questa societa potra sponsorizzarlo e sbloccare le feature premium per tutti i partecipanti.',
-          'After joining the worksite, this company will be able to sponsor it and unlock premium features for all participants.',
-        ),
+        title: tx('k5'),
+        description: tx('k9'),
         className: 'border-[#ef6144]/20 bg-[#ef6144]/5 text-slate-900',
       };
     }

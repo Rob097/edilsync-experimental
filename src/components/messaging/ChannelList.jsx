@@ -21,8 +21,8 @@ export default function ChannelList({
   canCreateChannels = true,
   channelAccessMode = 'full',
 }) {
-  const { currentLanguage } = useLanguage();
-  const tr = (it, en) => currentLanguage === 'it' ? it : en;
+  const { t, currentLanguage } = useLanguage();
+  const tx = (key, options) => t(`completeScoped.components_messaging_ChannelList.${key}`, options);
   const [createDialogOpen, setCreateDialogOpen] = useState(false);
   const effectiveProjectId = scopeType === 'project' ? (projectId || scopeId) : null;
   const effectiveCompanyId = scopeType === 'company' ? (companyId || scopeId) : activeCompanyId;
@@ -157,7 +157,7 @@ export default function ChannelList({
       {generalChannel && (
         <div>
           <h3 className="text-xs font-semibold text-gray-500 uppercase mb-2 px-3">
-            {tr('Canale Generale', 'General Channel')}
+            {tx('k1')}
           </h3>
           {renderChannel(generalChannel, <Hash className="h-4 w-4" />)}
         </div>
@@ -167,7 +167,7 @@ export default function ChannelList({
       {companyChannel && (
         <div>
           <h3 className="text-xs font-semibold text-gray-500 uppercase mb-2 px-3">
-            {tr('Canale Aziendale', 'Company Channel')}
+            {tx('k2')}
           </h3>
           {renderChannel(companyChannel, <Building2 className="h-4 w-4" />)}
         </div>
@@ -177,7 +177,7 @@ export default function ChannelList({
       {!isCompanyScope && directChannels.length > 0 && (
         <div>
           <h3 className="text-xs font-semibold text-gray-500 uppercase mb-2 px-3">
-            {tr('Messaggi Diretti', 'Direct Messages')}
+            {tx('k3')}
           </h3>
           <div className="space-y-1">
             {directChannels.map(channel => 
@@ -192,7 +192,7 @@ export default function ChannelList({
         <div>
           <div className="flex items-center justify-between mb-2 px-3">
             <h3 className="text-xs font-semibold text-gray-500 uppercase">
-              {tr('Canali', 'Channels')}
+              {tx('k4')}
             </h3>
             {canCreateChannels && (
               <Button
@@ -221,7 +221,7 @@ export default function ChannelList({
           onClick={() => setCreateDialogOpen(true)}
         >
           <Plus className="h-4 w-4 mr-2" />
-          {tr('Crea Canale', 'Create Channel')}
+          {tx('k5')}
         </Button>
       )}
 

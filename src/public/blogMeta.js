@@ -1,3 +1,5 @@
+import { getPublicCopy } from '@/public/lib/publicTranslations';
+
 function getLocaleTag(locale = 'it') {
   return locale === 'en' ? 'en-GB' : 'it-IT';
 }
@@ -19,7 +21,8 @@ export function formatReadingTime(minutes, locale = 'it') {
   if (!minutes || Number.isNaN(Number(minutes))) return '';
 
   const roundedMinutes = Math.max(1, Math.round(Number(minutes)));
-  return locale === 'en' ? `${roundedMinutes} min read` : `${roundedMinutes} min di lettura`;
+  const copy = getPublicCopy(locale, 'blogMeta');
+  return `${roundedMinutes} ${copy?.minReadLabel || (locale === 'en' ? 'min read' : 'min di lettura')}`;
 }
 
 export function getBlogMetaItems(post, locale = 'it') {

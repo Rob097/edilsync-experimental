@@ -4,32 +4,31 @@ import { MessageSquare, Calendar, ListTodo, Users } from "lucide-react";
 import { useLanguage } from '@/components/i18n/useLanguage';
 
 export default function SuggestedMessages({ onSelectMessage }) {
-  const { currentLanguage } = useLanguage();
-  const tr = (itText, enText) => currentLanguage === 'it' ? itText : enText;
-
+  const { t, currentLanguage } = useLanguage();
+  const tx = (key, options) => t(`completeScoped.components_assistant_SuggestedMessages.${key}`, options);
   const suggestions = [
     {
       icon: ListTodo,
-      text: tr('Quali sono i miei cantieri in corso?', 'What are my ongoing worksites?'),
+      text: tx('k1'),
     },
     {
       icon: Calendar,
-      text: tr('Mostrami gli eventi di questa settimana', 'Show me this week\'s events'),
+      text: tx('k2'),
     },
     {
       icon: Users,
-      text: tr('Chi sono i partecipanti del cantiere X?', 'Who are the participants of worksite X?'),
+      text: tx('k3'),
     },
     {
       icon: MessageSquare,
-      text: tr('Ci sono nuove notifiche importanti?', 'Are there any important new notifications?'),
+      text: tx('k4'),
     },
   ];
 
   return (
     <div className="space-y-2">
       <p className="text-xs font-medium text-gray-500 uppercase tracking-wide">
-        {tr('Suggerimenti', 'Suggestions')}
+        {tx('k5')}
       </p>
       <div className="grid grid-cols-1 gap-2">
         {suggestions.map((suggestion, idx) => (

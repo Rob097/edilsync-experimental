@@ -1,0 +1,1434 @@
+{
+  "home": {
+    "seo": {
+      "title": "Piattaforma di coordinamento cantieri",
+      "description": "EdilSync centralizza comunicazione e pianificazione tra imprese, committenti e subappaltatori.",
+      "softwareDescription": "Software per centralizzare comunicazione, pianificazione ed esecuzione tracciabile in cantiere."
+    },
+    "hero": {
+      "badge": "La piattaforma per cantieri edili",
+      "titleA": "Basta caos in cantiere.",
+      "titleHighlight": "Coordina tutto",
+      "titleB": "in un unico spazio.",
+      "subtitle": "EdilSync unisce committenti, imprese, subappaltatori e professionisti in un'unica piattaforma. Meno chiamate, meno incomprensioni, più controllo sul tuo cantiere.",
+      "ctaPrimary": "Crea account gratis",
+      "ctaSecondary": "Scopri di più",
+      "note": "Account personale o società · Nessuna carta per iniziare · Upgrade quando serve",
+      "highlights": {
+        "alignmentLabel": "Allineamento",
+        "alignmentText": "Un solo posto per task, foto, varianti e conversazioni di cantiere.",
+        "traceabilityLabel": "Tracciabilità",
+        "traceabilityText": "Ogni azione diventa evidenza utile per decisioni, SAL e dispute.",
+        "controlLabel": "Controllo",
+        "controlText": "Meno chiamate di chiarimento, meno viaggi a vuoto, meno zone grigie."
+      },
+      "preview": {
+        "alt": "Interfaccia EdilSync per coordinare il cantiere",
+        "feedLabel": "Feed di cantiere",
+        "feedTitle": "Stato, responsabilità e approvazioni nello stesso flusso operativo.",
+        "feedText": "Il committente vede avanzamento e decisioni. L’impresa conserva il contesto senza rincorrere chat e allegati.",
+        "fieldReadyLabel": "Pronto sul campo",
+        "fieldReadyValue": "3 tap",
+        "fieldReadyText": "Per aggiornare stato, allegare una foto o rispondere a una richiesta di variante."
+      }
+    },
+    "stats": {
+      "aValue": "$31B",
+      "aLabel": "Persi ogni anno per scarsa comunicazione",
+      "bValue": "98%",
+      "bLabel": "Dei cantieri non rispetta gli standard di qualità",
+      "cValue": "14h",
+      "cLabel": "Perse a settimana per conflitti e rilavorazioni",
+      "dValue": "48%",
+      "dLabel": "Delle rilavorazioni causate da comunicazione inadeguata"
+    },
+    "problem": {
+      "chip": "Il problema",
+      "title": "Il cantiere è un caos comunicativo",
+      "subtitle": "Ogni giorno si usano strumenti diversi per lavorare in cantiere, ma il risultato è disallineamento e comunicazioni fuori contesto.",
+      "issueLabel": "Criticità {{number}}",
+      "c1t": "WhatsApp, SMS, email... ovunque",
+      "c1d": "Le informazioni si perdono tra chat personali, gruppi e thread infiniti. Impossibile ritrovare quella conversazione importante di 3 settimane fa.",
+      "c2t": "Chiamate continue che bloccano il lavoro",
+      "c2d": "Il committente chiama per aggiornamenti. I subappaltatori chiamano per coordinarsi. Ogni interruzione costa 15 minuti di produttività.",
+      "c3t": "\"Pensavo fosse incluso\"",
+      "c3d": "Le varianti non documentate diventano dispute. Con margini del 3-5%, una sola incomprensione può annullare il profitto dell'intero cantiere.",
+      "c4t": "Ritardi senza responsabilità chiare",
+      "c4d": "Chi ha causato il ritardo? Il fornitore? Il cliente che non ha scelto i materiali? Senza documentazione, la colpa ricade sempre sull'impresa.",
+      "c5t": "Viaggi a vuoto e coordinamento impossibile",
+      "c5d": "L'elettricista arriva ma il lavoro precedente non è finito. Ogni viaggio a vuoto costa €100-200. Moltiplicato per decine di volte all'anno.",
+      "c6t": "Nessuna visibilità per il committente",
+      "c6d": "Il proprietario non sa cosa succede, si sente in ansia, chiama in continuazione. Non per cattiveria, ma perché nessuno strumento gli dà trasparenza."
+    },
+    "solution": {
+      "chip": "La soluzione",
+      "title": "Un unico spazio per tutti gli attori del cantiere",
+      "subtitle": "EdilSync non è un gestionale generico. È una piattaforma contestuale dove ruoli, permessi e responsabilità cambiano in base al cantiere e al contesto operativo.",
+      "s1t": "Crea il cantiere",
+      "s1d": "L'impresa crea il cantiere e invita committente, subappaltatori e professionisti con un click.",
+      "s2t": "Lavora e documenta",
+      "s2d": "Ogni azione — foto, task, varianti, messaggi — diventa automaticamente documentazione tracciabile.",
+      "s3t": "Tutti allineati",
+      "s3d": "Committente, impresa e subappaltatori vedono lo stesso stato del cantiere. Zero ambiguità.",
+      "result": {
+        "label": "Risultato operativo",
+        "title": "Tutti vedono lo stesso cantiere, senza rincorrersi.",
+        "b1": "Il committente segue avanzamento e decisioni senza telefonate continue.",
+        "b2": "L’impresa coordina task, prove fotografiche e change request nello stesso flusso.",
+        "b3": "Il subappaltatore trova solo ciò che gli serve, quando gli serve."
+      }
+    },
+    "features": {
+      "chip": "Funzionalità",
+      "title": "Tutto ciò che serve al tuo cantiere",
+      "subtitle": "Task, foto, varianti, chat e controllo economico lavorano insieme per darti controllo reale.",
+      "moduleLabel": "Modulo",
+      "seeAll": "Vedi tutte le funzionalità",
+      "f1t": "Task e Milestone",
+      "f1d": "Organizza il lavoro per stanze, fasi e milestone. Stato bloccato con responsabilità taggata per documentare chi causa i ritardi.",
+      "f2t": "Documentazione Fotografica",
+      "f2d": "Le foto scattate diventano automaticamente parte del cantiere. Timestamp, organizzazione per task e protezione legale integrata.",
+      "f3t": "Varianti e Change Request",
+      "f3d": "Ogni modifica è tracciata con impatto su costi e tempi. Il committente approva o rifiuta. Fine alle dispute 'pensavo fosse incluso'.",
+      "f4t": "Chat Contestuale",
+      "f4d": "Messaggi di cantiere con riferimenti a task, milestone e documenti. Sostituisce WhatsApp mantenendo tutto nel contesto giusto.",
+      "f5t": "Calendario Condiviso",
+      "f5d": "Un calendario unificato per coordinare sopralluoghi, subappaltatori e scadenze. Rileva conflitti automaticamente.",
+      "f6t": "Gestione Dispute",
+      "f6d": "Formalizza i conflitti con timeline, prove, commenti e stati. Protezione documentale per tutte le parti coinvolte.",
+      "f7t": "Controllo Economico",
+      "f7d": "Budget, costi, tariffe e stati avanzamento lavori. Il committente vede il progresso; l'impresa gestisce il controllo finanziario.",
+      "f8t": "Timbrature e Presenze",
+      "f8d": "Clock-in/out con GPS opzionale, collegamento al cantiere, export dati e sincronizzazione automatica con il modulo costi."
+    },
+    "why": {
+      "chip": "Perché EdilSync",
+      "title": "Non è il solito gestionale",
+      "w1t": "Protezione crea fiducia",
+      "w1d": "L'unico tool costruito attorno alla protezione dell'impresa. La documentazione automatica protegge entrambe le parti, senza lavoro extra.",
+      "w2t": "Mobile-first, davvero",
+      "w2d": "Progettato per il cantiere, non per la scrivania. Upload foto in 3 tap, aggiornamento stato in 3 tap. Se l'esperienza mobile ha friction, non funziona.",
+      "w3t": "Zero formazione",
+      "w3d": "Se servono più di 5 minuti per capirlo, abbiamo sbagliato noi. Interfacce chiare, nessuna funzionalità nascosta, stesso modello per tutti i ruoli.",
+      "w4t": "Documentazione automatica",
+      "w4d": "Non devi 'scrivere aggiornamenti'. Le tue azioni — foto, task update, approvazioni — diventano automaticamente il feed del cantiere."
+    },
+    "audience": {
+      "chip": "Per chi è",
+      "title": "Progettato per ogni attore del cantiere",
+      "subtitle": "Stesso strumento, interfaccia adattata al ruolo. Nessuno deve imparare qualcosa di nuovo.",
+      "micheleRole": "Contractor",
+      "micheleQuote": "\"Non sono io in ritardo — sto aspettando che il cliente scelga le piastrelle da tre settimane.\"",
+      "matteoRole": "Committente",
+      "matteoQuote": "\"Sto spendendo €40.000 per rifare la cucina e non ho idea di cosa stia succedendo.\"",
+      "marcoRole": "Subappaltatore",
+      "marcoQuote": "\"Arrivo in cantiere e il lavoro precedente non è finito. Un altro viaggio a vuoto.\"",
+      "helpLabel": "COME EDILSYNC AIUTA",
+      "m1": "Documenta tutto automaticamente senza lavoro extra",
+      "m2": "Proteggi i margini con change request tracciati",
+      "m3": "Coordina i subappaltatori da un'unica piattaforma",
+      "m4": "Mostra professionalità ai tuoi clienti",
+      "t1": "Visibilità in tempo reale senza dover chiamare",
+      "t2": "Sai esattamente quando aspettarti i progressi",
+      "t3": "Nessuna sorpresa su costi extra non concordati",
+      "t4": "Accesso gratuito nel cantiere in cui sei invitato",
+      "r1": "Vedi solo i task e le scadenze che ti riguardano",
+      "r2": "Zero viaggi a vuoto grazie al calendario condiviso",
+      "r3": "Chat di cantiere senza dare il numero personale",
+      "r4": "Documenti e foto sempre a portata di mano"
+    },
+    "pricing": {
+      "chip": "Prezzi",
+      "title": "Un prezzo semplice. Zero sorprese.",
+      "subtitle": "Privati sempre gratis. Società free o Pro. Gli strumenti avanzati di cantiere si attivano quando il cantiere viene sponsorizzato.",
+      "badge": "Società + sponsorship",
+      "trial": "€19/mese o €190/anno",
+      "plan": "PIANO UNICO",
+      "price": "€19/mese",
+      "priceNote": "Strumenti avanzati per l'impresa e possibilità di sponsorizzare i cantieri. Nessuna carta per iniziare.",
+      "cta": "Crea account società",
+      "noCard": "Nessuna carta richiesta per iniziare",
+      "included": "Con EdilSync Pro hai a disposizione:",
+      "p1": "Timbrature societarie",
+      "p2": "Possibilità di sponsorizzare il cantiere e attivare gli strumenti avanzati nei cantieri sponsorizzati",
+      "p3": "Nei cantieri sponsorizzati: task, milestone e change request",
+      "p4": "Chat contestuale di società e, nei cantieri sponsorizzati, chat contestuale di cantiere",
+      "p5": "Calendario condiviso con rilevamento conflitti",
+      "p6": "Nei cantieri sponsorizzati: gestione documentale con revisioni",
+      "p7": "Nei cantieri sponsorizzati: modulo dispute e protezione documentale",
+      "p8": "Nei cantieri sponsorizzati: controllo economico di cantiere",
+      "p9": "Nei cantieri sponsorizzati: timbrature e presenze di cantiere",
+      "p10": "Area operativa avanzata per l'impresa",
+      "p11": "Fatturazione e gestione abbonamento",
+      "p12": "Notifiche in-app e via email",
+      "explainer": {
+        "freeBadge": "Sempre free",
+        "freeTitle": "Chi non paga",
+        "freeText": "Committente, subappaltatori e professionisti invitati possono entrare gratis nel cantiere. Una società può anche restare free finché non le servono strumenti in più.",
+        "companyBadge": "Società Pro",
+        "companyTitle": "Chi paga",
+        "companyText": "Paga solo la società che sceglie il piano Pro: ha strumenti avanzati per l'impresa, un'area operativa più completa e la possibilità di sponsorizzare i cantieri.",
+        "projectBadge": "Cantiere sponsorizzato",
+        "projectTitle": "Cosa si sblocca sul cantiere",
+        "projectText": "Milestone, controllo economico, documenti avanzati, dispute e chat contestuale completa si attivano quando una società Pro sponsorizza quel cantiere."
+      },
+      "access": {
+        "label": "Logica del prezzo",
+        "title": "Un piano per la società. Accesso gratuito per tutti gli altri.",
+        "i1": "Committente e invitati restano free",
+        "i2": "Paga solo la società quando servono strumenti avanzati",
+        "i3": "I cantieri sponsorizzati sbloccano le aree premium condivise"
+      },
+      "teamsNeedLabel": "Cosa serve subito nella pratica",
+      "seeFull": "Vedi il dettaglio completo dei prezzi",
+      "hint": " all'anno ripaga l'intero abbonamento.",
+      "hintStrong": "Una disputa evitata",
+      "hintSub": "~€230/anno = il costo di un solo viaggio a vuoto."
+    },
+    "final": {
+      "title": "Pronto a portare ordine nel tuo cantiere?",
+      "text": "Smetti di perdere tempo tra chat, email e telefonate. Inizia oggi con EdilSync e vedi la differenza dal primo giorno.",
+      "ctaPrimary": "Apri EdilSync",
+      "ctaSecondary": "Contattaci"
+    }
+  },
+  "layout": {
+    "brandTagline": "Coordinamento vero",
+    "menu": {
+      "solutions": {
+        "label": "Soluzioni",
+        "sections": [
+          {
+            "title": "Panoramica prodotto",
+            "links": [
+              {
+                "label": "Funzionalità complete",
+                "href": "/funzionalita",
+                "desc": "Task, documenti, dispute, finanza e chat in un unico flusso."
+              },
+              {
+                "label": "Come funziona",
+                "href": "/come-funziona",
+                "desc": "Dal kickoff del cantiere alla chiusura con evidenze tracciate."
+              },
+              {
+                "label": "Prezzi",
+                "href": "/prezzi",
+                "desc": "Onboarding guidato con percorso su misura per il team."
+              }
+            ]
+          },
+          {
+            "title": "Punti critici che risolve",
+            "links": [
+              {
+                "label": "Protezione dispute",
+                "href": "/dispute-protection",
+                "desc": "Riduci margine bruciato da extra non formalizzati."
+              },
+              {
+                "label": "Trasparenza committente",
+                "href": "/transparency",
+                "desc": "Meno ansia e meno aggiornamenti dispersi su chat."
+              },
+              {
+                "label": "Coordinamento squadra",
+                "href": "/team-coordination",
+                "desc": "Meno viaggi a vuoto e responsabilità più chiare."
+              }
+            ]
+          }
+        ],
+        "featured": {
+          "title": "Perché EdilSync",
+          "text": "La piattaforma è costruita per proteggere impresa, margine e reputazione con una cronologia che regge quando nascono contestazioni."
+        }
+      },
+      "audiences": {
+        "label": "Per chi è",
+        "sections": [
+          {
+            "title": "",
+            "links": [
+              {
+                "label": "Contractor",
+                "href": "/contractors",
+                "desc": "Imprese generali e specializzate",
+                "icon": "hammer"
+              },
+              {
+                "label": "Committenti",
+                "href": "/per-committenti",
+                "desc": "Proprietari e committenti privati",
+                "icon": "house"
+              }
+            ]
+          },
+          {
+            "title": "",
+            "links": [
+              {
+                "label": "Professionisti Tecnici",
+                "href": "/per-tecnici",
+                "desc": "Architetti, ingegneri, geometri, designer",
+                "icon": "ruler"
+              },
+              {
+                "label": "Subappaltatori",
+                "href": "/per-subappaltatori",
+                "desc": "Artigiani e specialisti in subappalto",
+                "icon": "wrench"
+              }
+            ]
+          }
+        ],
+        "featured": {
+          "title": "Modello contestuale",
+          "text": "Una persona può agire come privato, impresa o tecnico senza duplicare account e dati: cambiano azioni e permessi, non il caos."
+        }
+      },
+      "resources": {
+        "label": "Risorse",
+        "sections": [
+          {
+            "title": "Approfondimenti",
+            "links": [
+              {
+                "label": "Blog",
+                "href": "/blog",
+                "desc": "Guide pratiche su dispute, coordinamento e operatività."
+              },
+              {
+                "label": "FAQ",
+                "href": "/faq",
+                "desc": "Risposte rapide su adozione, onboarding e utilizzo sul campo."
+              },
+              {
+                "label": "Contatti",
+                "href": "/contatti",
+                "desc": "Parla con il team per una demo orientata al tuo cantiere."
+              }
+            ]
+          }
+        ],
+        "featured": {
+          "title": "Approccio pratico",
+          "text": "Meno teoria, più casi reali: ogni contenuto spiega come ridurre ritardi, rilavorazioni e attriti tra gli attori del cantiere."
+        }
+      },
+      "quickLinks": [
+        {
+          "label": "Blog",
+          "href": "/blog"
+        },
+        {
+          "label": "Contatti",
+          "href": "/contatti"
+        }
+      ]
+    },
+    "cta": {
+      "demo": "Richiedi una demo",
+      "login": "Accedi"
+    },
+    "aria": {
+      "openMenu": "Apri menu",
+      "closeMenu": "Chiudi menu"
+    }
+  },
+  "blogIndex": {
+    "seoTitle": "Risorse per il settore edile",
+    "subtitle": "Contenuti pratici su prevenzione dispute, coordinamento di cantiere e chiarezza operativa.",
+    "chip": "Risorse",
+    "loading": "Caricamento...",
+    "loadError": "Impossibile caricare gli articoli del blog.",
+    "empty": "Nessun articolo pubblicato al momento. I contenuti appariranno qui a breve.",
+    "readArticle": "Leggi articolo",
+    "ctaTitle": "Vuoi contenuti applicati al tuo modello di cantiere?",
+    "ctaText": "Prenota una demo focalizzata e scopri come EdilSync trasforma le best practice in routine operative.",
+    "ctaButton": "Richiedi demo"
+  },
+  "blogPost": {
+    "loading": "Caricamento...",
+    "notFound": "Articolo non trovato",
+    "backToBlog": "Torna al blog",
+    "ctaTitle": "Vuoi portare tutto questo nell'operatività quotidiana?",
+    "ctaText": "Prenota una demo guidata e mappa EdilSync sul tuo flusso reale di cantiere.",
+    "ctaButton": "Richiedi demo"
+  },
+  "contact": {
+    "seoTitle": "Contatti e Demo",
+    "chip": "Contatti",
+    "title": "Richiedi una demo EdilSync",
+    "subtitle": "Raccontaci il tuo contesto di cantiere. Ti ricontattiamo con una demo focalizzata su dispute, coordinamento e controllo operativo.",
+    "fields": {
+      "fullName": "Nome e cognome",
+      "email": "Email",
+      "company": "Azienda (opzionale)",
+      "role": "Ruolo",
+      "message": "Messaggio"
+    },
+    "roles": [
+      "Impresa / Contractor",
+      "Committente",
+      "Subappaltatore",
+      "Tecnico / Progettista",
+      "Altro"
+    ],
+    "messagePlaceholder": "Descrivi flusso attuale e criticità principali...",
+    "submit": "Invia richiesta",
+    "sending": "Invio in corso...",
+    "success": "Richiesta inviata. Ti contatteremo al più presto.",
+    "error": "Errore durante l'invio. Riprova tra poco.",
+    "nextTitle": "Cosa succede dopo",
+    "nextSteps": [
+      "1. Analizziamo la tua richiesta e il contesto.",
+      "2. Fissiamo una call di allineamento mirata.",
+      "3. Eseguiamo una demo live orientata ai ruoli."
+    ],
+    "resourcesTitle": "Vuoi prima approfondire?",
+    "readBlog": "Leggi blog",
+    "faq": "FAQ",
+    "detailsTitle": "Dettagli richiesta",
+    "finalTitle": "Serve supporto immediato prima della demo?",
+    "finalText": "Scrivici e ti orientiamo sul punto di partenza migliore per il tuo contesto di cantiere.",
+    "finalCta": "Apri risorse",
+    "finalNote": "Guide pratiche, flussi reali e aggiornamenti testati sul campo"
+  },
+  "pricingPage": {
+    "seoTitle": "Prezzi",
+    "seoDescription": "Prezzi chiari per società e cantieri: piano società free o paid, sponsorship cantiere e accesso gratuito per committente e collaboratori invitati.",
+    "badge": "Prezzi",
+    "title": "Prezzi chiari per società e cantieri.",
+    "subtitle": "Gli strumenti avanzati dell’impresa appartengono alla società Pro. Quelli di cantiere si attivano con una sponsorship attiva.",
+    "planName": "EdilSync Pro per società",
+    "planDesc": "Per avere strumenti avanzati per l’impresa e sponsorizzare i cantieri",
+    "trialBadge": "€190/anno disponibile",
+    "price": "€19",
+    "priceSuffix": "/mese",
+    "priceNote": "Oppure €190/anno - IVA esclusa - Cancella quando vuoi",
+    "legendTitle": "Come funziona davvero il prezzo",
+    "legendItems": [
+      {
+        "badge": "Sempre free",
+        "title": "Privati e invitati",
+        "text": "Il committente resta free. Anche subappaltatori e professionisti partecipano gratis ai cantieri in cui vengono invitati."
+      },
+      {
+        "badge": "Società Pro",
+        "title": "Chi paga",
+        "text": "Paga solo la società che sceglie il piano Pro: ha strumenti avanzati per l’impresa, un’area operativa più completa e la possibilità di sponsorizzare i cantieri."
+      },
+      {
+        "badge": "Cantiere sponsorizzato",
+        "title": "Cosa si sblocca",
+        "text": "Milestone, economia, dispute, documenti avanzati e chat contestuale completa si attivano sul singolo cantiere sponsorizzato."
+      }
+    ],
+    "cta": "Crea account società",
+    "noCard": "Nessuna carta richiesta per iniziare",
+    "includedLabel": "Con EdilSync Pro hai",
+    "includedItems": [
+      "Timbrature societarie",
+      "Chat società multi-canale",
+      "Documenti società completi",
+      "Sponsorship del cantiere",
+      "Milestone nei cantieri sponsorizzati",
+      "Economia di cantiere nei cantieri sponsorizzati",
+      "Chat cantiere avanzata nei cantieri sponsorizzati",
+      "Documenti cantiere avanzati nei cantieri sponsorizzati",
+      "Area operativa avanzata per l’impresa",
+      "Fatturazione e gestione abbonamento"
+    ],
+    "freeAccessTitle": "Chi entra gratis e cosa resta free",
+    "freeAccessText": "Il privato resta gratis. Le società possono restare free o passare a Pro. Committente, subappaltatori e professionisti entrano gratis nei cantieri a cui sono invitati; gli strumenti avanzati di cantiere dipendono dalla sponsorship attiva.",
+    "roles": [
+      {
+        "label": "Privato / committente",
+        "value": "Gratis",
+        "note": "Puoi avere 1 cantiere non sponsorizzato alla volta"
+      },
+      {
+        "label": "Società free",
+        "value": "Gratis",
+        "note": "Partecipa ai cantieri e può avere 1 cantiere owner non sponsorizzato alla volta"
+      },
+      {
+        "label": "Società Pro",
+        "value": "€19/mese o €190/anno",
+        "note": "Sponsorizza i cantieri e attiva gli strumenti avanzati dell’impresa"
+      }
+    ],
+    "worthTitle": "Quando ha senso passare a Pro",
+    "worthItems": [
+      "Vuoi sponsorizzare un cantiere e attivare milestone, economia, chat e documenti avanzati per tutti i partecipanti",
+      "Ti servono timbrature e altri strumenti avanzati per l’impresa",
+      "Gestisci più cantieri e vuoi evitare che il coordinamento resti bloccato nella modalità free",
+      "Una sola disputa evitata o un solo viaggio a vuoto risparmiato copre facilmente il costo del piano"
+    ],
+    "faqTitle": "Domande sui prezzi",
+    "faqs": [
+      {
+        "q": "Il committente deve pagare?",
+        "a": "No. Il committente resta free. Anche subappaltatori e professionisti possono entrare gratis nei cantieri a cui vengono invitati."
+      },
+      {
+        "q": "Posso cancellare quando voglio?",
+        "a": "Sì, senza penali né costi nascosti. Cancelli dalle impostazioni in qualsiasi momento."
+      },
+      {
+        "q": "Cosa succede ai dati se cancello?",
+        "a": "I dati restano nel sistema, ma le aree avanzate dell’impresa e del cantiere non sono più accessibili finché non riattivi un piano Pro o una sponsorship valida."
+      },
+      {
+        "q": "C’è un contratto a lungo termine?",
+        "a": "No. EdilSync è mese per mese, puoi cancellare in qualsiasi momento."
+      },
+      {
+        "q": "Esiste un piano per agenzie o grandi imprese?",
+        "a": "Stiamo lavorando su un piano Enterprise. Scrivici a info@rdlabs.digital per discutere le tue esigenze."
+      }
+    ],
+    "faqFooterStart": "Hai altre domande?",
+    "faqFooterFaq": "Vai alla pagina FAQ completa",
+    "faqFooterAnd": "o",
+    "faqFooterContact": "contattaci",
+    "finalTitle": "Vuoi capire se Pro ha senso per la tua impresa?",
+    "finalText": "Parti free, guarda come lavora il team e passa a Pro quando vuoi attivare sponsorship, strumenti avanzati e controllo piu strutturato.",
+    "finalCta": "Parla con noi",
+    "finalNote": "Piano semplice · Nessun setup complesso · Upgrade quando serve"
+  },
+  "featuresPage": {
+    "seoTitle": "Funzionalità EdilSync",
+    "seoDescription": "Tutte le funzionalità EdilSync per coordinare cantieri, comunicazione, documentazione, operatività e protezione in cantiere, distinguendo tra strumenti avanzati dell’impresa e strumenti avanzati del cantiere sponsorizzato.",
+    "badge": "Funzionalità",
+    "title": "Tutto in un'unica piattaforma",
+    "subtitle": "Non moduli separati, ma un ecosistema interconnesso che copre ogni aspetto del coordinamento di cantiere - dalla prima foto fino al SAL finale.",
+    "note": "Privati e collaboratori invitati restano free. Gli strumenti avanzati dell’impresa appartengono alla società Pro; milestone, controllo economico, documenti avanzati e chat contestuale completa si attivano nei cantieri sponsorizzati.",
+    "sections": [
+      {
+        "title": "Gestione Cantieri",
+        "icon": "Layers",
+        "colorClass": "bg-blue-500/10 text-blue-600",
+        "note": "Le funzioni più avanzate di cantiere qui descritte si attivano nei cantieri sponsorizzati.",
+        "cards": [
+          {
+            "title": "Task e Milestone",
+            "icon": "ListChecks",
+            "badge": "Cantiere sponsorizzato",
+            "description": "Organizza il lavoro per fasi, stanze e milestone. Ogni task ha stato, scadenza, assegnatario e può essere bloccato con responsabilità taggata. Vista board e lista disponibili."
+          },
+          {
+            "title": "Change Request / Varianti",
+            "icon": "FileText",
+            "description": "Ogni modifica richiesta e tracciata con impatto su costi e tempi. Il committente approva, rifiuta o chiede chiarimenti. Tutto time-stamped."
+          },
+          {
+            "title": "Calendario Condiviso",
+            "icon": "CalendarDays",
+            "description": "Calendario unificato per eventi, sopralluoghi e task con scadenza. Rileva conflitti automaticamente e notifica tutti gli interessati."
+          }
+        ]
+      },
+      {
+        "title": "Comunicazione",
+        "icon": "MessageCircle",
+        "colorClass": "bg-purple-500/10 text-purple-600",
+        "note": "Chat e notifiche restano contestuali; i riferimenti avanzati di cantiere si espandono nei cantieri sponsorizzati.",
+        "cards": [
+          {
+            "title": "Chat Contestuale",
+            "icon": "MessageCircle",
+            "badge": "Cantiere sponsorizzato",
+            "description": "Messaggi di cantiere e di società con riferimenti strutturati a task, milestone, documenti e change request. I riferimenti sono badge cliccabili."
+          },
+          {
+            "title": "Notifiche Intelligenti",
+            "icon": "Bell",
+            "description": "Notifiche in-app e via email per ogni evento rilevante: inviti, assegnazioni, aggiornamenti stato, mention. Configurabili per tipo e canale."
+          },
+          {
+            "title": "Inviti e Partecipazioni",
+            "icon": "Users",
+            "description": "Invita committenti, subappaltatori e professionisti via email. Gestione stati (invitato, attivo, rifiutato) con permessi contestuali automatici."
+          }
+        ]
+      },
+      {
+        "title": "Documentazione",
+        "icon": "Camera",
+        "colorClass": "bg-amber-500/10 text-amber-600",
+        "note": "La documentazione più strutturata e la collaborazione tecnica completa si esprimono nei cantieri sponsorizzati.",
+        "cards": [
+          {
+            "title": "Documentazione Fotografica",
+            "icon": "Camera",
+            "description": "Foto automaticamente associate al cantiere, time-stamped, organizzabili per task e area. Protezione legale integrata senza lavoro extra."
+          },
+          {
+            "title": "Gestione Documenti Avanzata",
+            "icon": "FileText",
+            "badge": "Cantiere sponsorizzato",
+            "description": "Upload, anteprima, download, commenti, revisioni e categorizzazione. Metadati tecnici avanzati: disciplina, fase, stato documento, tag."
+          },
+          {
+            "title": "BIM e Viewer 3D",
+            "icon": "Globe",
+            "badge": "Cantiere sponsorizzato",
+            "description": "Nei cantieri sponsorizzati, supporto IFC, GLB e GLTF con viewer in-app, camera orbitale, parsing IFC e fallback automatico a viewer esterno."
+          }
+        ]
+      },
+      {
+        "title": "Finanza e Operatività",
+        "icon": "Wallet",
+        "colorClass": "bg-emerald-500/10 text-emerald-600",
+        "note": "Timbrature societarie appartengono alla società Pro; controllo economico e operatività di cantiere dipendono dalla sponsorship attiva.",
+        "cards": [
+          {
+            "title": "Controllo Economico",
+            "icon": "Wallet",
+            "badge": "Cantiere sponsorizzato",
+            "description": "Budget, costi, tariffe e progress statement. Permessi granulari e visibilità per ruolo su forecast, extra approvati e contestazioni."
+          },
+          {
+            "title": "Timbrature e Presenze",
+            "icon": "Clock3",
+            "description": "Clock-in/out con GPS opzionale, note entrata/uscita e collegamento al cantiere. Export dati e integrazione con il modulo costi."
+          },
+          {
+            "title": "Dashboard e Analytics",
+            "icon": "ChartNoAxesColumn",
+            "description": "Dashboard contestuale per ruolo con indicatori su avanzamento, task completati, cantieri attivi e membri presenti."
+          }
+        ]
+      },
+      {
+        "title": "Sicurezza e Protezione",
+        "icon": "ShieldCheck",
+        "colorClass": "bg-red-500/10 text-red-600",
+        "cards": [
+          {
+            "title": "Gestione Dispute",
+            "icon": "ShieldCheck",
+            "description": "Formalizza conflitti su scope, costi, ritardi, qualità e pagamenti. Timeline eventi, prove allegate e note di risoluzione."
+          },
+          {
+            "title": "Permessi Contestuali",
+            "icon": "LockKeyhole",
+            "description": "Livelli di permesso su applicazione, contesto attivo, ruolo società e ruolo cantiere. Tutto relazionale e tracciabile."
+          },
+          {
+            "title": "Documentazione Automatica",
+            "icon": "Zap",
+            "description": "Le azioni quotidiane diventano documentazione: il feed registra ogni cambio stato, upload, approvazione e messaggio."
+          }
+        ]
+      },
+      {
+        "title": "Modalità d'Uso",
+        "icon": "Smartphone",
+        "colorClass": "bg-indigo-500/10 text-indigo-600",
+        "note": "La modalità operativa rispetta gli stessi permessi e le stesse abilitazioni dell’area completa.",
+        "cards": [
+          {
+            "title": "Area completa",
+            "icon": "Layers",
+            "description": "Area completa con dashboard, cantieri, calendario, aziende, notifiche e impostazioni per la gestione quotidiana e amministrativa."
+          },
+          {
+            "title": "Modalità Operativa",
+            "icon": "Smartphone",
+            "description": "Interfaccia mobile-first per il cantiere: clock-in/out rapido, task di oggi, upload foto e chat compatta."
+          },
+          {
+            "title": "Accesso contestuale per ruolo",
+            "icon": "Zap",
+            "description": "La stessa piattaforma adatta visibilità e azioni in base al contesto attivo, al ruolo in impresa e al ruolo nel cantiere, senza creare doppioni inutili."
+          }
+        ]
+      }
+    ]
+  },
+  "faqPage": {
+    "seoTitle": "FAQ",
+    "seoDescription": "Domande frequenti su EdilSync: piattaforma, prezzi, funzionalità, permessi, sicurezza e supporto.",
+    "badge": "FAQ",
+    "title": "Domande frequenti",
+    "subtitle": "Trova risposta alle domande più comuni su EdilSync.",
+    "groups": [
+      {
+        "title": "Generale",
+        "items": [
+          {
+            "q": "Cos'e EdilSync?",
+            "a": "EdilSync è una piattaforma per il coordinamento di cantieri edili e ristrutturazioni. Unisce committenti, imprese, subappaltatori e professionisti in un unico spazio condiviso, con ruoli e permessi contestuali adattati a ogni cantiere."
+          },
+          {
+            "q": "EdilSync è adatto anche per piccole imprese?",
+            "a": "Assolutamente sì. EdilSync è progettato specificamente per imprese edili sotto €1M di fatturato annuo che gestiscono 8-12 ristrutturazioni residenziali. L’interfaccia è semplice, mobile-first e non richiede formazione."
+          },
+          {
+            "q": "In che lingue è disponibile EdilSync?",
+            "a": "EdilSync è disponibile in italiano e in inglese. La lingua è selezionabile dal menu utente in qualsiasi momento."
+          }
+        ]
+      },
+      {
+        "title": "Prezzi e Abbonamento",
+        "items": [
+          {
+            "q": "Quanto costa EdilSync?",
+            "a": "EdilSync Pro per società costa €19/mese oppure €190/anno. Il privato resta free. Le società possono restare free o passare a Pro per sbloccare la sponsorship del cantiere e gli strumenti avanzati dell’impresa."
+          },
+          {
+            "q": "Posso iniziare senza carta?",
+            "a": "Non usiamo una prova separata. Puoi iniziare senza carta con un account personale o con una società free e passare a Pro quando ti serve la sponsorship o strumenti in più per l’impresa."
+          },
+          {
+            "q": "Posso cancellare quando voglio?",
+            "a": "Sì, puoi cancellare l’abbonamento in qualsiasi momento direttamente dalle impostazioni. Non ci sono penali né costi nascosti."
+          },
+          {
+            "q": "I miei committenti devono pagare?",
+            "a": "No. Il committente resta free. Anche subappaltatori e professionisti possono entrare gratis nei cantieri a cui vengono invitati. Gli strumenti avanzati di cantiere dipendono dalla sponsorship attiva di una società paid."
+          }
+        ]
+      },
+      {
+        "title": "Funzionalità",
+        "items": [
+          {
+            "q": "Posso usare EdilSync sul cantiere con il telefono?",
+            "a": "Sì, EdilSync è mobile-first. C’è una modalità operativa dedicata all’uso sul campo, pensata per operai, capicantiere e chiunque lavori on-site. Upload foto, clock-in/out e aggiornamenti task in pochi tap."
+          },
+          {
+            "q": "Come funzionano i permessi? Tutti vedono tutto?",
+            "a": "No. EdilSync ha un sistema di permessi contestuale a 4 livelli: ruolo applicativo, contesto attivo (personale o aziendale), ruolo nella società e ruolo nel cantiere. Ogni persona vede solo ciò che è rilevante per il suo ruolo nel cantiere specifico."
+          },
+          {
+            "q": "Posso gestire i subappalti a catena?",
+            "a": "Sì. EdilSync supporta nativamente subappalti multipli. Un contractor può invitare subappaltatori, che a loro volta possono avere il proprio team. I permessi e l’accesso sono controllati a ogni livello."
+          },
+          {
+            "q": "E possibile visualizzare file BIM o modelli 3D?",
+            "a": "Sì, ma come funzione premium di cantiere. Nei cantieri sponsorizzati EdilSync supporta IFC, GLB e GLTF con viewer in-app per IFC e viewer 3D per GLB/GLTF. Nei cantieri non sponsorizzati questi file non si possono caricare e, se già presenti, la preview resta inibita."
+          },
+          {
+            "q": "Come funzionano le dispute?",
+            "a": "Il modulo dispute permette di formalizzare conflitti su scope, costi, ritardi, qualità o pagamenti. Ogni disputa ha una timeline eventi, può avere prove allegate, commenti, note di risoluzione e notifiche agli stakeholder. Tutto è documentato e immutabile."
+          }
+        ]
+      },
+      {
+        "title": "Privacy e Sicurezza",
+        "items": [
+          {
+            "q": "I miei dati sono al sicuro?",
+            "a": "Sì. EdilSync utilizza infrastruttura cloud con Row Level Security (RLS) su ogni operazione dati. L’accesso ai dati è costruito su insiemi utente sincronizzati automaticamente da membership e partecipazioni."
+          },
+          {
+            "q": "Chi può vedere i miei cantieri?",
+            "a": "Solo le persone che hai invitato come partecipanti al cantiere. Ogni utente vede solo i cantieri in cui è partecipante attivo, e solo le sezioni adeguate al proprio ruolo nel cantiere."
+          }
+        ]
+      }
+    ],
+    "finalTitle": "Pronto a portare ordine nel tuo cantiere?",
+    "finalText": "Smetti di perdere tempo tra chat, email e telefonate. Inizia oggi con EdilSync e vedi la differenza dal primo giorno.",
+    "finalCta": "Apri EdilSync",
+    "finalNote": "Account personale o società - Nessuna carta per iniziare - Upgrade quando serve"
+  },
+  "howItWorksPage": {
+    "seoTitle": "Come funziona EdilSync",
+    "seoDescription": "Da zero a cantiere coordinato in pochi minuti: onboarding, cantiere, inviti, operatività e controllo finale in un unico flusso.",
+    "badge": "Come funziona",
+    "title": "Da zero a cantiere coordinato in pochi minuti",
+    "subtitle": "EdilSync è progettato per funzionare dal primo giorno, senza formazione e senza setup complessi.",
+    "ctaTop": "Crea account gratis",
+    "steps": [
+      {
+        "number": "01",
+        "title": "Crea il tuo account",
+        "text": "Registrati in 2 minuti. Nessuna carta per iniziare. Scegli se operare come privato o come società.",
+        "note": "Ogni persona ha un unico account e può operare in più contesti: come committente, come membro di una società o come professionista. Un solo login per tutto.",
+        "icon": "UserPlus"
+      },
+      {
+        "number": "02",
+        "title": "Crea la tua società",
+        "text": "Registra la tua impresa su EdilSync. Aggiungi i tuoi collaboratori, assegna ruoli operativi e crea il canale di comunicazione interno.",
+        "note": "La società è l'unità operativa del cantiere. Puoi avere responsabili di cantiere, capicantiere, operai, backoffice: ognuno con permessi adeguati al proprio ruolo.",
+        "icon": "Building2"
+      },
+      {
+        "number": "03",
+        "title": "Crea il cantiere",
+        "text": "Apri un nuovo cantiere su EdilSync. Aggiungi indirizzo, date, descrizione e la prima documentazione fotografica dello stato iniziale.",
+        "note": "Il cantiere è il contenitore di tutte le relazioni: committente, contractor, subappaltatori, professionisti, documenti, task, chat e finanza.",
+        "icon": "FolderOpen"
+      },
+      {
+        "number": "04",
+        "title": "Invita i partecipanti",
+        "text": "Invita il committente, i subappaltatori e i professionisti via email. Ognuno vede solo ciò che gli compete, con permessi adeguati al ruolo.",
+        "note": "Il committente entra gratis. Subappaltatori e professionisti entrano gratis nei cantieri a cui sono invitati. Gli strumenti avanzati di cantiere si attivano quando una società paid sponsorizza il cantiere.",
+        "icon": "Users"
+      },
+      {
+        "number": "05",
+        "title": "Lavora e documenta",
+        "text": "Task, foto, messaggi, varianti, scadenze: ogni azione diventa automaticamente documentazione tracciabile nel feed del cantiere.",
+        "note": "Non devi scrivere aggiornamenti. Le tue azioni quotidiane diventano il diario di cantiere. Il committente vede lo stesso feed in tempo reale.",
+        "icon": "CircleCheck"
+      },
+      {
+        "number": "06",
+        "title": "Controlla e chiudi",
+        "text": "Monitora avanzamento, costi e milestone. Gestisci varianti approvate e dispute documentate. Chiudi il cantiere con uno storico completo.",
+        "note": "Dalla timbratura in cantiere al controllo costi, tutto resta collegato. Un SAL finale con tutta la documentazione in un unico posto.",
+        "icon": "TrendingUp"
+      }
+    ],
+    "finalTitle": "Pronto a portare ordine nel tuo cantiere?",
+    "finalText": "Smetti di perdere tempo tra chat, email e telefonate. Inizia oggi con EdilSync e vedi la differenza dal primo giorno.",
+    "finalCta": "Crea account gratis",
+    "finalNote": "Account personale o società · Setup in 2 minuti · Upgrade quando serve"
+  },
+  "contractorsPage": {
+    "seoTitle": "Per i Contractor",
+    "seoDescription": "Pagina dedicata ai contractor: società free o Pro, protezione margini, documentazione automatica, coordinamento subappalti e strumenti avanzati di cantiere tramite sponsorship.",
+    "badge": "Per i Contractor",
+    "titleA": "Proteggi i tuoi margini.",
+    "titleB": "Ogni giorno.",
+    "subtitle": "Con margini del 3-5%, una sola disputa non documentata può azzerare il profitto di un intero cantiere. La società può partire free e passare a Pro quando servono strumenti avanzati per l’impresa e la possibilità di sponsorizzare i cantieri.",
+    "note": "Società free o Pro. Gli strumenti avanzati di cantiere si attivano sui cantieri sponsorizzati.",
+    "ctaTop": "Crea account azienda",
+    "quote": "Non sono io in ritardo: sto aspettando che il cliente scelga le piastrelle da tre settimane. Ma quando lascia una recensione negativa, indovina di chi è la colpa?",
+    "quoteAuthor": "Michele",
+    "quoteRole": "Contractor, 18 anni di esperienza",
+    "advantagesTitle": "I vantaggi concreti per la tua impresa",
+    "advantages": [
+      {
+        "title": "Proteggiti dalle dispute",
+        "text": "Ogni variante è documentata con change request firmata. Stop alle discussioni 'pensavo fosse incluso' che erodono i tuoi margini.",
+        "icon": "Shield"
+      },
+      {
+        "title": "Documentazione automatica",
+        "text": "Le foto che scatti in cantiere diventano automaticamente parte del dossier di cantiere. Time-stamped, organizzate, sempre trovabili.",
+        "icon": "Camera"
+      },
+      {
+        "title": "Coordinamento subappalti",
+        "text": "Invita elettricisti, idraulici e specialisti. Ognuno vede i propri task e il calendario condiviso. Zero viaggi a vuoto.",
+        "icon": "Users"
+      },
+      {
+        "title": "Tracciabilità totale",
+        "text": "Chi ha detto cosa, quando, in quale cantiere. Ogni azione è registrata. Protezione legale integrata nel lavoro quotidiano.",
+        "icon": "FileText"
+      },
+      {
+        "title": "Controllo finanziario",
+        "text": "Budget, costi, tariffe e progress statements in un posto solo. Dalle timbrature in cantiere al SAL finale, tutto collegato.",
+        "icon": "Wallet"
+      },
+      {
+        "title": "Mobile-first, davvero",
+        "text": "La modalità operativa è pensata per chi lavora sul campo. Upload foto in 3 tap, clock-in/out rapido, task del giorno sempre visibili.",
+        "icon": "Smartphone"
+      }
+    ],
+    "valueTitle": "Quanto vale per te EdilSync?",
+    "valueItems": [
+      "Una disputa evitata (~€300 di media) = 15 mesi di abbonamento",
+      "Un viaggio a vuoto evitato al mese = abbonamento coperto",
+      "2 ore risparmiate al mese in chiamate di status = abbonamento coperto",
+      "Una recensione negativa evitata = valore incalcolabile"
+    ],
+    "valueCostLabel": "Il costo:",
+    "valueCost": "€19/mese per società Pro",
+    "finalTitle": "Pronto a portare ordine nel tuo cantiere?",
+    "finalText": "Smetti di perdere tempo tra chat, email e telefonate. Inizia oggi con EdilSync e vedi la differenza dal primo giorno.",
+    "finalCta": "Crea account azienda",
+    "finalNote": "Società free o Pro · Nessuna carta per iniziare · Upgrade quando serve"
+  },
+  "homeownersPage": {
+    "seoTitle": "Per Committenti",
+    "seoDescription": "Pagina dedicata ai committenti: accesso gratuito al cantiere, approvazioni tracciate e, nei cantieri sponsorizzati, più controllo su costi, tempi e coordinamento.",
+    "badge": "Per Committenti",
+    "titleA": "Segui il cantiere",
+    "titleB": "con chiarezza.",
+    "subtitle": "Niente più inseguimenti su chat e telefonate. Con EdilSync hai avanzamento, decisioni e varianti in un unico flusso, sempre aggiornato; nei cantieri sponsorizzati hai anche più strumenti per seguire tempi, costi e coordinamento.",
+    "note": "Accesso committente incluso nel cantiere. Gli strumenti in più si attivano quando una società Pro sponsorizza il cantiere.",
+    "ctaTop": "Richiedi una Demo",
+    "quote": "Prima dovevo chiedere aggiornamenti ogni settimana. Ora apro il cantiere e vedo cosa è stato fatto, cosa manca e quali decisioni servono da parte mia.",
+    "quoteAuthor": "Laura",
+    "quoteRole": "Committente privata",
+    "advantagesTitle": "Cosa ottieni concretamente",
+    "advantages": [
+      {
+        "title": "Visibilità reale sullo stato lavori",
+        "text": "Timeline chiara con attività completate, in corso e bloccate. Capisci subito a che punto è il cantiere.",
+        "icon": "Clock3"
+      },
+      {
+        "title": "Decisioni e approvazioni tracciate",
+        "text": "Nei cantieri sponsorizzati, ogni variante viene formalizzata con impatto su costi e tempi. Fine delle ambiguità a fine cantiere.",
+        "icon": "CheckCheck",
+        "badge": "Cantiere sponsorizzato"
+      },
+      {
+        "title": "Comunicazione ordinata",
+        "text": "Nei cantieri sponsorizzati, i messaggi restano contestuali al cantiere, non dispersi tra chat personali, chiamate e allegati senza contesto.",
+        "icon": "MessagesSquare",
+        "badge": "Cantiere sponsorizzato"
+      },
+      {
+        "title": "Documenti sempre accessibili",
+        "text": "Nei cantieri sponsorizzati, foto, file e decisioni restano collegati alle attività corrette, così puoi ritrovare tutto in pochi secondi.",
+        "icon": "FileText",
+        "badge": "Cantiere sponsorizzato"
+      },
+      {
+        "title": "Notifiche utili, non rumore",
+        "text": "Ricevi alert solo quando serve davvero il tuo intervento: approvazioni, blocchi o scelte operative.",
+        "icon": "BellRing"
+      },
+      {
+        "title": "Più tutela e meno stress",
+        "text": "Con uno storico verificabile riduci conflitti, incomprensioni e rischi di contestazioni fuori controllo.",
+        "icon": "ShieldCheck"
+      }
+    ],
+    "valueTitle": "Quanto valore ti porta EdilSync?",
+    "valueItems": [
+      "Una sola variante chiarita prima dell’esecuzione evita costi extra e discussioni finali",
+      "Meno tempo perso a rincorrere aggiornamenti = più serenità durante tutto il cantiere",
+      "Decisioni tracciate riducono il rischio di incomprensioni e rilavorazioni",
+      "Documentazione ordinata protegge i rapporti tra committente, impresa e tecnici"
+    ],
+    "valueCostLabel": "Attivazione per il committente:",
+    "valueCost": "gratis nel cantiere",
+    "finalTitle": "Vuoi un cantiere più trasparente e meno stressante?",
+    "finalText": "Richiedi una demo e scopri come seguire lavori, decisioni e varianti senza perdere il controllo del cantiere.",
+    "finalCta": "Prenota una Demo",
+    "finalNote": "Nessuna complessità tecnica · Accesso guidato · Collaborazione immediata"
+  },
+  "subcontractorsPage": {
+    "seoTitle": "Per i Subappaltatori",
+    "seoDescription": "Pagina dedicata ai subappaltatori: meno viaggi a vuoto, task contestuali, chat tracciata e accesso gratuito nei cantieri EdilSync.",
+    "badge": "Per i Subappaltatori",
+    "titleA": "Sai esattamente",
+    "titleB": "dove e quando",
+    "titleC": "essere in cantiere.",
+    "subtitle": "Gestire 3-5 cantieri contemporaneamente è una sfida di coordinamento. EdilSync ti dà il contesto giusto per ogni cantiere senza confusione.",
+    "note": "Accesso gratuito nei cantieri in cui vieni invitato",
+    "ctaTop": "Apri account gratis",
+    "quote": "Arrivo in cantiere e il lavoro precedente non è finito. Un altro viaggio a vuoto. 150 euro di costo, zero fatturato. E nessuno mi aveva avvisato.",
+    "quoteAuthor": "Marco",
+    "quoteRole": "Elettricista, 5 cantieri attivi",
+    "benefitsTitle": "I vantaggi per chi lavora in subappalto",
+    "benefits": [
+      {
+        "title": "Zero viaggi a vuoto",
+        "text": "Il calendario condiviso ti mostra quando sei atteso in cantiere. Se qualcosa cambia, ricevi notifica immediata. Fine ai viaggi inutili.",
+        "icon": "CalendarDays"
+      },
+      {
+        "title": "Solo i tuoi task",
+        "text": "Vedi esclusivamente i task e le attività rilevanti per il tuo lavoro. Nessuna informazione superflua, solo ciò che ti serve.",
+        "icon": "ListChecks"
+      },
+      {
+        "title": "Chat senza numero personale",
+        "text": "Comunica con il contractor e il team di cantiere tramite la chat di EdilSync. Non devi dare il tuo numero di telefono personale.",
+        "icon": "MessageCircle"
+      },
+      {
+        "title": "Documenta il tuo lavoro",
+        "text": "Foto e documenti associati ai tuoi task. Protezione documentale per il lavoro che esegui, accessibile quando serve.",
+        "icon": "Camera"
+      },
+      {
+        "title": "Accesso contestuale",
+        "text": "Entri nel cantiere solo quando sei stato invitato, con accesso limitato a ciò che è rilevante per il tuo ambito di lavoro.",
+        "icon": "Navigation"
+      },
+      {
+        "title": "Accesso gratuito su invito",
+        "text": "Come subappaltatore, entri gratis nei cantieri a cui vieni invitato. Se il cantiere è sponsorizzato, sblocchi anche gli strumenti avanzati disponibili in quel cantiere.",
+        "icon": "ArrowRight"
+      }
+    ],
+    "finalTitle": "Pronto a portare ordine nel tuo cantiere?",
+    "finalText": "Smetti di perdere tempo tra chat, email e telefonate. Inizia oggi con EdilSync e vedi la differenza dal primo giorno.",
+    "finalCta": "Apri account gratis",
+    "finalNote": "Accesso solo ai cantieri invitati · Nessuna carta per iniziare · Collaborazione immediata"
+  },
+  "professionalsPage": {
+    "seoTitle": "Per i Professionisti Tecnici",
+    "seoDescription": "Pagina dedicata ai professionisti tecnici: accesso gratuito ai cantieri invitati, con gestione documentale avanzata e coordinamento strutturato nei cantieri sponsorizzati.",
+    "badge": "Per i Professionisti Tecnici",
+    "title": "Il tuo spazio di lavoro condiviso con impresa e committente",
+    "subtitle": "Architetti, ingegneri, geometri e designer. Entri gratis nei cantieri in cui vieni invitato e, quando il cantiere è sponsorizzato, lavori con documenti avanzati, milestone e chat contestuale completa.",
+    "note": "Accesso gratuito nei cantieri invitati. Gli strumenti avanzati di cantiere si attivano nei cantieri sponsorizzati.",
+    "ctaTop": "Apri account gratis",
+    "rolesTitle": "Per ogni figura professionale",
+    "roles": [
+      {
+        "title": "Architetti",
+        "text": "Coordina esecutivo, varianti e approvazioni con committente e impresa in un unico spazio. I tuoi elaborati tecnici sempre accessibili a tutti."
+      },
+      {
+        "title": "Ingegneri strutturali",
+        "text": "Documenta calcoli, relazioni e collaudi. Tieni traccia di ogni modifica strutturale e della sua approvazione nel tempo."
+      },
+      {
+        "title": "Geometri",
+        "text": "Gestisci pratiche, documentazione catastale e DL. Coordinati con impresa e committente senza email sparse."
+      },
+      {
+        "title": "Interior designer",
+        "text": "Condividi tavole, materiali e revisioni. Le change request documentano ogni variante di cantiere concordata con il cliente."
+      },
+      {
+        "title": "Consulenti tecnici",
+        "text": "Accedi al cantiere nel tuo contesto, vedi i documenti rilevanti e comunica con tutte le parti senza dover gestire accessi multipli."
+      }
+    ],
+    "featuresTitle": "Funzionalità pensate per i professionisti",
+    "features": [
+      {
+        "title": "Viewer BIM integrato",
+        "text": "Nei cantieri sponsorizzati, carica IFC, GLB e GLTF e visualizza i modelli 3D direttamente in piattaforma, condividendoli con committente e impresa.",
+        "icon": "Globe",
+        "badge": "Cantiere sponsorizzato"
+      },
+      {
+        "title": "Gestione documentale avanzata",
+        "text": "Nei cantieri sponsorizzati, disciplina, fase, stato, revisioni e tag tengono ogni documento ricercabile, verificabile e gestito correttamente.",
+        "icon": "FileText",
+        "badge": "Cantiere sponsorizzato"
+      },
+      {
+        "title": "Calendario condiviso",
+        "text": "Sopralluoghi, riunioni, scadenze - tutto coordinato con tutti gli attori del cantiere in un calendario unificato.",
+        "icon": "CalendarDays"
+      },
+      {
+        "title": "Chat di cantiere strutturata",
+        "text": "Nei cantieri sponsorizzati, i messaggi possono riferirsi a documenti, task e milestone. Non più email infinite per ogni aggiornamento.",
+        "icon": "MessageCircle",
+        "badge": "Cantiere sponsorizzato"
+      },
+      {
+        "title": "Accesso contestuale",
+        "text": "Il tuo profilo professionista ti permette di lavorare su più cantieri con ruoli diversi. Un solo account per tutto.",
+        "icon": "Layers"
+      },
+      {
+        "title": "Coordinamento multi-attore",
+        "text": "Sei il punto di raccordo tra committente e impresa. EdilSync rende questa mediazione strutturata e tracciabile.",
+        "icon": "Users"
+      }
+    ],
+    "finalTitle": "Pronto a portare ordine nel tuo cantiere?",
+    "finalText": "Smetti di perdere tempo tra chat, email e telefonate. Inizia oggi con EdilSync e vedi la differenza dal primo giorno.",
+    "finalCta": "Apri account gratis",
+    "finalNote": "Account unico · Accesso gratuito nei cantieri invitati · Strumenti avanzati nei cantieri sponsorizzati"
+  },
+  "disputeProtectionPage": {
+    "seoTitle": "Protezione Dispute",
+    "seoDescription": "Riduci le dispute in cantiere con prove contestuali, change request tracciate e comunicazione strutturata in un unico spazio.",
+    "badge": "Protezione dalle Dispute",
+    "title": "Ogni parola è scritta.",
+    "titleHighlight": "Ogni accordo è provato.",
+    "subtitle": "Nel settore edile, i margini sono del 3-5%. Una sola disputa non documentata può azzerare il profitto di un intero cantiere. EdilSync ti protegge automaticamente, senza lavoro extra.",
+    "cta": "Crea account azienda",
+    "note": "Funziona per contractor, committenti, subappaltatori e professionisti.",
+    "scenarioLabel": "Lo scenario tipico",
+    "scenarioQuote": "\"Ho perso €4.200 su un cantiere da €28.000 per una disputa su due stanze che erano già incluse secondo il cliente. Non avevo niente di scritto. Avevo solo la mia parola.\"",
+    "scenarioAuthor": "Giuseppe",
+    "scenarioRole": "Contractor, Torino - prima di EdilSync",
+    "issuesTitle": "Le dispute più frequenti - e come le elimini",
+    "issuesSubtitle": "Ogni scenario che hai vissuto ha una risposta documentale precisa.",
+    "issues": [
+      {
+        "title": "\"Pensavo fosse incluso nel preventivo\"",
+        "text": "Le change request documentano ogni variante con impatto su costi e tempi. Il committente approva o rifiuta. Tutto con data e ora, tutto immutabile.",
+        "icon": "FileText"
+      },
+      {
+        "title": "\"Non sapevo che fossi io in ritardo\"",
+        "text": "I task bloccati registrano nome del responsabile e data. Se il ritardo è causato da una scelta del committente, è scritto nero su bianco.",
+        "icon": "Clock3"
+      },
+      {
+        "title": "\"Quella foto non prova niente, era già così\"",
+        "text": "Le foto sono associate al task specifico con data e ora. Lo stato iniziale e finale di ogni area è documentato automaticamente.",
+        "icon": "Camera"
+      },
+      {
+        "title": "\"Ma me l’avevi detto per telefono\"",
+        "text": "Tutta la comunicazione avviene in-app con riferimenti strutturati. Nessuna conversazione rilevante finisce su WhatsApp o email personale.",
+        "icon": "Scale"
+      }
+    ],
+    "flowTitle": "Come funziona la protezione",
+    "flowSubtitle": "Non è un modulo extra da compilare. È il risultato del tuo lavoro quotidiano.",
+    "flowSteps": [
+      {
+        "title": "Le tue azioni diventano prove",
+        "text": "Ogni foto scattata, ogni task aggiornato, ogni approvazione ricevuta viene registrata automaticamente con timestamp nel feed del cantiere. Non devi fare nulla di extra."
+      },
+      {
+        "title": "Le varianti sono formalizzate",
+        "text": "Quando il committente chiede una modifica, si apre una change request con descrizione, impatto economico e impatto sulle tempistiche. L’approvazione è digitale e immutabile."
+      },
+      {
+        "title": "I ritardi hanno un nome",
+        "text": "I task possono essere marcati come bloccati con la causa e il responsabile. Se stai aspettando una decisione del committente, questo è documentato con data e ora."
+      },
+      {
+        "title": "Le dispute sono gestite formalmente",
+        "text": "In caso di conflitto, si apre una disputa formale con timeline eventi, prove allegate e commenti. Tutto in un posto, tutto tracciato. Nessuna parola contro parola."
+      }
+    ],
+    "roiTitle": "Una disputa evitata vale mesi di abbonamento",
+    "roiText": "Una disputa media in cantiere costa tra 200 e 2.000 euro tra tempo, rilavorazioni e margine perso. EdilSync costa 19 euro al mese. Il ritorno si calcola da solo.",
+    "roiCards": [
+      {
+        "value": "€300",
+        "label": "Costo medio di una disputa piccola"
+      },
+      {
+        "value": "€19/mese",
+        "label": "Costo di EdilSync"
+      },
+      {
+        "value": "15x",
+        "label": "ROI con una sola disputa evitata all anno"
+      }
+    ],
+    "finalTitle": "Pronto a portare ordine nel tuo cantiere?",
+    "finalText": "Smetti di perdere tempo tra chat, email e telefonate. Inizia oggi con EdilSync e vedi la differenza dal primo giorno.",
+    "finalCta": "Crea account azienda",
+    "finalNote": "Società free o Pro - Nessuna carta per iniziare - Upgrade quando serve"
+  },
+  "transparencyPage": {
+    "seoTitle": "Trasparenza Committente",
+    "seoDescription": "Segui il cantiere in tempo reale senza chiamare: feed cantiere, notifiche utili e, nei cantieri sponsorizzati, milestone chiare e trasparenza su costi e varianti.",
+    "badge": "Trasparenza del Cantiere",
+    "title": "Sai sempre cosa succede.",
+    "titleHighlight": "Senza chiamare.",
+    "subtitle": "Stai investendo una somma importante nella tua casa o nel tuo immobile. Hai visibilità sul cantiere in tempo reale e, quando il cantiere è sponsorizzato, hai anche strumenti in più per seguire tempi, costi e decisioni.",
+    "note": "Committente sempre gratis. Milestone, costi approvati e chat strutturata si attivano nei cantieri sponsorizzati.",
+    "cta": "Apri account gratis",
+    "quote": "\"Ho speso €65.000 per ristrutturare l’appartamento. Per tre mesi ho chiamato il contractor ogni due giorni per sapere a che punto erano. Mi sentivo fastidiosa, ma non avevo altra scelta.\"",
+    "quoteAuthor": "Simona",
+    "quoteRole": "Committente, Milano - prima di EdilSync",
+    "compareTitle": "Prima e dopo EdilSync",
+    "compareRows": [
+      [
+        "Chiami il contractor per sapere a che punto è il lavoro",
+        "Apri l’app e vedi il feed aggiornato"
+      ],
+      [
+        "Non sai se una variante aumenterà il costo finale",
+        "Ogni modifica arriva con impatto su costi e tempi"
+      ],
+      [
+        "Il ritardo è colpa mia anche se stavi aspettando il materiale",
+        "La causa del ritardo è sempre documentata"
+      ],
+      [
+        "Non capisci il SAL che ti hanno mandato",
+        "Lo stato di avanzamento è visibile in tempo reale"
+      ],
+      [
+        "Fai un sopralluogo non annunciato perché non ti fidi",
+        "Hai visibilità piena senza dover disturbare nessuno"
+      ]
+    ],
+    "featuresTitle": "Tutto ciò che vedi come committente",
+    "featuresSubtitle": "Visibilità immediata sul cantiere, con strumenti in più che si attivano quando una società Pro sponsorizza il cantiere.",
+    "features": [
+      {
+        "title": "Feed del cantiere in tempo reale",
+        "text": "Ogni azione - foto caricata, task completato, variante approvata - compare nel feed. Il committente vede lo stesso cantiere che vede il contractor, senza dover chiamare.",
+        "icon": "Eye"
+      },
+      {
+        "title": "Notifiche proattive",
+        "text": "Quando succede qualcosa di rilevante, ricevi una notifica. Niente più ansia da cosa starà succedendo in cantiere.",
+        "icon": "Bell"
+      },
+      {
+        "title": "Documentazione fotografica",
+        "text": "Le foto scattate dal cantiere sono automaticamente visibili nel cantiere. Vedi lo stato di ogni area, ogni giorno, senza sopralluoghi non programmati.",
+        "icon": "Camera"
+      },
+      {
+        "title": "Milestone e scadenze chiare",
+        "text": "Nei cantieri sponsorizzati, la timeline del cantiere è condivisa con milestone e scadenze chiare. Sai quando aspettarti ogni fase completata e ricevi un avviso se qualcosa è in ritardo, con la causa documentata.",
+        "icon": "CalendarDays",
+        "badge": "Cantiere sponsorizzato"
+      },
+      {
+        "title": "Trasparenza economica",
+        "text": "Nei cantieri sponsorizzati, vedi budget, costi approvati e stato avanzamento lavori. Le varianti arrivano come change request formali con impatto su costi e tempistiche.",
+        "icon": "Wallet",
+        "badge": "Cantiere sponsorizzato"
+      },
+      {
+        "title": "Canale diretto con l’impresa",
+        "text": "Nei cantieri sponsorizzati, la chat di cantiere mantiene tutta la comunicazione nel contesto giusto, collegata a task e documenti specifici. Fine alle email perse e ai messaggi senza risposta.",
+        "icon": "MessageCircle",
+        "badge": "Cantiere sponsorizzato"
+      }
+    ],
+    "finalTitle": "Pronto a portare ordine nel tuo cantiere?",
+    "finalText": "Smetti di perdere tempo tra chat, email e telefonate. Inizia oggi con EdilSync e vedi la differenza dal primo giorno.",
+    "finalCta": "Apri account gratis",
+    "finalNote": "Accesso guidato · Nessuna carta per iniziare · Collaborazione immediata"
+  },
+  "teamCoordinationPage": {
+    "seoTitle": "Coordinamento Squadra",
+    "seoDescription": "Allinea contractor, committente, subappaltatori e professionisti in un unico flusso con task, calendario condiviso e comunicazione contestuale.",
+    "badge": "Coordinamento del Team",
+    "title": "Un cantiere ha 4-8 attori.",
+    "titleHighlight": "Tutti devono essere allineati.",
+    "subtitle": "Contractor, committente, subappaltatori, architetti. Ognuno ha il suo calendario, le sue priorità, i suoi strumenti. EdilSync li allinea in un unico spazio condiviso.",
+    "cta": "Apri EdilSync",
+    "stakeholdersTitle": "Chi coordini con EdilSync",
+    "stakeholders": [
+      {
+        "role": "Contractor",
+        "roleClass": "bg-blue-500/10 text-blue-600",
+        "text": "Gestisce il cantiere, assegna task, approva varianti, monitora costi."
+      },
+      {
+        "role": "Committente",
+        "roleClass": "bg-amber-500/10 text-amber-600",
+        "text": "Visibilità in tempo reale, approva change request, comunica con l’impresa."
+      },
+      {
+        "role": "Subappaltatore",
+        "roleClass": "bg-emerald-500/10 text-emerald-600",
+        "text": "Vede i propri task, il calendario condiviso, comunica con il contractor."
+      },
+      {
+        "role": "Professionista",
+        "roleClass": "bg-purple-500/10 text-purple-600",
+        "text": "Gestisce documenti tecnici, coordina con impresa e committente."
+      }
+    ],
+    "problemsTitle": "I problemi che il disallineamento causa ogni settimana",
+    "problems": [
+      {
+        "title": "Doppia prenotazione degli spazi",
+        "text": "L’elettricista e il piastrellista devono lavorare nello stesso bagno lo stesso giorno. Nessuno lo sapeva."
+      },
+      {
+        "title": "Subappaltatore che arriva a vuoto",
+        "text": "Il lavoro preparatorio non è finito. L’idraulico ha fatto 60 km per niente. Nessuno lo aveva avvisato."
+      },
+      {
+        "title": "Decisione bloccante non escalata",
+        "text": "Il cliente deve scegliere le piastrelle. I lavori si fermano. Il contractor non sa di dover sollecitare."
+      },
+      {
+        "title": "Task assegnato alla persona sbagliata",
+        "text": "Il task di impermeabilizzazione della terrazza finisce al muratore invece che allo specialista. Lo si scopre a lavori iniziati."
+      }
+    ],
+    "alignmentTitle": "Come EdilSync allinea tutti",
+    "alignment": [
+      {
+        "title": "Task assegnati con responsabilità chiare",
+        "text": "Ogni task ha un assegnatario, una scadenza e uno stato. Chi deve fare cosa è scritto, senza ambiguità.",
+        "icon": "ListChecks"
+      },
+      {
+        "title": "Calendario unificato con conflict detection",
+        "text": "Tutti gli impegni in un calendario condiviso che rileva automaticamente i conflitti.",
+        "icon": "CalendarDays"
+      },
+      {
+        "title": "Comunicazione contestuale",
+        "text": "I messaggi sono agganciati ai task e ai documenti. Non più chat generiche dove le informazioni si perdono.",
+        "icon": "MessageCircle"
+      },
+      {
+        "title": "Notifiche attive per ogni stakeholder",
+        "text": "Ogni persona riceve le notifiche rilevanti per il proprio ruolo. Nessuno può dire: non sapevo.",
+        "icon": "Bell"
+      },
+      {
+        "title": "Visibilità per ruolo",
+        "text": "Ognuno vede solo ciò che è rilevante per il proprio ruolo nel cantiere specifico.",
+        "icon": "Navigation"
+      },
+      {
+        "title": "Feed di cantiere condiviso",
+        "text": "Un unico feed cronologico con tutto ciò che succede nel cantiere. Tutti allineati.",
+        "icon": "Zap"
+      }
+    ],
+    "citation": "La comunicazione frammentata costa al settore edile 31 miliardi di dollari all’anno. Non perché le persone non vogliano comunicare, ma perché non hanno gli strumenti giusti per farlo.",
+    "citationSource": "FMI Corporation, Construction Industry Report",
+    "finalTitle": "Pronto a portare ordine nel tuo cantiere?",
+    "finalText": "Smetti di perdere tempo tra chat, email e telefonate. Inizia oggi con EdilSync e vedi la differenza dal primo giorno.",
+    "finalCta": "Apri EdilSync",
+    "finalNote": "Account personale o società - Nessuna carta per iniziare - Upgrade quando serve"
+  },
+  "blogMeta": {
+    "minReadLabel": ""
+  },
+  "footer": {
+    "copyright": "© {{year}} EdilSync. Tutti i diritti riservati.",
+    "privacyLabel": "Privacy",
+    "termsLabel": "Termini",
+    "cookiesLabel": "Cookie"
+  },
+  "cookieBanner": {
+    "text": "Utilizziamo cookie tecnici necessari per il funzionamento del servizio e cookie analitici per migliorare la tua esperienza. Per maggiori informazioni consulta la nostra",
+    "linkLabel": "Cookie Policy",
+    "rejectAction": "Solo necessari",
+    "acceptAction": "Accetta tutti"
+  },
+  "privacyPolicyPage": {
+    "chipLabel": "Legal",
+    "title": "Informativa sulla Privacy",
+    "seoDescription": "Informativa sul trattamento dei dati personali per la piattaforma EdilSync.",
+    "updatedAt": "Ultimo aggiornamento: 17 febbraio 2026",
+    "intro": "Questa informativa descrive come trattiamo i dati personali sulla piattaforma EdilSync.",
+    "k1": "1. Titolare del trattamento",
+    "k2": "Il titolare del trattamento dei dati personali è EdilSync, raggiungibile all'indirizzo email:",
+    "k3": "2. Dati raccolti",
+    "k4": "Raccogliamo le seguenti categorie di dati personali:",
+    "k5": "Dati identificativi:",
+    "k6": "nome, cognome, indirizzo email",
+    "k7": "Dati aziendali:",
+    "k8": "ragione sociale, P.IVA, indirizzo sede, telefono",
+    "k9": "Dati di utilizzo:",
+    "k10": "log di accesso, interazioni con l'applicazione",
+    "k11": "Dati di cantiere:",
+    "k12": "documenti, foto, messaggi caricati dall'utente",
+    "k13": "3. Finalità e base giuridica",
+    "k14": "I dati sono trattati per le seguenti finalità:",
+    "k15": "Esecuzione del contratto",
+    "k16": "registrazione, gestione account, erogazione del servizio",
+    "k17": "Legittimo interesse",
+    "k18": "sicurezza, prevenzione frodi, miglioramento del servizio",
+    "k19": "Consenso",
+    "k20": "invio di comunicazioni promozionali (se attivato)",
+    "k21": "Obbligo legale",
+    "k22": "adempimenti fiscali e contabili",
+    "k23": "4. Conservazione dei dati",
+    "k24": "I dati personali sono conservati per tutta la durata del rapporto contrattuale e per i successivi 10 anni per adempimenti fiscali e legali. I dati di utilizzo sono conservati per 24 mesi.",
+    "k25": "5. Condivisione dei dati",
+    "k26": "I dati possono essere condivisi con:",
+    "k27": "Altri partecipanti al cantiere (nome, email, ruolo) — necessario per il funzionamento del servizio",
+    "k28": "Fornitori di servizi tecnici (hosting, email) — in qualità di responsabili del trattamento",
+    "k29": "I dati non vengono venduti a terzi.",
+    "k30": "6. Diritti dell'interessato",
+    "k31": "Ai sensi degli articoli 15-22 del GDPR, l'utente ha diritto di:",
+    "k32": "Accedere ai propri dati personali",
+    "k33": "Rettificare dati inesatti",
+    "k34": "Cancellare i propri dati (\"diritto all'oblio\")",
+    "k35": "Limitare il trattamento",
+    "k36": "Portabilità dei dati",
+    "k37": "Opporsi al trattamento",
+    "k38": "Revocare il consenso in qualsiasi momento",
+    "k39": "Proporre reclamo al Garante per la Protezione dei Dati Personali",
+    "k40": "Per esercitare i propri diritti, scrivere a:",
+    "k41": "7. Cookie",
+    "k42": "Per informazioni sull'utilizzo dei cookie, consultare la nostra",
+    "cookiePolicyLinkLabel": "Cookie Policy",
+    "k43": "8. Modifiche",
+    "k44": "Ci riserviamo il diritto di aggiornare questa informativa. Eventuali modifiche saranno comunicate tramite l'applicazione."
+  },
+  "termsOfServicePage": {
+    "chipLabel": "Legal",
+    "title": "Termini di Servizio",
+    "heroTitle": "Termini e Condizioni di Servizio",
+    "seoDescription": "Termini e condizioni che regolano l'uso della piattaforma EdilSync.",
+    "updatedAt": "Ultimo aggiornamento: 17 febbraio 2026",
+    "intro": "Questi termini regolano l utilizzo della piattaforma EdilSync.",
+    "k1": "1. Descrizione del servizio",
+    "k2": "EdilSync è una piattaforma digitale per la gestione di cantieri edili che consente la collaborazione tra committenti, imprese, professionisti e consulenti. Il servizio include gestione di cantieri, attività, documenti, messaggistica e calendario.",
+    "k3": "2. Accettazione dei termini",
+    "k4": "L'accesso e l'utilizzo di EdilSync comportano l'accettazione integrale dei presenti Termini e Condizioni. Se non si accettano i termini, non è consentito utilizzare il servizio.",
+    "k5": "3. Registrazione e account",
+    "k6": "L'utente deve fornire informazioni veritiere e aggiornate",
+    "k7": "L'utente è responsabile della riservatezza delle proprie credenziali",
+    "k8": "Ogni account è personale e non trasferibile",
+    "k9": "L'utente è responsabile di tutte le attività svolte tramite il proprio account",
+    "k10": "4. Obblighi dell'utente",
+    "k11": "L'utente si impegna a:",
+    "k12": "Utilizzare il servizio in conformità alla legge italiana e dell'UE",
+    "k13": "Non caricare contenuti illeciti, diffamatori o lesivi di diritti altrui",
+    "k14": "Non tentare di accedere a dati o funzionalità non autorizzate",
+    "k15": "Non utilizzare il servizio per scopi diversi dalla gestione di cantieri edili",
+    "k16": "5. Proprietà intellettuale",
+    "k17": "Il software, il design, i loghi e tutti i contenuti di EdilSync sono protetti dal diritto d'autore (L. 633/1941) e restano di proprietà esclusiva del titolare. L'utente mantiene la proprietà dei propri contenuti caricati sulla piattaforma.",
+    "k18": "6. Contenuti dell'utente",
+    "k19": "L'utente concede a EdilSync una licenza limitata, non esclusiva, per ospitare, visualizzare e trasmettere i contenuti caricati al solo fine di erogare il servizio. I contenuti condivisi all'interno di un cantiere saranno visibili agli altri partecipanti del medesimo cantiere.",
+    "k20": "7. Limitazione di responsabilità",
+    "k21": "EdilSync è fornito \"così com'è\" (as is). Il titolare non garantisce che il servizio sia privo di errori o interruzioni. In nessun caso il titolare sarà responsabile per danni indiretti, incidentali o consequenziali derivanti dall'uso del servizio.",
+    "k22": "8. Sospensione e terminazione",
+    "k23": "Il titolare si riserva il diritto di sospendere o terminare l'accesso al servizio in caso di violazione dei presenti termini, senza preavviso. L'utente può cancellare il proprio account in qualsiasi momento dalle impostazioni.",
+    "k24": "9. Legge applicabile e foro competente",
+    "k25": "I presenti termini sono regolati dalla legge italiana. Per qualsiasi controversia sarà competente il Foro di [sede legale], salvo diversa disposizione inderogabile di legge a tutela del consumatore.",
+    "k26": "10. Modifiche",
+    "k27": "Ci riserviamo il diritto di modificare i presenti termini. Le modifiche saranno comunicate tramite l'applicazione con un preavviso ragionevole. L'uso continuato del servizio dopo la modifica costituisce accettazione dei nuovi termini.",
+    "k28": "11. Contatti",
+    "k29": "Per domande relative ai presenti termini, scrivere a:"
+  },
+  "cookiePolicyPage": {
+    "chipLabel": "Legal",
+    "title": "Cookie Policy",
+    "seoDescription": "Informativa sull'uso dei cookie per il funzionamento e il miglioramento del servizio EdilSync.",
+    "updatedAt": "Ultimo aggiornamento: 17 febbraio 2026",
+    "intro": "Questa policy spiega come usiamo i cookie per il funzionamento e il miglioramento del servizio.",
+    "k1": "1. Cosa sono i cookie",
+    "k2": "I cookie sono piccoli file di testo che vengono memorizzati sul dispositivo dell'utente durante la navigazione. Vengono utilizzati per migliorare l'esperienza di utilizzo e per il funzionamento del servizio.",
+    "k3": "2. Tipologie di cookie utilizzati",
+    "k4": "Cookie tecnici (necessari)",
+    "k5": "Questi cookie sono essenziali per il funzionamento dell'applicazione e non possono essere disattivati. Includono:",
+    "k6": "Cookie di sessione:",
+    "k7": "mantengono l'autenticazione dell'utente",
+    "k8": "Cookie di preferenza:",
+    "k9": "memorizzano le impostazioni dell'utente (es. contesto attivo)",
+    "k10": "Base giuridica:",
+    "k11": "legittimo interesse (Art. 6.1.f GDPR) — necessari per l'erogazione del servizio.",
+    "k12": "Cookie analitici",
+    "k13": "Utilizziamo cookie analitici per comprendere come gli utenti interagiscono con l'applicazione e migliorare il servizio. Questi cookie raccolgono informazioni in forma aggregata e anonima.",
+    "k14": "Base giuridica:",
+    "k15": "consenso dell'utente (Art. 6.1.a GDPR).",
+    "k16": "3. Cookie di terze parti",
+    "k17": "L'applicazione potrebbe includere servizi di terze parti che impostano i propri cookie. EdilSync non ha controllo su questi cookie. Si invita a consultare le rispettive informative.",
+    "k18": "4. Gestione dei cookie",
+    "k19": "L'utente può gestire le preferenze sui cookie tramite:",
+    "k20": "Il banner cookie mostrato al primo accesso",
+    "k21": "Le impostazioni del proprio browser",
+    "k22": "La disattivazione dei cookie tecnici potrebbe compromettere il funzionamento dell'applicazione.",
+    "k23": "5. Durata dei cookie",
+    "k24": "Tipo",
+    "k25": "Durata",
+    "k26": "Cookie di sessione",
+    "k27": "Fino alla chiusura del browser",
+    "k28": "Cookie di preferenza",
+    "k29": "12 mesi",
+    "k30": "Cookie analitici",
+    "k31": "24 mesi",
+    "k32": "6. Diritti dell'utente",
+    "k33": "Per maggiori informazioni sui diritti relativi al trattamento dei dati, consultare la nostra",
+    "privacyPolicyLinkLabel": "Informativa sulla Privacy",
+    "k34": "7. Contatti",
+    "k35": "Per domande relative ai cookie, scrivere a:"
+  }
+}

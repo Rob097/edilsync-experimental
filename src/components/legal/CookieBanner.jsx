@@ -8,9 +8,9 @@ import { localizePublicPath } from '@/public/lib/localePath';
 const COOKIE_CONSENT_KEY = 'edilsync_cookie_consent';
 
 export default function CookieBanner() {
-  const { currentLanguage } = useLanguage();
+  const { t, currentLanguage } = useLanguage();
   const location = useLocation();
-  const tr = (itText, enText) => currentLanguage === 'it' ? itText : enText;
+  const tx = (key, options) => t(`completeScoped.components_legal_CookieBanner.${key}`, options);
   const [visible, setVisible] = useState(false);
   const cookiePolicyPath = localizePublicPath('/cookie', location.pathname);
 
@@ -39,9 +39,9 @@ export default function CookieBanner() {
         <div className="order-2 flex items-start gap-3 sm:order-1 sm:flex-1">
           <Cookie className="h-5 w-5 text-[#ef6144] mt-0.5 flex-shrink-0" />
           <p className="text-sm text-gray-600">
-            {tr('Utilizziamo cookie tecnici necessari per il funzionamento del servizio e cookie analitici per migliorare la tua esperienza. Per maggiori informazioni consulta la nostra', 'We use technical cookies necessary for the service and analytics cookies to improve your experience. For more information, see our')}{' '}
+            {tx('k1')}{' '}
             <Link to={cookiePolicyPath} className="text-[#ef6144] hover:underline font-medium">
-              {tr('Cookie Policy', 'Cookie Policy')}
+              {tx('k2')}
             </Link>.
           </p>
         </div>
@@ -52,14 +52,14 @@ export default function CookieBanner() {
             onClick={handleReject}
             className="h-11 flex-1 sm:flex-none px-4"
           >
-            {tr('Solo necessari', 'Only necessary')}
+            {tx('k3')}
           </Button>
           <Button
             size="sm"
             onClick={handleAccept}
             className="h-11 flex-1 sm:flex-none px-4 bg-[#ef6144] hover:bg-[#d9553a]"
           >
-            {tr('Accetta tutti', 'Accept all')}
+            {tx('k4')}
           </Button>
         </div>
       </div>

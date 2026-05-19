@@ -61,8 +61,7 @@ const statusConfig = {
 };
 
 export default function ProjectDetail() {
-  const { t, currentLanguage } = useLanguage();
-  const tr = (itText, enText) => (currentLanguage === 'it' ? itText : enText);
+  const { t, currentLanguage } = useLanguage();const tx = (key, options) => t(`completeScoped.pages_ProjectDetail.${key}`, options);
   const { startTour } = useTour();
   const dateLocale = currentLanguage === 'it' ? it : enUS;
   const location = useLocation();
@@ -448,7 +447,7 @@ export default function ProjectDetail() {
 
   const status = statusConfig[project.status] || statusConfig.planning;
   const statusLabel = project.status === 'on_hold'
-    ? tr('In pausa', 'On hold')
+    ? tx('k1')
     : t(`project.status.${project.status || 'planning'}`);
 
   // Show invite banner only if the context-specific participation is "invited"
@@ -614,7 +613,7 @@ export default function ProjectDetail() {
                   {blockedTasks.length === 1 
                     ? `1 ${t('projectDetail.blockedTasks')}` 
                     : `${blockedTasks.length} ${t('projectDetail.blockedTasks')}`}
-                  {blockedTasks[0]?.blocked_by_name && ` • ${tr('In attesa di', 'Waiting for')} ${blockedTasks[0].blocked_by_name}`}
+                  {blockedTasks[0]?.blocked_by_name && ` • ${tx('k2')} ${blockedTasks[0].blocked_by_name}`}
                 </p>
                 <Button
                   variant="link"
@@ -661,7 +660,7 @@ export default function ProjectDetail() {
           ) : null}
           <TabsTrigger value="info" className="flex items-center gap-2">
             <Users className="h-4 w-4" />
-            {isBlockedProject ? tr('Recupero sponsor', 'Sponsor recovery') : t('projectDetail.tabs.info')}
+            {isBlockedProject ? tx('k3') : t('projectDetail.tabs.info')}
           </TabsTrigger>
         </TabsList>
 
@@ -831,12 +830,9 @@ export default function ProjectDetail() {
               </div>
               {showMilestonesPlanGate ? (
                 <FeatureGateCard
-                  title={tr('Milestone premium', 'Premium milestones')}
-                  description={tr(
-                    'Le milestone sono disponibili nei cantieri sponsorizzati. In un cantiere free questa sezione resta visibile ma bloccata.',
-                    'Milestones are available on sponsored worksites. On a free worksite this section stays visible but locked.',
-                  )}
-                  badgeLabel={tr('Cantiere sponsorizzato', 'Sponsored worksite')}
+                  title={tx('k4')}
+                  description={tx('k13')}
+                  badgeLabel={tx('k5')}
                 />
               ) : (
                 <MilestoneList 
@@ -890,13 +886,10 @@ export default function ProjectDetail() {
                   <AlertCircle className="mt-0.5 h-5 w-5 flex-shrink-0 text-red-600" />
                   <div>
                     <h3 className="font-semibold text-red-900">
-                      {tr('Cantiere bloccato per perdita sponsor', 'Worksite blocked after sponsor loss')}
+                      {tx('k6')}
                     </h3>
                     <p className="mt-1 text-sm text-red-800">
-                      {tr(
-                        'Le aree premium sono state nascoste e il cantiere non puo essere usato come normale cantiere free. Da qui puoi solo gestire i partecipanti e invitare societa che possano riportare una sponsorship valida.',
-                        'Premium areas are now hidden and the worksite cannot be used as a normal free worksite. From here you can only manage participants and invite companies that can restore a valid sponsorship.',
-                      )}
+                      {tx('k14')}
                     </p>
                   </div>
                 </div>
@@ -1002,7 +995,7 @@ export default function ProjectDetail() {
                }}
                className={infoSection === 'participants' || isBlockedProject ? 'bg-[#ef6144] hover:bg-[#d9553a]' : ''}
              >
-               {isBlockedProject ? tr('Partecipanti e sponsor', 'Participants and sponsor') : t('projectDetail.sections.participants')}
+               {isBlockedProject ? tx('k7') : t('projectDetail.sections.participants')}
              </Button>
           </div>
 
@@ -1072,18 +1065,15 @@ export default function ProjectDetail() {
                     data-tour="finance-section-help-button"
                   >
                     <BookOpen className="h-4 w-4 mr-2" />
-                    {tr('Guida sezione', 'Section guide')}
+                    {tx('k8')}
                   </Button>
                 ) : null}
               </div>
               {showFinancePlanGate ? (
                 <FeatureGateCard
-                  title={tr('Economia di cantiere premium', 'Premium worksite finance')}
-                  description={tr(
-                    'Budget, costi, SAL e impostazioni finanziarie si sbloccano solo quando il cantiere è sponsorizzato da una società paid.',
-                    'Budget, costs, progress statements and financial settings unlock only when the worksite is sponsored by a paid company.',
-                  )}
-                  badgeLabel={tr('Richiede sponsorship', 'Requires sponsorship')}
+                  title={tx('k9')}
+                  description={tx('k15')}
+                  badgeLabel={tx('k10')}
                 />
               ) : (
                 <ProjectFinancialSection
@@ -1108,7 +1098,7 @@ export default function ProjectDetail() {
                     data-tour="project-invite-button"
                   >
                     <UserPlus className="h-4 w-4 mr-2" />
-                    {isBlockedProject ? tr('Invita società sponsor', 'Invite sponsor company') : t('projectDetail.invite')}
+                    {isBlockedProject ? tx('k11') : t('projectDetail.invite')}
                   </Button>
                 )}
               </CardHeader>
@@ -1167,7 +1157,7 @@ export default function ProjectDetail() {
       {isActiveParticipant && !isBlockedProject && (
         <button
           onClick={() => setQuickActionOpen(!quickActionOpen)}
-          aria-label={tr('Apri azioni rapide', 'Open quick actions')}
+          aria-label={tx('k12')}
           data-tour="project-quick-actions-trigger"
           className="fixed bottom-6 right-24 w-14 h-14 rounded-full bg-gray-700 hover:bg-gray-600 text-white shadow-lg flex items-center justify-center z-50 transition-transform hover:scale-110"
         >

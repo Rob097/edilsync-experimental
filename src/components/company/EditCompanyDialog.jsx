@@ -19,7 +19,7 @@ import { getCompanyTypeOptions } from '@/lib/domainRoles';
 
 export default function EditCompanyDialog({ open, onOpenChange, company }) {
   const { t, currentLanguage } = useLanguage();
-  const tr = (itText, enText) => currentLanguage === 'it' ? itText : enText;
+  const tx = (key, options) => t(`completeScoped.components_company_EditCompanyDialog.${key}`, options);
   const queryClient = useQueryClient();
   
   const [formData, setFormData] = useState({
@@ -121,7 +121,7 @@ export default function EditCompanyDialog({ open, onOpenChange, company }) {
               id="address"
               value={formData.address}
               onChange={(e) => handleChange('address', e.target.value)}
-              placeholder={tr('Via Roma 15, 20121 Milano', '15 Rome Street, 20121 Milan')}
+              placeholder={tx('k1')}
             />
           </div>
 
@@ -142,7 +142,7 @@ export default function EditCompanyDialog({ open, onOpenChange, company }) {
               type="email"
               value={formData.email}
               onChange={(e) => handleChange('email', e.target.value)}
-              placeholder={tr('info@azienda.it', 'info@company.com')}
+              placeholder={tx('k2')}
             />
           </div>
 
@@ -152,7 +152,7 @@ export default function EditCompanyDialog({ open, onOpenChange, company }) {
               id="description"
               value={formData.description}
               onChange={(e) => handleChange('description', e.target.value)}
-              placeholder={tr('Breve descrizione della società...', 'Short company description...')}
+              placeholder={tx('k3')}
               rows={3}
             />
           </div>

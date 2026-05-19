@@ -16,16 +16,16 @@ import { it, enUS } from 'date-fns/locale';
 import { useLanguage } from '@/components/i18n/useLanguage';
 
 const statusConfig = {
-  not_started: { it: 'Non iniziata', en: 'Not started', color: 'bg-gray-100 text-gray-700' },
-  in_progress: { it: 'In corso', en: 'In progress', color: 'bg-blue-100 text-blue-700' },
-  completed: { it: 'Completata', en: 'Completed', color: 'bg-green-100 text-green-700' },
-  blocked: { it: 'Bloccata', en: 'Blocked', color: 'bg-red-100 text-red-700' },
+  not_started: { key: 'not_started', color: 'bg-gray-100 text-gray-700' },
+  in_progress: { key: 'in_progress', color: 'bg-blue-100 text-blue-700' },
+  completed: { key: 'completed', color: 'bg-green-100 text-green-700' },
+  blocked: { key: 'blocked', color: 'bg-red-100 text-red-700' },
 };
 
 export default function TaskDetailDialog({ open, onOpenChange, task }) {
   const navigate = useNavigate();
-  const { currentLanguage } = useLanguage();
-  const tr = (itText, enText) => (currentLanguage === 'it' ? itText : enText);
+  const { t, currentLanguage } = useLanguage();
+  const tx = (key, options) => t(`completeScoped.components_calendar_TaskDetailDialog.${key}`, options);
   const dateLocale = currentLanguage === 'it' ? it : enUS;
 
   if (!task) return null;
@@ -48,14 +48,14 @@ export default function TaskDetailDialog({ open, onOpenChange, task }) {
 
         <div className="space-y-4 mt-4">
           <div className="flex items-center justify-between gap-2">
-            <span className="text-sm text-gray-500">{tr('Stato', 'Status')}</span>
-            <Badge className={status.color}>{currentLanguage === 'it' ? status.it : status.en}</Badge>
+            <span className="text-sm text-gray-500">{tx('k1')}</span>
+            <Badge className={status.color}>{t(`completeScoped.components_calendar_TaskDetailDialog.status.${status.key}`)}</Badge>
           </div>
 
           <div className="flex items-center gap-3 text-gray-600">
             <CalendarDays className="h-5 w-5 text-gray-400" />
             <div>
-              <p className="text-sm text-gray-500">{tr('Scadenza', 'Due date')}</p>
+              <p className="text-sm text-gray-500">{tx('k2')}</p>
               <p className="font-medium">{format(new Date(task.due_date), 'EEEE d MMMM yyyy', { locale: dateLocale })}</p>
             </div>
           </div>
@@ -64,7 +64,7 @@ export default function TaskDetailDialog({ open, onOpenChange, task }) {
             <div className="flex items-center gap-3 text-gray-600">
               <FolderKanban className="h-5 w-5 text-gray-400" />
               <div>
-                <p className="text-sm text-gray-500">{tr('Cantiere', 'Worksite')}</p>
+                <p className="text-sm text-gray-500">{tx('k3')}</p>
                 <p className="font-medium">{task.project_name}</p>
               </div>
             </div>
@@ -74,7 +74,7 @@ export default function TaskDetailDialog({ open, onOpenChange, task }) {
             <div className="flex items-center gap-3 text-gray-600">
               <MapPin className="h-5 w-5 text-gray-400" />
               <div>
-                <p className="text-sm text-gray-500">{tr('Area', 'Area')}</p>
+                <p className="text-sm text-gray-500">{tx('k4')}</p>
                 <p className="font-medium">{task.room_area}</p>
               </div>
             </div>
@@ -84,7 +84,7 @@ export default function TaskDetailDialog({ open, onOpenChange, task }) {
             <>
               <Separator />
               <div>
-                <p className="text-sm text-gray-500 mb-1">{tr('Descrizione', 'Description')}</p>
+                <p className="text-sm text-gray-500 mb-1">{tx('k5')}</p>
                 <p className="text-gray-700">{task.description}</p>
               </div>
             </>
@@ -93,7 +93,7 @@ export default function TaskDetailDialog({ open, onOpenChange, task }) {
           <Separator />
           <Button onClick={handleOpenTaskInProject} className="w-full bg-[#ef6144] hover:bg-[#d9553a]">
             <ArrowRight className="h-4 w-4 mr-2" />
-            {tr('Vai all\'attività nel cantiere', 'Go to task in worksite')}
+            {tx('k6')}
           </Button>
         </div>
       </DialogContent>

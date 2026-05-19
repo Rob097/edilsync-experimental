@@ -68,10 +68,9 @@ const mergeAssistantConversations = (...conversationGroups) => {
 };
 
 export default function AssistantFloatingButton({ className }) {
-  const { currentLanguage } = useLanguage();
+  const { t, currentLanguage } = useLanguage();
   const queryClient = useQueryClient();
-  const location = useLocation();
-  const tr = (itText, enText) => currentLanguage === 'it' ? itText : enText;
+  const location = useLocation();const tx = (key, options) => t(`completeScoped.components_assistant_AssistantFloatingButton.${key}`, options);
   const dateLocale = currentLanguage === 'it' ? it : enUS;
   const [isOpen, setIsOpen] = useState(false);
   const [showConversations, setShowConversations] = useState(false);
@@ -125,10 +124,7 @@ export default function AssistantFloatingButton({ className }) {
     [user?.id, assistantChatScope?.type, assistantChatScope?.id, assistantFocusContext?.type, assistantFocusContext?.id],
   );
   const getFriendlyAssistantErrorMessage = (rawMessage) => {
-    const fallbackMessage = tr(
-      'C\'e un problema temporaneo con l\'assistant. Riprova piu tardi.',
-      'There is a temporary problem with the assistant. Please try again later.',
-    );
+    const fallbackMessage = tx('k26');
     const normalizedMessage = String(rawMessage || '').trim();
 
     if (!normalizedMessage) {
@@ -250,7 +246,7 @@ export default function AssistantFloatingButton({ className }) {
 
       recognitionInstance.onerror = () => {
         setIsListening(false);
-        toast.error(tr('Errore nel riconoscimento vocale', 'Speech recognition error'));
+        toast.error(tx('k1'));
       };
 
       recognitionInstance.onend = () => {
@@ -279,7 +275,7 @@ export default function AssistantFloatingButton({ className }) {
 
   const handleSendMessage = async (messageText) => {
     if (!assistantFocusContext || !assistantChatScope || !user?.id) {
-      toast.error(tr('Contesto assistant non disponibile', 'Assistant context unavailable'));
+      toast.error(tx('k2'));
       return;
     }
 
@@ -390,7 +386,7 @@ export default function AssistantFloatingButton({ className }) {
 
   const toggleVoiceInput = () => {
     if (!recognition) {
-      toast.error(tr('Il riconoscimento vocale non è supportato dal tuo browser', 'Speech recognition is not supported by your browser'));
+      toast.error(tx('k3'));
       return;
     }
 
@@ -402,7 +398,7 @@ export default function AssistantFloatingButton({ className }) {
 
     recognition.start();
     setIsListening(true);
-    toast.info(tr('In ascolto...', 'Listening...'));
+    toast.info(tx('k4'));
   };
 
   const handleKeyDown = (event) => {
@@ -417,7 +413,7 @@ export default function AssistantFloatingButton({ className }) {
     setIsDraftConversation(true);
     setMessages([]);
     setShowConversations(false);
-    toast.success(tr('Nuova chat avviata', 'New chat started'));
+    toast.success(tx('k5'));
   };
 
   const handleLoadConversation = (targetConversationId) => {
@@ -438,9 +434,9 @@ export default function AssistantFloatingButton({ className }) {
 
       await queryClient.invalidateQueries({ queryKey: assistantConversationQueryKey });
       setShowConversations(false);
-      toast.success(tr('Chat eliminata', 'Chat deleted'));
+      toast.success(tx('k6'));
     } catch (error) {
-      toast.error(error?.message || tr('Impossibile eliminare la chat', 'Unable to delete the chat'));
+      toast.error(error?.message || tx('k7'));
     }
   };
 
@@ -456,8 +452,8 @@ export default function AssistantFloatingButton({ className }) {
       <Button
         data-tour="assistant"
         onClick={() => setIsOpen(true)}
-        title={tr('Apri l\'assistente AI', 'Open AI assistant')}
-        aria-label={tr('Apri il pannello dell\'assistente AI', 'Open the AI assistant panel')}
+        title={tx('k8')}
+        aria-label={tx('k9')}
         className={cn(
           "fixed bottom-6 right-6 h-14 w-14 rounded-full shadow-lg bg-gradient-to-br from-[#ef6144] to-orange-600 hover:from-[#ef6144]/90 hover:to-orange-600/90 z-50",
           className,
@@ -484,10 +480,10 @@ export default function AssistantFloatingButton({ className }) {
                 </div>
                 <div className="min-w-0 flex-1">
                   <h2 id="assistant-panel-title" className="text-base font-semibold text-slate-900">
-                    {tr('Assistente AI', 'AI Assistant')}
+                    {tx('k10')}
                   </h2>
                   <p className="mt-1 text-xs text-slate-500">
-                    {tr('Contesto attivo', 'Active context')}: <span className="font-medium text-slate-700">{assistantContextLabel}</span>
+                    {tx('k11')}: <span className="font-medium text-slate-700">{assistantContextLabel}</span>
                   </p>
                 </div>
                 <div className="flex items-center gap-1">
@@ -496,7 +492,7 @@ export default function AssistantFloatingButton({ className }) {
                     size="icon"
                     className="h-9 w-9 border border-[rgba(197,177,165,0.36)] bg-white/80 text-slate-600 hover:bg-white"
                     onClick={() => setShowConversations(!showConversations)}
-                    title={tr('Storico chat', 'Chat history')}
+                    title={tx('k12')}
                   >
                     <History className="h-4 w-4" />
                   </Button>
@@ -505,7 +501,7 @@ export default function AssistantFloatingButton({ className }) {
                     size="icon"
                     className="h-9 w-9 border border-[rgba(197,177,165,0.36)] bg-white/80 text-slate-600 hover:bg-white"
                     onClick={handleNewConversation}
-                    title={tr('Nuova chat', 'New chat')}
+                    title={tx('k13')}
                   >
                     <Plus className="h-4 w-4" />
                   </Button>
@@ -517,7 +513,7 @@ export default function AssistantFloatingButton({ className }) {
                       setShowConversations(false);
                       setIsOpen(false);
                     }}
-                    title={tr('Chiudi assistant', 'Close assistant')}
+                    title={tx('k14')}
                   >
                     <X className="h-4 w-4" />
                   </Button>
@@ -529,7 +525,7 @@ export default function AssistantFloatingButton({ className }) {
               {showConversations ? (
                 <div className="flex-1 overflow-y-auto px-5 py-5">
                   <div className="mb-4 flex items-center justify-between">
-                    <h3 className="font-semibold text-gray-900">{tr('Le tue chat', 'Your chats')}</h3>
+                    <h3 className="font-semibold text-gray-900">{tx('k15')}</h3>
                     <Button variant="ghost" size="sm" onClick={() => setShowConversations(false)}>
                       <X className="h-4 w-4" />
                     </Button>
@@ -538,10 +534,10 @@ export default function AssistantFloatingButton({ className }) {
                     {isLoadingConversations ? (
                       <div className="flex items-center justify-center py-8 text-gray-500">
                         <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                        <span className="text-sm">{tr('Carico le chat...', 'Loading chats...')}</span>
+                        <span className="text-sm">{tx('k16')}</span>
                       </div>
                     ) : conversations.length === 0 ? (
-                      <p className="py-8 text-center text-sm text-gray-500">{tr('Nessuna chat disponibile', 'No chats available')}</p>
+                      <p className="py-8 text-center text-sm text-gray-500">{tx('k17')}</p>
                     ) : (
                       conversations.map((conversation) => (
                         <div
@@ -557,7 +553,7 @@ export default function AssistantFloatingButton({ className }) {
                           <MessageSquare className="h-4 w-4 flex-shrink-0 text-gray-400" />
                           <div className="min-w-0 flex-1">
                             <p className="truncate text-sm font-medium text-gray-900">
-                              {conversation.title || tr('Chat senza titolo', 'Untitled chat')}
+                              {conversation.title || tx('k18')}
                             </p>
                             <p className="text-xs text-gray-500">
                               {format(new Date(conversation.updated_date || conversation.created_date), 'dd/MM/yyyy HH:mm', { locale: dateLocale })}
@@ -588,10 +584,10 @@ export default function AssistantFloatingButton({ className }) {
                           <MessageSquare className="h-8 w-8 text-[#ef6144]" />
                         </div>
                         <h3 className="mb-2 text-lg font-semibold text-gray-900">
-                          {tr('Contesto non disponibile', 'Context unavailable')}
+                          {tx('k19')}
                         </h3>
                         <p className="max-w-sm text-sm text-gray-600">
-                          {tr('Apri una pagina supportata o attendi il caricamento del tuo profilo per iniziare a usare l\'assistant.', 'Open a supported page or wait for your profile to load before using the assistant.')}
+                          {tx('k20')}
                         </p>
                       </div>
                     ) : !hasMessages ? (
@@ -600,10 +596,10 @@ export default function AssistantFloatingButton({ className }) {
                           <MessageSquare className="h-8 w-8 text-[#ef6144]" />
                         </div>
                         <h3 className="mb-2 text-lg font-semibold text-gray-900">
-                          {tr('Dimmi cosa ti serve', 'Tell me what you need')}
+                          {tx('k21')}
                         </h3>
                         <p className="text-sm text-gray-500">
-                          {tr('L\'assistant lavora solo dentro il contesto attivo, senza mischiare dati di altri cantieri o altre societa.', 'The assistant works only inside the active context, without mixing data from other worksites or companies.')}
+                          {tx('k22')}
                         </p>
                       </div>
                     ) : (
@@ -619,7 +615,7 @@ export default function AssistantFloatingButton({ className }) {
                     {isBusy && (
                       <div className="flex items-center gap-2 text-gray-500">
                         <Loader2 className="h-4 w-4 animate-spin" />
-                        <span className="text-sm">{tr('Sto pensando...', 'Thinking...')}</span>
+                        <span className="text-sm">{tx('k23')}</span>
                       </div>
                     )}
                     <div ref={messagesEndRef} />
@@ -635,7 +631,7 @@ export default function AssistantFloatingButton({ className }) {
                     {!assistantFocusContext ? (
                       <div className="rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3">
                         <p className="text-sm text-slate-700">
-                          {tr('Il contesto assistant verra impostato appena il profilo e la pagina corrente saranno pronti.', 'The assistant context will be set as soon as the profile and current page are ready.')}
+                          {tx('k24')}
                         </p>
                       </div>
                     ) : (
@@ -644,7 +640,7 @@ export default function AssistantFloatingButton({ className }) {
                           value={input}
                           onChange={(event) => setInput(event.target.value)}
                           onKeyDown={handleKeyDown}
-                          placeholder={tr('Scrivi un messaggio...', 'Write a message...')}
+                          placeholder={tx('k25')}
                           className="min-h-[60px] max-h-[120px] resize-none rounded-2xl border-[rgba(197,177,165,0.52)] bg-white/96"
                           disabled={isBusy}
                         />

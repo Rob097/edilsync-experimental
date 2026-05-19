@@ -20,6 +20,7 @@ import { useLanguage } from '@/components/i18n/useLanguage';
 
 export default function Calendar() {
   const { t, currentLanguage } = useLanguage();
+  const tx = (key, options) => t(`completeScoped.pages_Calendar.${key}`, options);
   const [currentDate, setCurrentDate] = useState(new Date());
   const [selectedDate, setSelectedDate] = useState(null);
   const [viewMode, setViewMode] = useState('month'); // month, week
@@ -369,13 +370,13 @@ export default function Calendar() {
                         }`}
                       >
                         {event.entry_type === 'task'
-                          ? `${currentLanguage === 'it' ? 'Attività' : 'Task'}: ${event.title} ${event.project_name ? `• ${event.project_name}` : ''}`
+                          ? `${tx('k1')}: ${event.title} ${event.project_name ? `• ${event.project_name}` : ''}`
                           : `${format(new Date(event.start_datetime), 'HH:mm')} ${event.title}`}
                       </div>
                     ))}
                     {dayEvents.length > 3 && (
                       <div className="text-xs text-gray-500">
-                        +{dayEvents.length - 3} {currentLanguage === 'it' ? 'altri' : 'more'}
+                        +{dayEvents.length - 3} {tx('k2')}
                       </div>
                     )}
                   </div>

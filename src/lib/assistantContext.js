@@ -1,4 +1,15 @@
+import completeEn from '@i18n/complete/en.json';
+import completeIt from '@i18n/complete/it.json';
 import { UI_MODES, isOperationalPath } from './ui-mode';
+
+const assistantContextCopyByLanguage = {
+  it: completeIt.completeScoped.lib_assistantContext,
+  en: completeEn.completeScoped.lib_assistantContext,
+};
+
+const getAssistantContextCopy = (currentLanguage = 'it') => (
+  currentLanguage === 'en' ? assistantContextCopyByLanguage.en : assistantContextCopyByLanguage.it
+);
 
 const getOperationalProjectId = (pathname = '') => {
   const match = pathname.match(/^\/(?:app\/)?operativa\/progetto\/([^/?#]+)/);
@@ -48,8 +59,10 @@ export function resolveAssistantUiMode({ pathname = '' } = {}) {
 }
 
 export function describeAssistantContext(context, currentLanguage = 'it', metadata = {}) {
+  const copy = getAssistantContextCopy(currentLanguage);
+
   if (!context?.type) {
-    return currentLanguage === 'it' ? 'Contesto non disponibile' : 'Context unavailable';
+    return copy.unavailable;
   }
 
   if (context.type === 'company' && metadata?.companyName) {
@@ -57,9 +70,9 @@ export function describeAssistantContext(context, currentLanguage = 'it', metada
   }
 
   const dictionary = {
-    personal: currentLanguage === 'it' ? 'Privato' : 'Private',
-    company: currentLanguage === 'it' ? 'Societa' : 'Company',
-    project: currentLanguage === 'it' ? 'Cantiere' : 'Worksite',
+    personal: copy.personal,
+    company: copy.company,
+    project: copy.project,
   };
 
   return dictionary[context.type] || context.type;

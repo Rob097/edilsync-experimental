@@ -60,8 +60,7 @@ export default function OperativeProjectWorkspace() {
   const [selectedChannelId, setSelectedChannelId] = useState(null);
   const [focusedMessageId, setFocusedMessageId] = useState(null);
   const [redirectCreateTarget, setRedirectCreateTarget] = useState(null);
-  const { currentLanguage, t } = useLanguage();
-  const tr = (itText, enText) => (currentLanguage === 'it' ? itText : enText);
+  const { currentLanguage, t } = useLanguage();const tx = (key, options) => t(`operationalScoped.operativa_pages_OperativeProjectWorkspace.${key}`, options);
   const dateLocale = currentLanguage === 'it' ? it : enUS;
 
   const {
@@ -121,11 +120,8 @@ export default function OperativeProjectWorkspace() {
     ? allCompanies.find((company) => company.id === projectPricingStatus.sponsor_company_id) || null
     : null;
   const sponsorshipLabel = projectPricingStatus?.status === 'sponsored'
-    ? tr(
-      `Sponsorizzato da ${sponsorCompany?.name || projectPricingStatus.sponsor_company_id}`,
-      `Sponsored by ${sponsorCompany?.name || projectPricingStatus.sponsor_company_id}`,
-    )
-    : tr('Non sponsorizzato', 'Unsponsored');
+    ? tx('k33', { value1: sponsorCompany?.name || projectPricingStatus.sponsor_company_id })
+    : tx('k1');
 
   const { data: milestones = [] } = useQuery({
     queryKey: ['milestones', projectId],
@@ -333,8 +329,8 @@ export default function OperativeProjectWorkspace() {
     if (!document) return;
     if (bimBlocked && isBimFileType(document.file_type || document.model_format)) {
       toast({
-        title: tr('Preview BIM non disponibile', 'BIM preview unavailable'),
-        description: tr('Nei cantieri non sponsorizzati i file IFC, GLB e GLTF non sono apribili in anteprima.', 'On unsponsored worksites, IFC, GLB, and GLTF files cannot be previewed.'),
+        title: tx('k2'),
+        description: tx('k3'),
       });
       return;
     }
@@ -370,7 +366,7 @@ export default function OperativeProjectWorkspace() {
       if (!uploadFile) return;
       const fileType = uploadFile.name.split('.').pop()?.toLowerCase() || 'file';
       if (bimBlocked && isBimFileType(fileType)) {
-        throw new Error(tr('I file BIM sono disponibili solo nei cantieri sponsorizzati.', 'BIM files are available only on sponsored worksites.'));
+        throw new Error(tx('k4'));
       }
       const uploaded = await appClient.integrations.Core.UploadFile({ file: uploadFile });
       await appClient.entities.ProjectDocument.create({
@@ -394,8 +390,8 @@ export default function OperativeProjectWorkspace() {
     },
     onError: (error) => {
       toast({
-        title: tr('Upload non disponibile', 'Upload unavailable'),
-        description: error?.message || tr('Impossibile caricare il documento.', 'Unable to upload the document.'),
+        title: tx('k5'),
+        description: error?.message || tx('k6'),
       });
     },
   });
@@ -421,20 +417,20 @@ export default function OperativeProjectWorkspace() {
 
   const createRedirectMap = {
     task: {
-      label: tr('attività', 'task'),
-      title: tr('Nuova attività', 'New task'),
+      label: tx('k7'),
+      title: tx('k8'),
       section: 'tasks',
       create: 'task',
     },
     change: {
-      label: tr('richiesta di modifica', 'change request'),
-      title: tr('Nuova richiesta di modifica', 'New change request'),
+      label: tx('k9'),
+      title: tx('k10'),
       section: 'changes',
       create: 'change',
     },
     dispute: {
-      label: tr('disputa', 'dispute'),
-      title: tr('Nuova disputa', 'New dispute'),
+      label: tx('k11'),
+      title: tx('k12'),
       section: 'disputes',
       create: 'dispute',
     },
@@ -666,12 +662,9 @@ export default function OperativeProjectWorkspace() {
                       {showMilestonesPlanGate ? (
                         <FeatureGateCard
                           compact
-                          title={tr('Milestone premium', 'Premium milestones')}
-                          description={tr(
-                            'Le milestone sono disponibili solo nei cantieri sponsorizzati.',
-                            'Milestones are available only on sponsored worksites.',
-                          )}
-                          badgeLabel={tr('Cantiere sponsorizzato', 'Sponsored worksite')}
+                          title={tx('k13')}
+                          description={tx('k34')}
+                          badgeLabel={tx('k14')}
                         />
                       ) : orderedMilestones.length > 0 ? (
                         orderedMilestones.map((milestone) => (
@@ -701,7 +694,7 @@ export default function OperativeProjectWorkspace() {
                   {canCreateTaskFromFullMode && (
                     <Button size="sm" variant="outline" className="w-full" onClick={() => openCreateRedirect('task')}>
                       <Plus className="h-4 w-4 mr-2" />
-                      {tr('Crea in modalità completa', 'Create in full mode')}
+                      {tx('k15')}
                     </Button>
                   )}
                   {upcomingOrInProgressTasks.length > 0 ? upcomingOrInProgressTasks.map((task) => (
@@ -724,7 +717,7 @@ export default function OperativeProjectWorkspace() {
                   {canCreateChangeFromFullMode && (
                     <Button size="sm" variant="outline" className="w-full" onClick={() => openCreateRedirect('change')}>
                       <Plus className="h-4 w-4 mr-2" />
-                      {tr('Crea in modalità completa', 'Create in full mode')}
+                      {tx('k16')}
                     </Button>
                   )}
                   {changeRequests.length > 0 ? changeRequests.map((request) => (
@@ -752,7 +745,7 @@ export default function OperativeProjectWorkspace() {
                   {canCreateDisputeFromFullMode && (
                     <Button size="sm" variant="outline" className="w-full" onClick={() => openCreateRedirect('dispute')}>
                       <Plus className="h-4 w-4 mr-2" />
-                      {tr('Crea in modalità completa', 'Create in full mode')}
+                      {tx('k17')}
                     </Button>
                   )}
                   <DisputeCaseList
@@ -762,7 +755,7 @@ export default function OperativeProjectWorkspace() {
                     canCreate={false}
                     canRespond={!!contextParticipation}
                     compact
-                    emptyStateText={tr('Nessuna disputa', 'No disputes')}
+                    emptyStateText={tx('k18')}
                   />
                 </AccordionContent>
               </AccordionItem>
@@ -859,12 +852,9 @@ export default function OperativeProjectWorkspace() {
         ) : (
           <FeatureGateCard
             compact
-            title={tr('Documenti premium', 'Premium documents')}
-            description={tr(
-              'I documenti avanzati del cantiere si sbloccano solo quando il cantiere è sponsorizzato.',
-              'Advanced worksite documents unlock only when the worksite is sponsored.',
-            )}
-            badgeLabel={tr('Richiede sponsorship', 'Requires sponsorship')}
+            title={tx('k19')}
+            description={tx('k35')}
+            badgeLabel={tx('k20')}
           />
         )
       )}
@@ -954,7 +944,7 @@ export default function OperativeProjectWorkspace() {
           <DialogHeader>
             <DialogTitle>{t('operational.quickActions')}</DialogTitle>
             <DialogDescription>
-              {tr('Azioni rapide disponibili in modalità operativa.', 'Quick actions available in operational mode.')}
+              {tx('k21')}
             </DialogDescription>
           </DialogHeader>
           <div className="space-y-2">
@@ -972,15 +962,15 @@ export default function OperativeProjectWorkspace() {
             </Button>
             <Button className="w-full" variant="outline" onClick={() => openCreateRedirect('task')} disabled={!canCreateTaskFromFullMode}>
               <ListTodo className="h-4 w-4 mr-2" />
-              {tr('Nuova attività', 'New task')}
+              {tx('k22')}
             </Button>
             <Button className="w-full" variant="outline" onClick={() => openCreateRedirect('change')} disabled={!canCreateChangeFromFullMode}>
               <DollarSign className="h-4 w-4 mr-2" />
-              {tr('Nuova richiesta', 'New change request')}
+              {tx('k23')}
             </Button>
             <Button className="w-full" variant="outline" onClick={() => openCreateRedirect('dispute')} disabled={!canCreateDisputeFromFullMode}>
               <ShieldAlert className="h-4 w-4 mr-2" />
-              {tr('Nuova disputa', 'New dispute')}
+              {tx('k24')}
             </Button>
           </div>
         </DialogContent>
@@ -989,27 +979,21 @@ export default function OperativeProjectWorkspace() {
       <Dialog open={!!redirectCreateTarget} onOpenChange={(open) => { if (!open) setRedirectCreateTarget(null); }}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>{tr('Passare alla modalità completa?', 'Switch to full mode?')}</DialogTitle>
+            <DialogTitle>{tx('k25')}</DialogTitle>
             <DialogDescription>
-              {redirectCreateTarget ? tr(
-                `La creazione di questa ${createRedirectMap[redirectCreateTarget].label} è disponibile solo nella modalità completa.`,
-                `Creating this ${createRedirectMap[redirectCreateTarget].label} is available only in full mode.`,
-              ) : ''}
+              {redirectCreateTarget ? tx('k36', { value1: createRedirectMap[redirectCreateTarget].label }) : ''}
             </DialogDescription>
           </DialogHeader>
           <div className="space-y-4 text-sm text-gray-700">
             <p>
-              {tr(
-                'Si aprirà direttamente il modulo corretto. Potrai tornare alla modalità operativa dal menu utente.',
-                'The correct form will open directly. You can return to operational mode from the user menu.',
-              )}
+              {tx('k37')}
             </p>
             <div className="flex gap-2">
               <Button variant="outline" className="flex-1" onClick={() => setRedirectCreateTarget(null)}>
-                {tr('Annulla', 'Cancel')}
+                {tx('k26')}
               </Button>
               <Button className="flex-1 bg-[#ef6144] hover:bg-[#d9553a]" onClick={confirmCreateRedirect}>
-                {tr('Continua', 'Continue')}
+                {tx('k27')}
               </Button>
             </div>
           </div>
@@ -1021,7 +1005,7 @@ export default function OperativeProjectWorkspace() {
           <DialogHeader>
             <DialogTitle>{t('operational.projectDetails')}</DialogTitle>
             <DialogDescription>
-              {tr('Dettagli sintetici del cantiere corrente in modalità operativa.', 'Summary details for the current worksite in operational mode.')}
+              {tx('k28')}
             </DialogDescription>
           </DialogHeader>
           <div className="space-y-4 text-sm">
@@ -1029,7 +1013,7 @@ export default function OperativeProjectWorkspace() {
               <p><strong>{t('newProject.projectName')}:</strong> {project.name || '-'}</p>
               <p><strong>{t('newProject.description')}:</strong> {project.description || '-'}</p>
               <p><strong>{t('operational.homeowner')}:</strong> {homeownerLabel}</p>
-              <p><strong>{tr('Sponsorship', 'Sponsorship')}:</strong> {sponsorshipLabel}</p>
+              <p><strong>{tx('k29')}:</strong> {sponsorshipLabel}</p>
               <p><strong>{t('newProject.siteAddress')}:</strong> {project.address ? <a href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(project.address)}`} target="_blank" rel="noopener noreferrer" className="text-[#ef6144] underline underline-offset-2">{project.address}</a> : '-'}</p>
               <p><strong>{t('tasks.status')}:</strong> {projectStatusLabel}</p>
               <p><strong>{t('projectDetail.startDate')}:</strong> {project.start_date ? format(new Date(`${project.start_date}T00:00:00`), 'dd MMM yyyy', { locale: dateLocale }) : '-'}</p>
@@ -1063,7 +1047,7 @@ export default function OperativeProjectWorkspace() {
                selectedEntity?.type === 'event' ? t('operational.calendarEvents') : t('operational.details')}
             </DialogTitle>
             <DialogDescription>
-              {tr('Dettaglio dell elemento selezionato.', 'Details for the selected item.')}
+              {tx('k30')}
             </DialogDescription>
           </DialogHeader>
           {selectedEntity?.entity ? (
@@ -1119,12 +1103,12 @@ export default function OperativeProjectWorkspace() {
           <DialogHeader>
             <DialogTitle>{t('operational.uploadTitle')}</DialogTitle>
             <DialogDescription>
-              {tr('Carica un file nel cantiere corrente dalla modalità operativa.', 'Upload a file to the current worksite from operational mode.')}
+              {tx('k31')}
             </DialogDescription>
           </DialogHeader>
           <div className="space-y-3">
             <Input type="file" accept={bimBlocked ? 'image/*,.pdf,.doc,.docx,.xls,.xlsx,.txt,.csv,.dwg,.dxf,.zip,.rar' : 'image/*,.pdf,.doc,.docx,.xls,.xlsx,.txt,.csv,.dwg,.dxf,.ifc,.glb,.gltf,.zip,.rar'} onChange={(event) => setUploadFile(event.target.files?.[0] || null)} />
-            {bimBlocked ? <p className="text-xs text-amber-700">{tr('IFC, GLB e GLTF si attivano solo quando il cantiere è sponsorizzato.', 'IFC, GLB, and GLTF unlock only when the worksite is sponsored.')}</p> : null}
+            {bimBlocked ? <p className="text-xs text-amber-700">{tx('k32')}</p> : null}
             <Select value={uploadCategory} onValueChange={setUploadCategory}>
               <SelectTrigger>
                 <SelectValue />

@@ -46,7 +46,7 @@ export default function DisputeCommentComposer({
   allowMilestoneMentions = true,
 }) {
   const { t, currentLanguage } = useLanguage();
-  const tr = (it, en) => (currentLanguage === 'it' ? it : en);
+  const tx = (key, options) => t(`completeScoped.components_project_DisputeCommentComposer.${key}`, options);
   const textareaRef = useRef(null);
   const fileInputRef = useRef(null);
 
@@ -212,7 +212,7 @@ export default function DisputeCommentComposer({
             <div className="space-y-1">
               {participantOptions.length > 0 ? participantOptions.map((item) => (
                 <button type="button" key={item.id} onClick={() => insertMention('participant', item)} className="w-full text-left px-3 py-2 hover:bg-gray-100 rounded text-sm">{item.label}</button>
-              )) : <p className="px-3 py-2 text-sm text-gray-500">{tr('Nessun partecipante disponibile', 'No participant available')}</p>}
+              )) : <p className="px-3 py-2 text-sm text-gray-500">{tx('k1')}</p>}
             </div>
           </PopoverContent>
         </Popover>
@@ -231,7 +231,7 @@ export default function DisputeCommentComposer({
               <div className="space-y-1">
                 {getMentionOptions().length > 0 ? getMentionOptions().map((item) => (
                   <button type="button" key={item.id} onClick={() => insertMention(type, item)} className="w-full text-left px-3 py-2 hover:bg-gray-100 rounded text-sm">{item.label}</button>
-                )) : <p className="px-3 py-2 text-sm text-gray-500">{tr('Nessun elemento disponibile', 'No item available')}</p>}
+                )) : <p className="px-3 py-2 text-sm text-gray-500">{tx('k2')}</p>}
               </div>
             </PopoverContent>
           </Popover>

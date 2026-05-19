@@ -11,14 +11,14 @@ import MilestoneDialog from './MilestoneDialog';
 import { useLanguage } from '@/components/i18n/useLanguage';
 
 export default function MilestoneBoard({ projectId, project, canEdit, onMilestoneClick }) {
-  const { currentLanguage } = useLanguage();
-  const tr = (itText, enText) => currentLanguage === 'it' ? itText : enText;
+  const { t, currentLanguage } = useLanguage();
+  const tx = (key, options) => t(`completeScoped.components_project_MilestoneBoard.${key}`, options);
   const dateLocale = currentLanguage === 'it' ? it : enUS;
   const statusConfig = {
-    pending: { color: 'bg-yellow-500', label: tr('In Attesa', 'Pending'), icon: Clock },
-    in_progress: { color: 'bg-blue-500', label: tr('In Corso', 'In Progress'), icon: Play },
-    completed: { color: 'bg-green-500', label: tr('Completata', 'Completed'), icon: CheckCircle2 },
-    delayed: { color: 'bg-red-500', label: tr('In Ritardo', 'Delayed'), icon: AlertCircle },
+    pending: { color: 'bg-yellow-500', label: tx('k1'), icon: Clock },
+    in_progress: { color: 'bg-blue-500', label: tx('k2'), icon: Play },
+    completed: { color: 'bg-green-500', label: tx('k3'), icon: CheckCircle2 },
+    delayed: { color: 'bg-red-500', label: tx('k4'), icon: AlertCircle },
   };
   const [dialogOpen, setDialogOpen] = useState(false);
   const [selectedMilestone, setSelectedMilestone] = useState(null);
@@ -116,8 +116,8 @@ export default function MilestoneBoard({ projectId, project, canEdit, onMileston
     return (
       <EmptyState
         icon={Flag}
-        title={tr('Nessuna milestone', 'No milestones')}
-        description={tr('Crea la prima milestone per tracciare i progressi del cantiere.', 'Create the first milestone to track worksite progress.')}
+        title={tx('k5')}
+        description={tx('k6')}
       />
     );
   }
@@ -225,7 +225,7 @@ export default function MilestoneBoard({ projectId, project, canEdit, onMileston
               </div>
             ) : (
               <div className="flex items-center justify-center h-48 text-gray-500 text-sm absolute inset-0">
-                {tr('Nessuna milestone per', 'No milestones for')} {currentYear}
+                {tx('k7')} {currentYear}
               </div>
             )}
           </div>

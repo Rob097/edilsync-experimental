@@ -9,11 +9,10 @@ import { X, ChevronLeft, ChevronRight } from 'lucide-react';
 export default function TourTooltip({ highlightRect }) {
   const { activeTour, currentStep, nextStep, prevStep, closeTour } = useTour();
   const navigate = useNavigate();
-  const { currentLanguage } = useLanguage();
+  const { t, currentLanguage } = useLanguage();
   const [position, setPosition] = useState({ top: 0, left: 0 });
   const tooltipRef = useRef(null);
-  const tr = (itText, enText) => (currentLanguage === 'it' ? itText : enText);
-
+  const tx = (key, options) => t(`completeScoped.components_tour_TourTooltip.${key}`, options);
   useEffect(() => {
     if (!activeTour || !tooltipRef.current) return;
 
@@ -114,7 +113,7 @@ export default function TourTooltip({ highlightRect }) {
             <div className="flex-1">
               <CardTitle className="text-lg">{step.title}</CardTitle>
               <CardDescription className="text-xs text-gray-500 mt-1">
-                {tr('Passo', 'Step')} {currentStep + 1} {tr('di', 'of')} {activeTour.steps.length}
+                {tx('k1')} {currentStep + 1} {tx('k2')} {activeTour.steps.length}
               </CardDescription>
             </div>
             <Button
@@ -141,7 +140,7 @@ export default function TourTooltip({ highlightRect }) {
               className="gap-1"
             >
               <ChevronLeft className="h-4 w-4" />
-              {tr('Indietro', 'Back')}
+              {tx('k3')}
             </Button>
 
             <div className="flex gap-1">
@@ -162,7 +161,7 @@ export default function TourTooltip({ highlightRect }) {
               onClick={handleNext}
               className="bg-[#ef6144] hover:bg-[#ef6144]/90 gap-1"
             >
-              {isLastStep ? tr('Completa', 'Finish') : tr('Avanti', 'Next')}
+              {isLastStep ? tx('k4') : tx('k5')}
               {!isLastStep && <ChevronRight className="h-4 w-4" />}
             </Button>
           </div>

@@ -3,8 +3,8 @@ import { Building2, User } from "lucide-react";
 import { useLanguage } from '@/components/i18n/useLanguage';
 
 export default function ContextBadge({ context, companyName }) {
-  const { currentLanguage } = useLanguage();
-  const tr = (itText, enText) => (currentLanguage === 'it' ? itText : enText);
+  const { t, currentLanguage } = useLanguage();
+  const tx = (key, options) => t(`completeScoped.components_context_ContextBadge.${key}`, options);
   const isPersonal = context === 'personal';
 
   return (
@@ -12,7 +12,7 @@ export default function ContextBadge({ context, companyName }) {
       {isPersonal ? (
         <>
           <User className="h-3 w-3" />
-          <span>{tr('Privato', 'Private')}</span>
+          <span>{tx('k1')}</span>
         </>
       ) : (
         <>

@@ -24,7 +24,7 @@ export default function ProjectMessaging({
   allowMilestoneMentions = true,
 }) {
   const { currentLanguage, t } = useLanguage();
-  const tr = (it, en) => (currentLanguage === 'it' ? it : en);
+  const tx = (key, options) => t(`completeScoped.components_messaging_ProjectMessaging.${key}`, options);
   const queryClient = useQueryClient();
   const isCompanyScope = !projectId && !!companyId;
   const scopeType = isCompanyScope ? 'company' : 'project';
@@ -96,9 +96,9 @@ export default function ProjectMessaging({
         const generalChannel = await createChannelMutation.mutateAsync({
           project_id: isCompanyScope ? null : projectId,
           company_id: isCompanyScope ? companyId : null,
-          name: isCompanyScope ? (companyName || tr('Generale', 'General')) : t('messages.general'),
+          name: isCompanyScope ? (companyName || tx('k1')) : t('messages.general'),
           type: isCompanyScope ? 'company' : 'general',
-          description: isCompanyScope ? tr('Canale generale società', 'Company general channel') : null,
+          description: isCompanyScope ? tx('k2') : null,
           created_by_email: currentUser.email,
         });
 
@@ -224,7 +224,7 @@ export default function ProjectMessaging({
           <div className="border-b p-3 flex items-center justify-between md:hidden">
             <div className="min-w-0">
               <h3 className="font-semibold truncate">
-                {selectedChannel?.name || tr('Canali', 'Channels')}
+                {selectedChannel?.name || tx('k3')}
               </h3>
             </div>
             <div className="flex items-center gap-1 ml-2">
@@ -233,7 +233,7 @@ export default function ProjectMessaging({
                   variant="ghost"
                   size="icon"
                   onClick={() => setMembersDialogOpen(true)}
-                  title={tr('Membri del canale', 'Channel members')}
+                  title={tx('k4')}
                 >
                   <Users className="h-5 w-5" />
                 </Button>
@@ -261,7 +261,7 @@ export default function ProjectMessaging({
                       variant="ghost"
                       size="icon"
                       onClick={() => setMembersDialogOpen(true)}
-                      title={tr('Membri del canale', 'Channel members')}
+                      title={tx('k5')}
                     >
                       <Users className="h-5 w-5" />
                     </Button>
@@ -293,7 +293,7 @@ export default function ProjectMessaging({
             </>
           ) : (
             <div className="flex items-center justify-center h-full text-gray-500 px-4 text-center">
-              {tr('Seleziona un canale per iniziare', 'Select a channel to start')}
+              {tx('k6')}
             </div>
           )}
         </Card>
@@ -330,7 +330,7 @@ export default function ProjectMessaging({
             type="button"
             className="absolute inset-0 z-10 bg-black/20 md:hidden"
             onClick={() => setSidebarOpen(false)}
-            aria-label={tr('Chiudi lista canali', 'Close channels list')}
+            aria-label={tx('k7')}
           />
         )}
       </div>

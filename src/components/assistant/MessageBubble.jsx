@@ -36,8 +36,8 @@ const resolveAssistantInternalPath = (href = '') => {
 };
 
 const FunctionDisplay = ({ toolCall }) => {
-  const { currentLanguage } = useLanguage();
-  const tr = (itText, enText) => currentLanguage === 'it' ? itText : enText;
+  const { t, currentLanguage } = useLanguage();
+  const tx = (key, options) => t(`completeScoped.components_assistant_MessageBubble.${key}`, options);
   const [expanded, setExpanded] = useState(false);
   const name = toolCall?.name || 'Function';
   const status = toolCall?.status || 'pending';
@@ -58,15 +58,15 @@ const FunctionDisplay = ({ toolCall }) => {
   );
 
   const statusConfig = {
-    pending: { icon: Clock, color: 'text-slate-400', text: tr('In attesa', 'Pending') },
-    running: { icon: Loader2, color: 'text-slate-500', text: tr('In esecuzione...', 'Running...'), spin: true },
-    in_progress: { icon: Loader2, color: 'text-slate-500', text: tr('In esecuzione...', 'Running...'), spin: true },
+    pending: { icon: Clock, color: 'text-slate-400', text: tx('k1') },
+    running: { icon: Loader2, color: 'text-slate-500', text: tx('k2'), spin: true },
+    in_progress: { icon: Loader2, color: 'text-slate-500', text: tx('k3'), spin: true },
     completed: isError
-      ? { icon: AlertCircle, color: 'text-red-500', text: tr('Errore', 'Error') }
-      : { icon: CheckCircle2, color: 'text-green-600', text: tr('Completato', 'Completed') },
-    success: { icon: CheckCircle2, color: 'text-green-600', text: tr('Completato', 'Completed') },
-    failed: { icon: AlertCircle, color: 'text-red-500', text: tr('Errore', 'Error') },
-    error: { icon: AlertCircle, color: 'text-red-500', text: tr('Errore', 'Error') },
+      ? { icon: AlertCircle, color: 'text-red-500', text: tx('k4') }
+      : { icon: CheckCircle2, color: 'text-green-600', text: tx('k5') },
+    success: { icon: CheckCircle2, color: 'text-green-600', text: tx('k6') },
+    failed: { icon: AlertCircle, color: 'text-red-500', text: tx('k7') },
+    error: { icon: AlertCircle, color: 'text-red-500', text: tx('k8') },
   }[status] || { icon: Zap, color: 'text-slate-500', text: '' };
 
   const Icon = statusConfig.icon;
@@ -98,7 +98,7 @@ const FunctionDisplay = ({ toolCall }) => {
         <div className="mt-1.5 ml-3 pl-3 border-l-2 border-slate-200 space-y-2">
           {toolCall.arguments_string && (
             <div>
-              <div className="text-xs text-slate-500 mb-1">{tr('Parametri:', 'Parameters:')}</div>
+              <div className="text-xs text-slate-500 mb-1">{tx('k9')}</div>
               <pre className="bg-slate-50 rounded-md p-2 text-xs text-slate-600 whitespace-pre-wrap">
                 {(() => {
                   try {
@@ -112,7 +112,7 @@ const FunctionDisplay = ({ toolCall }) => {
           )}
           {parsedResults && (
             <div>
-              <div className="text-xs text-slate-500 mb-1">{tr('Risultato:', 'Result:')}</div>
+              <div className="text-xs text-slate-500 mb-1">{tx('k10')}</div>
               <pre className="bg-slate-50 rounded-md p-2 text-xs text-slate-600 whitespace-pre-wrap max-h-48 overflow-auto">
                 {typeof parsedResults === 'object' ? JSON.stringify(parsedResults, null, 2) : parsedResults}
               </pre>
@@ -125,8 +125,8 @@ const FunctionDisplay = ({ toolCall }) => {
 };
 
 export default function MessageBubble({ message, onNavigate, showToolCalls = false }) {
-  const { currentLanguage } = useLanguage();
-  const tr = (itText, enText) => currentLanguage === 'it' ? itText : enText;
+  const { t, currentLanguage } = useLanguage();
+  const tx = (key, options) => t(`completeScoped.components_assistant_MessageBubble.${key}`, options);
   const isUser = message.role === 'user';
   const navigate = useNavigate();
 
@@ -173,7 +173,7 @@ export default function MessageBubble({ message, onNavigate, showToolCalls = fal
                           className="absolute top-2 right-2 h-6 w-6 opacity-0 group-hover/code:opacity-100 bg-slate-800 hover:bg-slate-700"
                           onClick={() => {
                             navigator.clipboard.writeText(String(children).replace(/\n$/, ''));
-                            toast.success(tr('Codice copiato', 'Code copied'));
+                            toast.success(tx('k11'));
                           }}
                         >
                           <Copy className="h-3 w-3 text-slate-400" />

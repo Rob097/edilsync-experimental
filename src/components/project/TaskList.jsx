@@ -15,14 +15,14 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { useLanguage } from '@/components/i18n/useLanguage';
 
 export default function TaskList({ projectId, canEdit, filterMilestoneId, showMilestoneFilter = true, createDialogOpen, onCreateDialogChange }) {
-  const { currentLanguage } = useLanguage();
-  const tr = (itText, enText) => currentLanguage === 'it' ? itText : enText;
+  const { t, currentLanguage } = useLanguage();
+  const tx = (key, options) => t(`completeScoped.components_project_TaskList.${key}`, options);
   const dateLocale = currentLanguage === 'it' ? it : enUS;
   const statusConfig = {
-    not_started: { label: tr('Non iniziato', 'Not started'), color: 'bg-gray-100 text-gray-700', icon: Clock },
-    in_progress: { label: tr('In corso', 'In progress'), color: 'bg-blue-100 text-blue-700', icon: Play },
-    completed: { label: tr('Completato', 'Completed'), color: 'bg-green-100 text-green-700', icon: CheckCircle2 },
-    blocked: { label: tr('Bloccato', 'Blocked'), color: 'bg-red-100 text-red-700', icon: AlertCircle },
+    not_started: { label: tx('k1'), color: 'bg-gray-100 text-gray-700', icon: Clock },
+    in_progress: { label: tx('k2'), color: 'bg-blue-100 text-blue-700', icon: Play },
+    completed: { label: tx('k3'), color: 'bg-green-100 text-green-700', icon: CheckCircle2 },
+    blocked: { label: tx('k4'), color: 'bg-red-100 text-red-700', icon: AlertCircle },
   };
   const [dialogOpen, setDialogOpen] = useState(false);
   const [selectedTask, setSelectedTask] = useState(null);
@@ -79,14 +79,14 @@ export default function TaskList({ projectId, canEdit, filterMilestoneId, showMi
       <Card>
         <CardHeader className="flex flex-row items-center justify-between pb-4">
           <div className="flex items-center gap-3 flex-1">
-            <CardTitle>{tr('Attività', 'Tasks')}</CardTitle>
+            <CardTitle>{tx('k5')}</CardTitle>
             <div className="flex gap-1">
               <Button
                 variant={viewMode === 'list' ? 'default' : 'outline'}
                 size="icon"
                 onClick={() => setViewMode('list')}
                 className={viewMode === 'list' ? 'bg-[#ef6144] hover:bg-[#d9553a] h-8 w-8' : 'h-8 w-8'}
-                title={tr('Vista lista', 'List view')}
+                title={tx('k6')}
               >
                 <List className="h-4 w-4" />
               </Button>
@@ -95,7 +95,7 @@ export default function TaskList({ projectId, canEdit, filterMilestoneId, showMi
                 size="icon"
                 onClick={() => setViewMode('board')}
                 className={viewMode === 'board' ? 'bg-[#ef6144] hover:bg-[#d9553a] h-8 w-8' : 'h-8 w-8'}
-                title={tr('Vista board', 'Board view')}
+                title={tx('k7')}
               >
                 <Grid3x3 className="h-4 w-4" />
               </Button>
@@ -104,7 +104,7 @@ export default function TaskList({ projectId, canEdit, filterMilestoneId, showMi
           {canEdit && (
             <Button onClick={handleCreate} size="sm" className="bg-[#ef6144] hover:bg-[#d9553a]">
               <Plus className="h-4 w-4 md:mr-1" />
-              <span className="hidden md:inline">{tr('Nuova Attività', 'New Task')}</span>
+              <span className="hidden md:inline">{tx('k8')}</span>
             </Button>
           )}
         </CardHeader>
@@ -115,11 +115,11 @@ export default function TaskList({ projectId, canEdit, filterMilestoneId, showMi
               <Flag className="h-4 w-4 text-gray-500" />
               <Select value={selectedMilestoneId} onValueChange={setSelectedMilestoneId}>
                 <SelectTrigger className="w-[250px]">
-                  <SelectValue placeholder={tr('Filtra per milestone', 'Filter by milestone')} />
+                  <SelectValue placeholder={tx('k9')} />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="all">{tr('Tutte le attività', 'All tasks')}</SelectItem>
-                  <SelectItem value="none">{tr('Senza milestone', 'Without milestone')}</SelectItem>
+                  <SelectItem value="all">{tx('k10')}</SelectItem>
+                  <SelectItem value="none">{tx('k11')}</SelectItem>
                   {milestones.map(milestone => (
                     <SelectItem key={milestone.id} value={milestone.id}>
                       {milestone.title}
@@ -174,7 +174,7 @@ export default function TaskList({ projectId, canEdit, filterMilestoneId, showMi
                           </Badge>
                           {task.status === 'blocked' && blockedByLabel ? (
                             <Badge variant="outline" className="text-red-700 border-red-200 bg-red-50">
-                              {tr('Bloccato da', 'Blocked by')}: {blockedByLabel}
+                              {tx('k12')}: {blockedByLabel}
                             </Badge>
                           ) : null}
                         </div>
@@ -189,13 +189,13 @@ export default function TaskList({ projectId, canEdit, filterMilestoneId, showMi
                             <span>• {task.room_area}</span>
                           )}
                           {task.due_date && (
-                            <span>• {tr('Scadenza', 'Due')}: {format(new Date(task.due_date), 'dd MMM yyyy', { locale: dateLocale })}</span>
+                            <span>• {tx('k13')}: {format(new Date(task.due_date), 'dd MMM yyyy', { locale: dateLocale })}</span>
                           )}
                         </div>
                         {task.status === 'blocked' && task.blocked_reason && (
                           <div className="mt-2 p-2 rounded bg-red-50 border border-red-200">
                             <p className="text-sm text-red-700">
-                              <strong>{tr('Bloccato:', 'Blocked:')}</strong> {task.blocked_reason}
+                              <strong>{tx('k14')}</strong> {task.blocked_reason}
                             </p>
                           </div>
                         )}
@@ -208,9 +208,9 @@ export default function TaskList({ projectId, canEdit, filterMilestoneId, showMi
           ) : (
             <EmptyState
               icon={CheckCircle2}
-              title={tr('Nessuna attività', 'No tasks')}
-              description={tr('Non ci sono attività per questo cantiere.', 'There are no tasks for this worksite.')}
-              actionLabel={canEdit ? tr('Crea attività', 'Create task') : undefined}
+              title={tx('k15')}
+              description={tx('k16')}
+              actionLabel={canEdit ? tx('k17') : undefined}
               onAction={canEdit ? handleCreate : undefined}
             />
           )}

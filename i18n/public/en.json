@@ -1,0 +1,1434 @@
+{
+  "home": {
+    "seo": {
+      "title": "Construction coordination platform",
+      "description": "EdilSync centralizes communication and planning for contractors, owners, and subcontractors.",
+      "softwareDescription": "Construction software to centralize communication, planning, and traceable execution."
+    },
+    "hero": {
+      "badge": "The construction site coordination platform",
+      "titleA": "Stop construction chaos.",
+      "titleHighlight": "Coordinate everything",
+      "titleB": "in one place.",
+      "subtitle": "EdilSync brings owners, contractors, subcontractors, and professionals into one platform. Fewer calls, fewer misunderstandings, more control.",
+      "ctaPrimary": "Create free account",
+      "ctaSecondary": "Learn more",
+      "note": "Personal or company account · No card required to start · Upgrade when needed",
+      "highlights": {
+        "alignmentLabel": "Alignment",
+        "alignmentText": "One place for tasks, photos, change requests, and worksite conversations.",
+        "traceabilityLabel": "Traceability",
+        "traceabilityText": "Every action becomes usable evidence for decisions, work progress, and disputes.",
+        "controlLabel": "Control",
+        "controlText": "Fewer clarification calls, fewer wasted trips, fewer gray areas."
+      },
+      "preview": {
+        "alt": "EdilSync interface for coordinating the construction site",
+        "feedLabel": "Site feed",
+        "feedTitle": "Status, accountability, and approvals in the same operating flow.",
+        "feedText": "The owner sees progress and decisions. The contractor keeps context without chasing chats and attachments.",
+        "fieldReadyLabel": "Field-ready",
+        "fieldReadyValue": "3 taps",
+        "fieldReadyText": "To update status, attach a photo, or answer a change request."
+      }
+    },
+    "stats": {
+      "aValue": "$31B",
+      "aLabel": "Lost every year because of poor communication",
+      "bValue": "98%",
+      "bLabel": "Of worksites miss expected quality standards",
+      "cValue": "14h",
+      "cLabel": "Lost weekly to conflicts and rework",
+      "dValue": "48%",
+      "dLabel": "Of rework tied to inadequate communication"
+    },
+    "problem": {
+      "chip": "The problem",
+      "title": "Construction communication is chaotic",
+      "subtitle": "Every day, different tools are used to run construction work, but the result is misalignment and communication outside the right context.",
+      "issueLabel": "Issue {{number}}",
+      "c1t": "WhatsApp, SMS, email... everywhere",
+      "c1d": "Information gets lost across private chats, groups, and endless threads. Finding that important conversation from 3 weeks ago becomes impossible.",
+      "c2t": "Constant calls stop execution",
+      "c2d": "The owner calls for updates. Subcontractors call to coordinate. Every interruption costs about 15 minutes of productivity.",
+      "c3t": "\"I thought it was included\"",
+      "c3d": "Undocumented changes turn into disputes. With 3-5% margins, a single misunderstanding can wipe out the profit of the whole worksite.",
+      "c4t": "Delays with no accountability",
+      "c4d": "Who caused the delay? The supplier? The client who did not choose materials? Without documentation, blame always falls on the contractor.",
+      "c5t": "Wasted trips and impossible coordination",
+      "c5d": "The electrician arrives but the previous work is not finished. Every wasted trip costs $100-200, multiplied dozens of times each year.",
+      "c6t": "No visibility for owners",
+      "c6d": "The owner does not know what is happening, feels anxious, and keeps calling. Not out of mistrust, but because no tool gives real transparency."
+    },
+    "solution": {
+      "chip": "The solution",
+      "title": "One shared space for every stakeholder",
+      "subtitle": "A contextual platform where roles, permissions, and responsibilities adapt by worksite and workflow.",
+      "s1t": "Create the worksite",
+      "s1d": "The contractor creates the site and invites owners, subcontractors, and professionals in one click.",
+      "s2t": "Work and document",
+      "s2d": "Every action - photos, tasks, changes, messages - automatically becomes traceable documentation.",
+      "s3t": "Stay aligned",
+      "s3d": "Everyone sees the same worksite state. Zero ambiguity.",
+      "result": {
+        "label": "Operational result",
+        "title": "Everyone sees the same site without chasing updates.",
+        "b1": "The owner follows progress and decisions without constant phone calls.",
+        "b2": "The contractor coordinates tasks, photo evidence, and change requests in the same flow.",
+        "b3": "The subcontractor sees only what is needed, when it is needed."
+      }
+    },
+    "features": {
+      "chip": "Features",
+      "title": "Everything your site needs",
+      "subtitle": "Tasks, photos, changes, chat, and financial control in one integrated flow.",
+      "moduleLabel": "Module",
+      "seeAll": "See all features",
+      "f1t": "Tasks and Milestones",
+      "f1d": "Organize work by rooms, phases, and milestones. Blocked status with tagged ownership to document who causes delays.",
+      "f2t": "Photo Documentation",
+      "f2d": "Captured photos automatically become part of the worksite. Timestamp, task-based organization, and built-in legal protection.",
+      "f3t": "Change Requests",
+      "f3d": "Every change is tracked with cost and timeline impact. The owner approves or rejects. No more disputes like 'I thought it was included'.",
+      "f4t": "Contextual Chat",
+      "f4d": "Worksite messages with references to tasks, milestones, and documents. Replaces WhatsApp while keeping everything in the right context.",
+      "f5t": "Shared Calendar",
+      "f5d": "Coordinate visits, teams, and deadlines with conflict detection.",
+      "f6t": "Dispute Management",
+      "f6d": "Formalize disputes with timeline, evidence, comments, and states.",
+      "f7t": "Financial Control",
+      "f7d": "Budget, costs, rates, and work progress statements. The owner sees progress while the contractor manages financial control.",
+      "f8t": "Attendance and Clock-in",
+      "f8d": "GPS optional clock-in/out linked to worksite costs."
+    },
+    "why": {
+      "chip": "Why EdilSync",
+      "title": "Not another generic management tool",
+      "w1t": "Protection builds trust",
+      "w1d": "The only tool built around contractor protection. Automatic documentation protects both sides without extra work.",
+      "w2t": "Truly mobile-first",
+      "w2d": "Designed for the jobsite, not the office desk. Upload photos in 3 taps, update status in 3 taps. If mobile has friction, it fails.",
+      "w3t": "Zero training",
+      "w3d": "If it takes more than 5 minutes to understand, we did it wrong. Clear interfaces, no hidden functionality, same model for every role.",
+      "w4t": "Automatic documentation",
+      "w4d": "You do not need to 'write updates'. Your actions - photos, task updates, approvals - automatically become the worksite feed."
+    },
+    "audience": {
+      "chip": "Who it's for",
+      "title": "Designed for every role on site",
+      "subtitle": "Same tool, role-adapted interface. No one needs to learn from scratch.",
+      "micheleRole": "Contractor",
+      "micheleQuote": "\"I am not late - I am waiting for the client to choose tiles for three weeks.\"",
+      "matteoRole": "Owner",
+      "matteoQuote": "\"I am spending €40,000 on my kitchen and I have no idea what is happening.\"",
+      "marcoRole": "Subcontractor",
+      "marcoQuote": "\"I arrive on site and previous work is not finished. Another wasted trip.\"",
+      "helpLabel": "HOW EDILSYNC HELPS",
+      "m1": "Document everything automatically without extra work",
+      "m2": "Protect margin with traceable change requests",
+      "m3": "Coordinate subcontractors from one platform",
+      "m4": "Show professionalism to your clients",
+      "t1": "Real-time visibility without constant calls",
+      "t2": "Know exactly when progress is expected",
+      "t3": "No surprises on unapproved extra costs",
+      "t4": "Free access on the worksite you are invited to",
+      "r1": "See only tasks and deadlines relevant to you",
+      "r2": "Avoid wasted trips with shared calendar",
+      "r3": "Worksite chat without sharing personal number",
+      "r4": "Documents and photos always available"
+    },
+    "pricing": {
+      "chip": "Pricing",
+      "title": "Simple pricing. No surprises.",
+      "subtitle": "Private owners stay free. Companies can be free or Pro. Premium worksite capabilities unlock through sponsorship.",
+      "badge": "Company + sponsorship",
+      "trial": "€19/month or €190/year",
+      "plan": "ONE PLAN",
+      "price": "€19/month",
+      "priceNote": "Company premium with worksite sponsorship. No card required to get started.",
+      "cta": "Create company account",
+      "noCard": "No card required to get started",
+      "included": "EdilSync Pro unlocks for the company and sponsored worksites:",
+      "p1": "Company time tracking",
+      "p2": "Worksite sponsorship and worksite premium on sponsored worksites",
+      "p3": "On sponsored worksites: tasks, milestones, and change requests",
+      "p4": "Company chat and, on sponsored worksites, contextual worksite chat",
+      "p5": "Shared calendar with conflict detection",
+      "p6": "On sponsored worksites: document management with revisions",
+      "p7": "On sponsored worksites: dispute module and document protection",
+      "p8": "On sponsored worksites: worksite financial control",
+      "p9": "On sponsored worksites: attendance and worksite clock-in",
+      "p10": "Premium company operative workspace",
+      "p11": "Billing and subscription management",
+      "p12": "In-app and email notifications",
+      "explainer": {
+        "freeBadge": "Always free",
+        "freeTitle": "Who does not pay",
+        "freeText": "Homeowners, subcontractors, and invited professionals can join the worksite for free. A company can also remain free until it needs premium capabilities.",
+        "companyBadge": "Pro company",
+        "companyTitle": "Who pays",
+        "companyText": "Only the company that wants the Pro plan pays: it unlocks company premium, the premium operative workspace, and the ability to sponsor worksites.",
+        "projectBadge": "Sponsored worksite",
+        "projectTitle": "What unlocks on the worksite",
+        "projectText": "Milestones, financial control, advanced documents, disputes, and full worksite chat activate when a Pro company sponsors that specific worksite."
+      },
+      "access": {
+        "label": "Billing logic",
+        "title": "One company plan. Free access for everyone else.",
+        "i1": "Homeowners and invited collaborators stay free",
+        "i2": "Only the company pays when it needs premium company tools",
+        "i3": "Sponsored worksites unlock advanced shared worksite areas"
+      },
+      "teamsNeedLabel": "What teams usually need first",
+      "seeFull": "See full pricing details",
+      "hint": " per year can repay the whole subscription.",
+      "hintStrong": "One avoided dispute",
+      "hintSub": "About $230/year: the cost of a single wasted trip."
+    },
+    "final": {
+      "title": "Ready to bring order to your construction site?",
+      "text": "Stop wasting time across chats, email, and phone calls. Start with EdilSync today and feel the difference from day one.",
+      "ctaPrimary": "Open EdilSync",
+      "ctaSecondary": "Contact us"
+    }
+  },
+  "layout": {
+    "brandTagline": "Real coordination",
+    "menu": {
+      "solutions": {
+        "label": "Solution",
+        "sections": [
+          {
+            "title": "Product overview",
+            "links": [
+              {
+                "label": "Full feature set",
+                "href": "/en/funzionalita",
+                "desc": "Tasks, documents, disputes, finance, and chat in one flow."
+              },
+              {
+                "label": "How it works",
+                "href": "/en/come-funziona",
+                "desc": "From worksite kickoff to closeout with traceable evidence."
+              },
+              {
+                "label": "Pricing",
+                "href": "/en/prezzi",
+                "desc": "Guided onboarding aligned with your team and worksite volume."
+              }
+            ]
+          },
+          {
+            "title": "Core pain points solved",
+            "links": [
+              {
+                "label": "Dispute protection",
+                "href": "/en/dispute-protection",
+                "desc": "Protect margin from untracked scope changes."
+              },
+              {
+                "label": "Client transparency",
+                "href": "/en/transparency",
+                "desc": "Reduce anxiety and status-chasing across channels."
+              },
+              {
+                "label": "Crew coordination",
+                "href": "/en/team-coordination",
+                "desc": "Cut wasted trips with clearer accountability."
+              }
+            ]
+          }
+        ],
+        "featured": {
+          "title": "Why EdilSync",
+          "text": "Built to protect contractor margin and reputation through a defensible, worksite-native timeline when disputes happen."
+        }
+      },
+      "audiences": {
+        "label": "Who it's for",
+        "sections": [
+          {
+            "title": "",
+            "links": [
+              {
+                "label": "Contractors",
+                "href": "/en/contractors",
+                "desc": "General and specialized construction companies",
+                "icon": "hammer"
+              },
+              {
+                "label": "Owners",
+                "href": "/en/per-committenti",
+                "desc": "Private owners and clients",
+                "icon": "house"
+              }
+            ]
+          },
+          {
+            "title": "",
+            "links": [
+              {
+                "label": "Technical professionals",
+                "href": "/en/per-tecnici",
+                "desc": "Architects, engineers, surveyors, designers",
+                "icon": "ruler"
+              },
+              {
+                "label": "Subcontractors",
+                "href": "/en/per-subappaltatori",
+                "desc": "Specialist trades and external crews",
+                "icon": "wrench"
+              }
+            ]
+          }
+        ],
+        "featured": {
+          "title": "Context-aware permissions",
+          "text": "A person can act as homeowner, contractor, or technical role over time without splitting accounts or losing data continuity."
+        }
+      },
+      "resources": {
+        "label": "Resources",
+        "sections": [
+          {
+            "title": "Learn and evaluate",
+            "links": [
+              {
+                "label": "EdilSync blog",
+                "href": "/en/blog",
+                "desc": "Field-tested content on disputes, workflows, and team alignment."
+              },
+              {
+                "label": "FAQ",
+                "href": "/en/faq",
+                "desc": "Answers on rollout, onboarding, and operational adoption."
+              },
+              {
+                "label": "Contact",
+                "href": "/en/contatti",
+                "desc": "Book a demo focused on your exact operating model."
+              }
+            ]
+          }
+        ],
+        "featured": {
+          "title": "Practical guidance",
+          "text": "Content is built around real jobsite constraints, not generic management theory."
+        }
+      },
+      "quickLinks": [
+        {
+          "label": "Blog",
+          "href": "/en/blog"
+        },
+        {
+          "label": "Contact",
+          "href": "/en/contatti"
+        }
+      ]
+    },
+    "cta": {
+      "demo": "Request a demo",
+      "login": "Log in"
+    },
+    "aria": {
+      "openMenu": "Open menu",
+      "closeMenu": "Close menu"
+    }
+  },
+  "blogIndex": {
+    "seoTitle": "Resources for the construction industry",
+    "subtitle": "Practical content about dispute prevention, worksite coordination, and operational clarity in construction.",
+    "chip": "Resources",
+    "loading": "Loading...",
+    "loadError": "Unable to load blog posts.",
+    "empty": "No published articles yet. Content will appear here soon.",
+    "readArticle": "Read article",
+    "ctaTitle": "Want content mapped to your exact worksite model?",
+    "ctaText": "Book a focused demo and see how EdilSync turns best practices into operational routines.",
+    "ctaButton": "Request Demo"
+  },
+  "blogPost": {
+    "loading": "Loading...",
+    "notFound": "Article not found",
+    "backToBlog": "Back to blog",
+    "ctaTitle": "Need this in your daily operation, not just in articles?",
+    "ctaText": "Book a guided demo and map EdilSync on your real worksite workflow.",
+    "ctaButton": "Request Demo"
+  },
+  "contact": {
+    "seoTitle": "Contact and Demo Request",
+    "chip": "Contact",
+    "title": "Request an EdilSync demo",
+    "subtitle": "Tell us about your worksite context. We will follow up with a demo focused on dispute prevention, coordination, and operational control.",
+    "fields": {
+      "fullName": "Full name",
+      "email": "Email",
+      "company": "Company (optional)",
+      "role": "Role",
+      "message": "Message"
+    },
+    "roles": [
+      "Contractor",
+      "Homeowner",
+      "Subcontractor",
+      "Technical professional",
+      "Other"
+    ],
+    "messagePlaceholder": "Tell us about your current workflow and challenges...",
+    "submit": "Send request",
+    "sending": "Sending...",
+    "success": "Request sent. We will get back to you soon.",
+    "error": "Unable to send request right now. Please try again shortly.",
+    "nextTitle": "What happens next",
+    "nextSteps": [
+      "1. We review your request and context.",
+      "2. We book a focused alignment call.",
+      "3. We run a role-based live demo."
+    ],
+    "resourcesTitle": "Need resources first?",
+    "readBlog": "Read blog",
+    "faq": "FAQ",
+    "detailsTitle": "Demo details",
+    "finalTitle": "Need immediate support before the demo?",
+    "finalText": "Write to us and we will guide you on the best starting point for your worksite context.",
+    "finalCta": "Open resources",
+    "finalNote": "Practical guides, real workflows, and field-tested updates"
+  },
+  "pricingPage": {
+    "seoTitle": "Pricing",
+    "seoDescription": "Clear pricing for companies and worksites: free or paid company plan, worksite sponsorship, and free access for homeowners and invited collaborators.",
+    "badge": "Pricing",
+    "title": "Clear pricing for companies and worksites.",
+    "subtitle": "Company premium belongs to the company. Worksite premium unlocks through active sponsorship.",
+    "planName": "EdilSync Pro for companies",
+    "planDesc": "Unlock company premium and worksite sponsorship",
+    "trialBadge": "Yearly plan at €190",
+    "price": "€19",
+    "priceSuffix": "/month",
+    "priceNote": "Or €190/year - VAT excluded - Cancel anytime",
+    "legendTitle": "How billing actually works",
+    "legendItems": [
+      {
+        "badge": "Always free",
+        "title": "Owners and invitees",
+        "text": "Homeowners stay free. Subcontractors and professionals also join invited worksites for free."
+      },
+      {
+        "badge": "Pro company",
+        "title": "Who pays",
+        "text": "Only the company that wants the Pro plan pays: it unlocks company premium, the premium operative workspace, and the ability to sponsor worksites."
+      },
+      {
+        "badge": "Sponsored worksite",
+        "title": "What unlocks",
+        "text": "Milestones, finance, disputes, advanced documents, and full worksite chat activate on each sponsored worksite."
+      }
+    ],
+    "cta": "Create company account",
+    "noCard": "No card required to get started",
+    "includedLabel": "EdilSync Pro unlocks",
+    "includedItems": [
+      "Company time tracking",
+      "Multi-channel company chat",
+      "Full company documents",
+      "Worksite sponsorship",
+      "Milestones on sponsored worksites",
+      "Worksite finance on sponsored worksites",
+      "Advanced worksite chat on sponsored worksites",
+      "Advanced worksite documents on sponsored worksites",
+      "Premium company operative workspace",
+      "Billing and subscription management"
+    ],
+    "freeAccessTitle": "Who stays free and what remains free",
+    "freeAccessText": "Private owners remain free. Companies can stay free or upgrade to Pro. Homeowners, subcontractors, and professionals can join invited worksites for free; premium worksite features depend on active sponsorship.",
+    "roles": [
+      {
+        "label": "Private owner / homeowner",
+        "value": "Free",
+        "note": "Can have 1 unsponsored worksite at a time"
+      },
+      {
+        "label": "Free company",
+        "value": "Free",
+        "note": "Can join worksites and own 1 unsponsored worksite at a time"
+      },
+      {
+        "label": "Paid company",
+        "value": "€19/month or €190/year",
+        "note": "Can sponsor worksites and unlock company premium"
+      }
+    ],
+    "worthTitle": "When Pro makes sense",
+    "worthItems": [
+      "You want to sponsor a worksite and unlock milestones, finance, premium chat, and premium documents for all worksite participants",
+      "You need company time tracking and other company premium capabilities",
+      "You manage more than a minimal free setup and do not want coordination blocked by free-plan limits",
+      "One avoided dispute or one avoided wasted trip can already justify the plan cost"
+    ],
+    "faqTitle": "Pricing questions",
+    "faqs": [
+      {
+        "q": "Does the homeowner need to pay?",
+        "a": "No. Homeowners remain free. Subcontractors and professionals can also join invited worksites for free."
+      },
+      {
+        "q": "Can I cancel anytime?",
+        "a": "Yes, no penalties and no hidden costs. Cancel any time from settings."
+      },
+      {
+        "q": "What happens to data if I cancel?",
+        "a": "Data stays in the system, but company and worksite premium areas become inaccessible until a paid plan or valid sponsorship is restored."
+      },
+      {
+        "q": "Is there a long-term contract?",
+        "a": "No. EdilSync is month-to-month and you can cancel any time."
+      },
+      {
+        "q": "Do you offer an enterprise plan?",
+        "a": "We are preparing an Enterprise plan. Write to info@rdlabs.digital to discuss your needs."
+      }
+    ],
+    "faqFooterStart": "Need more details?",
+    "faqFooterFaq": "Go to full FAQ page",
+    "faqFooterAnd": "or",
+    "faqFooterContact": "contact us",
+    "finalTitle": "Want to see whether Pro fits your company?",
+    "finalText": "Start free, validate the workflow with your team, then upgrade when you need sponsorship, premium tools, and tighter control.",
+    "finalCta": "Talk to us",
+    "finalNote": "Simple plan · No heavy setup · Upgrade when needed"
+  },
+  "featuresPage": {
+    "seoTitle": "EdilSync Features",
+    "seoDescription": "All EdilSync features for worksite coordination, communication, documentation, field operations, and dispute protection, with a clear split between company premium and sponsored-worksite premium.",
+    "badge": "Features",
+    "title": "Everything in one platform",
+    "subtitle": "Not separate modules, but one connected ecosystem covering every layer of construction coordination from first photo to final progress statement.",
+    "note": "Private owners and invited collaborators remain free. Company premium belongs to the Pro company; milestones, financial control, advanced documents, and full worksite chat unlock on sponsored worksites.",
+    "sections": [
+      {
+        "title": "Worksite Management",
+        "icon": "Layers",
+        "colorClass": "bg-blue-500/10 text-blue-600",
+        "note": "The premium worksite surfaces described here unlock on sponsored worksites.",
+        "cards": [
+          {
+            "title": "Tasks and Milestones",
+            "icon": "ListChecks",
+            "badge": "Sponsored worksite",
+            "description": "Organize execution by phases, rooms, and milestones. Each task has status, due date, owner, and optional blocked accountability. Board and list views included."
+          },
+          {
+            "title": "Change Requests / Variations",
+            "icon": "FileText",
+            "description": "Every requested change is tracked with cost and time impact. Owners can approve, reject, or ask for clarifications. Fully time-stamped."
+          },
+          {
+            "title": "Shared Calendar",
+            "icon": "CalendarDays",
+            "description": "Unified calendar for events, site visits, and due tasks. Detects conflicts automatically and notifies all involved participants."
+          }
+        ]
+      },
+      {
+        "title": "Communication",
+        "icon": "MessageCircle",
+        "colorClass": "bg-purple-500/10 text-purple-600",
+        "note": "Chat and notifications stay contextual; advanced worksite references expand on sponsored worksites.",
+        "cards": [
+          {
+            "title": "Contextual Chat",
+            "icon": "MessageCircle",
+            "badge": "Sponsored worksite",
+            "description": "Worksite and company messages linked to tasks, milestones, documents, and change requests through structured clickable references."
+          },
+          {
+            "title": "Smart Notifications",
+            "icon": "Bell",
+            "description": "In-app and email notifications for key events: invitations, assignments, status updates, and mentions. Configurable by type and channel."
+          },
+          {
+            "title": "Invites and Participation",
+            "icon": "Users",
+            "description": "Invite owners, subcontractors, and professionals by email. Track invite status and apply contextual permissions automatically."
+          }
+        ]
+      },
+      {
+        "title": "Documentation",
+        "icon": "Camera",
+        "colorClass": "bg-amber-500/10 text-amber-600",
+        "note": "Advanced document workflows and full technical collaboration are strongest on sponsored worksites.",
+        "cards": [
+          {
+            "title": "Photo Documentation",
+            "icon": "Camera",
+            "description": "Photos are automatically linked to the worksite, time-stamped, and organized by task and area with built-in legal protection."
+          },
+          {
+            "title": "Advanced Document Management",
+            "icon": "FileText",
+            "badge": "Sponsored worksite",
+            "description": "Upload, preview, download, comments, revisions, and categorization with advanced metadata for discipline, phase, and status."
+          },
+          {
+            "title": "BIM and 3D Viewer",
+            "icon": "Globe",
+            "badge": "Sponsored worksite",
+            "description": "On sponsored worksites, native support for IFC, GLB, and GLTF with in-app orbit controls, IFC parsing, and automatic fallback to external viewer when needed."
+          }
+        ]
+      },
+      {
+        "title": "Finance and Operations",
+        "icon": "Wallet",
+        "colorClass": "bg-emerald-500/10 text-emerald-600",
+        "note": "Company attendance belongs to the Pro company; worksite financial control and worksite operations depend on active sponsorship.",
+        "cards": [
+          {
+            "title": "Financial Control",
+            "icon": "Wallet",
+            "badge": "Sponsored worksite",
+            "description": "Budgets, costs, labor rates, and progress statements with role-based visibility on forecasts, approved extras, and contested items."
+          },
+          {
+            "title": "Attendance and Clock-in",
+            "icon": "Clock3",
+            "description": "Clock-in/out with optional GPS, entry and exit notes, worksite linkage, data export, and integration with cost control."
+          },
+          {
+            "title": "Dashboards and Analytics",
+            "icon": "ChartNoAxesColumn",
+            "description": "Role-aware dashboards showing progress indicators, completed tasks, active worksites, and team presence across contexts."
+          }
+        ]
+      },
+      {
+        "title": "Security and Protection",
+        "icon": "ShieldCheck",
+        "colorClass": "bg-red-500/10 text-red-600",
+        "cards": [
+          {
+            "title": "Dispute Management",
+            "icon": "ShieldCheck",
+            "description": "Formalize conflicts on scope, costs, delays, quality, and payments with event timelines, evidence, and resolution notes."
+          },
+          {
+            "title": "Contextual Permissions",
+            "icon": "LockKeyhole",
+            "description": "Permission levels across app scope, active context, company role, and worksite role. Fully relational and traceable."
+          },
+          {
+            "title": "Automatic Documentation",
+            "icon": "Zap",
+            "description": "Daily actions become documentation automatically: status changes, uploads, approvals, and messages are captured in the worksite feed."
+          }
+        ]
+      },
+      {
+        "title": "Usage Modes",
+        "icon": "Smartphone",
+        "colorClass": "bg-indigo-500/10 text-indigo-600",
+        "note": "Operative mode follows the same permissions and entitlement logic as the full workspace.",
+        "cards": [
+          {
+            "title": "Normal workspace",
+            "icon": "Layers",
+            "description": "Full workspace with dashboards, worksites, calendar, companies, notifications, and settings for advanced management."
+          },
+          {
+            "title": "Operative Mode",
+            "icon": "Smartphone",
+            "description": "Mobile-first interface for field teams with quick clock-in/out, daily tasks, photo uploads, and compact chat."
+          },
+          {
+            "title": "Contextual role access",
+            "icon": "Zap",
+            "description": "The same platform adapts visibility and actions based on active context, company role, and worksite role without duplicating surfaces."
+          }
+        ]
+      }
+    ]
+  },
+  "faqPage": {
+    "seoTitle": "FAQ",
+    "seoDescription": "Frequently asked questions about EdilSync: platform, pricing, capabilities, permissions, security, and support.",
+    "badge": "FAQ",
+    "title": "Frequently asked questions",
+    "subtitle": "Find answers to the most common questions about EdilSync.",
+    "groups": [
+      {
+        "title": "General",
+        "items": [
+          {
+            "q": "What is EdilSync?",
+            "a": "EdilSync is a SaaS platform for construction-site and renovation coordination. It brings together clients, contractors, subcontractors, and professionals in one shared workspace, with contextual roles and permissions adapted to each worksite."
+          },
+          {
+            "q": "Is EdilSync suitable for small companies?",
+            "a": "Absolutely. EdilSync is designed specifically for construction companies under €1M annual revenue that manage 8-12 residential renovations. The interface is simple, mobile-first, and does not require training."
+          },
+          {
+            "q": "Which languages are supported?",
+            "a": "EdilSync is available in Italian and English. You can switch language at any time from the user menu."
+          }
+        ]
+      },
+      {
+        "title": "Pricing & Subscription",
+        "items": [
+          {
+            "q": "How much does EdilSync cost?",
+            "a": "EdilSync Pro for companies costs €19/month or €190/year. Private owners remain free. Companies can stay free or upgrade to Pro to unlock worksite sponsorship and company premium capabilities."
+          },
+          {
+            "q": "Can I get started without a card?",
+            "a": "There is no separate trial tier. You can get started without a card using a personal account or a free company, then upgrade to Pro when you need sponsorship or company premium."
+          },
+          {
+            "q": "Can I cancel anytime?",
+            "a": "Yes, you can cancel your subscription at any time directly from settings. There are no penalties and no hidden costs."
+          },
+          {
+            "q": "Do my owners need to pay?",
+            "a": "No. The homeowner remains free. Subcontractors and professionals can also join invited worksites for free. Premium worksite capabilities depend on an active sponsorship from a paid company."
+          }
+        ]
+      },
+      {
+        "title": "Capabilities",
+        "items": [
+          {
+            "q": "Can I use EdilSync from the jobsite on phone?",
+            "a": "Yes, EdilSync is mobile-first. There is a dedicated operative mode for on-site use, designed for workers, site managers, and anyone working in the field. Photo uploads, clock-in/out, and task updates happen in just a few taps."
+          },
+          {
+            "q": "How do permissions work? Can everyone see everything?",
+            "a": "No. EdilSync uses a 4-level contextual permission model: application role, active context (personal or company), company role, and worksite role. Each person only sees what is relevant to their role in that specific worksite."
+          },
+          {
+            "q": "Can I manage multi-level subcontracting?",
+            "a": "Yes. EdilSync natively supports multi-level subcontracting. A contractor can invite subcontractors, who can in turn involve their own teams. Permissions and access are controlled at every level."
+          },
+          {
+            "q": "Can I view BIM files or 3D models?",
+            "a": "Yes, but as a premium worksite capability. On sponsored worksites, EdilSync supports IFC, GLB, and GLTF with an in-app IFC viewer and a 3D viewer for GLB/GLTF. On unsponsored worksites, these files cannot be uploaded and existing ones stay archived without preview."
+          },
+          {
+            "q": "How does dispute management work?",
+            "a": "The disputes module lets you formalize conflicts about scope, costs, delays, quality, or payments. Each dispute has an event timeline and can include evidence, comments, resolution notes, and stakeholder notifications. Everything is documented and immutable."
+          }
+        ]
+      },
+      {
+        "title": "Privacy & Security",
+        "items": [
+          {
+            "q": "Are my data secure?",
+            "a": "Yes. EdilSync runs on cloud infrastructure with Row Level Security (RLS) enforced on every data operation. Data access is built on synchronized user sets automatically derived from memberships and worksite participation."
+          },
+          {
+            "q": "Who can view my worksites?",
+            "a": "Only people you have invited as worksite participants. Each user only sees worksites where they are an active participant, and only the sections appropriate for their role in that worksite."
+          }
+        ]
+      }
+    ],
+    "finalTitle": "Ready to bring order to your construction site?",
+    "finalText": "Stop wasting time across chats, emails, and calls. Start with EdilSync today and feel the difference from day one.",
+    "finalCta": "Open EdilSync",
+    "finalNote": "Personal or company account - No card required to start - Upgrade when needed"
+  },
+  "howItWorksPage": {
+    "seoTitle": "How EdilSync works",
+    "seoDescription": "From zero to a coordinated construction site in minutes: onboarding, worksite setup, participant invites, daily execution, and final control.",
+    "badge": "How it works",
+    "title": "From zero to a coordinated jobsite in minutes",
+    "subtitle": "EdilSync is designed to work from day one, with no heavy training and no complex setup.",
+    "ctaTop": "Create free account",
+    "steps": [
+      {
+        "number": "01",
+        "title": "Create your account",
+        "text": "Sign up in 2 minutes. No card required to get started. Choose whether to operate as an individual or company.",
+        "note": "Each person has one account and can operate in multiple contexts - as owner, company member, or professional. One login for everything.",
+        "icon": "UserPlus"
+      },
+      {
+        "number": "02",
+        "title": "Create your company",
+        "text": "Register your contractor company in EdilSync. Add collaborators, assign operational roles, and activate your internal communication channel.",
+        "note": "The company is the operational unit of the jobsite. You can have site managers, foremen, workers, and backoffice with contextual permissions.",
+        "icon": "Building2"
+      },
+      {
+        "number": "03",
+        "title": "Create the worksite",
+        "text": "Open a new worksite in EdilSync. Add address, dates, description, and initial photo documentation.",
+        "note": "The worksite is the container for all relationships: owner, contractor, subcontractors, professionals, docs, tasks, chat, and finance.",
+        "icon": "FolderOpen"
+      },
+      {
+        "number": "04",
+        "title": "Invite participants",
+        "text": "Invite owners, subcontractors, and professionals by email. Each participant sees only relevant scope with role-based permissions.",
+        "note": "The homeowner joins free. Subcontractors and professionals can join invited worksites for free. Premium worksite capabilities unlock when a paid company sponsors the worksite.",
+        "icon": "Users"
+      },
+      {
+        "number": "05",
+        "title": "Work and document",
+        "text": "Tasks, photos, messages, changes, deadlines - every action automatically becomes traceable worksite documentation.",
+        "note": "You do not need to write manual updates. Daily actions become the jobsite journal, visible in real time.",
+        "icon": "CircleCheck"
+      },
+      {
+        "number": "06",
+        "title": "Control and close",
+        "text": "Monitor progress, costs, and milestones. Manage approved changes and documented disputes. Close with complete worksite history.",
+        "note": "From field attendance to cost control, everything remains connected. Final progress statement includes full evidence in one place.",
+        "icon": "TrendingUp"
+      }
+    ],
+    "finalTitle": "Ready to bring order to your construction site?",
+    "finalText": "Stop wasting time across chats, emails, and calls. Start with EdilSync today and feel the difference from day one.",
+    "finalCta": "Create free account",
+    "finalNote": "Personal or company account · 2-minute setup · Upgrade when needed"
+  },
+  "contractorsPage": {
+    "seoTitle": "For Contractors",
+    "seoDescription": "Dedicated contractor page: free or Pro company plans, margin protection, automatic documentation, subcontractor coordination, and worksite premium through sponsorship.",
+    "badge": "For Contractors",
+    "titleA": "Protect your margin.",
+    "titleB": "Every day.",
+    "subtitle": "With 3-5% margins, one undocumented dispute can erase profit on an entire worksite. Your company can start free and upgrade to Pro when you need company premium and worksite sponsorship.",
+    "note": "Free or Pro company. Premium worksite features activate on sponsored worksites.",
+    "ctaTop": "Create company account",
+    "quote": "I am not late - I am waiting for the client to choose the tiles for three weeks. But when they leave a bad review, guess who gets blamed?",
+    "quoteAuthor": "Michele",
+    "quoteRole": "Contractor, 18 years experience",
+    "advantagesTitle": "Concrete benefits for your company",
+    "advantages": [
+      {
+        "title": "Dispute protection",
+        "text": "Every variation is documented with signed change request flow. No more margin-killing arguments on unclear scope.",
+        "icon": "Shield"
+      },
+      {
+        "title": "Automatic documentation",
+        "text": "Photos from site become part of the worksite dossier automatically. Time-stamped, organized, and always retrievable.",
+        "icon": "Camera"
+      },
+      {
+        "title": "Subcontractor coordination",
+        "text": "Invite specialist trades. Each one sees assigned tasks and shared calendar context. Fewer wasted trips.",
+        "icon": "Users"
+      },
+      {
+        "title": "Full traceability",
+        "text": "Who said what, when, and in which worksite. Every action is logged for legal and operational clarity.",
+        "icon": "FileText"
+      },
+      {
+        "title": "Financial control",
+        "text": "Budget, costs, rates, and progress statements in one place. From attendance to final statement, everything stays linked.",
+        "icon": "Wallet"
+      },
+      {
+        "title": "Truly mobile-first",
+        "text": "Operative mode is built for field teams. Fast photo upload, quick clock-in/out, and daily tasks always visible.",
+        "icon": "Smartphone"
+      }
+    ],
+    "valueTitle": "How much is EdilSync worth for you?",
+    "valueItems": [
+      "One avoided dispute (~€300 average) = 15 months of subscription",
+      "One avoided wasted trip per month = subscription paid",
+      "2 hours saved per month in status calls = subscription paid",
+      "One avoided negative review = priceless value"
+    ],
+    "valueCostLabel": "Cost:",
+    "valueCost": "€19/month for a Pro company",
+    "finalTitle": "Ready to bring order to your construction site?",
+    "finalText": "Stop wasting time across chats, emails, and calls. Start today with EdilSync and feel the difference from day one.",
+    "finalCta": "Create company account",
+    "finalNote": "Free or Pro company · No card required to start · Upgrade when needed"
+  },
+  "homeownersPage": {
+    "seoTitle": "For Homeowners",
+    "seoDescription": "Dedicated homeowners page: free worksite access, traceable approvals, and, on sponsored worksites, stronger control over cost, schedule, and coordination.",
+    "badge": "For Homeowners",
+    "titleA": "Follow your worksite",
+    "titleB": "with clarity.",
+    "subtitle": "No more chasing updates across chats and calls. EdilSync gives you progress, decisions, and scope changes in one structured timeline; sponsored worksites also unlock the premium transparency and coordination areas.",
+    "note": "Homeowner access is included in the worksite. Premium areas activate when a Pro company sponsors the worksite.",
+    "ctaTop": "Request a Demo",
+    "quote": "I used to ask for updates every week. Now I open the worksite and immediately see what is done, what is pending, and what needs my decision.",
+    "quoteAuthor": "Laura",
+    "quoteRole": "Private homeowner",
+    "advantagesTitle": "What you get in practice",
+    "advantages": [
+      {
+        "title": "Real visibility into progress",
+        "text": "Clear timeline of completed, in-progress, and blocked activities. You always understand worksite status.",
+        "icon": "Clock3"
+      },
+      {
+        "title": "Traceable approvals and decisions",
+        "text": "On sponsored worksites, every scope change is formalized with schedule and cost impact. No end-of-worksite ambiguity.",
+        "icon": "CheckCheck",
+        "badge": "Sponsored worksite"
+      },
+      {
+        "title": "Organized communication",
+        "text": "On sponsored worksites, worksite-context messages replace scattered personal chats, calls, and detached attachments.",
+        "icon": "MessagesSquare",
+        "badge": "Sponsored worksite"
+      },
+      {
+        "title": "Always-accessible documentation",
+        "text": "On sponsored worksites, photos, files, and decisions stay linked to the right activities so you can find everything fast.",
+        "icon": "FileText",
+        "badge": "Sponsored worksite"
+      },
+      {
+        "title": "Useful alerts, not noise",
+        "text": "Get notified only when your input is needed: approvals, blockers, and critical choices.",
+        "icon": "BellRing"
+      },
+      {
+        "title": "More protection, less stress",
+        "text": "A defensible timeline lowers conflict risk and keeps owner, contractor, and technical roles aligned.",
+        "icon": "ShieldCheck"
+      }
+    ],
+    "valueTitle": "How much value can EdilSync create for you?",
+    "valueItems": [
+      "One clarified scope change before execution can prevent expensive end-stage disputes",
+      "Less time spent chasing status means more confidence throughout the worksite",
+      "Traceable decisions reduce misunderstandings and rework",
+      "Organized documentation protects collaboration among owner, contractor, and technical roles"
+    ],
+    "valueCostLabel": "Homeowner access:",
+    "valueCost": "free in the worksite",
+    "finalTitle": "Want a more transparent, less stressful worksite?",
+    "finalText": "Request a demo and see how to track execution, approvals, and changes without losing control.",
+    "finalCta": "Book a Demo",
+    "finalNote": "No technical setup burden · Guided access · Fast collaboration"
+  },
+  "subcontractorsPage": {
+    "seoTitle": "For Subcontractors",
+    "seoDescription": "Dedicated page for subcontractors: fewer wasted trips, contextual tasks, traceable chat, and free worksite access in EdilSync.",
+    "badge": "For Subcontractors",
+    "titleA": "Know exactly",
+    "titleB": "where and when",
+    "titleC": "to be on site.",
+    "subtitle": "Managing 3-5 active jobs at once is a coordination challenge. EdilSync gives you the right context for each worksite without confusion.",
+    "note": "Free access on worksites where you are invited",
+    "ctaTop": "Open free account",
+    "quote": "I arrive on site and the previous work is not finished. Another wasted trip. €150 cost, zero revenue. And nobody warned me.",
+    "quoteAuthor": "Marco",
+    "quoteRole": "Electrician, 5 active jobs",
+    "benefitsTitle": "Benefits for subcontractors",
+    "benefits": [
+      {
+        "title": "No wasted trips",
+        "text": "The shared calendar shows when you are expected on site. If plans change, you get immediate notification.",
+        "icon": "CalendarDays"
+      },
+      {
+        "title": "Only your tasks",
+        "text": "See only the tasks and activities relevant to your scope. No noise, just what you need to execute.",
+        "icon": "ListChecks"
+      },
+      {
+        "title": "Chat without sharing personal number",
+        "text": "Communicate with contractor and worksite team in EdilSync chat. No need to expose your personal phone number.",
+        "icon": "MessageCircle"
+      },
+      {
+        "title": "Document your work",
+        "text": "Photos and documents tied to your tasks. Built-in protection for delivered work, accessible when needed.",
+        "icon": "Camera"
+      },
+      {
+        "title": "Contextual access",
+        "text": "You enter worksites only when invited, with visibility limited to what matters for your work package.",
+        "icon": "Navigation"
+      },
+      {
+        "title": "Free invited access",
+        "text": "As a subcontractor, you join invited worksites for free. If the worksite is sponsored, you also unlock the premium worksite capabilities available inside that worksite.",
+        "icon": "ArrowRight"
+      }
+    ],
+    "finalTitle": "Ready to bring order to your construction site?",
+    "finalText": "Stop wasting time across chats, emails, and calls. Start today with EdilSync and feel the difference from day one.",
+    "finalCta": "Open free account",
+    "finalNote": "Only invited-worksite access · No card required to start · Fast collaboration"
+  },
+  "professionalsPage": {
+    "seoTitle": "For Technical Professionals",
+    "seoDescription": "Dedicated page for technical professionals: free access on invited worksites, with advanced document management and structured coordination on sponsored worksites.",
+    "badge": "For Technical Professionals",
+    "title": "Your shared workspace with contractor and owner",
+    "subtitle": "Architects, engineers, surveyors, and designers. You join invited worksites for free and, when the worksite is sponsored, work with advanced documents, milestones, and fully contextual chat.",
+    "note": "Free access on invited worksites. Premium worksite surfaces unlock on sponsored worksites.",
+    "ctaTop": "Open free account",
+    "rolesTitle": "For every professional profile",
+    "roles": [
+      {
+        "title": "Architects",
+        "text": "Coordinate executive design, changes, and approvals with owner and contractor in one shared space. Your technical outputs stay accessible and aligned."
+      },
+      {
+        "title": "Structural engineers",
+        "text": "Document calculations, reports, and structural checks. Track every structural change and its approval over time."
+      },
+      {
+        "title": "Surveyors",
+        "text": "Manage permits, cadastral documentation, and site supervision. Coordinate with owner and contractor without fragmented emails."
+      },
+      {
+        "title": "Interior designers",
+        "text": "Share boards, materials, and revisions. Change requests document every agreed design variation with the client."
+      },
+      {
+        "title": "Technical consultants",
+        "text": "Access the worksite in your role context, see relevant documents, and communicate with all stakeholders without multi-account overhead."
+      }
+    ],
+    "featuresTitle": "Features built for technical professionals",
+    "features": [
+      {
+        "title": "Integrated BIM viewer",
+        "text": "On sponsored worksites, upload IFC, GLB, and GLTF and review 3D models directly in platform while sharing context with owners and contractors.",
+        "icon": "Globe",
+        "badge": "Sponsored worksite"
+      },
+      {
+        "title": "Advanced document management",
+        "text": "On sponsored worksites, discipline, phase, status, revisions, and tags keep every document searchable, auditable, and easy to manage.",
+        "icon": "FileText",
+        "badge": "Sponsored worksite"
+      },
+      {
+        "title": "Shared calendar",
+        "text": "Site visits, meetings, deadlines - fully coordinated across all worksite participants in one unified calendar.",
+        "icon": "CalendarDays"
+      },
+      {
+        "title": "Structured worksite chat",
+        "text": "On sponsored worksites, messages can link to docs, tasks, and milestones. No more endless email threads for each update.",
+        "icon": "MessageCircle",
+        "badge": "Sponsored worksite"
+      },
+      {
+        "title": "Contextual access",
+        "text": "Your professional profile can work across multiple worksites with different roles. One account for everything.",
+        "icon": "Layers"
+      },
+      {
+        "title": "Multi-actor coordination",
+        "text": "You are often the bridge between owner and contractor. EdilSync makes that mediation structured and traceable.",
+        "icon": "Users"
+      }
+    ],
+    "finalTitle": "Ready to bring order to your construction site?",
+    "finalText": "Stop wasting time across chats, emails, and calls. Start today with EdilSync and feel the difference from day one.",
+    "finalCta": "Open free account",
+    "finalNote": "Single account · Free access on invited worksites · Premium on sponsored worksites"
+  },
+  "disputeProtectionPage": {
+    "seoTitle": "Dispute Protection",
+    "seoDescription": "Reduce jobsite disputes with contextual proof, traceable change requests, and structured communication in one workspace.",
+    "badge": "Dispute Protection",
+    "title": "Every word is written.",
+    "titleHighlight": "Every agreement is provable.",
+    "subtitle": "In construction, margins are often 3-5%. One undocumented dispute can erase profit on an entire worksite. EdilSync protects you automatically, without extra admin work.",
+    "cta": "Create company account",
+    "note": "Built for contractors, owners, subcontractors, and technical professionals.",
+    "scenarioLabel": "Typical scenario",
+    "scenarioQuote": "\"I lost €4,200 on a €28,000 worksite because of a dispute on two rooms the client said were already included. I had nothing documented. Only my word.\"",
+    "scenarioAuthor": "Giuseppe",
+    "scenarioRole": "Contractor, Turin - before EdilSync",
+    "issuesTitle": "The most common disputes - and how you prevent them",
+    "issuesSubtitle": "Every painful scenario has a clear documentary response.",
+    "issues": [
+      {
+        "title": "\"I thought it was included in the quote\"",
+        "text": "Change requests document every variation with cost and schedule impact. The owner approves or rejects. Everything is time-stamped and immutable.",
+        "icon": "FileText"
+      },
+      {
+        "title": "\"I did not know the delay was on me\"",
+        "text": "Blocked tasks register owner, date, and reason. If delay depends on a client decision, it is clearly recorded.",
+        "icon": "Clock3"
+      },
+      {
+        "title": "\"That photo proves nothing\"",
+        "text": "Photos are time-stamped and linked to the specific task. Initial and final state of each area is documented automatically.",
+        "icon": "Camera"
+      },
+      {
+        "title": "\"But I told you on the phone\"",
+        "text": "All key communication lives in-app with structured references. No critical decisions are buried in private chats or email.",
+        "icon": "Scale"
+      }
+    ],
+    "flowTitle": "How the protection works",
+    "flowSubtitle": "It is not an extra form to fill. It is the result of your daily operations.",
+    "flowSteps": [
+      {
+        "title": "Your actions become evidence",
+        "text": "Every photo, task update, and approval is automatically recorded with timestamp in the worksite feed. No extra effort required."
+      },
+      {
+        "title": "Variations are formalized",
+        "text": "When scope changes, a change request captures description, time impact, and cost impact. Approval is digital and immutable."
+      },
+      {
+        "title": "Delays have named responsibility",
+        "text": "Tasks can be marked blocked with cause and accountable party. Waiting on a client decision is documented with date and time."
+      },
+      {
+        "title": "Disputes are handled formally",
+        "text": "If conflict starts, open a formal dispute with event timeline, attached evidence, and comments. Everything in one place, fully traceable."
+      }
+    ],
+    "roiTitle": "One avoided dispute is worth months of subscription",
+    "roiText": "An average construction dispute can cost between €200 and €2,000 in time, rework, and lost margin. EdilSync costs €19 per month. ROI is straightforward.",
+    "roiCards": [
+      {
+        "value": "€300",
+        "label": "Average cost of a minor dispute"
+      },
+      {
+        "value": "€19/month",
+        "label": "EdilSync cost"
+      },
+      {
+        "value": "15x",
+        "label": "ROI with one avoided dispute per year"
+      }
+    ],
+    "finalTitle": "Ready to bring order to your construction site?",
+    "finalText": "Stop wasting time between chats, emails, and phone calls. Start with EdilSync today and feel the difference from day one.",
+    "finalCta": "Create company account",
+    "finalNote": "Free or Pro company - No card required to start - Upgrade when needed"
+  },
+  "transparencyPage": {
+    "seoTitle": "Client Transparency",
+    "seoDescription": "Follow your worksite in real time without constant calls: live feed, meaningful alerts and, on sponsored worksites, clear milestones and visibility on costs and changes.",
+    "badge": "Jobsite Transparency",
+    "title": "Always know what is happening.",
+    "titleHighlight": "Without calling.",
+    "subtitle": "You are investing serious money in your home or property. You get real-time visibility on the jobsite and, when the worksite is sponsored, access to premium coordination and financial transparency areas.",
+    "note": "Homeowners always stay free. Milestones, approved costs, and structured chat unlock on sponsored worksites.",
+    "cta": "Open free account",
+    "quote": "\"I spent €65,000 to renovate my apartment. For three months I called the contractor every two days just to understand progress. I felt annoying, but I had no alternative.\"",
+    "quoteAuthor": "Simona",
+    "quoteRole": "Homeowner, Milan - before EdilSync",
+    "compareTitle": "Before and after EdilSync",
+    "compareRows": [
+      [
+        "You call the contractor to ask for updates",
+        "Open the app and see the updated feed"
+      ],
+      [
+        "You do not know if a change will increase final cost",
+        "Every change includes cost and schedule impact"
+      ],
+      [
+        "Delay is blamed on you even when material was pending",
+        "Delay cause is always documented"
+      ],
+      [
+        "You cannot understand the progress report you received",
+        "Progress status is visible in real time"
+      ],
+      [
+        "You do surprise site visits because you do not trust updates",
+        "You get full visibility without disturbing anyone"
+      ]
+    ],
+    "featuresTitle": "Everything you can see as a homeowner",
+    "featuresSubtitle": "Immediate worksite visibility, with premium areas enabled when a Pro company sponsors the worksite.",
+    "features": [
+      {
+        "title": "Real-time worksite feed",
+        "text": "Every action - photo uploaded, task completed, change approved - appears in the feed. You see the same worksite reality as the contractor.",
+        "icon": "Eye"
+      },
+      {
+        "title": "Proactive alerts",
+        "text": "When something relevant happens, you get notified. No more anxiety wondering what is happening on site.",
+        "icon": "Bell"
+      },
+      {
+        "title": "Photo documentation",
+        "text": "Site photos become automatically visible in the worksite. Track each area day by day without unscheduled inspections.",
+        "icon": "Camera"
+      },
+      {
+        "title": "Clear milestones and deadlines",
+        "text": "On sponsored worksites, the shared timeline includes clear milestones and deadlines. You know what to expect and receive alerts if something slips, with documented cause.",
+        "icon": "CalendarDays",
+        "badge": "Sponsored worksite"
+      },
+      {
+        "title": "Financial transparency",
+        "text": "On sponsored worksites, you can see budget, approved costs, and progress status. Scope changes arrive as formal change requests with explicit impact.",
+        "icon": "Wallet",
+        "badge": "Sponsored worksite"
+      },
+      {
+        "title": "Direct worksite channel",
+        "text": "On sponsored worksites, worksite chat keeps communication in context, linked to tasks and documents. No more lost emails or scattered messages.",
+        "icon": "MessageCircle",
+        "badge": "Sponsored worksite"
+      }
+    ],
+    "finalTitle": "Ready to bring order to your construction site?",
+    "finalText": "Stop wasting time across chats, emails, and calls. Start with EdilSync today and see the difference from day one.",
+    "finalCta": "Open free account",
+    "finalNote": "Guided access · No card required to start · Fast collaboration"
+  },
+  "teamCoordinationPage": {
+    "seoTitle": "Team Coordination",
+    "seoDescription": "Align contractors, owners, subcontractors, and technical professionals in one workflow with shared tasks, calendar, and contextual communication.",
+    "badge": "Team Coordination",
+    "title": "A jobsite has 4-8 actors.",
+    "titleHighlight": "Everyone must stay aligned.",
+    "subtitle": "Contractor, owner, subcontractors, architects. Each has different priorities, schedules, and tools. EdilSync aligns everyone in one shared workspace.",
+    "cta": "Open EdilSync",
+    "stakeholdersTitle": "Who you coordinate with EdilSync",
+    "stakeholders": [
+      {
+        "role": "Contractor",
+        "roleClass": "bg-blue-500/10 text-blue-600",
+        "text": "Manages the worksite, assigns tasks, approves changes, monitors costs."
+      },
+      {
+        "role": "Owner",
+        "roleClass": "bg-amber-500/10 text-amber-600",
+        "text": "Real-time visibility, approves change requests, communicates with contractor."
+      },
+      {
+        "role": "Subcontractor",
+        "roleClass": "bg-emerald-500/10 text-emerald-600",
+        "text": "Sees own tasks, shared calendar, and contractor updates."
+      },
+      {
+        "role": "Professional",
+        "roleClass": "bg-purple-500/10 text-purple-600",
+        "text": "Handles technical docs and coordinates with contractor and owner."
+      }
+    ],
+    "problemsTitle": "Weekly issues caused by misalignment",
+    "problems": [
+      {
+        "title": "Double-booked work areas",
+        "text": "Electrician and tiler are scheduled in the same bathroom on the same day. Nobody knew."
+      },
+      {
+        "title": "Subcontractor arrives with no prep complete",
+        "text": "Preparatory work is not finished. The plumber drove 60km for nothing. Nobody warned them."
+      },
+      {
+        "title": "Blocking decision not escalated",
+        "text": "Client must choose tiles. Work stops. Contractor does not know to escalate."
+      },
+      {
+        "title": "Task assigned to wrong person",
+        "text": "Terrace waterproofing goes to the wrong trade. Issue appears after work starts."
+      }
+    ],
+    "alignmentTitle": "How EdilSync keeps everyone aligned",
+    "alignment": [
+      {
+        "title": "Assigned tasks with clear accountability",
+        "text": "Each task has owner, deadline, and status. Responsibilities are explicit.",
+        "icon": "ListChecks"
+      },
+      {
+        "title": "Unified calendar with conflict detection",
+        "text": "All visits, work slots, and deadlines in one shared schedule with automatic conflict checks.",
+        "icon": "CalendarDays"
+      },
+      {
+        "title": "Contextual communication",
+        "text": "Messages are linked to tasks and documents so critical information is never lost.",
+        "icon": "MessageCircle"
+      },
+      {
+        "title": "Active notifications for every stakeholder",
+        "text": "Each role receives only relevant updates. No one can claim they did not know.",
+        "icon": "Bell"
+      },
+      {
+        "title": "Role-based visibility",
+        "text": "Everyone sees only what matters for their role in that worksite context.",
+        "icon": "Navigation"
+      },
+      {
+        "title": "Shared worksite feed",
+        "text": "One chronological feed for what happens on site. Photos, updates, approvals: aligned by default.",
+        "icon": "Zap"
+      }
+    ],
+    "citation": "Fragmented communication costs the construction industry $31B per year. Not because people do not want to communicate, but because they lack the right tools.",
+    "citationSource": "FMI Corporation, Construction Industry Report",
+    "finalTitle": "Ready to bring order to your construction site?",
+    "finalText": "Stop wasting time across chats, emails, and calls. Start with EdilSync today and feel the difference from day one.",
+    "finalCta": "Open EdilSync",
+    "finalNote": "Personal or company account - No card required to start - Upgrade when needed"
+  },
+  "blogMeta": {
+    "minReadLabel": ""
+  },
+  "footer": {
+    "copyright": "© {{year}} EdilSync. All rights reserved.",
+    "privacyLabel": "Privacy",
+    "termsLabel": "Terms",
+    "cookiesLabel": "Cookies"
+  },
+  "cookieBanner": {
+    "text": "We use technical cookies necessary for the service and analytics cookies to improve your experience. For more information, see our",
+    "linkLabel": "Cookie Policy",
+    "rejectAction": "Only necessary",
+    "acceptAction": "Accept all"
+  },
+  "privacyPolicyPage": {
+    "chipLabel": "Legal",
+    "title": "Privacy Policy",
+    "seoDescription": "Privacy policy describing how personal data is processed on EdilSync.",
+    "updatedAt": "Last updated: February 17, 2026",
+    "intro": "This policy explains how personal data is processed on EdilSync.",
+    "k1": "1. Data controller",
+    "k2": "The controller of personal data is EdilSync, reachable at:",
+    "k3": "2. Data collected",
+    "k4": "We collect the following categories of personal data:",
+    "k5": "Identification data:",
+    "k6": "name, surname, email address",
+    "k7": "Company data:",
+    "k8": "company name, VAT number, office address, phone",
+    "k9": "Usage data:",
+    "k10": "access logs, interactions with the application",
+    "k11": "Worksite data:",
+    "k12": "documents, photos, messages uploaded by the user",
+    "k13": "3. Purposes and legal basis",
+    "k14": "Data is processed for the following purposes:",
+    "k15": "Contract performance",
+    "k16": "registration, account management, service delivery",
+    "k17": "Legitimate interest",
+    "k18": "security, fraud prevention, service improvement",
+    "k19": "Consent",
+    "k20": "sending promotional communications (if enabled)",
+    "k21": "Legal obligation",
+    "k22": "tax and accounting obligations",
+    "k23": "4. Data retention",
+    "k24": "Personal data is retained for the duration of the contractual relationship and for the following 10 years for fiscal and legal compliance. Usage data is retained for 24 months.",
+    "k25": "5. Data sharing",
+    "k26": "Data may be shared with:",
+    "k27": "Other worksite participants (name, email, role) — necessary for service operation",
+    "k28": "Technical service providers (hosting, email) — as processors",
+    "k29": "Data is not sold to third parties.",
+    "k30": "6. Data subject rights",
+    "k31": "Under Articles 15-22 GDPR, users have the right to:",
+    "k32": "Access personal data",
+    "k33": "Rectify inaccurate data",
+    "k34": "Delete personal data (\"right to be forgotten\")",
+    "k35": "Restrict processing",
+    "k36": "Data portability",
+    "k37": "Object to processing",
+    "k38": "Withdraw consent at any time",
+    "k39": "Lodge a complaint with the Data Protection Authority",
+    "k40": "To exercise your rights, write to:",
+    "k41": "7. Cookies",
+    "k42": "For information about cookie usage, see our",
+    "cookiePolicyLinkLabel": "Cookie Policy",
+    "k43": "8. Changes",
+    "k44": "We reserve the right to update this policy. Any changes will be communicated through the application."
+  },
+  "termsOfServicePage": {
+    "chipLabel": "Legal",
+    "title": "Terms of Service",
+    "heroTitle": "Terms and Conditions of Service",
+    "seoDescription": "Terms and conditions that govern the use of the EdilSync platform.",
+    "updatedAt": "Last updated: February 17, 2026",
+    "intro": "These terms govern the use of the EdilSync platform.",
+    "k1": "1. Service description",
+    "k2": "EdilSync is a digital platform for managing construction worksites, enabling collaboration among clients, companies, professionals and consultants. The service includes worksite, task, document, messaging and calendar management.",
+    "k3": "2. Acceptance of terms",
+    "k4": "Accessing and using EdilSync implies full acceptance of these Terms and Conditions. If you do not accept these terms, you may not use the service.",
+    "k5": "3. Registration and account",
+    "k6": "Users must provide truthful and updated information",
+    "k7": "Users are responsible for credential confidentiality",
+    "k8": "Each account is personal and non-transferable",
+    "k9": "Users are responsible for all activity performed through their account",
+    "k10": "4. User obligations",
+    "k11": "Users agree to:",
+    "k12": "Use the service in compliance with Italian and EU law",
+    "k13": "Not upload illegal, defamatory or rights-infringing content",
+    "k14": "Not attempt unauthorized access to data or features",
+    "k15": "Not use the service for purposes other than construction worksite management",
+    "k16": "5. Intellectual property",
+    "k17": "The software, design, logos and all EdilSync content are protected by copyright and remain the exclusive property of the owner. Users retain ownership of content uploaded to the platform.",
+    "k18": "6. User content",
+    "k19": "Users grant EdilSync a limited, non-exclusive license to host, display and transmit uploaded content solely for service delivery. Content shared within a worksite is visible to other worksite participants.",
+    "k20": "7. Limitation of liability",
+    "k21": "EdilSync is provided \"as is\". The owner does not guarantee the service is error-free or uninterrupted. In no case shall the owner be liable for indirect, incidental, or consequential damages arising from service use.",
+    "k22": "8. Suspension and termination",
+    "k23": "The owner reserves the right to suspend or terminate service access in case of terms violations, without prior notice. Users can delete their account at any time from settings.",
+    "k24": "9. Applicable law and jurisdiction",
+    "k25": "These terms are governed by Italian law. Any dispute shall fall under the jurisdiction of the Court of [registered office], unless mandatory consumer protection rules provide otherwise.",
+    "k26": "10. Changes",
+    "k27": "We reserve the right to modify these terms. Changes will be communicated through the application with reasonable notice. Continued use after changes implies acceptance of the updated terms.",
+    "k28": "11. Contacts",
+    "k29": "For questions related to these terms, write to:"
+  },
+  "cookiePolicyPage": {
+    "chipLabel": "Legal",
+    "title": "Cookie Policy",
+    "seoDescription": "Cookie policy for service operation and improvement on EdilSync.",
+    "updatedAt": "Last updated: February 17, 2026",
+    "intro": "This policy explains how cookies are used for service operation and improvement.",
+    "k1": "1. What cookies are",
+    "k2": "Cookies are small text files stored on the user's device while browsing. They are used to improve user experience and enable service operation.",
+    "k3": "2. Types of cookies used",
+    "k4": "Technical cookies (necessary)",
+    "k5": "These cookies are essential for the app to function and cannot be disabled. They include:",
+    "k6": "Session cookies:",
+    "k7": "maintain user authentication",
+    "k8": "Preference cookies:",
+    "k9": "store user settings (e.g. active context)",
+    "k10": "Legal basis:",
+    "k11": "legitimate interest (Art. 6.1.f GDPR) — necessary for service delivery.",
+    "k12": "Analytics cookies",
+    "k13": "We use analytics cookies to understand how users interact with the application and improve the service. These cookies collect aggregated and anonymous information.",
+    "k14": "Legal basis:",
+    "k15": "user consent (Art. 6.1.a GDPR).",
+    "k16": "3. Third-party cookies",
+    "k17": "The app may include third-party services that set their own cookies. EdilSync has no control over those cookies. Please refer to the respective policies.",
+    "k18": "4. Cookie management",
+    "k19": "Users can manage cookie preferences through:",
+    "k20": "The cookie banner shown at first access",
+    "k21": "Browser settings",
+    "k22": "Disabling technical cookies may affect application functionality.",
+    "k23": "5. Cookie duration",
+    "k24": "Type",
+    "k25": "Duration",
+    "k26": "Session cookies",
+    "k27": "Until browser is closed",
+    "k28": "Preference cookies",
+    "k29": "12 months",
+    "k30": "Analytics cookies",
+    "k31": "24 months",
+    "k32": "6. User rights",
+    "k33": "For more information on data-processing rights, see our",
+    "privacyPolicyLinkLabel": "Privacy Policy",
+    "k34": "7. Contacts",
+    "k35": "For cookie-related questions, write to:"
+  }
+}

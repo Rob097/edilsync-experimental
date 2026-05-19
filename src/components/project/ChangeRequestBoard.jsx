@@ -13,13 +13,13 @@ import { useLanguage } from '@/components/i18n/useLanguage';
 
 export default function ChangeRequestBoard({ projectId, canCreateOrRespond, currentUserEmail }) {
   const { currentLanguage, t } = useLanguage();
-  const tr = (itText, enText) => currentLanguage === 'it' ? itText : enText;
+  const tx = (key, options) => t(`completeScoped.components_project_ChangeRequestBoard.${key}`, options);
   const dateLocale = currentLanguage === 'it' ? it : enUS;
   const columns = [
-    { id: 'pending', label: tr('In Attesa', 'Pending'), color: 'bg-yellow-100', icon: Clock },
-    { id: 'approved', label: tr('Approvata', 'Approved'), color: 'bg-green-100', icon: CheckCircle2 },
-    { id: 'clarification_needed', label: tr('Chiarimenti', 'Clarification'), color: 'bg-blue-100', icon: AlertCircle },
-    { id: 'rejected', label: tr('Rifiutata', 'Rejected'), color: 'bg-red-100', icon: XCircle },
+    { id: 'pending', label: tx('k1'), color: 'bg-yellow-100', icon: Clock },
+    { id: 'approved', label: tx('k2'), color: 'bg-green-100', icon: CheckCircle2 },
+    { id: 'clarification_needed', label: tx('k3'), color: 'bg-blue-100', icon: AlertCircle },
+    { id: 'rejected', label: tx('k4'), color: 'bg-red-100', icon: XCircle },
   ];
   const queryClient = useQueryClient();
   const [dialogOpen, setDialogOpen] = useState(false);
@@ -152,7 +152,7 @@ export default function ChangeRequestBoard({ projectId, canCreateOrRespond, curr
                                 {request.time_impact_days && (
                                   <div className="flex items-center gap-1 text-xs text-gray-600">
                                     <Clock className="h-3 w-3" />
-                                    <span>{`+${request.time_impact_days} ${tr('giorni', 'days')}`}</span>
+                                    <span>{`+${request.time_impact_days} ${tx('k5')}`}</span>
                                   </div>
                                 )}
                                 

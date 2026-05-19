@@ -16,11 +16,10 @@ import {
 } from '@/lib/notificationPreferences';
 
 export default function NotificationPreferences({ userEmail }) {
-  const { currentLanguage, t } = useLanguage();
+  const { t } = useLanguage();
   const queryClient = useQueryClient();
   const [preferences, setPreferences] = useState(DEFAULT_NOTIFICATION_PREFERENCES);
   const [hasChanges, setHasChanges] = useState(false);
-  const tr = (itText, enText) => (currentLanguage === 'it' ? itText : enText);
 
   const { data: userPrefs, isLoading } = useQuery({
     queryKey: ['notificationPreferences', userEmail],
@@ -138,13 +137,13 @@ export default function NotificationPreferences({ userEmail }) {
         <Separator />
 
         {/* Action Groups */}
-        {NOTIFICATION_PREFERENCE_GROUPS.map(({ group, actions }, groupIndex) => (
-          <div key={group.en} className="space-y-4">
-            <h3 className="font-semibold text-gray-900">{currentLanguage === 'it' ? group.it : group.en}</h3>
+        {NOTIFICATION_PREFERENCE_GROUPS.map(({ groupKey, actions }, groupIndex) => (
+          <div key={groupKey} className="space-y-4">
+            <h3 className="font-semibold text-gray-900">{t(`notificationPreferences.groups.${groupKey}`)}</h3>
             <div className="space-y-3">
-              {actions.map(({ key, label }) => (
+              {actions.map(({ key }) => (
                 <div key={key} className="flex items-center justify-between py-2">
-                  <Label className="text-sm text-gray-700 flex-1">{currentLanguage === 'it' ? label.it : label.en}</Label>
+                  <Label className="text-sm text-gray-700 flex-1">{t(`notificationPreferences.actions.${key}`)}</Label>
                   <div className="flex items-center gap-6">
                     <Switch
                       checked={preferences[key]?.notification ?? false}

@@ -23,53 +23,53 @@ export const DEFAULT_NOTIFICATION_PREFERENCES = {
 
 export const NOTIFICATION_PREFERENCE_GROUPS = [
   {
-    group: { it: 'Gestione Cantieri', en: 'Worksite Management' },
+    groupKey: 'worksiteManagement',
     actions: [
-      { key: 'project_invite', label: { it: 'Invito a nuovo cantiere', en: 'Invitation to a new worksite' } },
-      { key: 'task_assigned', label: { it: 'Assegnazione task', en: 'Task assignment' } },
-      { key: 'task_status_changed', label: { it: 'Cambio stato task', en: 'Task status change' } },
-      { key: 'change_request_assigned', label: { it: 'Assegnazione richiesta di modifica', en: 'Change request assignment' } },
-      { key: 'change_request_status_changed', label: { it: 'Cambio stato richiesta di modifica', en: 'Change request status change' } },
-      { key: 'milestone_status_changed', label: { it: 'Cambio stato milestone', en: 'Milestone status change' } },
+      { key: 'project_invite' },
+      { key: 'task_assigned' },
+      { key: 'task_status_changed' },
+      { key: 'change_request_assigned' },
+      { key: 'change_request_status_changed' },
+      { key: 'milestone_status_changed' },
     ],
   },
   {
-    group: { it: 'Gestione Società', en: 'Company Management' },
+    groupKey: 'companyManagement',
     actions: [
-      { key: 'company_invite', label: { it: 'Invito a nuova società', en: 'Invitation to a new company' } },
-      { key: 'company_plan_activated', label: { it: 'Piano società attivato', en: 'Company plan activated' } },
-      { key: 'company_plan_changed', label: { it: 'Piano società modificato', en: 'Company plan changed' } },
-      { key: 'company_plan_canceled', label: { it: 'Abbonamento società disdetto', en: 'Company subscription canceled' } },
+      { key: 'company_invite' },
+      { key: 'company_plan_activated' },
+      { key: 'company_plan_changed' },
+      { key: 'company_plan_canceled' },
     ],
   },
   {
-    group: { it: 'Piano Cantiere', en: 'Worksite Plan' },
+    groupKey: 'worksitePlan',
     actions: [
-      { key: 'project_sponsorship_activated', label: { it: 'Sponsorship cantiere attivata', en: 'Worksite sponsorship activated' } },
-      { key: 'project_sponsorship_revoked', label: { it: 'Sponsorship cantiere revocata', en: 'Worksite sponsorship revoked' } },
+      { key: 'project_sponsorship_activated' },
+      { key: 'project_sponsorship_revoked' },
     ],
   },
   {
-    group: { it: 'Calendario ed Eventi', en: 'Calendar and Events' },
+    groupKey: 'calendarAndEvents',
     actions: [
-      { key: 'event_invite', label: { it: 'Invito ad evento', en: 'Invitation to event' } },
-      { key: 'event_updated', label: { it: 'Evento aggiornato', en: 'Event updated' } },
-      { key: 'event_cancelled', label: { it: 'Evento cancellato', en: 'Event cancelled' } },
+      { key: 'event_invite' },
+      { key: 'event_updated' },
+      { key: 'event_cancelled' },
     ],
   },
   {
-    group: { it: 'Comunicazioni', en: 'Communications' },
+    groupKey: 'communications',
     actions: [
-      { key: 'message_mention', label: { it: 'Menzione in un messaggio', en: 'Mention in a message' } },
-      { key: 'document_comment', label: { it: 'Commento su documento', en: 'Comment on a document' } },
+      { key: 'message_mention' },
+      { key: 'document_comment' },
     ],
   },
   {
-    group: { it: 'Gestione Dispute', en: 'Dispute Management' },
+    groupKey: 'disputeManagement',
     actions: [
-      { key: 'dispute_opened', label: { it: 'Nuova disputa aperta', en: 'New dispute opened' } },
-      { key: 'dispute_status_changed', label: { it: 'Cambio stato disputa', en: 'Dispute status changed' } },
-      { key: 'dispute_commented', label: { it: 'Nuovo commento in disputa', en: 'New dispute comment' } },
+      { key: 'dispute_opened' },
+      { key: 'dispute_status_changed' },
+      { key: 'dispute_commented' },
     ],
   },
 ];

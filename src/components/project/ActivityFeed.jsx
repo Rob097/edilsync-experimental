@@ -20,8 +20,8 @@ import { useLanguage } from '@/components/i18n/useLanguage';
 import { getUserDisplayNameByEmail } from '@/lib/userDisplay';
 
 export default function ActivityFeed({ projectId, onItemClick }) {
-  const { currentLanguage } = useLanguage();
-  const tr = (itText, enText) => currentLanguage === 'it' ? itText : enText;
+  const { t, currentLanguage } = useLanguage();
+  const tx = (key, options) => t(`completeScoped.components_project_ActivityFeed.${key}`, options);
   const dateLocale = currentLanguage === 'it' ? it : enUS;
   const { data: tasks = [] } = useQuery({
     queryKey: ['tasks', projectId],
@@ -73,7 +73,7 @@ export default function ActivityFeed({ projectId, onItemClick }) {
         icon: task.status === 'completed' ? CheckCircle2 : task.status === 'blocked' ? AlertCircle : Clock,
         color: task.status === 'completed' ? 'text-green-600' : task.status === 'blocked' ? 'text-red-600' : 'text-blue-600',
         title: task.title,
-        description: `${tr('Stato', 'Status')}: ${task.status}`,
+        description: `${tx('k1')}: ${task.status}`,
         data: task,
       });
     });
@@ -85,8 +85,8 @@ export default function ActivityFeed({ projectId, onItemClick }) {
         date: cr.updated_date || cr.created_date,
         icon: DollarSign,
         color: cr.status === 'approved' ? 'text-green-600' : cr.status === 'rejected' ? 'text-red-600' : 'text-yellow-600',
-        title: `${tr('Richiesta Modifica', 'Change Request')}: ${cr.title}`,
-        description: cr.cost_impact ? `€${cr.cost_impact}` : tr('Nessun costo aggiuntivo', 'No additional cost'),
+        title: `${tx('k2')}: ${cr.title}`,
+        description: cr.cost_impact ? `€${cr.cost_impact}` : tx('k3'),
         data: cr,
       });
     });
@@ -114,8 +114,8 @@ export default function ActivityFeed({ projectId, onItemClick }) {
         icon: Image,
         color: 'text-purple-600',
         title: `Documento caricato: ${doc.name}`,
-        title: `${tr('Documento caricato', 'Uploaded document')}: ${doc.name}`,
-        description: `${tr('da', 'by')} ${uploaderName}`,
+        title: `${tx('k4')}: ${doc.name}`,
+        description: `${tx('k5')} ${uploaderName}`,
         data: doc,
       });
     });
@@ -127,7 +127,7 @@ export default function ActivityFeed({ projectId, onItemClick }) {
         date: event.created_date,
         icon: Calendar,
         color: 'text-indigo-600',
-        title: `${tr('Appuntamento', 'Appointment')}: ${event.title}`,
+        title: `${tx('k6')}: ${event.title}`,
         description: format(new Date(event.start_datetime), 'dd MMM, HH:mm', { locale: dateLocale }),
         data: event,
       });
@@ -154,8 +154,8 @@ export default function ActivityFeed({ projectId, onItemClick }) {
   }, [activities]);
 
   const getDayLabel = (date) => {
-    if (isToday(date)) return tr('Oggi', 'Today');
-    if (isYesterday(date)) return tr('Ieri', 'Yesterday');
+    if (isToday(date)) return tx('k7');
+    if (isYesterday(date)) return tx('k8');
     return format(date, 'dd MMMM yyyy', { locale: dateLocale });
   };
 
@@ -178,7 +178,7 @@ export default function ActivityFeed({ projectId, onItemClick }) {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>{tr('Attività Cantiere', 'Worksite Activity')}</CardTitle>
+        <CardTitle>{tx('k9')}</CardTitle>
       </CardHeader>
       <CardContent>
         {isLoading ? (
@@ -225,8 +225,8 @@ export default function ActivityFeed({ projectId, onItemClick }) {
         ) : (
           <EmptyState
             icon={FileText}
-            title={tr('Nessuna attività', 'No activity')}
-            description={tr('Le attività del cantiere appariranno qui.', 'Worksite activity will appear here.')}
+            title={tx('k10')}
+            description={tx('k11')}
           />
         )}
       </CardContent>

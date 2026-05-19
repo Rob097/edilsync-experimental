@@ -24,8 +24,7 @@ import { enUS, it } from 'date-fns/locale';
 import { useLanguage } from '@/components/i18n/useLanguage';
 
 export default function SystemDashboard() {
-  const { t, currentLanguage } = useLanguage();
-  const tr = (itText, enText) => (currentLanguage === 'it' ? itText : enText);
+  const { t, currentLanguage } = useLanguage();const tx = (key, options) => t(`completeScoped.pages_SystemDashboard.${key}`, options);
   const dateLocale = currentLanguage === 'it' ? it : enUS;
   // Auth check
   const { data: user, isLoading: userLoading } = useQuery({
@@ -270,7 +269,7 @@ export default function SystemDashboard() {
         <Alert className="max-w-md">
           <AlertCircle className="h-4 w-4" />
           <AlertDescription>
-            {tr('Questa dashboard è accessibile solo agli amministratori di sistema.', 'This dashboard is only available to system administrators.')}
+            {tx('k1')}
           </AlertDescription>
         </Alert>
       </div>
@@ -292,27 +291,27 @@ export default function SystemDashboard() {
 
   const COLORS = ['#ef6144', '#f59e0b', '#10b981', '#3b82f6', '#8b5cf6', '#ec4899'];
   const documentCategoryLabels = {
-    project: tr('Cantiere', 'Worksite'),
-    contract: tr('Contratto', 'Contract'),
-    permit: tr('Permesso', 'Permit'),
-    drawing: tr('Disegno', 'Drawing'),
-    photo: tr('Foto', 'Photo'),
-    report: tr('Report', 'Report'),
-    other: tr('Altro', 'Other'),
+    project: tx('k2'),
+    contract: tx('k3'),
+    permit: tx('k4'),
+    drawing: tx('k5'),
+    photo: tx('k6'),
+    report: tx('k7'),
+    other: tx('k8'),
   };
 
   const projectStatusData = [
-    { name: tr('In pianificazione', 'Planning'), value: stats.projects.byStatus.planning, color: '#f59e0b' },
-    { name: tr('In corso', 'In progress'), value: stats.projects.byStatus.in_progress, color: '#3b82f6' },
-    { name: tr('Completati', 'Completed'), value: stats.projects.byStatus.completed, color: '#10b981' },
-    { name: tr('In pausa', 'On hold'), value: stats.projects.byStatus.on_hold, color: '#6b7280' },
+    { name: tx('k9'), value: stats.projects.byStatus.planning, color: '#f59e0b' },
+    { name: tx('k10'), value: stats.projects.byStatus.in_progress, color: '#3b82f6' },
+    { name: tx('k11'), value: stats.projects.byStatus.completed, color: '#10b981' },
+    { name: tx('k12'), value: stats.projects.byStatus.on_hold, color: '#6b7280' },
   ];
 
   const taskStatusData = [
-    { name: tr('Non avviato', 'Not started'), value: stats.tasks.byStatus.not_started, color: '#6b7280' },
-    { name: tr('In corso', 'In progress'), value: stats.tasks.byStatus.in_progress, color: '#3b82f6' },
-    { name: tr('Completato', 'Completed'), value: stats.tasks.byStatus.completed, color: '#10b981' },
-    { name: tr('Bloccato', 'Blocked'), value: stats.tasks.byStatus.blocked, color: '#ef4444' },
+    { name: tx('k13'), value: stats.tasks.byStatus.not_started, color: '#6b7280' },
+    { name: tx('k14'), value: stats.tasks.byStatus.in_progress, color: '#3b82f6' },
+    { name: tx('k15'), value: stats.tasks.byStatus.completed, color: '#10b981' },
+    { name: tx('k16'), value: stats.tasks.byStatus.blocked, color: '#ef4444' },
   ];
 
   const documentCategoryData = Object.entries(stats.documents.byCategory).map(([key, value]) => ({
@@ -326,11 +325,11 @@ export default function SystemDashboard() {
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-3xl font-bold text-gray-900">{t('navigation.systemDashboard')}</h1>
-          <p className="text-gray-500 mt-1">{tr("Panoramica completa dell'utilizzo di EdilSync", 'Complete overview of EdilSync usage')}</p>
+          <p className="text-gray-500 mt-1">{tx('k69')}</p>
         </div>
         <div className="flex items-center gap-2 text-sm text-gray-500">
           <Activity className="h-4 w-4" />
-          <span>{tr('Aggiornato in tempo reale', 'Updated in real time')}</span>
+          <span>{tx('k17')}</span>
         </div>
       </div>
 
@@ -338,65 +337,65 @@ export default function SystemDashboard() {
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         <Card>
           <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-sm font-medium text-gray-600">{tr('Utenti totali', 'Total users')}</CardTitle>
+            <CardTitle className="text-sm font-medium text-gray-600">{tx('k18')}</CardTitle>
             <Users className="h-4 w-4 text-gray-400" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">{stats.users.total}</div>
             <p className="text-xs text-gray-500 mt-1">
-              +{stats.users.new} {tr('negli ultimi 30 giorni', 'in the last 30 days')}
+              +{stats.users.new} {tx('k19')}
             </p>
             <div className="flex gap-2 mt-2">
-              <span className="text-xs text-gray-500">{tr('Admin', 'Admins')}: {stats.users.admin}</span>
-              <span className="text-xs text-gray-500">{tr('Utenti', 'Users')}: {stats.users.regular}</span>
+              <span className="text-xs text-gray-500">{tx('k20')}: {stats.users.admin}</span>
+              <span className="text-xs text-gray-500">{tx('k21')}: {stats.users.regular}</span>
             </div>
           </CardContent>
         </Card>
 
         <Card>
           <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-sm font-medium text-gray-600">{tr('Aziende attive', 'Active companies')}</CardTitle>
+            <CardTitle className="text-sm font-medium text-gray-600">{tx('k22')}</CardTitle>
             <Building2 className="h-4 w-4 text-gray-400" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">{stats.companies.active}</div>
             <p className="text-xs text-gray-500 mt-1">
-              {tr('su', 'out of')} {stats.companies.total} {tr('totali', 'total')}
+              {tx('k23')} {stats.companies.total} {tx('k24')}
             </p>
             <p className="text-xs text-gray-500 mt-1">
-              {tr('Media membri', 'Average members')}: {stats.companies.avgMembers}
+              {tx('k25')}: {stats.companies.avgMembers}
             </p>
           </CardContent>
         </Card>
 
         <Card>
           <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-sm font-medium text-gray-600">{tr('Cantieri attivi', 'Active worksites')}</CardTitle>
+            <CardTitle className="text-sm font-medium text-gray-600">{tx('k26')}</CardTitle>
             <FolderKanban className="h-4 w-4 text-gray-400" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">{stats.projects.byStatus.in_progress}</div>
             <p className="text-xs text-gray-500 mt-1">
-              {stats.projects.total} {tr('totali', 'total')}
+              {stats.projects.total} {tx('k27')}
             </p>
             <p className="text-xs text-green-600 mt-1">
-              {stats.projects.byStatus.completed} {tr('completati', 'completed')}
+              {stats.projects.byStatus.completed} {tx('k28')}
             </p>
           </CardContent>
         </Card>
 
         <Card>
           <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-sm font-medium text-gray-600">{tr('Task completati', 'Completed tasks')}</CardTitle>
+            <CardTitle className="text-sm font-medium text-gray-600">{tx('k29')}</CardTitle>
             <CheckSquare className="h-4 w-4 text-gray-400" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">{stats.tasks.byStatus.completed}</div>
             <p className="text-xs text-gray-500 mt-1">
-              {stats.tasks.total} {tr('totali', 'total')}
+              {stats.tasks.total} {tx('k30')}
             </p>
             <p className="text-xs text-green-600 mt-1">
-              {tr('Tasso completamento', 'Completion rate')}: {stats.tasks.completionRate}%
+              {tx('k31')}: {stats.tasks.completionRate}%
             </p>
           </CardContent>
         </Card>
@@ -409,9 +408,9 @@ export default function SystemDashboard() {
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <TrendingUp className="h-5 w-5" />
-              {tr('Attività ultimi 30 giorni', 'Activity in the last 30 days')}
+              {tx('k32')}
             </CardTitle>
-            <CardDescription>{tr('Nuovi cantieri, task completati e messaggi', 'New worksites, completed tasks, and messages')}</CardDescription>
+            <CardDescription>{tx('k33')}</CardDescription>
           </CardHeader>
           <CardContent>
             <ResponsiveContainer width="100%" height={300}>
@@ -421,9 +420,9 @@ export default function SystemDashboard() {
                 <YAxis style={{ fontSize: '12px' }} />
                 <Tooltip />
                 <Legend />
-                <Line type="monotone" dataKey="projects" stroke="#ef6144" name={tr('Cantieri', 'Worksites')} strokeWidth={2} />
+                <Line type="monotone" dataKey="projects" stroke="#ef6144" name={tx('k34')} strokeWidth={2} />
                 <Line type="monotone" dataKey="tasks" stroke="#10b981" name="Task" strokeWidth={2} />
-                <Line type="monotone" dataKey="messages" stroke="#3b82f6" name={tr('Messaggi', 'Messages')} strokeWidth={2} />
+                <Line type="monotone" dataKey="messages" stroke="#3b82f6" name={tx('k35')} strokeWidth={2} />
               </LineChart>
             </ResponsiveContainer>
           </CardContent>
@@ -434,9 +433,9 @@ export default function SystemDashboard() {
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <PieChartIcon className="h-5 w-5" />
-              {tr('Distribuzione cantieri per stato', 'Worksite distribution by status')}
+              {tx('k36')}
             </CardTitle>
-            <CardDescription>{stats.projects.total} {tr('cantieri totali', 'total worksites')}</CardDescription>
+            <CardDescription>{stats.projects.total} {tx('k37')}</CardDescription>
           </CardHeader>
           <CardContent>
             <ResponsiveContainer width="100%" height={300}>
@@ -469,9 +468,9 @@ export default function SystemDashboard() {
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <BarChart3 className="h-5 w-5" />
-              {tr('Stato task', 'Task status')}
+              {tx('k38')}
             </CardTitle>
-            <CardDescription>{stats.tasks.total} {tr('task totali', 'total tasks')}</CardDescription>
+            <CardDescription>{stats.tasks.total} {tx('k39')}</CardDescription>
           </CardHeader>
           <CardContent>
             <ResponsiveContainer width="100%" height={300}>
@@ -495,9 +494,9 @@ export default function SystemDashboard() {
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <Users className="h-5 w-5" />
-              {tr('Utenti più attivi', 'Most active users')}
+              {tx('k40')}
             </CardTitle>
-            <CardDescription>{tr('Per task e cantieri creati', 'By tasks and worksites created')}</CardDescription>
+            <CardDescription>{tx('k41')}</CardDescription>
           </CardHeader>
           <CardContent>
             <ResponsiveContainer width="100%" height={300}>
@@ -508,7 +507,7 @@ export default function SystemDashboard() {
                 <Tooltip />
                 <Legend />
                 <Bar dataKey="tasks" fill="#10b981" name="Task" />
-                <Bar dataKey="projects" fill="#ef6144" name={tr('Cantieri', 'Worksites')} />
+                <Bar dataKey="projects" fill="#ef6144" name={tx('k42')} />
               </BarChart>
             </ResponsiveContainer>
           </CardContent>
@@ -522,28 +521,28 @@ export default function SystemDashboard() {
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <Target className="h-5 w-5" />
-              {tr('Milestone', 'Milestones')}
+              {tx('k43')}
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-2">
             <div className="flex justify-between items-center">
-              <span className="text-sm text-gray-600">{tr('Totali', 'Total')}</span>
+              <span className="text-sm text-gray-600">{tx('k44')}</span>
               <span className="font-semibold">{stats.milestones.total}</span>
             </div>
             <div className="flex justify-between items-center">
-              <span className="text-sm text-gray-600">{tr('In attesa', 'Pending')}</span>
+              <span className="text-sm text-gray-600">{tx('k45')}</span>
               <span className="text-yellow-600">{stats.milestones.byStatus.pending}</span>
             </div>
             <div className="flex justify-between items-center">
-              <span className="text-sm text-gray-600">{tr('In corso', 'In progress')}</span>
+              <span className="text-sm text-gray-600">{tx('k46')}</span>
               <span className="text-blue-600">{stats.milestones.byStatus.in_progress}</span>
             </div>
             <div className="flex justify-between items-center">
-              <span className="text-sm text-gray-600">{tr('Completate', 'Completed')}</span>
+              <span className="text-sm text-gray-600">{tx('k47')}</span>
               <span className="text-green-600">{stats.milestones.byStatus.completed}</span>
             </div>
             <div className="flex justify-between items-center">
-              <span className="text-sm text-gray-600">{tr('In ritardo', 'Delayed')}</span>
+              <span className="text-sm text-gray-600">{tx('k48')}</span>
               <span className="text-red-600">{stats.milestones.byStatus.delayed}</span>
             </div>
           </CardContent>
@@ -554,30 +553,30 @@ export default function SystemDashboard() {
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <AlertCircle className="h-5 w-5" />
-              {tr('Richieste di modifica', 'Change requests')}
+              {tx('k49')}
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-2">
             <div className="flex justify-between items-center">
-              <span className="text-sm text-gray-600">{tr('Totali', 'Total')}</span>
+              <span className="text-sm text-gray-600">{tx('k50')}</span>
               <span className="font-semibold">{stats.changeRequests.total}</span>
             </div>
             <div className="flex justify-between items-center">
-              <span className="text-sm text-gray-600">{tr('In attesa', 'Pending')}</span>
+              <span className="text-sm text-gray-600">{tx('k51')}</span>
               <span className="text-yellow-600">{stats.changeRequests.byStatus.pending}</span>
             </div>
             <div className="flex justify-between items-center">
-              <span className="text-sm text-gray-600">{tr('Approvate', 'Approved')}</span>
+              <span className="text-sm text-gray-600">{tx('k52')}</span>
               <span className="text-green-600">{stats.changeRequests.byStatus.approved}</span>
             </div>
             <div className="flex justify-between items-center">
-              <span className="text-sm text-gray-600">{tr('Rifiutate', 'Rejected')}</span>
+              <span className="text-sm text-gray-600">{tx('k53')}</span>
               <span className="text-red-600">{stats.changeRequests.byStatus.rejected}</span>
             </div>
             <div className="pt-2 border-t">
-              <div className="text-xs text-gray-500">{tr('Impatto medio approvate', 'Average approved impact')}:</div>
-              <div className="text-sm">{tr('Costo', 'Cost')}: €{stats.changeRequests.avgCostImpact}</div>
-              <div className="text-sm">{tr('Tempo', 'Time')}: {stats.changeRequests.avgTimeImpact} {tr('giorni', 'days')}</div>
+              <div className="text-xs text-gray-500">{tx('k54')}:</div>
+              <div className="text-sm">{tx('k55')}: €{stats.changeRequests.avgCostImpact}</div>
+              <div className="text-sm">{tx('k56')}: {stats.changeRequests.avgTimeImpact} {tx('k57')}</div>
             </div>
           </CardContent>
         </Card>
@@ -587,26 +586,26 @@ export default function SystemDashboard() {
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <MessageSquare className="h-5 w-5" />
-              {tr('Comunicazione', 'Communication')}
+              {tx('k58')}
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-3">
             <div className="flex justify-between items-center">
-              <span className="text-sm text-gray-600">{tr('Messaggi', 'Messages')}</span>
+              <span className="text-sm text-gray-600">{tx('k59')}</span>
               <span className="font-semibold">{stats.communication.messages}</span>
             </div>
             <div className="flex justify-between items-center">
-              <span className="text-sm text-gray-600">{tr('Eventi', 'Events')}</span>
+              <span className="text-sm text-gray-600">{tx('k60')}</span>
               <span className="font-semibold">{stats.communication.events}</span>
             </div>
             <div className="flex justify-between items-center">
-              <span className="text-sm text-gray-600">{tr('Notifiche', 'Notifications')}</span>
+              <span className="text-sm text-gray-600">{tx('k61')}</span>
               <span className="font-semibold">{stats.communication.notifications}</span>
             </div>
             <div className="pt-2 border-t">
               <div className="flex items-center gap-2">
                 <FileText className="h-4 w-4 text-gray-400" />
-                <span className="text-sm text-gray-600">{tr('Documenti', 'Documents')}</span>
+                <span className="text-sm text-gray-600">{tx('k62')}</span>
                 <span className="font-semibold ml-auto">{stats.documents.total}</span>
               </div>
             </div>
@@ -620,9 +619,9 @@ export default function SystemDashboard() {
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <Building2 className="h-5 w-5" />
-              {tr('Aziende con più cantieri', 'Companies with the most worksites')}
+              {tx('k63')}
             </CardTitle>
-            <CardDescription>{tr('Classifica per numero di cantieri gestiti', 'Ranking by number of managed worksites')}</CardDescription>
+            <CardDescription>{tx('k64')}</CardDescription>
           </CardHeader>
           <CardContent>
             <div className="space-y-3">
@@ -634,12 +633,12 @@ export default function SystemDashboard() {
                     </div>
                     <div>
                       <div className="font-medium">{company.name}</div>
-                      <div className="text-xs text-gray-500">{company.members} {tr('membri', 'members')}</div>
+                      <div className="text-xs text-gray-500">{company.members} {tx('k65')}</div>
                     </div>
                   </div>
                   <div className="text-right">
                     <div className="font-semibold text-lg">{company.projects}</div>
-                    <div className="text-xs text-gray-500">{tr('cantieri', 'worksites')}</div>
+                    <div className="text-xs text-gray-500">{tx('k66')}</div>
                   </div>
                 </div>
               ))}
@@ -654,9 +653,9 @@ export default function SystemDashboard() {
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <FileText className="h-5 w-5" />
-              {tr('Distribuzione documenti per categoria', 'Document distribution by category')}
+              {tx('k67')}
             </CardTitle>
-            <CardDescription>{stats.documents.total} {tr('documenti totali', 'total documents')}</CardDescription>
+            <CardDescription>{stats.documents.total} {tx('k68')}</CardDescription>
           </CardHeader>
           <CardContent>
             <ResponsiveContainer width="100%" height={300}>

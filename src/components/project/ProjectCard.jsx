@@ -17,23 +17,23 @@ const statusConfig = {
 
 export default function ProjectCard({ project, userRole, participantCount }) {
   const { t, currentLanguage } = useLanguage();
-  const tr = (itText, enText) => (currentLanguage === 'it' ? itText : enText);
+  const tx = (key, options) => t(`completeScoped.components_project_ProjectCard.${key}`, options);
   const dateLocale = currentLanguage === 'it' ? it : enUS;
   const status = statusConfig[project.status] || statusConfig.planning;
   const statusLabel = project.status === 'on_hold'
-    ? tr('In pausa', 'On hold')
+    ? tx('k1')
     : t(`project.status.${project.status || 'planning'}`);
 
   const roleLabels = {
-    homeowner: tr('Committente', 'Homeowner'),
-    contractor: tr('Contractor', 'Contractor'),
-    subcontractor: tr('Subappaltatore', 'Subcontractor'),
-    architect: tr('Architetto', 'Architect'),
-    engineer: tr('Ingegnere', 'Engineer'),
-    surveyor: tr('Geometra', 'Surveyor'),
-    designer: tr('Designer', 'Designer'),
-    consultant: tr('Consulente', 'Consultant'),
-    supplier: tr('Fornitore', 'Supplier')
+    homeowner: tx('k2'),
+    contractor: tx('k3'),
+    subcontractor: tx('k4'),
+    architect: tx('k5'),
+    engineer: tx('k6'),
+    surveyor: tx('k7'),
+    designer: tx('k8'),
+    consultant: tx('k9'),
+    supplier: tx('k10')
   };
 
   return (

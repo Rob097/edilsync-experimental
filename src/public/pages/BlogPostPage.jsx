@@ -13,8 +13,7 @@ import usePublicSeo from '@/public/hooks/usePublicSeo';
 import { readPublicPrerenderData } from '@/public/prerenderData';
 import StructuredData from '@/public/seo/StructuredData';
 import usePublicGsap from '@/public/hooks/usePublicGsap';
-import blogPostIt from '@/public/i18n/blog-post.it.json';
-import blogPostEn from '@/public/i18n/blog-post.en.json';
+import { getPublicCopy } from '@/public/lib/publicTranslations';
 
 function pickLocalized(post, locale, field) {
   const preferred = post?.[`${field}_${locale}`];
@@ -25,7 +24,7 @@ function pickLocalized(post, locale, field) {
 export default function BlogPostPage({ locale = 'it', basePath = '', initialPost }) {
   const rootRef = useRef(null);
   const { slug } = useParams();
-  const copy = locale === 'en' ? blogPostEn : blogPostIt;
+  const copy = getPublicCopy(locale, 'blogPost');
   const prerenderedPost = readPublicPrerenderData('blogPost');
   const seededPost = initialPost?.slug === slug
     ? initialPost

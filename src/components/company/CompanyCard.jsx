@@ -9,8 +9,7 @@ import { getCompanyTypeLabel } from '@/lib/domainRoles';
 
 export default function CompanyCard({ company, userRole, memberCount }) {
   const { t, currentLanguage } = useLanguage();
-  const tr = (itText, enText) => (currentLanguage === 'it' ? itText : enText);
-
+  const tx = (key, options) => t(`completeScoped.components_company_CompanyCard.${key}`, options);
   const roleLabels = {
     admin: t('companies.admin'),
     member: t('companies.member'),
@@ -34,7 +33,7 @@ export default function CompanyCard({ company, userRole, memberCount }) {
                 )}
               </div>
               {company.vat_number && (
-                <p className="mb-2 text-sm text-[#6d5c55]">{tr('P.IVA', 'VAT')}: {company.vat_number}</p>
+                <p className="mb-2 text-sm text-[#6d5c55]">{tx('k1')}: {company.vat_number}</p>
               )}
               {company.company_type && (
                 <p className="mb-2 text-sm text-[#6d5c55]">{getCompanyTypeLabel(company.company_type, currentLanguage)}</p>
@@ -43,7 +42,7 @@ export default function CompanyCard({ company, userRole, memberCount }) {
                 {memberCount > 0 && (
                   <div className="flex items-center gap-1">
                     <Users className="h-3.5 w-3.5" />
-                    <span>{memberCount} {memberCount === 1 ? tr('membro', 'member') : tr('membri', 'members')}</span>
+                    <span>{memberCount} {memberCount === 1 ? tx('k2') : tx('k3')}</span>
                   </div>
                 )}
               </div>

@@ -8,8 +8,7 @@ import { PUBLIC_CLASSES } from '@/public/designSystem';
 import usePublicSeo from '@/public/hooks/usePublicSeo';
 import usePublicGsap from '@/public/hooks/usePublicGsap';
 import { readPublicPrerenderData } from '@/public/prerenderData';
-import blogIndexIt from '@/public/i18n/blog-index.it.json';
-import blogIndexEn from '@/public/i18n/blog-index.en.json';
+import { getPublicCopy } from '@/public/lib/publicTranslations';
 
 function pickLocalized(post, locale, field) {
   const preferred = post?.[`${field}_${locale}`];
@@ -30,7 +29,7 @@ export default function BlogIndexPage({ locale = 'it', basePath = '', initialPos
     initialData: seededPosts,
   });
 
-  const copy = locale === 'en' ? blogIndexEn : blogIndexIt;
+  const copy = getPublicCopy(locale, 'blogIndex');
   const title = copy.seoTitle;
   const subtitle = copy.subtitle;
 

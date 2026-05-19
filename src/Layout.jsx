@@ -158,6 +158,7 @@ export default function Layout({ children, currentPageName }) {
   const switchDialogDescription = t('operationalMode.switchDialogDescription');
 
   const switchDialogConfirm = t('operationalMode.switchDialogConfirm');
+  const tx = (key, options) => t(`completeScoped.Layout.${key}`, options);
 
   const getInitials = (name) => {
     if (!name) return 'U';
@@ -167,7 +168,7 @@ export default function Layout({ children, currentPageName }) {
   return (
     <I18nextProvider i18n={i18next}>
       <TourProvider>
-        {isChangingContext && <FullPageLoader message={currentLanguage === 'it' ? 'Cambio contesto in corso...' : 'Changing context...'} />}
+        {isChangingContext && <FullPageLoader message={tx('k1')} />}
         <TourOverlay />
         <div className="app-shell min-h-screen flex flex-col">
       {/* Header */}

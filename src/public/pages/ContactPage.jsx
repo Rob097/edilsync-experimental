@@ -10,11 +10,10 @@ import { Textarea } from '@/components/ui/textarea';
 import { getPublicSupabaseClient } from '@/public/api/publicSupabaseClient';
 import usePublicSeo from '@/public/hooks/usePublicSeo';
 import { PUBLIC_CLASSES } from '@/public/designSystem';
-import contactIt from '@/public/i18n/contact.it.json';
-import contactEn from '@/public/i18n/contact.en.json';
+import { getPublicCopy } from '@/public/lib/publicTranslations';
 
 export default function ContactPage({ locale = 'it' }) {
-  const t = locale === 'en' ? contactEn : contactIt;
+  const t = getPublicCopy(locale, 'contact');
   const roleOptions = t.roles;
 
   const [form, setForm] = useState({

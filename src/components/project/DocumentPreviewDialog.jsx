@@ -16,8 +16,8 @@ import InAppIfcViewer from './InAppIfcViewer';
 import { useLanguage } from '@/components/i18n/useLanguage';
 
 export default function DocumentPreviewDialog({ document, open, onOpenChange, allDocuments = [], onNavigate, scopeType = 'project', featureAccess }) {
-  const { currentLanguage } = useLanguage();
-  const tr = (itText, enText) => (currentLanguage === 'it' ? itText : enText);
+  const { t, currentLanguage } = useLanguage();
+  const tx = (key, options) => t(`completeScoped.components_project_DocumentPreviewDialog.${key}`, options);
   const [activeTab, setActiveTab] = useState('preview');
   const [isBimFullscreen, setIsBimFullscreen] = useState(false);
   const bimContainerRef = useRef(null);
@@ -103,19 +103,19 @@ export default function DocumentPreviewDialog({ document, open, onOpenChange, al
   const getDocumentStatusLabel = (status) => {
     switch (status) {
       case 'draft':
-        return tr('Bozza', 'Draft');
+        return tx('k1');
       case 'in_review':
-        return tr('In revisione', 'In review');
+        return tx('k2');
       case 'approved':
-        return tr('Approvato', 'Approved');
+        return tx('k3');
       case 'rejected':
-        return tr('Respinto', 'Rejected');
+        return tx('k4');
       case 'superseded':
-        return tr('Superato', 'Superseded');
+        return tx('k5');
       case 'archived':
-        return tr('Archiviato', 'Archived');
+        return tx('k6');
       default:
-        return status || tr('Bozza', 'Draft');
+        return status || tx('k7');
     }
   };
 

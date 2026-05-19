@@ -30,8 +30,8 @@ const billingStatusClasses = {
 export default function CompanyBillingSection({ companyId, companyName, isAdmin }) {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
-  const { currentLanguage } = useLanguage();
-  const tr = (itText, enText) => (currentLanguage === 'it' ? itText : enText);
+  const { t, currentLanguage } = useLanguage();
+const tx = (key, options) => t(`completeScoped.components_company_CompanyBillingSection.${key}`, options);
   const dateLocale = currentLanguage === 'it' ? it : enUS;
   const [selectedBillingCycle, setSelectedBillingCycle] = useState('monthly');
   const [billingOpen, setBillingOpen] = useState(false);
@@ -84,17 +84,17 @@ export default function CompanyBillingSection({ companyId, companyName, isAdmin 
   const canManageSubscription = Boolean(billingFeatureAccess?.config?.can_manage_subscription);
   const canSponsorProjects = sponsorshipFeatureAccess?.access_level === 'enabled';
   const planLabel = subscriptionRecord.plan_code === 'paid'
-    ? tr('Pro', 'Pro')
-    : tr('Base', 'Base');
+    ? tx('k1')
+    : tx('k2');
   const isProPlan = subscriptionRecord.plan_code === 'paid';
 
   const billingStatusLabel = {
-    free: tr('Base', 'Base'),
-    active: tr('Attivo', 'Active'),
-    incomplete: tr('Da completare', 'Needs completion'),
-    past_due: tr('Pagamento da aggiornare', 'Payment issue'),
-    canceled: tr('Cancellato', 'Canceled'),
-    unpaid: tr('Pagamento non riuscito', 'Payment failed'),
+    free: tx('k3'),
+    active: tx('k4'),
+    incomplete: tx('k5'),
+    past_due: tx('k6'),
+    canceled: tx('k7'),
+    unpaid: tx('k8'),
   }[subscriptionRecord.billing_status] || subscriptionRecord.billing_status;
 
   const formatDateLabel = (value) => {
@@ -104,13 +104,10 @@ export default function CompanyBillingSection({ companyId, companyName, isAdmin 
 
   const periodEndLabel = formatDateLabel(subscriptionRecord.current_period_end);
   const cycleLabel = subscriptionRecord.billing_cycle
-    ? tr(
-      subscriptionRecord.billing_cycle === 'monthly' ? 'Mensile' : 'Annuale',
-      subscriptionRecord.billing_cycle === 'monthly' ? 'Monthly' : 'Yearly',
-    )
+    ? undefined
     : null;
   const isYearlyBilling = selectedBillingCycle === 'yearly';
-  const upgradePriceLabel = isYearlyBilling ? tr('190€ / anno', '€190 / year') : tr('19€ / mese', '€19 / month');
+  const upgradePriceLabel = isYearlyBilling ? tx('k9') : tx('k10');
 
   const sponsoredProjectsById = useMemo(
     () => Object.fromEntries(sponsoredProjects.map((project) => [project.id, project])),
@@ -133,11 +130,8 @@ export default function CompanyBillingSection({ companyId, companyName, isAdmin 
       }
 
       toast({
-        title: tr('Fatturazione aggiornata', 'Billing refreshed'),
-        description: tr(
-          'Ho riallineato lo stato del piano con il profilo di pagamento.',
-          'I synced the plan status with the payment profile.',
-        ),
+        title: tx('k11'),
+        description: tx('k74'),
       });
     },
     onError: (error, variables) => {
@@ -146,8 +140,8 @@ export default function CompanyBillingSection({ companyId, companyName, isAdmin 
       }
 
       toast({
-        title: tr('Impossibile aggiornare la fatturazione', 'Unable to refresh billing'),
-        description: error?.message || tr('Riprova tra qualche secondo.', 'Please try again in a few seconds.'),
+        title: tx('k12'),
+        description: error?.message || tx('k13'),
       });
     },
   });
@@ -163,11 +157,8 @@ export default function CompanyBillingSection({ companyId, companyName, isAdmin 
 
     if (checkoutState === 'success') {
       toast({
-        title: tr('Checkout completato', 'Checkout completed'),
-        description: tr(
-          'Pagamento completato. Stiamo aggiornando il piano della societa.',
-          'Payment completed. We are updating the company plan.',
-        ),
+        title: tx('k14'),
+        description: tx('k75'),
       });
       stripeSyncMutation.mutate({ silent: true });
       queryClient.invalidateQueries({ queryKey: ['companySubscription', companyId] });
@@ -176,21 +167,15 @@ export default function CompanyBillingSection({ companyId, companyName, isAdmin 
 
     if (checkoutState === 'canceled') {
       toast({
-        title: tr('Checkout annullato', 'Checkout canceled'),
-        description: tr(
-          'Nessuna modifica e stata applicata al piano della societa.',
-          'No changes were applied to the company plan.',
-        ),
+        title: tx('k15'),
+        description: tx('k76'),
       });
     }
 
     if (portalState === 'return') {
       toast({
-        title: tr('Piano aggiornato', 'Plan updated'),
-        description: tr(
-          'Sto aggiornando i dati di fatturazione della societa.',
-          'Refreshing the company billing details.',
-        ),
+        title: tx('k16'),
+        description: tx('k77'),
       });
       stripeSyncMutation.mutate({ silent: true });
       queryClient.invalidateQueries({ queryKey: ['companySubscription', companyId] });
@@ -259,17 +244,14 @@ export default function CompanyBillingSection({ companyId, companyName, isAdmin 
       }
 
       toast({
-        title: tr('Pagina pagamento non disponibile', 'Payment page unavailable'),
-        description: tr(
-          'Non sono riuscito ad aprire la pagina di pagamento.',
-          'I could not open the payment page.',
-        ),
+        title: tx('k17'),
+        description: tx('k78'),
       });
     },
     onError: (error) => {
       toast({
-        title: tr('Impossibile aprire la pagina di pagamento', 'Unable to open the payment page'),
-        description: error?.message || tr('Riprova tra qualche secondo.', 'Please try again in a few seconds.'),
+        title: tx('k18'),
+        description: error?.message || tx('k19'),
       });
     },
   });
@@ -289,17 +271,14 @@ export default function CompanyBillingSection({ companyId, companyName, isAdmin 
       }
 
       toast({
-        title: tr('Gestione piano non disponibile', 'Plan management unavailable'),
-        description: tr(
-          'Non sono riuscito ad aprire la pagina di gestione del piano.',
-          'I could not open the plan management page.',
-        ),
+        title: tx('k20'),
+        description: tx('k79'),
       });
     },
     onError: (error) => {
       toast({
-        title: tr('Impossibile modificare il piano', 'Unable to manage the plan'),
-        description: error?.message || tr('Riprova tra qualche secondo.', 'Please try again in a few seconds.'),
+        title: tx('k21'),
+        description: error?.message || tx('k22'),
       });
     },
   });
@@ -328,11 +307,11 @@ export default function CompanyBillingSection({ companyId, companyName, isAdmin 
                   <CreditCard className="h-5 w-5 text-[#ef6144]" />
                 </div>
                 <div>
-                  <CardTitle className="text-lg">{tr('Fatturazione e piano', 'Billing and plan')}</CardTitle>
+                  <CardTitle className="text-lg">{tx('k23')}</CardTitle>
                   <p className="mt-1 text-sm text-gray-500">
                     {isProPlan
-                      ? tr('Piano Pro attivo', 'Pro plan active')
-                      : tr('Piano Base attivo', 'Base plan active')}
+                      ? tx('k24')
+                      : tx('k25')}
                   </p>
                 </div>
               </div>
@@ -341,7 +320,7 @@ export default function CompanyBillingSection({ companyId, companyName, isAdmin 
                   {planLabel}
                 </Badge>
                 <CollapsibleTrigger asChild>
-                  <Button variant="ghost" size="icon" aria-label={tr('Espandi fatturazione', 'Expand billing')}>
+                  <Button variant="ghost" size="icon" aria-label={tx('k26')}>
                     <ChevronDown className={`h-4 w-4 text-slate-500 transition-transform ${billingOpen ? 'rotate-180' : ''}`} />
                   </Button>
                 </CollapsibleTrigger>
@@ -354,13 +333,13 @@ export default function CompanyBillingSection({ companyId, companyName, isAdmin 
                 <div>
                   <p className="text-lg font-semibold text-slate-900">
                     {isProPlan
-                      ? tr('Gestisci il piano della societa', 'Manage the company plan')
-                      : tr('Passa a Pro per sbloccare di piu', 'Upgrade to Pro to unlock more')}
+                      ? tx('k27')
+                      : tx('k28')}
                   </p>
                   <p className="text-sm text-slate-500">
                     {isProPlan
                       ? [billingStatusLabel, cycleLabel, periodEndLabel].filter(Boolean).join(' • ')
-                      : tr('Sponsorship cantiere, strumenti avanzati e gestione semplice del piano.', 'Worksite sponsorship, advanced tools, and simple plan management.')}
+                      : tx('k29')}
                   </p>
                 </div>
                   <div className="flex items-center gap-2">
@@ -371,11 +350,11 @@ export default function CompanyBillingSection({ companyId, companyName, isAdmin 
                       onClick={() => stripeSyncMutation.mutate({ silent: false })}
                       disabled={stripeSyncMutation.isPending}
                     >
-                      {stripeSyncMutation.isPending ? tr('Aggiornamento...', 'Refreshing...') : tr('Aggiorna da Stripe', 'Refresh from Stripe')}
+                      {stripeSyncMutation.isPending ? tx('k30') : tx('k31')}
                     </Button>
                     <CollapsibleTrigger asChild>
                       <Button variant="ghost" className="justify-start px-0 text-[#b5432e] hover:bg-transparent hover:text-[#ef6144] sm:justify-end">
-                        {billingOpen ? tr('Nascondi dettagli', 'Hide details') : tr('Mostra dettagli', 'Show details')}
+                        {billingOpen ? tx('k32') : tx('k33')}
                       </Button>
                     </CollapsibleTrigger>
                   </div>
@@ -385,11 +364,11 @@ export default function CompanyBillingSection({ companyId, companyName, isAdmin 
             <CollapsibleContent className="space-y-5 pt-5 data-[state=closed]:animate-accordion-up data-[state=open]:animate-accordion-down">
               <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
                 <div className="rounded-xl border bg-slate-50 p-4">
-                  <p className="text-xs uppercase tracking-wide text-slate-500">{tr('Piano', 'Plan')}</p>
+                  <p className="text-xs uppercase tracking-wide text-slate-500">{tx('k34')}</p>
                   <p className="mt-2 text-lg font-semibold text-slate-900">{planLabel}</p>
                 </div>
                 <div className="rounded-xl border bg-slate-50 p-4">
-                  <p className="text-xs uppercase tracking-wide text-slate-500">{tr('Stato fatturazione', 'Billing status')}</p>
+                  <p className="text-xs uppercase tracking-wide text-slate-500">{tx('k35')}</p>
                   <div className="mt-2">
                     <Badge className={billingStatusClasses[subscriptionRecord.billing_status] || 'bg-slate-100 text-slate-700'}>
                       {billingStatusLabel}
@@ -398,13 +377,13 @@ export default function CompanyBillingSection({ companyId, companyName, isAdmin 
                 </div>
                 {cycleLabel ? (
                   <div className="rounded-xl border bg-slate-50 p-4">
-                    <p className="text-xs uppercase tracking-wide text-slate-500">{tr('Ciclo', 'Cycle')}</p>
+                    <p className="text-xs uppercase tracking-wide text-slate-500">{tx('k36')}</p>
                     <p className="mt-2 text-lg font-semibold text-slate-900">{cycleLabel}</p>
                   </div>
                 ) : null}
                 {periodEndLabel ? (
                   <div className="rounded-xl border bg-slate-50 p-4">
-                    <p className="text-xs uppercase tracking-wide text-slate-500">{tr('Rinnovo', 'Renewal')}</p>
+                    <p className="text-xs uppercase tracking-wide text-slate-500">{tx('k37')}</p>
                     <p className="mt-2 text-lg font-semibold text-slate-900">{periodEndLabel}</p>
                   </div>
                 ) : null}
@@ -413,12 +392,9 @@ export default function CompanyBillingSection({ companyId, companyName, isAdmin 
               {isProPlan ? (
                 <Alert className="border-[#ef6144]/20 bg-[#ef6144]/5">
                   <Rocket className="h-4 w-4 text-[#ef6144]" />
-                  <AlertTitle>{tr('Piano Pro attivo', 'Pro plan active')}</AlertTitle>
+                  <AlertTitle>{tx('k38')}</AlertTitle>
                   <AlertDescription>
-                    {tr(
-                      'Puoi aggiornare il piano o controllare la fatturazione in modo sicuro.',
-                      'You can update the plan or review billing securely.',
-                    )}
+                    {tx('k80')}
                   </AlertDescription>
                 </Alert>
               ) : (
@@ -426,29 +402,29 @@ export default function CompanyBillingSection({ companyId, companyName, isAdmin 
                   <div className="space-y-5">
                     <div className="flex flex-col gap-3 lg:flex-row lg:items-start lg:justify-between">
                       <div className="space-y-2">
-                        <p className="text-sm font-semibold text-[#b5432e]">{tr('Piano Pro', 'Pro plan')}</p>
+                        <p className="text-sm font-semibold text-[#b5432e]">{tx('k39')}</p>
                         <p className="text-2xl font-semibold text-slate-900">{upgradePriceLabel}</p>
                         <p className="text-sm text-slate-600">
                           {isYearlyBilling
-                            ? tr('Con l annuale hai 2 mensilita gratuite.', 'Yearly gives you 2 months free.')
-                            : tr('Flessibile, mese per mese.', 'Flexible, month by month.')}
+                            ? tx('k40')
+                            : tx('k41')}
                         </p>
                       </div>
                       <Tabs value={selectedBillingCycle} onValueChange={setSelectedBillingCycle}>
                         <TabsList className="grid h-auto w-full grid-cols-2 rounded-2xl bg-white/80 p-1 shadow-sm lg:w-[320px]">
                           <TabsTrigger value="monthly" className="h-auto rounded-xl px-4 py-3 data-[state=active]:bg-white data-[state=active]:shadow-sm">
                             <span className="flex flex-col items-start text-left">
-                              <span className="text-sm font-semibold">{tr('Mensile', 'Monthly')}</span>
-                              <span className="text-xs text-slate-500">{tr('19€ al mese', '€19 per month')}</span>
+                              <span className="text-sm font-semibold">{tx('k42')}</span>
+                              <span className="text-xs text-slate-500">{tx('k43')}</span>
                             </span>
                           </TabsTrigger>
                           <TabsTrigger value="yearly" className="relative h-auto rounded-xl px-4 py-3 data-[state=active]:bg-[#fff7f1] data-[state=active]:text-[#9a3412] data-[state=active]:shadow-sm">
                             <span className="absolute -top-2 right-3 rounded-full bg-[#ef6144] px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-white shadow-sm">
-                              {tr('2 mesi gratis', '2 months free')}
+                              {tx('k44')}
                             </span>
                             <span className="flex flex-col items-start text-left">
-                              <span className="text-sm font-semibold">{tr('Annuale', 'Yearly')}</span>
-                              <span className="text-xs text-slate-500">{tr('190€ all anno', '€190 per year')}</span>
+                              <span className="text-sm font-semibold">{tx('k45')}</span>
+                              <span className="text-xs text-slate-500">{tx('k46')}</span>
                             </span>
                           </TabsTrigger>
                         </TabsList>
@@ -460,30 +436,30 @@ export default function CompanyBillingSection({ companyId, companyName, isAdmin 
                         <div className="space-y-2">
                           <div className="flex flex-wrap items-center gap-2">
                             <span className="rounded-full bg-[#ef6144] px-3 py-1 text-xs font-semibold uppercase tracking-wide text-white">
-                              {tr('Offerta migliore', 'Best value')}
+                              {tx('k47')}
                             </span>
                             {isYearlyBilling ? (
                               <span className="rounded-full border border-emerald-200 bg-emerald-50 px-3 py-1 text-xs font-semibold text-emerald-700">
-                                {tr('Risparmi 38€ l anno', 'Save €38 per year')}
+                                {tx('k48')}
                               </span>
                             ) : null}
                           </div>
                           <p className="text-xl font-semibold text-slate-900">
                             {isYearlyBilling
-                              ? tr('Con l annuale lavori 12 mesi ma ne paghi 10.', 'With yearly billing you get 12 months and pay for 10.')
-                              : tr('Puoi iniziare subito e passare all annuale quando vuoi.', 'You can start now and switch to yearly anytime.')}
+                              ? tx('k49')
+                              : tx('k50')}
                           </p>
                           <p className="text-sm text-slate-600">
                             {isYearlyBilling
-                              ? tr('La scelta annuale e quella piu conveniente per chi usa EdilSync tutto l anno.', 'Yearly billing is the best option if you use EdilSync all year.')
-                              : tr('Se preferisci piu flessibilita, il mensile resta disponibile.', 'If you prefer more flexibility, monthly remains available.')}
+                              ? tx('k51')
+                              : tx('k52')}
                           </p>
                         </div>
                         <div className="rounded-2xl bg-slate-950 px-5 py-4 text-white shadow-lg">
-                          <p className="text-xs uppercase tracking-[0.2em] text-white/60">{tr('Totale', 'Total')}</p>
+                          <p className="text-xs uppercase tracking-[0.2em] text-white/60">{tx('k53')}</p>
                           <p className="mt-2 text-3xl font-semibold">{isYearlyBilling ? '190€' : '19€'}</p>
                           <p className="mt-1 text-sm text-white/70">
-                            {isYearlyBilling ? tr('12 mesi di accesso Pro', '12 months of Pro access') : tr('1 mese di accesso Pro', '1 month of Pro access')}
+                            {isYearlyBilling ? tx('k54') : tx('k55')}
                           </p>
                         </div>
                       </div>
@@ -491,34 +467,31 @@ export default function CompanyBillingSection({ companyId, companyName, isAdmin 
 
                     <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-4">
                       <div className="rounded-xl border bg-white/80 p-4">
-                        <p className="text-sm font-semibold text-slate-900">{tr('Sponsorship cantiere', 'Worksite sponsorship')}</p>
-                        <p className="mt-1 text-sm text-slate-600">{tr('Sblocchi i cantieri a cui partecipa la societa.', 'Unlock worksites your company participates in.')}</p>
+                        <p className="text-sm font-semibold text-slate-900">{tx('k56')}</p>
+                        <p className="mt-1 text-sm text-slate-600">{tx('k57')}</p>
                       </div>
                       <div className="rounded-xl border bg-white/80 p-4">
-                        <p className="text-sm font-semibold text-slate-900">{tr('Strumenti avanzati', 'Advanced tools')}</p>
-                        <p className="mt-1 text-sm text-slate-600">{tr('Più funzioni per organizzare il lavoro della societa.', 'More tools to run your company work.')}</p>
+                        <p className="text-sm font-semibold text-slate-900">{tx('k58')}</p>
+                        <p className="mt-1 text-sm text-slate-600">{tx('k59')}</p>
                       </div>
                       <div className="rounded-xl border bg-white/80 p-4">
-                        <p className="text-sm font-semibold text-slate-900">{tr('Gestione semplice', 'Simple management')}</p>
-                        <p className="mt-1 text-sm text-slate-600">{tr('Modifichi o aggiorni il piano in pochi passaggi, in modo sicuro.', 'Change or update the plan securely in a few steps.')}</p>
+                        <p className="text-sm font-semibold text-slate-900">{tx('k60')}</p>
+                        <p className="mt-1 text-sm text-slate-600">{tx('k61')}</p>
                       </div>
                       <div className="rounded-xl border bg-white/80 p-4">
-                        <p className="text-sm font-semibold text-slate-900">{tr('Attivazione immediata', 'Instant activation')}</p>
-                        <p className="mt-1 text-sm text-slate-600">{tr('Dopo il pagamento il piano si aggiorna automaticamente.', 'After payment the plan updates automatically.')}</p>
+                        <p className="text-sm font-semibold text-slate-900">{tx('k62')}</p>
+                        <p className="mt-1 text-sm text-slate-600">{tx('k63')}</p>
                       </div>
                     </div>
 
                     <div className="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
                       <p className="text-sm text-slate-600">
-                        {tr(
-                          'Dopo il clic si apre una pagina di pagamento sicura. Il primo caricamento puo richiedere qualche secondo.',
-                          'After you click, a secure payment page opens. The first load can take a few seconds.',
-                        )}
+                        {tx('k81')}
                       </p>
                       {canUpgrade ? (
                         <Button className="h-11 w-full bg-[#ef6144] text-base font-semibold shadow-[0_20px_36px_-18px_rgba(239,97,68,0.95)] hover:bg-[#d9553a] lg:w-auto lg:px-8" onClick={() => checkoutMutation.mutate()} disabled={checkoutMutation.isPending}>
                           <Sparkles className="h-4 w-4" />
-                          {checkoutMutation.isPending ? tr('Sto aprendo la pagina sicura...', 'Opening secure page...') : tr('Passa a Pro', 'Upgrade to Pro')}
+                          {checkoutMutation.isPending ? tx('k64') : tx('k65')}
                         </Button>
                       ) : null}
                     </div>
@@ -530,7 +503,7 @@ export default function CompanyBillingSection({ companyId, companyName, isAdmin 
                 <div className="flex flex-wrap gap-3">
                   <Button variant="outline" onClick={() => portalMutation.mutate()} disabled={portalMutation.isPending}>
                     <ExternalLink className="h-4 w-4" />
-                    {portalMutation.isPending ? tr('Sto aprendo la pagina sicura...', 'Opening secure page...') : tr('Modifica piano', 'Manage plan')}
+                    {portalMutation.isPending ? tx('k66') : tx('k67')}
                   </Button>
                 </div>
               ) : null}
@@ -542,16 +515,13 @@ export default function CompanyBillingSection({ companyId, companyName, isAdmin 
       <Card>
         <CardHeader className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
           <div>
-            <CardTitle className="text-lg">{tr('Sponsorship attive', 'Active sponsorships')}</CardTitle>
+            <CardTitle className="text-lg">{tx('k68')}</CardTitle>
             <p className="mt-1 text-sm text-gray-500">
-              {tr(
-                'Cantieri attualmente sbloccati da questa societa.',
-                'Worksites currently unlocked by this company.',
-              )}
+              {tx('k82')}
             </p>
           </div>
           <Badge variant="outline">
-            {tr('{count} attive', '{count} active').replace('{count}', String(sponsorships.length))}
+            {tx('k69').replace('{count}', String(sponsorships.length))}
           </Badge>
         </CardHeader>
         <CardContent className="space-y-4">
@@ -569,7 +539,7 @@ export default function CompanyBillingSection({ companyId, companyName, isAdmin 
                     <div>
                       <p className="font-semibold text-slate-900">{project?.name || sponsorship.project_id}</p>
                       <p className="text-sm text-slate-500">
-                        {tr('Attiva dal', 'Active since')} {formatDateLabel(sponsorship.started_at)}
+                        {tx('k70')} {formatDateLabel(sponsorship.started_at)}
                       </p>
                     </div>
                     <Button
@@ -578,7 +548,7 @@ export default function CompanyBillingSection({ companyId, companyName, isAdmin 
                       onClick={() => navigate(createPageUrl('ProjectDetail') + `?id=${sponsorship.project_id}`)}
                     >
                       <ExternalLink className="h-4 w-4" />
-                      {tr('Apri cantiere', 'Open worksite')}
+                      {tx('k71')}
                     </Button>
                   </div>
                 );
@@ -587,14 +557,8 @@ export default function CompanyBillingSection({ companyId, companyName, isAdmin 
           ) : (
             <div className="rounded-xl border border-dashed p-5 text-sm text-slate-600">
               {canSponsorProjects
-                ? tr(
-                  'Questa societa puo sponsorizzare i cantieri a cui partecipa, ma al momento non ha sponsorship attive.',
-                  'This company can sponsor the worksites it participates in, but it currently has no active sponsorships.',
-                )
-                : tr(
-                  'Con il piano Pro potrai sponsorizzare i cantieri a cui la societa partecipa.',
-                  'With the Pro plan, you will be able to sponsor the worksites your company joins.',
-                )}
+                ? tx('k83')
+                : tx('k84')}
             </div>
           )}
 
@@ -602,14 +566,8 @@ export default function CompanyBillingSection({ companyId, companyName, isAdmin 
             <p className="font-medium text-slate-900">{companyName}</p>
             <p className="mt-1">
               {canSponsorProjects
-                ? tr(
-                  'Puo sponsorizzare un cantiere solo se e gia partecipante attivo dello stesso cantiere.',
-                  'It can sponsor a worksite only if it is already an active participant in that worksite.',
-                )
-                : tr(
-                  'Per sponsorizzare un cantiere serve un piano Pro attivo.',
-                  'Sponsoring a worksite requires an active Pro plan.',
-                )}
+                ? tx('k85')
+                : tx('k86')}
             </p>
           </div>
         </CardContent>

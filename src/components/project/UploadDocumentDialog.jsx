@@ -34,7 +34,7 @@ const isBimFileType = (fileType) => BIM_FILE_TYPES.has((fileType || '').toLowerC
 
 export default function UploadDocumentDialog({ open, onOpenChange, projectId, companyId, document, featureAccess }) {
   const { t, currentLanguage } = useLanguage();
-  const tr = (itText, enText) => (currentLanguage === 'it' ? itText : enText);
+  const tx = (key, options) => t(`completeScoped.components_project_UploadDocumentDialog.${key}`, options);
   const queryClient = useQueryClient();
   const isCompanyScope = !projectId && !!companyId;
   const documentsQueryKey = isCompanyScope ? ['companyDocuments', companyId] : ['projectDocuments', projectId];
@@ -57,42 +57,42 @@ export default function UploadDocumentDialog({ open, onOpenChange, projectId, co
   const isTechnicalCategory = category === 'technical';
 
   const disciplineOptions = [
-    { value: 'architecture', label: tr('Architettura', 'Architecture') },
-    { value: 'structure', label: tr('Struttura', 'Structure') },
-    { value: 'mep', label: tr('Impianti (MEP)', 'MEP') },
-    { value: 'interior', label: tr('Interni', 'Interior') },
-    { value: 'landscape', label: tr('Paesaggio', 'Landscape') },
-    { value: 'geotechnical', label: tr('Geotecnica', 'Geotechnical') },
-    { value: 'other', label: tr('Altro', 'Other') },
+    { value: 'architecture', label: tx('k1') },
+    { value: 'structure', label: tx('k2') },
+    { value: 'mep', label: tx('k3') },
+    { value: 'interior', label: tx('k4') },
+    { value: 'landscape', label: tx('k5') },
+    { value: 'geotechnical', label: tx('k6') },
+    { value: 'other', label: tx('k7') },
   ];
 
   const workAreaOptions = [
-    { value: 'room', label: tr('Stanza', 'Room') },
-    { value: 'detail', label: tr('Particolare', 'Detail') },
-    { value: 'interior', label: tr('Interno', 'Interior') },
-    { value: 'exterior', label: tr('Esterno', 'Exterior') },
-    { value: 'garden', label: tr('Giardino', 'Garden') },
-    { value: 'foundation', label: tr('Fondamenta', 'Foundation') },
-    { value: 'section', label: tr('Sezione', 'Section') },
-    { value: 'static_calculation', label: tr('Calcoli statici', 'Static calculations') },
-    { value: 'other', label: tr('Altro', 'Other') },
+    { value: 'room', label: tx('k8') },
+    { value: 'detail', label: tx('k9') },
+    { value: 'interior', label: tx('k10') },
+    { value: 'exterior', label: tx('k11') },
+    { value: 'garden', label: tx('k12') },
+    { value: 'foundation', label: tx('k13') },
+    { value: 'section', label: tx('k14') },
+    { value: 'static_calculation', label: tx('k15') },
+    { value: 'other', label: tx('k16') },
   ];
 
   const phaseOptions = [
-    { value: 'concept', label: tr('Concept', 'Concept') },
-    { value: 'definitive', label: tr('Definitivo', 'Definitive') },
-    { value: 'executive', label: tr('Esecutivo', 'Executive') },
-    { value: 'as_built', label: tr('As built', 'As built') },
-    { value: 'calculation', label: tr('Calcolo', 'Calculation') },
-    { value: 'other', label: tr('Altro', 'Other') },
+    { value: 'concept', label: tx('k17') },
+    { value: 'definitive', label: tx('k18') },
+    { value: 'executive', label: tx('k19') },
+    { value: 'as_built', label: tx('k20') },
+    { value: 'calculation', label: tx('k21') },
+    { value: 'other', label: tx('k22') },
   ];
 
   const statusOptions = [
-    { value: 'draft', label: tr('Bozza', 'Draft') },
-    { value: 'in_review', label: tr('In revisione', 'In review') },
-    { value: 'approved', label: tr('Approvato', 'Approved') },
-    { value: 'rejected', label: tr('Respinto', 'Rejected') },
-    { value: 'archived', label: tr('Archiviato', 'Archived') },
+    { value: 'draft', label: tx('k23') },
+    { value: 'in_review', label: tx('k24') },
+    { value: 'approved', label: tx('k25') },
+    { value: 'rejected', label: tx('k26') },
+    { value: 'archived', label: tx('k27') },
   ];
 
   // Initialize form with document data when editing
@@ -239,10 +239,10 @@ export default function UploadDocumentDialog({ open, onOpenChange, projectId, co
       const selectedFileType = selectedFile.name.split('.').pop()?.toLowerCase() || '';
       if (bimUploadsBlocked && isBimFileType(selectedFileType)) {
         toast({
-          title: tr('BIM disponibile solo con funzioni premium', 'BIM available only with premium features'),
+          title: tx('k28'),
           description: isCompanyScope
-            ? tr('I file IFC, GLB e GLTF si possono caricare solo con una società Pro.', 'IFC, GLB, and GLTF files can be uploaded only with a Pro company.')
-            : tr('I file IFC, GLB e GLTF si possono caricare solo nei cantieri sponsorizzati.', 'IFC, GLB, and GLTF files can be uploaded only on sponsored worksites.'),
+            ? tx('k29')
+            : tx('k30'),
         });
         e.currentTarget.value = '';
         return;
@@ -262,10 +262,10 @@ export default function UploadDocumentDialog({ open, onOpenChange, projectId, co
     const droppedFileType = droppedFile.name.split('.').pop()?.toLowerCase() || '';
     if (bimUploadsBlocked && isBimFileType(droppedFileType)) {
       toast({
-        title: tr('BIM disponibile solo con funzioni premium', 'BIM available only with premium features'),
+        title: tx('k31'),
         description: isCompanyScope
-          ? tr('I file IFC, GLB e GLTF si possono caricare solo con una società Pro.', 'IFC, GLB, and GLTF files can be uploaded only with a Pro company.')
-          : tr('I file IFC, GLB e GLTF si possono caricare solo nei cantieri sponsorizzati.', 'IFC, GLB, and GLTF files can be uploaded only on sponsored worksites.'),
+          ? tx('k32')
+          : tx('k33'),
       });
       return;
     }
@@ -280,10 +280,10 @@ export default function UploadDocumentDialog({ open, onOpenChange, projectId, co
     const selectedFileType = file?.name.split('.').pop()?.toLowerCase() || '';
     if (bimUploadsBlocked && file && isBimFileType(selectedFileType)) {
       toast({
-        title: tr('BIM disponibile solo con funzioni premium', 'BIM available only with premium features'),
+        title: tx('k34'),
         description: isCompanyScope
-          ? tr('I file IFC, GLB e GLTF si possono caricare solo con una società Pro.', 'IFC, GLB, and GLTF files can be uploaded only with a Pro company.')
-          : tr('I file IFC, GLB e GLTF si possono caricare solo nei cantieri sponsorizzati.', 'IFC, GLB, and GLTF files can be uploaded only on sponsored worksites.'),
+          ? tx('k35')
+          : tx('k36'),
       });
       return;
     }
@@ -363,7 +363,7 @@ export default function UploadDocumentDialog({ open, onOpenChange, projectId, co
                 <Upload className="h-8 w-8 mx-auto text-gray-400 mb-2" />
                 <p className="text-sm text-gray-600">
                   {dragActive
-                    ? tr('Rilascia qui il file', 'Drop file here')
+                    ? tx('k37')
                     : isEditMode
                       ? t('uploadDocumentDialog.clickToReplace')
                       : t('uploadDocumentDialog.clickToSelect')}
@@ -374,8 +374,8 @@ export default function UploadDocumentDialog({ open, onOpenChange, projectId, co
                 {bimUploadsBlocked ? (
                   <p className="text-xs text-amber-700 mt-2">
                     {isCompanyScope
-                      ? tr('IFC, GLB e GLTF sono disponibili solo con la società Pro.', 'IFC, GLB, and GLTF are available only with the Pro company plan.')
-                      : tr('IFC, GLB e GLTF sono disponibili solo nei cantieri sponsorizzati.', 'IFC, GLB, and GLTF are available only on sponsored worksites.')}
+                      ? tx('k38')
+                      : tx('k39')}
                   </p>
                 ) : null}
               </div>
@@ -419,13 +419,13 @@ export default function UploadDocumentDialog({ open, onOpenChange, projectId, co
           {isTechnicalCategory && (
             <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
               <div className="space-y-2">
-                <Label>{tr('Disciplina', 'Discipline')}</Label>
+                <Label>{tx('k40')}</Label>
                 <Select value={discipline || 'none'} onValueChange={(value) => setDiscipline(value === 'none' ? '' : value)}>
                   <SelectTrigger>
-                    <SelectValue placeholder={tr('Seleziona disciplina', 'Select discipline')} />
+                    <SelectValue placeholder={tx('k41')} />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="none">{tr('Nessuna', 'None')}</SelectItem>
+                    <SelectItem value="none">{tx('k42')}</SelectItem>
                     {disciplineOptions.map((option) => (
                       <SelectItem key={option.value} value={option.value}>{option.label}</SelectItem>
                     ))}
@@ -434,13 +434,13 @@ export default function UploadDocumentDialog({ open, onOpenChange, projectId, co
               </div>
 
               <div className="space-y-2">
-                <Label>{tr('Ambito tecnico del documento', 'Technical scope of document')}</Label>
+                <Label>{tx('k43')}</Label>
                 <Select value={workArea || 'none'} onValueChange={(value) => setWorkArea(value === 'none' ? '' : value)}>
                   <SelectTrigger>
-                    <SelectValue placeholder={tr('Seleziona ambito tecnico', 'Select technical scope')} />
+                    <SelectValue placeholder={tx('k44')} />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="none">{tr('Nessuna', 'None')}</SelectItem>
+                    <SelectItem value="none">{tx('k45')}</SelectItem>
                     {workAreaOptions.map((option) => (
                       <SelectItem key={option.value} value={option.value}>{option.label}</SelectItem>
                     ))}
@@ -449,13 +449,13 @@ export default function UploadDocumentDialog({ open, onOpenChange, projectId, co
               </div>
 
               <div className="space-y-2">
-                <Label>{tr('Fase cantiere', 'Worksite phase')}</Label>
+                <Label>{tx('k46')}</Label>
                 <Select value={projectPhase || 'none'} onValueChange={(value) => setProjectPhase(value === 'none' ? '' : value)}>
                   <SelectTrigger>
-                    <SelectValue placeholder={tr('Seleziona fase', 'Select phase')} />
+                    <SelectValue placeholder={tx('k47')} />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="none">{tr('Nessuna', 'None')}</SelectItem>
+                    <SelectItem value="none">{tx('k48')}</SelectItem>
                     {phaseOptions.map((option) => (
                       <SelectItem key={option.value} value={option.value}>{option.label}</SelectItem>
                     ))}
@@ -464,7 +464,7 @@ export default function UploadDocumentDialog({ open, onOpenChange, projectId, co
               </div>
 
               <div className="space-y-2">
-                <Label>{tr('Stato documento', 'Document status')}</Label>
+                <Label>{tx('k49')}</Label>
                 <Select value={documentStatus} onValueChange={setDocumentStatus}>
                   <SelectTrigger>
                     <SelectValue />
@@ -481,12 +481,12 @@ export default function UploadDocumentDialog({ open, onOpenChange, projectId, co
 
           {isTechnicalCategory && (
             <div className="space-y-2">
-              <Label htmlFor="tags">{tr('Tag (separati da virgola)', 'Tags (comma separated)')}</Label>
+              <Label htmlFor="tags">{tx('k50')}</Label>
               <Input
                 id="tags"
                 value={documentTags}
                 onChange={(e) => setDocumentTags(e.target.value)}
-                placeholder={tr('es. piano terra, struttura, variante', 'e.g. ground floor, structure, variation')}
+                placeholder={tx('k51')}
               />
             </div>
           )}

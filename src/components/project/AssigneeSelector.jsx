@@ -15,8 +15,8 @@ export default function AssigneeSelector({
   onChange,
   label
 }) {
-  const { currentLanguage } = useLanguage();
-  const tr = (itText, enText) => currentLanguage === 'it' ? itText : enText;
+  const { t, currentLanguage } = useLanguage();
+  const tx = (key, options) => t(`completeScoped.components_project_AssigneeSelector.${key}`, options);
   const [searchQuery, setSearchQuery] = useState('');
   const [isOpen, setIsOpen] = useState(false);
 
@@ -38,7 +38,7 @@ export default function AssigneeSelector({
         return {
           id: p.id,
           type: 'company',
-          label: company?.name || tr('Società sconosciuta', 'Unknown company'),
+          label: company?.name || tx('k1'),
           companyId: p.company_id,
         };
       });
@@ -55,7 +55,7 @@ export default function AssigneeSelector({
   );
 
   const selectedOption = [...options.users, ...options.companies].find(o => o.id === value);
-  const noneLabel = tr('Nessuno', 'None');
+  const noneLabel = tx('k2');
 
   const handleSelect = (option) => {
     onChange(option);
@@ -65,7 +65,7 @@ export default function AssigneeSelector({
 
   return (
     <div className="space-y-2">
-      <Label>{label || tr('Assegnato a', 'Assigned to')}</Label>
+      <Label>{label || tx('k3')}</Label>
       <div className="relative">
         <button
           type="button"
@@ -90,7 +90,7 @@ export default function AssigneeSelector({
           <div className="absolute z-50 w-full mt-1 bg-white border rounded-md shadow-lg">
             <div className="p-2 border-b">
               <Input
-                placeholder={tr('Cerca...', 'Search...')}
+                placeholder={tx('k4')}
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 className="h-8"
@@ -114,7 +114,7 @@ export default function AssigneeSelector({
 
                 {filteredUsers.length > 0 && (
                   <div className="mb-2">
-                    <div className="px-2 py-1 text-xs font-medium text-gray-500">{tr('Utenti', 'Users')}</div>
+                    <div className="px-2 py-1 text-xs font-medium text-gray-500">{tx('k5')}</div>
                     {filteredUsers.map(user => (
                       <button
                         key={user.id}
@@ -135,7 +135,7 @@ export default function AssigneeSelector({
 
                 {filteredCompanies.length > 0 && (
                   <div>
-                    <div className="px-2 py-1 text-xs font-medium text-gray-500">{tr('Società', 'Companies')}</div>
+                    <div className="px-2 py-1 text-xs font-medium text-gray-500">{tx('k6')}</div>
                     {filteredCompanies.map(company => (
                       <button
                         key={company.id}
@@ -156,7 +156,7 @@ export default function AssigneeSelector({
 
                 {filteredUsers.length === 0 && filteredCompanies.length === 0 && (
                   <div className="px-2 py-4 text-sm text-gray-500 text-center">
-                    {tr('Nessun risultato', 'No results')}
+                    {tx('k7')}
                   </div>
                 )}
               </div>

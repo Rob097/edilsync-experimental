@@ -27,8 +27,7 @@ export default function ContextSwitcher({
   const { t, currentLanguage } = useLanguage();
   const isPersonal = currentContext === 'personal';
   const [confirmDialog, setConfirmDialog] = useState(null);
-  const tr = (itText, enText) => (currentLanguage === 'it' ? itText : enText);
-
+  const tx = (key, options) => t(`completeScoped.components_context_ContextSwitcher.${key}`, options);
   const handleContextSelect = (context, company) => {
     // Don't show confirmation if selecting current context
     if (context === currentContext && company?.id === currentCompany?.id) {
@@ -46,14 +45,14 @@ export default function ContextSwitcher({
   };
 
   const getCurrentContextLabel = () => {
-    return isPersonal ? tr('Privato', 'Private') : currentCompany?.name || tr('Società', 'Company');
+    return isPersonal ? tx('k1') : currentCompany?.name || tx('k2');
   };
 
   const getNewContextLabel = () => {
     if (!confirmDialog) return '';
     return confirmDialog.context === 'personal'
-      ? tr('Privato', 'Private')
-      : confirmDialog.company?.name || tr('Società', 'Company');
+      ? tx('k3')
+      : confirmDialog.company?.name || tx('k4');
   };
 
   return (
@@ -67,13 +66,13 @@ export default function ContextSwitcher({
             {isPersonal ? (
               <>
                 <User className="h-4 w-4 text-[#ef6144]" />
-                <span className="font-medium">{tr('Privato', 'Private')}</span>
+                <span className="font-medium">{tx('k5')}</span>
               </>
             ) : (
               <>
                 <Building2 className="h-4 w-4 text-[#ef6144]" />
                 <span className="font-medium truncate max-w-[150px]">
-                  {currentCompany?.name || tr('Società', 'Company')}
+                  {currentCompany?.name || tx('k6')}
                 </span>
               </>
             )}
@@ -87,7 +86,7 @@ export default function ContextSwitcher({
           >
             <div className="flex items-center gap-2">
               <User className="h-4 w-4" />
-              <span>{tr('Privato', 'Private')}</span>
+              <span>{tx('k7')}</span>
             </div>
             {isPersonal && <Check className="h-4 w-4 text-[#ef6144]" />}
           </DropdownMenuItem>
@@ -115,15 +114,12 @@ export default function ContextSwitcher({
       <Dialog open={!!confirmDialog} onOpenChange={(open) => !open && setConfirmDialog(null)}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>{tr('Cambiare contesto di lavoro?', 'Switch work context?')}</DialogTitle>
+            <DialogTitle>{tx('k8')}</DialogTitle>
             <DialogDescription>
-              {tr(
-                'Stai per passare dal contesto',
-                'You are about to switch from'
-              )}{' '}
+              {tx('k9')}{' '}
               "<strong>{getCurrentContextLabel()}</strong>"{' '}
-              {tr('a', 'to')}{' '}
-              "<strong>{getNewContextLabel()}</strong>". {tr('Sarai reindirizzato alla home page.', 'You will be redirected to the home page.')}
+              {tx('k10')}{' '}
+              "<strong>{getNewContextLabel()}</strong>". {tx('k11')}
             </DialogDescription>
           </DialogHeader>
           <DialogFooter>

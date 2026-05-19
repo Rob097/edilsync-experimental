@@ -21,22 +21,22 @@ const roleColors = {
 
 export default function ParticipantCard({ participant, userDisplayName, companyName, isPending, canRemove, projectId }) {
   const { t, currentLanguage } = useLanguage();
-  const tr = (itText, enText) => (currentLanguage === 'it' ? itText : enText);
+  const tx = (key, options) => t(`completeScoped.components_project_ParticipantCard.${key}`, options);
   const isCompany = participant.participant_type === 'company';
   const roleColor = roleColors[participant.project_role] || 'bg-gray-100 text-gray-700';
   const queryClient = useQueryClient();
   const [confirmRemove, setConfirmRemove] = useState(false);
 
   const localizedRoleLabels = {
-    homeowner: tr('Committente', 'Homeowner'),
-    contractor: tr('Contractor', 'Contractor'),
-    subcontractor: tr('Subappaltatore', 'Subcontractor'),
-    architect: tr('Architetto', 'Architect'),
-    engineer: tr('Ingegnere', 'Engineer'),
-    surveyor: tr('Geometra', 'Surveyor'),
-    designer: tr('Designer', 'Designer'),
-    consultant: tr('Consulente', 'Consultant'),
-    supplier: tr('Fornitore', 'Supplier'),
+    homeowner: tx('k1'),
+    contractor: tx('k2'),
+    subcontractor: tx('k3'),
+    architect: tx('k4'),
+    engineer: tx('k5'),
+    surveyor: tx('k6'),
+    designer: tx('k7'),
+    consultant: tx('k8'),
+    supplier: tx('k9'),
   };
 
   const resolvedUserName = userDisplayName || participant.user_email;
@@ -52,7 +52,7 @@ export default function ParticipantCard({ participant, userDisplayName, companyN
       }, 500);
     },
     onError: (error) => {
-      toast.error(error?.message || tr('Impossibile rimuovere il partecipante.', 'Unable to remove participant.'));
+      toast.error(error?.message || tx('k10'));
     },
   });
 
@@ -85,7 +85,7 @@ export default function ParticipantCard({ participant, userDisplayName, companyN
         {isPending && (
           <Badge variant="outline" className="text-gray-500">
             <Clock className="h-3 w-3 mr-1" />
-            {tr('In attesa', 'Pending')}
+            {tx('k11')}
           </Badge>
         )}
         <Badge className={roleColor}>

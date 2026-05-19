@@ -46,8 +46,8 @@ export default function ProjectSponsorshipCard({
 }) {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
-  const { currentLanguage } = useLanguage();
-  const tr = (itText, enText) => (currentLanguage === 'it' ? itText : enText);
+  const { t, currentLanguage } = useLanguage();
+const tx = (key, options) => t(`completeScoped.components_project_ProjectSponsorshipCard.${key}`, options);
   const dateLocale = currentLanguage === 'it' ? it : enUS;
 
   const [infoOpen, setInfoOpen] = useState(false);
@@ -182,36 +182,27 @@ export default function ProjectSponsorshipCard({
       await invalidateProjectAccess(sponsorCompanyId);
       setSponsorDialogOpen(false);
 
-      const sponsorCompanyName = companies.find((company) => company.id === sponsorCompanyId)?.name || tr('la società sponsor', 'the sponsor company');
+      const sponsorCompanyName = companies.find((company) => company.id === sponsorCompanyId)?.name || tx('k1');
 
       await sendProjectSponsorshipNotifications({
         projectId,
         actionType: 'project_sponsorship_activated',
         notificationType: 'project_sponsorship_activated',
-        title: tr('Sponsorship attivata', 'Sponsorship activated'),
-        message: tr(
-          `Il cantiere è ora sponsorizzato da ${sponsorCompanyName} e le funzioni avanzate sono disponibili.`,
-          `The worksite is now sponsored by ${sponsorCompanyName} and advanced features are available.`,
-        ),
-        emailSubject: tr('Sponsorship cantiere attivata', 'Worksite sponsorship activated'),
-        emailBody: tr(
-          `Ciao,\n\nIl cantiere è ora sponsorizzato da ${sponsorCompanyName}. Le funzioni avanzate del cantiere sono disponibili per i partecipanti.\n\nCordiali saluti,\nIl team EdilSync`,
-          `Hello,\n\nThe worksite is now sponsored by ${sponsorCompanyName}. Advanced worksite features are now available to participants.\n\nBest regards,\nThe EdilSync team`,
-        ),
+        title: tx('k2'),
+        message: tx('k43', { value1: sponsorCompanyName }),
+        emailSubject: tx('k3'),
+        emailBody: tx('k44', { value1: sponsorCompanyName }),
       });
 
       toast({
-        title: tr('Sponsorship attivata', 'Sponsorship activated'),
-        description: tr(
-          'Il cantiere ora sblocca le feature premium per tutti i partecipanti.',
-          'The worksite now unlocks premium features for all participants.',
-        ),
+        title: tx('k4'),
+        description: tx('k45'),
       });
     },
     onError: (error) => {
       toast({
-        title: tr('Impossibile sponsorizzare', 'Unable to sponsor'),
-        description: error?.message || tr('Controlla piano, ruolo e partecipazione attiva della societa.', 'Check plan, role and active company participation.'),
+        title: tx('k5'),
+        description: error?.message || tx('k6'),
       });
     },
   });
@@ -225,36 +216,27 @@ export default function ProjectSponsorshipCard({
       await invalidateProjectAccess(effectiveActiveSponsorship?.sponsor_company_id || null);
       setEndDialogOpen(false);
 
-      const revokedCompanyName = sponsorCompany?.name || tr('la società sponsor', 'the sponsor company');
+      const revokedCompanyName = sponsorCompany?.name || tx('k7');
 
       await sendProjectSponsorshipNotifications({
         projectId,
         actionType: 'project_sponsorship_revoked',
         notificationType: 'project_sponsorship_revoked',
-        title: tr('Sponsorship terminata', 'Sponsorship ended'),
-        message: tr(
-          `La sponsorship di ${revokedCompanyName} è terminata e alcune funzioni avanzate del cantiere non sono più disponibili.`,
-          `The sponsorship from ${revokedCompanyName} has ended and some advanced worksite features are no longer available.`,
-        ),
-        emailSubject: tr('Sponsorship cantiere revocata', 'Worksite sponsorship revoked'),
-        emailBody: tr(
-          `Ciao,\n\nLa sponsorship di ${revokedCompanyName} è terminata. Alcune funzioni avanzate del cantiere potrebbero non essere più disponibili finché non viene attivata una nuova sponsorship.\n\nCordiali saluti,\nIl team EdilSync`,
-          `Hello,\n\nThe sponsorship from ${revokedCompanyName} has ended. Some advanced worksite features may no longer be available until a new sponsorship is activated.\n\nBest regards,\nThe EdilSync team`,
-        ),
+        title: tx('k8'),
+        message: tx('k46', { value1: revokedCompanyName }),
+        emailSubject: tx('k9'),
+        emailBody: tx('k47', { value1: revokedCompanyName }),
       });
 
       toast({
-        title: tr('Sponsorship terminata', 'Sponsorship ended'),
-        description: tr(
-          'Il cantiere torna al piano Base finche non viene sponsorizzato di nuovo.',
-          'The worksite returns to the Base plan until it is sponsored again.',
-        ),
+        title: tx('k10'),
+        description: tx('k48'),
       });
     },
     onError: (error) => {
       toast({
-        title: tr('Impossibile terminare la sponsorship', 'Unable to end sponsorship'),
-        description: error?.message || tr('Riprova tra poco.', 'Please try again shortly.'),
+        title: tx('k11'),
+        description: error?.message || tx('k12'),
       });
     },
   });
@@ -285,23 +267,23 @@ export default function ProjectSponsorshipCard({
                   <ShieldCheck className={`h-5 w-5 ${effectiveActiveSponsorship ? 'text-[#ef6144]' : isBlockedProject ? 'text-red-600' : 'text-slate-500'}`} />
                 </div>
                 <div>
-                  <CardTitle className="text-lg">{tr('Piano cantiere', 'Worksite plan')}</CardTitle>
+                  <CardTitle className="text-lg">{tx('k13')}</CardTitle>
                   <p className="mt-1 text-sm text-gray-500">
                     {effectiveActiveSponsorship
-                      ? tr('Funzioni avanzate attive', 'Advanced features active')
+                      ? tx('k14')
                       : isBlockedProject
-                        ? tr('Serve uno sponsor', 'A sponsor is needed')
-                        : tr('Piano Base attivo', 'Base plan active')}
+                        ? tx('k15')
+                        : tx('k16')}
                   </p>
                 </div>
               </div>
               <div className="flex items-center gap-2">
                 <Badge className={effectiveActiveSponsorship ? 'bg-[#ef6144] text-white' : (isBlockedProject ? 'bg-red-100 text-red-700' : 'bg-slate-100 text-slate-700')}>
                   {effectiveActiveSponsorship
-                    ? tr('Pro', 'Pro')
+                    ? tx('k17')
                     : isBlockedProject
-                      ? tr('Sponsor mancante', 'Sponsor missing')
-                      : tr('Base', 'Base')}
+                      ? tx('k18')
+                      : tx('k19')}
                 </Badge>
                 <TooltipProvider>
                   <Tooltip>
@@ -311,7 +293,7 @@ export default function ProjectSponsorshipCard({
                       </Button>
                     </TooltipTrigger>
                     <TooltipContent>
-                      {tr('Cosa significa', 'What does this mean')}
+                      {tx('k20')}
                     </TooltipContent>
                   </Tooltip>
                 </TooltipProvider>
@@ -324,22 +306,22 @@ export default function ProjectSponsorshipCard({
                 <div>
                   <p className="text-lg font-semibold text-slate-900">
                     {effectiveActiveSponsorship
-                      ? tr('Cantiere sponsorizzato', 'Sponsored worksite')
+                      ? tx('k21')
                       : isBlockedProject
-                        ? tr('Riattiva una societa sponsor', 'Restore a sponsor company')
-                        : tr('Puoi passare il cantiere a Pro', 'You can upgrade this worksite to Pro')}
+                        ? tx('k22')
+                        : tx('k23')}
                   </p>
                   <p className="text-sm text-slate-500">
                     {effectiveActiveSponsorship
-                      ? tr('Le funzioni avanzate del cantiere sono attive per tutti i partecipanti.', 'Advanced worksite features are active for all participants.')
+                      ? tx('k24')
                       : isBlockedProject
-                        ? tr('Per riattivare le funzioni avanzate serve una societa sponsor.', 'A sponsor company is required to reactivate advanced features.')
-                        : tr('Serve una societa Pro gia presente nel cantiere.', 'A Pro company already in the worksite is required.')}
+                        ? tx('k25')
+                        : tx('k26')}
                   </p>
                 </div>
                 <CollapsibleTrigger asChild>
                   <Button variant="ghost" className="justify-start px-0 text-[#b5432e] hover:bg-transparent hover:text-[#ef6144] sm:justify-end">
-                    {detailsOpen ? tr('Nascondi dettagli', 'Hide details') : tr('Mostra dettagli', 'Show details')}
+                    {detailsOpen ? tx('k27') : tx('k28')}
                     <ChevronDown className={`h-4 w-4 transition-transform ${detailsOpen ? 'rotate-180' : ''}`} />
                   </Button>
                 </CollapsibleTrigger>
@@ -355,10 +337,10 @@ export default function ProjectSponsorshipCard({
                 </div>
                 <div className="space-y-2">
                   <p className="font-semibold text-slate-900">
-                    {tr('Sponsorizzato da', 'Sponsored by')} {sponsorCompany?.name || effectiveActiveSponsorship.sponsor_company_id}
+                    {tx('k29')} {sponsorCompany?.name || effectiveActiveSponsorship.sponsor_company_id}
                   </p>
                   {startedAtLabel ? (
-                    <p className="text-sm text-slate-600">{tr('Attivo dal', 'Active since')} {startedAtLabel}</p>
+                    <p className="text-sm text-slate-600">{tx('k30')} {startedAtLabel}</p>
                   ) : null}
                 </div>
               </div>
@@ -366,34 +348,22 @@ export default function ProjectSponsorshipCard({
           ) : isBlockedProject ? (
             <div className="rounded-xl border border-red-200 bg-red-50 p-4 text-sm text-red-900">
               <p className="font-medium">
-                {tr(
-                  'Questo cantiere ha bisogno di una societa sponsor per tornare completo.',
-                  'This worksite needs a sponsor company to be fully active again.',
-                )}
+                {tx('k49')}
               </p>
               <p className="mt-2 text-red-800">
-                {tr(
-                  'Puoi invitare una societa e riattivare la sponsorship.',
-                  'You can invite a company and restore sponsorship.',
-                )}
+                {tx('k50')}
               </p>
             </div>
           ) : (
             <div className="rounded-xl border border-dashed p-4 text-sm text-slate-600">
-              {tr(
-                'Per attivare funzioni come milestone, documenti avanzati, chat avanzata e area economica serve una societa Pro gia presente nel cantiere.',
-                'To unlock milestones, advanced documents, advanced chat, and finance, a participating Pro company must sponsor the worksite.',
-              )}
+              {tx('k51')}
             </div>
           )}
 
           {!effectiveActiveSponsorship && paidSponsorCandidates.length > 0 ? (
             <div className="space-y-3 rounded-xl border bg-slate-50 p-4">
               <p className="text-sm text-slate-700">
-                {tr(
-                  'Puoi attivare subito il piano Pro del cantiere con una delle tue societa Pro gia presenti.',
-                  'You can activate the worksite Pro plan now with one of your participating Pro companies.',
-                )}
+                {tx('k52')}
               </p>
               <div className="flex flex-wrap gap-2">
                 {paidSponsorCandidates.map((company) => (
@@ -402,7 +372,7 @@ export default function ProjectSponsorshipCard({
               </div>
               <Button className="bg-[#ef6144] hover:bg-[#d9553a]" onClick={() => setSponsorDialogOpen(true)}>
                 <Sparkles className="h-4 w-4" />
-                {tr('Sponsorizza cantiere', 'Sponsor worksite')}
+                {tx('k31')}
               </Button>
             </div>
           ) : null}
@@ -410,13 +380,10 @@ export default function ProjectSponsorshipCard({
           {!effectiveActiveSponsorship && paidSponsorCandidates.length === 0 && preferredUpgradeCompany ? (
             <div className="space-y-3 rounded-xl border bg-slate-50 p-4">
               <p className="text-sm text-slate-700">
-                {tr(
-                  'Sei admin di una societa partecipante. Passando a Pro potrai attivare il piano Pro di questo cantiere.',
-                  'You are an admin of a participating company. Upgrading to Pro will let you activate this worksite Pro plan.',
-                )}
+                {tx('k53')}
               </p>
               <Button variant="outline" onClick={openUpgradeTarget}>
-                {tr('Vai al piano di {company}', 'Go to {company} plan').replace('{company}', preferredUpgradeCompany.name)}
+                {tx('k32').replace('{company}', preferredUpgradeCompany.name)}
               </Button>
             </div>
           ) : null}
@@ -424,7 +391,7 @@ export default function ProjectSponsorshipCard({
           {effectiveActiveSponsorship && canEndCurrentSponsorship ? (
             <div className="flex flex-wrap gap-3">
               <Button variant="outline" onClick={() => setEndDialogOpen(true)}>
-                {tr('Termina sponsorship', 'End sponsorship')}
+                {tx('k33')}
               </Button>
             </div>
           ) : null}
@@ -436,30 +403,21 @@ export default function ProjectSponsorshipCard({
       <Dialog open={infoOpen} onOpenChange={setInfoOpen}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>{tr('Cosa significa la sponsorship', 'What worksite sponsorship means')}</DialogTitle>
+            <DialogTitle>{tx('k34')}</DialogTitle>
             <DialogDescription>
-              {tr(
-                'La sponsorship attiva il piano Pro solo dentro questo cantiere.',
-                'Sponsorship activates the Pro plan only inside this worksite.',
-              )}
+              {tx('k54')}
             </DialogDescription>
           </DialogHeader>
           <div className="space-y-3 text-sm text-slate-600">
             <p>
-              {tr(
-                'Quando una societa Pro sponsorizza il cantiere, tutti i partecipanti vedono le funzioni avanzate del cantiere.',
-                'When a Pro company sponsors the worksite, all participants can use its advanced features.',
-              )}
+              {tx('k55')}
             </p>
             <p>
-              {tr(
-                'Se la sponsorship termina, i dati restano salvati ma le funzioni avanzate si fermano finche non arriva un nuovo sponsor.',
-                'If sponsorship ends, data stays saved but advanced features pause until a new sponsor arrives.',
-              )}
+              {tx('k56')}
             </p>
           </div>
           <DialogFooter>
-            <Button variant="outline" onClick={() => setInfoOpen(false)}>{tr('Chiudi', 'Close')}</Button>
+            <Button variant="outline" onClick={() => setInfoOpen(false)}>{tx('k35')}</Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>
@@ -467,18 +425,15 @@ export default function ProjectSponsorshipCard({
       <Dialog open={sponsorDialogOpen} onOpenChange={setSponsorDialogOpen}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>{tr('Sponsorizza cantiere', 'Sponsor worksite')}</DialogTitle>
+            <DialogTitle>{tx('k36')}</DialogTitle>
             <DialogDescription>
-              {tr(
-                'Scegli la societa Pro che deve attivare il piano Pro di questo cantiere.',
-                'Choose the Pro company that should activate this worksite Pro plan.',
-              )}
+              {tx('k57')}
             </DialogDescription>
           </DialogHeader>
           <div className="space-y-4">
             <Select value={selectedSponsorCompanyId} onValueChange={setSelectedSponsorCompanyId}>
               <SelectTrigger>
-                <SelectValue placeholder={tr('Seleziona una societa', 'Select a company')} />
+                <SelectValue placeholder={tx('k37')} />
               </SelectTrigger>
               <SelectContent>
                 {paidSponsorCandidates.map((company) => (
@@ -487,22 +442,19 @@ export default function ProjectSponsorshipCard({
               </SelectContent>
             </Select>
             <p className="text-sm text-slate-600">
-              {tr(
-                'La sponsorship parte subito e resta attiva finche la societa sponsor mantiene il piano Pro e partecipa al cantiere.',
-                'Sponsorship starts immediately and stays active while the sponsor company keeps its Pro plan and remains in the worksite.',
-              )}
+              {tx('k58')}
             </p>
           </div>
           <DialogFooter>
             <Button variant="outline" onClick={() => setSponsorDialogOpen(false)}>
-              {tr('Annulla', 'Cancel')}
+              {tx('k38')}
             </Button>
             <Button
               className="bg-[#ef6144] hover:bg-[#d9553a]"
               disabled={!selectedSponsorCompanyId || sponsorMutation.isPending}
               onClick={() => sponsorMutation.mutate(selectedSponsorCompanyId)}
             >
-              {tr('Conferma sponsorship', 'Confirm sponsorship')}
+              {tx('k39')}
             </Button>
           </DialogFooter>
         </DialogContent>
@@ -511,22 +463,19 @@ export default function ProjectSponsorshipCard({
       <AlertDialog open={endDialogOpen} onOpenChange={setEndDialogOpen}>
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>{tr('Terminare la sponsorship?', 'End sponsorship?')}</AlertDialogTitle>
+            <AlertDialogTitle>{tx('k40')}</AlertDialogTitle>
             <AlertDialogDescription>
-              {tr(
-                'Il cantiere perdera subito le feature premium. Se l owner ha gia un altro cantiere non sponsorizzato, il cantiere entrera nello stato bloccato finche non arrivera una nuova sponsorship.',
-                'The worksite will immediately lose premium features. If the owner already has another unsponsored worksite, the worksite will enter the blocked state until a new sponsorship arrives.',
-              )}
+              {tx('k59')}
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel>{tr('Annulla', 'Cancel')}</AlertDialogCancel>
+            <AlertDialogCancel>{tx('k41')}</AlertDialogCancel>
             <AlertDialogAction
               className="bg-[#ef6144] hover:bg-[#d9553a]"
               disabled={endSponsorshipMutation.isPending}
               onClick={() => endSponsorshipMutation.mutate()}
             >
-              {tr('Termina', 'End')}
+              {tx('k42')}
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>

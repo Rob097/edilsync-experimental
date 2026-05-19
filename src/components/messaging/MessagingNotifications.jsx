@@ -18,8 +18,8 @@ import { useLanguage } from '@/components/i18n/useLanguage';
 
 export default function MessagingNotifications({ userEmail }) {
   const navigate = useNavigate();
-  const { currentLanguage } = useLanguage();
-  const tr = (itText, enText) => currentLanguage === 'it' ? itText : enText;
+  const { t, currentLanguage } = useLanguage();
+  const tx = (key, options) => t(`completeScoped.components_messaging_MessagingNotifications.${key}`, options);
   const dateLocale = currentLanguage === 'it' ? it : enUS;
 
   const { data: channelMembers = [] } = useQuery({
@@ -133,12 +133,12 @@ export default function MessagingNotifications({ userEmail }) {
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="w-80">
         <div className="p-3 border-b">
-          <h3 className="font-semibold text-sm">{tr('Messaggi', 'Messages')}</h3>
+          <h3 className="font-semibold text-sm">{tx('k1')}</h3>
         </div>
 
         {totalNotifications === 0 ? (
           <div className="p-4 text-center text-sm text-gray-500">
-            {tr('Nessun nuovo messaggio', 'No new messages')}
+            {tx('k2')}
           </div>
         ) : (
           <div className="max-h-96 overflow-y-auto">
@@ -150,7 +150,7 @@ export default function MessagingNotifications({ userEmail }) {
               >
                 <div className="flex items-center justify-between w-full mb-1">
                   <span className="text-xs font-medium text-[#ef6144]">
-                    {tr('Sei stato menzionato', 'You were mentioned')}
+                    {tx('k3')}
                   </span>
                   <span className="text-xs text-gray-500">
                     {formatDistanceToNow(new Date(item.message.created_date), { 
@@ -176,7 +176,7 @@ export default function MessagingNotifications({ userEmail }) {
               >
                 <div className="flex items-center justify-between w-full mb-1">
                   <Badge variant="secondary" className="bg-[#ef6144] text-white">
-                    {item.unreadCount} {item.unreadCount === 1 ? tr('nuovo', 'new') : tr('nuovi', 'new')}
+                    {item.unreadCount} {item.unreadCount === 1 ? tx('k4') : tx('k5')}
                   </Badge>
                   <span className="text-xs text-gray-500">
                     {formatDistanceToNow(new Date(item.lastMessage.created_date), { 

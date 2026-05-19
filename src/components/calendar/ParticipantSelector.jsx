@@ -11,8 +11,8 @@ import { useLanguage } from '@/components/i18n/useLanguage';
 import { getUserDisplayName } from '@/lib/userDisplay';
 
 export default function ParticipantSelector({ participants, onChange }) {
-  const { currentLanguage } = useLanguage();
-  const tr = (itText, enText) => currentLanguage === 'it' ? itText : enText;
+  const { t, currentLanguage } = useLanguage();
+  const tx = (key, options) => t(`completeScoped.components_calendar_ParticipantSelector.${key}`, options);
   const [participantType, setParticipantType] = useState('user');
   const [selectedUserId, setSelectedUserId] = useState('');
   const [selectedCompanyId, setSelectedCompanyId] = useState('');
@@ -72,7 +72,7 @@ export default function ParticipantSelector({ participants, onChange }) {
 
   return (
     <div className="space-y-3">
-      <Label>{tr('Partecipanti', 'Participants')}</Label>
+      <Label>{tx('k1')}</Label>
       
       {/* Add participant form */}
       <div className="space-y-2">
@@ -81,8 +81,8 @@ export default function ParticipantSelector({ participants, onChange }) {
             <SelectValue />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="user">{tr('Persona', 'Person')}</SelectItem>
-            <SelectItem value="company">{tr('Società', 'Company')}</SelectItem>
+            <SelectItem value="user">{tx('k2')}</SelectItem>
+            <SelectItem value="company">{tx('k3')}</SelectItem>
           </SelectContent>
         </Select>
 
@@ -90,7 +90,7 @@ export default function ParticipantSelector({ participants, onChange }) {
           <div className="flex flex-col sm:flex-row gap-2">
             <Select value={selectedUserId} onValueChange={setSelectedUserId}>
               <SelectTrigger className="flex-1">
-                <SelectValue placeholder={tr('Seleziona utente...', 'Select user...')} />
+                <SelectValue placeholder={tx('k4')} />
               </SelectTrigger>
               <SelectContent>
                 {allUsers.map(user => (
@@ -100,23 +100,23 @@ export default function ParticipantSelector({ participants, onChange }) {
                 ))}
               </SelectContent>
             </Select>
-            <span className="text-gray-400 flex items-center justify-center sm:justify-start">{tr('o', 'or')}</span>
+            <span className="text-gray-400 flex items-center justify-center sm:justify-start">{tx('k5')}</span>
             <Input
-              placeholder={tr('Email...', 'Email...')}
+              placeholder={tx('k6')}
               value={manualEmail}
               onChange={(e) => setManualEmail(e.target.value)}
               className="flex-1"
             />
             <Button type="button" variant="outline" onClick={handleAddParticipant} className="w-full sm:w-auto">
               <Plus className="h-4 w-4 sm:mr-0 mr-2" />
-              <span className="sm:hidden">{tr('Aggiungi', 'Add')}</span>
+              <span className="sm:hidden">{tx('k7')}</span>
             </Button>
           </div>
         ) : (
           <div className="flex flex-col sm:flex-row gap-2">
             <Select value={selectedCompanyId} onValueChange={setSelectedCompanyId}>
               <SelectTrigger className="flex-1">
-                <SelectValue placeholder={tr('Seleziona società...', 'Select company...')} />
+                <SelectValue placeholder={tx('k8')} />
               </SelectTrigger>
               <SelectContent>
                 {allCompanies.map(company => (
@@ -128,7 +128,7 @@ export default function ParticipantSelector({ participants, onChange }) {
             </Select>
             <Button type="button" variant="outline" onClick={handleAddParticipant} className="w-full sm:w-auto">
               <Plus className="h-4 w-4 sm:mr-0 mr-2" />
-              <span className="sm:hidden">{tr('Aggiungi', 'Add')}</span>
+              <span className="sm:hidden">{tx('k9')}</span>
             </Button>
           </div>
         )}

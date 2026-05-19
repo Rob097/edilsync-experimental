@@ -19,7 +19,7 @@ import { useLanguage } from '@/components/i18n/useLanguage';
 
 export default function ProjectOverview({ projectId, onNavigate }) {
   const { t, currentLanguage } = useLanguage();
-  const tr = (itText, enText) => (currentLanguage === 'it' ? itText : enText);
+  const tx = (key, options) => t(`completeScoped.components_project_ProjectOverview.${key}`, options);
   const dateLocale = currentLanguage === 'it' ? it : enUS;
 
   const { data: tasks = [], isLoading: tasksLoading } = useQuery({
@@ -72,7 +72,7 @@ export default function ProjectOverview({ projectId, onNavigate }) {
     ...blockedTasks.map(t => ({
       type: 'task_blocked',
       title: t.title,
-      description: `${tr('Bloccato', 'Blocked')}: ${t.blocked_reason || tr('Motivo non specificato', 'Unspecified reason')}`,
+      description: `${tx('k1')}: ${t.blocked_reason || tx('k2')}`,
       icon: AlertCircle,
       color: 'text-red-600',
       bgColor: 'bg-red-50',
@@ -82,7 +82,7 @@ export default function ProjectOverview({ projectId, onNavigate }) {
     ...pendingChanges.map(cr => ({
       type: 'change_pending',
       title: cr.title,
-      description: `${tr('Richiesta modifica in attesa', 'Pending change request')}${cr.cost_impact ? ` • €${cr.cost_impact}` : ''}`,
+      description: `${tx('k3')}${cr.cost_impact ? ` • €${cr.cost_impact}` : ''}`,
       icon: DollarSign,
       color: 'text-yellow-600',
       bgColor: 'bg-yellow-50',
@@ -92,7 +92,7 @@ export default function ProjectOverview({ projectId, onNavigate }) {
     ...overdueTasks.map(t => ({
       type: 'task_overdue',
       title: t.title,
-      description: `${tr('Scadenza superata', 'Overdue')}: ${format(new Date(t.due_date), 'dd MMM yyyy', { locale: dateLocale })}`,
+      description: `${tx('k4')}: ${format(new Date(t.due_date), 'dd MMM yyyy', { locale: dateLocale })}`,
       icon: Clock,
       color: 'text-orange-600',
       bgColor: 'bg-orange-50',
@@ -122,13 +122,13 @@ export default function ProjectOverview({ projectId, onNavigate }) {
         <Card className="hover:shadow-md transition-shadow cursor-pointer" onClick={() => onNavigate?.('lavori', 'tasks')}>
           <CardContent className="p-4">
             <div className="flex items-center justify-between mb-3">
-              <h3 className="font-semibold text-gray-700">{tr('Attività', 'Tasks')}</h3>
+              <h3 className="font-semibold text-gray-700">{tx('k5')}</h3>
               <CheckCircle2 className="h-5 w-5 text-blue-600" />
             </div>
             <div className="space-y-2">
               <div className="flex items-center justify-between">
                 <span className="text-2xl font-bold">{taskStats.total}</span>
-                <span className="text-sm text-gray-500">{tr('Totali', 'Total')}</span>
+                <span className="text-sm text-gray-500">{tx('k6')}</span>
               </div>
               <div className="flex gap-2 flex-wrap">
                 {taskStats.in_progress > 0 && (
@@ -140,13 +140,13 @@ export default function ProjectOverview({ projectId, onNavigate }) {
                 {taskStats.blocked > 0 && (
                   <Badge className="bg-red-100 text-red-700 flex items-center gap-1">
                     <AlertCircle className="h-3 w-3" />
-                    {taskStats.blocked} {tr('bloccate', 'blocked')}
+                    {taskStats.blocked} {tx('k7')}
                   </Badge>
                 )}
                 {taskStats.completed > 0 && (
                   <Badge className="bg-green-100 text-green-700 flex items-center gap-1">
                     <CheckCircle2 className="h-3 w-3" />
-                    {taskStats.completed} {tr('completate', 'completed')}
+                    {taskStats.completed} {tx('k8')}
                   </Badge>
                 )}
               </div>
@@ -164,17 +164,17 @@ export default function ProjectOverview({ projectId, onNavigate }) {
             <div className="space-y-2">
               <div className="flex items-center justify-between">
                 <span className="text-2xl font-bold">{changeStats.total}</span>
-                <span className="text-sm text-gray-500">{tr('Totali', 'Total')}</span>
+                <span className="text-sm text-gray-500">{tx('k9')}</span>
               </div>
               <div className="flex gap-2 flex-wrap">
                 {changeStats.pending > 0 && (
                   <Badge className="bg-yellow-100 text-yellow-700">
-                    {changeStats.pending} {tr('in attesa', 'pending')}
+                    {changeStats.pending} {tx('k10')}
                   </Badge>
                 )}
                 {changeStats.approved > 0 && (
                   <Badge className="bg-green-100 text-green-700">
-                    {changeStats.approved} {tr('approvate', 'approved')}
+                    {changeStats.approved} {tx('k11')}
                   </Badge>
                 )}
               </div>
@@ -186,7 +186,7 @@ export default function ProjectOverview({ projectId, onNavigate }) {
         <Card className="hover:shadow-md transition-shadow cursor-pointer" onClick={() => onNavigate?.('lavori', 'milestones')}>
           <CardContent className="p-4">
             <div className="flex items-center justify-between mb-3">
-              <h3 className="font-semibold text-gray-700">{tr('Prossime Milestone', 'Upcoming Milestones')}</h3>
+              <h3 className="font-semibold text-gray-700">{tx('k12')}</h3>
               <Flag className="h-5 w-5 text-purple-600" />
             </div>
             {upcomingMilestones.length > 0 ? (
@@ -202,7 +202,7 @@ export default function ProjectOverview({ projectId, onNavigate }) {
                 ))}
               </div>
             ) : (
-              <p className="text-sm text-gray-500">{tr('Nessuna milestone programmata', 'No milestones scheduled')}</p>
+              <p className="text-sm text-gray-500">{tx('k13')}</p>
             )}
           </CardContent>
         </Card>
@@ -214,7 +214,7 @@ export default function ProjectOverview({ projectId, onNavigate }) {
           <CardContent className="p-4">
             <div className="flex items-center gap-2 mb-4">
               <AlertCircle className="h-5 w-5 text-red-600" />
-              <h3 className="font-semibold text-gray-900">{tr('Richiede Attenzione', 'Needs Attention')}</h3>
+              <h3 className="font-semibold text-gray-900">{tx('k14')}</h3>
               <Badge className="bg-red-100 text-red-700">{needsAttention.length}</Badge>
             </div>
             <div className="space-y-2">
@@ -244,7 +244,7 @@ export default function ProjectOverview({ projectId, onNavigate }) {
               })}
               {needsAttention.length > 5 && (
                 <p className="text-xs text-gray-500 text-center pt-2">
-                  +{needsAttention.length - 5} {tr('altri elementi', 'more items')}
+                  +{needsAttention.length - 5} {tx('k15')}
                 </p>
               )}
             </div>

@@ -52,7 +52,7 @@ const getFileIcon = (fileType) => {
 
 export default function SelectDocumentDialog({ projectId, companyId, scopeType = 'project', open, onOpenChange, onSelectDocument }) {
   const { currentLanguage, t } = useLanguage();
-  const tr = (it, en) => currentLanguage === 'it' ? it : en;
+  const tx = (key, options) => t(`completeScoped.components_messaging_SelectDocumentDialog.${key}`, options);
   const [searchQuery, setSearchQuery] = useState('');
   const [filterCategory, setFilterCategory] = useState('all');
   const [filterType, setFilterType] = useState('all');
@@ -87,7 +87,7 @@ export default function SelectDocumentDialog({ projectId, companyId, scopeType =
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-3xl max-h-[80vh]">
         <DialogHeader>
-          <DialogTitle>{tr('Seleziona documento da linkare', 'Select document to link')}</DialogTitle>
+          <DialogTitle>{tx('k1')}</DialogTitle>
         </DialogHeader>
 
         <div className="space-y-4">
@@ -129,24 +129,24 @@ export default function SelectDocumentDialog({ projectId, companyId, scopeType =
                   <SelectValue placeholder={t('documents.category')} />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="all">{tr('Tutte', 'All')}</SelectItem>
-                  <SelectItem value="project">{tr('Cantiere', 'Worksite')}</SelectItem>
-                  <SelectItem value="contract">{tr('Contratto', 'Contract')}</SelectItem>
-                  <SelectItem value="permit">{tr('Permesso', 'Permit')}</SelectItem>
-                  <SelectItem value="drawing">{tr('Disegno', 'Drawing')}</SelectItem>
-                  <SelectItem value="photo">{tr('Foto', 'Photo')}</SelectItem>
+                  <SelectItem value="all">{tx('k2')}</SelectItem>
+                  <SelectItem value="project">{tx('k3')}</SelectItem>
+                  <SelectItem value="contract">{tx('k4')}</SelectItem>
+                  <SelectItem value="permit">{tx('k5')}</SelectItem>
+                  <SelectItem value="drawing">{tx('k6')}</SelectItem>
+                  <SelectItem value="photo">{tx('k7')}</SelectItem>
                   <SelectItem value="report">Report</SelectItem>
-                  <SelectItem value="other">{tr('Altro', 'Other')}</SelectItem>
+                  <SelectItem value="other">{tx('k8')}</SelectItem>
                 </SelectContent>
               </Select>
 
               {uniqueFileTypes.length > 0 && (
                 <Select value={filterType} onValueChange={setFilterType}>
                   <SelectTrigger className="w-28">
-                    <SelectValue placeholder={tr('Tipo', 'Type')} />
+                    <SelectValue placeholder={tx('k9')} />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="all">{tr('Tutti', 'All')}</SelectItem>
+                    <SelectItem value="all">{tx('k10')}</SelectItem>
                     {uniqueFileTypes.map(type => (
                       <SelectItem key={type} value={type}>{type.toUpperCase()}</SelectItem>
                     ))}
@@ -198,7 +198,7 @@ export default function SelectDocumentDialog({ projectId, companyId, scopeType =
               ) : (
                 <EmptyState
                   icon={FileText}
-                  title={tr('Nessun documento trovato', 'No documents found')}
+                  title={tx('k11')}
                   description={t('common.tryModifyingFilters')}
                 />
               )
@@ -236,7 +236,7 @@ export default function SelectDocumentDialog({ projectId, companyId, scopeType =
               ) : (
                 <EmptyState
                   icon={FileText}
-                  title={tr('Nessun documento trovato', 'No documents found')}
+                  title={tx('k12')}
                   description={t('common.tryModifyingFilters')}
                 />
               )

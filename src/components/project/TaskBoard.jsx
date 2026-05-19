@@ -23,13 +23,13 @@ import { notifyTaskBlockedResponsible } from '@/lib/taskBlockNotifications';
 
 export default function TaskBoard({ projectId, canEdit, onTaskCreate, filteredTasks, showMilestoneField = true }) {
   const { currentLanguage, t } = useLanguage();
-  const tr = (itText, enText) => currentLanguage === 'it' ? itText : enText;
+  const tx = (key, options) => t(`completeScoped.components_project_TaskBoard.${key}`, options);
   const dateLocale = currentLanguage === 'it' ? it : enUS;
   const columns = [
-    { id: 'not_started', label: tr('Da Iniziare', 'To Do'), color: 'bg-gray-100' },
-    { id: 'in_progress', label: tr('In Corso', 'In Progress'), color: 'bg-blue-100' },
-    { id: 'completed', label: tr('Completato', 'Completed'), color: 'bg-green-100' },
-    { id: 'blocked', label: tr('Bloccato', 'Blocked'), color: 'bg-red-100' },
+    { id: 'not_started', label: tx('k1'), color: 'bg-gray-100' },
+    { id: 'in_progress', label: tx('k2'), color: 'bg-blue-100' },
+    { id: 'completed', label: tx('k3'), color: 'bg-green-100' },
+    { id: 'blocked', label: tx('k4'), color: 'bg-red-100' },
   ];
   const queryClient = useQueryClient();
   const [dialogOpen, setDialogOpen] = useState(false);
@@ -255,9 +255,9 @@ export default function TaskBoard({ projectId, canEdit, onTaskCreate, filteredTa
     return (
       <EmptyState
         icon={Clock}
-        title={tr('Nessuna attività', 'No tasks')}
-        description={tr('Crea la prima attività per iniziare a organizzare il lavoro.', 'Create the first task to start organizing the work.')}
-        actionLabel={canEdit ? tr('Crea attività', 'Create task') : undefined}
+        title={tx('k5')}
+        description={tx('k6')}
+        actionLabel={canEdit ? tx('k7') : undefined}
         onAction={canEdit ? onTaskCreate || handleCreate : undefined}
       />
     );
@@ -329,7 +329,7 @@ export default function TaskBoard({ projectId, canEdit, onTaskCreate, filteredTa
 
                               {task.status === 'blocked' && blockedByLabel ? (
                                 <Badge variant="outline" className="text-xs mb-2 text-red-700 border-red-200 bg-red-50">
-                                  {tr('Bloccato da', 'Blocked by')}: {blockedByLabel}
+                                  {tx('k8')}: {blockedByLabel}
                                 </Badge>
                               ) : null}
                               
@@ -365,7 +365,7 @@ export default function TaskBoard({ projectId, canEdit, onTaskCreate, filteredTa
                       
                       {columnTasks.length === 0 && (
                         <div className="flex items-center justify-center h-32 text-gray-400 text-sm">
-                          {tr('Nessuna attività', 'No tasks')}
+                          {tx('k9')}
                         </div>
                       )}
                     </div>

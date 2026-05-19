@@ -33,7 +33,7 @@ export default function DisputeCaseList({
   emptyStateText,
 }) {
   const { t, currentLanguage } = useLanguage();
-  const tr = (itText, enText) => currentLanguage === 'it' ? itText : enText;
+  const tx = (key, options) => t(`completeScoped.components_project_DisputeCaseList.${key}`, options);
   const dateLocale = currentLanguage === 'it' ? it : enUS;
   const queryClient = useQueryClient();
   const { featureMap: projectFeatureMap } = useProjectFeatureAccess(projectId, ['project_milestones'], { enabled: !!projectId });
@@ -307,7 +307,7 @@ export default function DisputeCaseList({
   }), []);
 
   const canCreateDispute = Boolean(title.trim() && summary.trim());
-  const resolvedEmptyStateText = emptyStateText || tr('Nessuna disputa', 'No disputes');
+  const resolvedEmptyStateText = emptyStateText || tx('k1');
 
   const listContent = isLoading ? (
     <p className="text-sm text-gray-600">{t('common.loading')}</p>
@@ -524,7 +524,7 @@ export default function DisputeCaseList({
                   ) : null}
                   <p className="text-sm text-gray-700">
                     <span className="font-medium">{t('disputes.causedByLabel')}:</span>{' '}
-                    {taskById[selectedDispute.task_id]?.blocked_by_name || taskById[selectedDispute.task_id]?.blocked_by_email || tr('Non specificato', 'Not specified')}
+                    {taskById[selectedDispute.task_id]?.blocked_by_name || taskById[selectedDispute.task_id]?.blocked_by_email || tx('k2')}
                   </p>
                 </div>
               ) : null}

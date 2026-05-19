@@ -9,7 +9,7 @@ import { getCompanyMemberRoleLabel } from '@/lib/domainRoles';
 
 export default function MemberCard({ member, displayName, isCurrentUser, isPending, isAdmin, companyId, canRemoveSelf = true }) {
   const { t, currentLanguage } = useLanguage();
-  const tr = (itText, enText) => (currentLanguage === 'it' ? itText : enText);
+  const tx = (key, options) => t(`completeScoped.components_company_MemberCard.${key}`, options);
   const queryClient = useQueryClient();
   const [confirmRemove, setConfirmRemove] = useState(false);
 
@@ -45,7 +45,7 @@ export default function MemberCard({ member, displayName, isCurrentUser, isPendi
           <div className="flex items-center gap-2 flex-wrap">
             <p className="font-medium text-gray-900 break-all">{resolvedDisplayName}</p>
             {isCurrentUser && (
-              <Badge variant="outline" className="text-xs">{tr('Tu', 'You')}</Badge>
+              <Badge variant="outline" className="text-xs">{tx('k1')}</Badge>
             )}
           </div>
           {resolvedDisplayName !== member.user_email && (
@@ -62,7 +62,7 @@ export default function MemberCard({ member, displayName, isCurrentUser, isPendi
         {isPending && (
           <Badge variant="outline" className="text-gray-500">
             <Clock className="h-3 w-3 mr-1" />
-            {tr('In attesa', 'Pending')}
+            {tx('k2')}
           </Badge>
         )}
         <Badge 

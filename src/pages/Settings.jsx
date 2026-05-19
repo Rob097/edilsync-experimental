@@ -15,7 +15,7 @@ import NotificationPreferences from '@/components/settings/NotificationPreferenc
 
 export default function Settings() {
   const { t, currentLanguage } = useLanguage();
-  const tr = (itText, enText) => (currentLanguage === 'it' ? itText : enText);
+  const tx = (key, options) => t(`completeScoped.pages_Settings.${key}`, options);
   const navigate = useNavigate();
   const queryClient = useQueryClient();
   
@@ -95,11 +95,11 @@ export default function Settings() {
               <div className="flex items-center gap-3">
                 <div className="flex h-12 w-12 items-center justify-center rounded-[1rem] bg-[linear-gradient(135deg,#ef6144,#d9553a)] shadow-[0_18px_36px_rgba(217,85,58,0.22)]">
                   <span className="text-white font-semibold text-lg">
-                    {user?.full_name?.charAt(0)?.toUpperCase() || (currentLanguage === 'it' ? 'U' : 'U')}
+                    {user?.full_name?.charAt(0)?.toUpperCase() || 'U'}
                   </span>
                 </div>
                 <div>
-                  <CardTitle className="text-[#231b18]">{user?.full_name || tr('Utente', 'User')}</CardTitle>
+                  <CardTitle className="text-[#231b18]">{user?.full_name || tx('k1')}</CardTitle>
                   <CardDescription>{user?.email}</CardDescription>
                 </div>
               </div>

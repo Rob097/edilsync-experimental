@@ -13,122 +13,12 @@ import usePublicGsap from '@/public/hooks/usePublicGsap';
 import { PUBLIC_CLASSES } from '@/public/designSystem';
 import PublicPrimaryCta from '@/public/components/marketing/PublicPrimaryCta';
 import MarketingFinalCtaSection from '@/public/components/marketing/MarketingFinalCtaSection';
+import { getPublicCopy } from '@/public/lib/publicTranslations';
 
-const contentByLocale = {
-  it: {
-    seoTitle: 'Per i Subappaltatori',
-    seoDescription:
-      'Pagina dedicata ai subappaltatori: meno viaggi a vuoto, task contestuali, chat tracciata e accesso gratuito nei cantieri EdilSync.',
-    badge: 'Per i Subappaltatori',
-    titleA: 'Sai esattamente',
-    titleB: 'dove e quando',
-    titleC: 'essere in cantiere.',
-    subtitle:
-      'Gestire 3-5 cantieri contemporaneamente è una sfida di coordinamento. EdilSync ti dà il contesto giusto per ogni cantiere senza confusione.',
-    note: 'Accesso gratuito nei cantieri in cui vieni invitato',
-    ctaTop: 'Apri account gratis',
-    quote:
-      'Arrivo in cantiere e il lavoro precedente non è finito. Un altro viaggio a vuoto. 150 euro di costo, zero fatturato. E nessuno mi aveva avvisato.',
-    quoteAuthor: 'Marco',
-    quoteRole: 'Elettricista, 5 cantieri attivi',
-    benefitsTitle: 'I vantaggi per chi lavora in subappalto',
-    benefits: [
-      {
-        title: 'Zero viaggi a vuoto',
-        text: 'Il calendario condiviso ti mostra quando sei atteso in cantiere. Se qualcosa cambia, ricevi notifica immediata. Fine ai viaggi inutili.',
-        icon: CalendarDays,
-      },
-      {
-        title: 'Solo i tuoi task',
-        text: 'Vedi esclusivamente i task e le attività rilevanti per il tuo lavoro. Nessuna informazione superflua, solo ciò che ti serve.',
-        icon: ListChecks,
-      },
-      {
-        title: 'Chat senza numero personale',
-        text: 'Comunica con il contractor e il team di cantiere tramite la chat di EdilSync. Non devi dare il tuo numero di telefono personale.',
-        icon: MessageCircle,
-      },
-      {
-        title: 'Documenta il tuo lavoro',
-        text: 'Foto e documenti associati ai tuoi task. Protezione documentale per il lavoro che esegui, accessibile quando serve.',
-        icon: Camera,
-      },
-      {
-        title: 'Accesso contestuale',
-        text: 'Entri nel cantiere solo quando sei stato invitato, con accesso limitato a ciò che è rilevante per il tuo ambito di lavoro.',
-        icon: Navigation,
-      },
-      {
-        title: 'Accesso gratuito su invito',
-        text: 'Come subappaltatore, entri gratis nei cantieri a cui vieni invitato. Se il cantiere è sponsorizzato, sblocchi anche gli strumenti avanzati disponibili in quel cantiere.',
-        icon: ArrowRight,
-      },
-    ],
-    finalTitle: 'Pronto a portare ordine nel tuo cantiere?',
-    finalText:
-      'Smetti di perdere tempo tra chat, email e telefonate. Inizia oggi con EdilSync e vedi la differenza dal primo giorno.',
-    finalCta: 'Apri account gratis',
-    finalNote: 'Accesso solo ai cantieri invitati · Nessuna carta per iniziare · Collaborazione immediata',
-  },
-  en: {
-    seoTitle: 'For Subcontractors',
-    seoDescription:
-      'Dedicated page for subcontractors: fewer wasted trips, contextual tasks, traceable chat, and free worksite access in EdilSync.',
-    badge: 'For Subcontractors',
-    titleA: 'Know exactly',
-    titleB: 'where and when',
-    titleC: 'to be on site.',
-    subtitle:
-      'Managing 3-5 active jobs at once is a coordination challenge. EdilSync gives you the right context for each worksite without confusion.',
-    note: 'Free access on worksites where you are invited',
-    ctaTop: 'Open free account',
-    quote:
-      'I arrive on site and the previous work is not finished. Another wasted trip. €150 cost, zero revenue. And nobody warned me.',
-    quoteAuthor: 'Marco',
-    quoteRole: 'Electrician, 5 active jobs',
-    benefitsTitle: 'Benefits for subcontractors',
-    benefits: [
-      {
-        title: 'No wasted trips',
-        text: 'The shared calendar shows when you are expected on site. If plans change, you get immediate notification.',
-        icon: CalendarDays,
-      },
-      {
-        title: 'Only your tasks',
-        text: 'See only the tasks and activities relevant to your scope. No noise, just what you need to execute.',
-        icon: ListChecks,
-      },
-      {
-        title: 'Chat without sharing personal number',
-        text: 'Communicate with contractor and worksite team in EdilSync chat. No need to expose your personal phone number.',
-        icon: MessageCircle,
-      },
-      {
-        title: 'Document your work',
-        text: 'Photos and documents tied to your tasks. Built-in protection for delivered work, accessible when needed.',
-        icon: Camera,
-      },
-      {
-        title: 'Contextual access',
-        text: 'You enter worksites only when invited, with visibility limited to what matters for your work package.',
-        icon: Navigation,
-      },
-      {
-        title: 'Free invited access',
-        text: 'As a subcontractor, you join invited worksites for free. If the worksite is sponsored, you also unlock the premium worksite capabilities available inside that worksite.',
-        icon: ArrowRight,
-      },
-    ],
-    finalTitle: 'Ready to bring order to your construction site?',
-    finalText: 'Stop wasting time across chats, emails, and calls. Start today with EdilSync and feel the difference from day one.',
-    finalCta: 'Open free account',
-    finalNote: 'Only invited-worksite access · No card required to start · Fast collaboration',
-  },
-};
 
 export default function SubcontractorsPage({ locale = 'it' }) {
   const rootRef = useRef(null);
-  const copy = useMemo(() => contentByLocale[locale] || contentByLocale.it, [locale]);
+  const copy = useMemo(() => getPublicCopy(locale, 'subcontractorsPage'), [locale]);
   const basePath = locale === 'en' ? '/en' : '';
   const canonicalPath = locale === 'en' ? '/en/per-subappaltatori' : '/per-subappaltatori';
 

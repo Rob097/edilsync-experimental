@@ -12,11 +12,10 @@ import {
   NavigationMenuList,
   NavigationMenuTrigger,
 } from '@/components/ui/navigation-menu';
-import CookieBanner from '@/components/legal/CookieBanner';
-import Footer from '@/components/legal/Footer';
+import PublicCookieBanner from '@/public/components/PublicCookieBanner';
+import PublicFooter from '@/public/components/PublicFooter';
 import PublicLanguageSelector from '@/public/components/PublicLanguageSelector';
-import publicLayoutIt from '@/public/i18n/layout.it.json';
-import publicLayoutEn from '@/public/i18n/layout.en.json';
+import { getPublicCopy } from '@/public/lib/publicTranslations';
 
 if (!i18next.isInitialized) {
   initializeI18n();
@@ -29,18 +28,13 @@ const audienceIconByKey = {
   wrench: Wrench,
 };
 
-const layoutByLocale = {
-  it: publicLayoutIt,
-  en: publicLayoutEn,
-};
-
 export default function PublicLayout({ locale = 'it', children }) {
   const location = useLocation();
   const [mobileOpen, setMobileOpen] = useState(false);
 
   const isEnglishPath = location.pathname.startsWith('/en');
   const effectiveLocale = isEnglishPath ? 'en' : locale;
-  const localized = layoutByLocale[effectiveLocale] || layoutByLocale.it;
+  const localized = getPublicCopy(effectiveLocale, 'layout');
   const copy = localized.cta;
   const aria = localized.aria;
 
@@ -249,9 +243,9 @@ export default function PublicLayout({ locale = 'it', children }) {
 
         <main className="flex-1">{children}</main>
         <div className="public-footer-wrap">
-          <Footer />
+          <PublicFooter />
         </div>
-        <CookieBanner />
+        <PublicCookieBanner />
       </div>
     </I18nextProvider>
   );

@@ -12,8 +12,8 @@ import { useLanguage } from '@/components/i18n/useLanguage';
 import { getUserDisplayNameByEmail } from '@/lib/userDisplay';
 
 export default function DocumentComments({ documentId, projectId, companyId, scopeType = 'project' }) {
-  const { currentLanguage } = useLanguage();
-  const tr = (itText, enText) => currentLanguage === 'it' ? itText : enText;
+  const { t, currentLanguage } = useLanguage();
+  const tx = (key, options) => t(`completeScoped.components_project_DocumentComments.${key}`, options);
   const dateLocale = currentLanguage === 'it' ? it : enUS;
   const queryClient = useQueryClient();
   const isCompanyScope = scopeType === 'company';
@@ -71,7 +71,7 @@ export default function DocumentComments({ documentId, projectId, companyId, sco
     <div className="space-y-4">
       <div className="flex items-center gap-2 pb-2 border-b">
         <MessageSquare className="h-5 w-5 text-gray-600" />
-        <h3 className="font-semibold">{tr('Commenti', 'Comments')}</h3>
+        <h3 className="font-semibold">{tx('k1')}</h3>
         <span className="text-sm text-gray-500">({comments.length})</span>
       </div>
 
@@ -107,7 +107,7 @@ export default function DocumentComments({ documentId, projectId, companyId, sco
         </div>
       ) : (
         <p className="text-sm text-gray-500 text-center py-4">
-          {tr('Nessun commento. Sii il primo a commentare!', 'No comments yet. Be the first to comment!')}
+          {tx('k2')}
         </p>
       )}
 
@@ -116,7 +116,7 @@ export default function DocumentComments({ documentId, projectId, companyId, sco
           <Textarea
             value={commentText}
             onChange={(e) => setCommentText(e.target.value)}
-            placeholder={tr('Scrivi un commento...', 'Write a comment...')}
+            placeholder={tx('k3')}
             rows={2}
             className="resize-none"
           />
@@ -128,7 +128,7 @@ export default function DocumentComments({ documentId, projectId, companyId, sco
               className="bg-[#ef6144] hover:bg-[#d9553a]"
             >
               <Send className="h-4 w-4 mr-2" />
-              {tr('Invia', 'Send')}
+              {tx('k4')}
             </Button>
           </div>
         </form>

@@ -13,8 +13,8 @@ import { useLanguage } from '@/components/i18n/useLanguage';
 import { getUserDisplayNameByEmail } from '@/lib/userDisplay';
 
 export default function ProjectChat({ projectId }) {
-  const { currentLanguage } = useLanguage();
-  const tr = (itText, enText) => currentLanguage === 'it' ? itText : enText;
+  const { t, currentLanguage } = useLanguage();
+  const tx = (key, options) => t(`completeScoped.components_project_ProjectChat.${key}`, options);
   const dateLocale = currentLanguage === 'it' ? it : enUS;
   const queryClient = useQueryClient();
   const [message, setMessage] = useState('');
@@ -68,7 +68,7 @@ export default function ProjectChat({ projectId }) {
   return (
     <Card className="flex flex-col h-[600px]">
       <CardHeader className="pb-4">
-        <CardTitle>{tr('Messaggi Cantiere', 'Worksite Messages')}</CardTitle>
+        <CardTitle>{tx('k1')}</CardTitle>
       </CardHeader>
       <CardContent className="flex-1 flex flex-col min-h-0">
         <div className="flex-1 overflow-y-auto space-y-3 mb-4">
@@ -102,8 +102,8 @@ export default function ProjectChat({ projectId }) {
           ) : (
             <EmptyState
               icon={Send}
-              title={tr('Nessun messaggio', 'No messages')}
-              description={tr('Inizia la conversazione inviando un messaggio.', 'Start the conversation by sending a message.')}
+              title={tx('k2')}
+              description={tx('k3')}
             />
           )}
         </div>
@@ -112,7 +112,7 @@ export default function ProjectChat({ projectId }) {
           <Input
             value={message}
             onChange={(e) => setMessage(e.target.value)}
-            placeholder={tr('Scrivi un messaggio...', 'Write a message...')}
+            placeholder={tx('k4')}
             disabled={sendMutation.isPending}
           />
           <Button

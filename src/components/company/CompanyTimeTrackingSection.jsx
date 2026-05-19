@@ -75,8 +75,8 @@ export default function CompanyTimeTrackingSection({
   mode = 'normal',
 }) {
   const queryClient = useQueryClient();
-  const { currentLanguage } = useLanguage();
-  const tr = (itText, enText) => (currentLanguage === 'it' ? itText : enText);
+  const { t, currentLanguage } = useLanguage();
+  const tx = (key, options) => t(`completeScoped.components_company_CompanyTimeTrackingSection.${key}`, options);
   const dateLocale = currentLanguage === 'it' ? it : enUS;
 
   const [startProjectId, setStartProjectId] = useState('__none__');
@@ -312,7 +312,7 @@ export default function CompanyTimeTrackingSection({
       ended_at: session.ended_at || '',
       member: getUserDisplayNameByEmail(session.user_email, allUsers),
       member_email: session.user_email,
-      project: session.project_id ? (projectById.get(session.project_id)?.name || tr('Cantiere', 'Worksite')) : tr('Senza cantiere', 'No worksite'),
+      project: session.project_id ? (projectById.get(session.project_id)?.name || tx('k1')) : tx('k2'),
       duration_hours: formatDurationHours(session),
       entry_type: session.entry_type || '',
       manual_reason: session.manual_reason || '',
@@ -408,40 +408,40 @@ export default function CompanyTimeTrackingSection({
   if (mode === 'operational') {
     const buttonDisabled = myOpenSession ? !canStop : !canStart;
     const buttonLabel = myOpenSession
-      ? (stopMutation.isPending ? tr('Clock-out in corso...', 'Clock-out in progress...') : 'Clock-out')
-      : (startMutation.isPending ? tr('Clock-in in corso...', 'Clock-in in progress...') : 'Clock-in');
+      ? (stopMutation.isPending ? tx('k3') : 'Clock-out')
+      : (startMutation.isPending ? tx('k4') : 'Clock-in');
 
     return (
       <Card className="operative-simple-card rounded-[1.5rem] border-[rgba(197,177,165,0.44)]">
         <CardHeader>
           <CardTitle className="flex items-center gap-2 text-lg">
             <Clock3 className="h-5 w-5 text-[#ef6144]" />
-            {tr('Timbratura rapida', 'Quick clock-in/out')}
+            {tx('k5')}
           </CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="flex flex-wrap items-center gap-2">
             {myOpenSession ? (
               <Badge className="bg-green-100 text-green-700">
-                {tr('Sessione aperta', 'Open session')} · {format(new Date(myOpenSession.started_at), 'HH:mm', { locale: dateLocale })}
+                {tx('k6')} · {format(new Date(myOpenSession.started_at), 'HH:mm', { locale: dateLocale })}
               </Badge>
             ) : (
-              <Badge variant="outline">{tr('Nessuna sessione aperta', 'No open session')}</Badge>
+              <Badge variant="outline">{tx('k7')}</Badge>
             )}
             <Badge variant="outline" className="flex items-center gap-1">
               <MapPin className="h-3 w-3" />
-              {tr('GPS attivo se disponibile', 'GPS enabled when available')}
+              {tx('k8')}
             </Badge>
           </div>
 
           <div className="space-y-2">
-            <Label>{tr('Cantiere', 'Worksite')}</Label>
+            <Label>{tx('k9')}</Label>
             <Select value={startProjectId} onValueChange={setStartProjectId} disabled={!!myOpenSession}>
               <SelectTrigger>
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="__none__">{tr('Nessun cantiere / esterno EdilSync', 'No worksite / external to EdilSync')}</SelectItem>
+                <SelectItem value="__none__">{tx('k10')}</SelectItem>
                 {projectOptions.map((project) => (
                   <SelectItem key={project.id} value={project.id}>{project.name}</SelectItem>
                 ))}
@@ -449,13 +449,13 @@ export default function CompanyTimeTrackingSection({
             </Select>
             {myOpenSession?.project_id && (
               <p className="text-xs text-gray-500">
-                {tr('Sessione in corso su', 'Current session on')}: {projectById.get(myOpenSession.project_id)?.name || tr('Cantiere', 'Worksite')}
+                {tx('k11')}: {projectById.get(myOpenSession.project_id)?.name || tx('k12')}
               </p>
             )}
           </div>
 
           <div className="space-y-2">
-            <Label>{tr('Note', 'Notes')}</Label>
+            <Label>{tx('k13')}</Label>
             <Textarea
               value={myOpenSession ? stopNote : startNote}
               onChange={(event) => {
@@ -465,7 +465,7 @@ export default function CompanyTimeTrackingSection({
                 }
                 setStartNote(event.target.value);
               }}
-              placeholder={tr('Note opzionali sulla timbratura', 'Optional note for this shift')}
+              placeholder={tx('k14')}
               rows={3}
             />
           </div>
@@ -492,11 +492,11 @@ export default function CompanyTimeTrackingSection({
     const latVal = formatGpsValue(lat);
     const lngVal = formatGpsValue(lng);
     if (!latVal || !lngVal) {
-      return <p className="text-xs text-gray-500">{label}: {tr('GPS non disponibile', 'GPS unavailable')}</p>;
+      return <p className="text-xs text-gray-500">{label}: {tx('k15')}</p>;
     }
 
     const accuracyText = Number.isFinite(Number(accuracy))
-      ? ` (${tr('accuratezza', 'accuracy')} ${Math.round(Number(accuracy))}m)`
+      ? ` (${tx('k16')} ${Math.round(Number(accuracy))}m)`
       : '';
 
     return (
@@ -508,7 +508,7 @@ export default function CompanyTimeTrackingSection({
           target="_blank"
           rel="noreferrer"
         >
-          {tr('Apri mappa', 'Open map')}
+          {tx('k17')}
         </a>
       </p>
     );
@@ -520,33 +520,33 @@ export default function CompanyTimeTrackingSection({
         <CardHeader>
           <CardTitle className="flex items-center gap-2 text-lg">
             <Clock3 className="h-5 w-5 text-[#ef6144]" />
-            {tr('Timbratura rapida', 'Quick clock-in/out')}
+            {tx('k18')}
           </CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="flex flex-wrap items-center gap-2">
             {myOpenSession ? (
               <Badge className="bg-green-100 text-green-700">
-                {tr('Sessione aperta', 'Open session')} · {format(new Date(myOpenSession.started_at), 'HH:mm', { locale: dateLocale })}
+                {tx('k19')} · {format(new Date(myOpenSession.started_at), 'HH:mm', { locale: dateLocale })}
               </Badge>
             ) : (
-              <Badge variant="outline">{tr('Nessuna sessione aperta', 'No open session')}</Badge>
+              <Badge variant="outline">{tx('k20')}</Badge>
             )}
             <Badge variant="outline" className="flex items-center gap-1">
               <MapPin className="h-3 w-3" />
-              {tr('GPS attivo se disponibile', 'GPS enabled when available')}
+              {tx('k21')}
             </Badge>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="space-y-2">
-              <Label>{tr('Cantiere (consigliato)', 'Worksite (recommended)')}</Label>
+              <Label>{tx('k22')}</Label>
               <Select value={startProjectId} onValueChange={setStartProjectId}>
                 <SelectTrigger>
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="__none__">{tr('Nessun cantiere / esterno EdilSync', 'No worksite / external to EdilSync')}</SelectItem>
+                  <SelectItem value="__none__">{tx('k23')}</SelectItem>
                   {projectOptions.map((project) => (
                     <SelectItem key={project.id} value={project.id}>{project.name}</SelectItem>
                   ))}
@@ -555,7 +555,7 @@ export default function CompanyTimeTrackingSection({
             </div>
 
             <div className="space-y-2">
-              <Label>{tr('Note', 'Notes')}</Label>
+              <Label>{tx('k24')}</Label>
               <Textarea
                 value={myOpenSession ? stopNote : startNote}
                 onChange={(event) => {
@@ -565,7 +565,7 @@ export default function CompanyTimeTrackingSection({
                   }
                   setStartNote(event.target.value);
                 }}
-                placeholder={tr('Note opzionali sulla timbratura', 'Optional note for this shift')}
+                placeholder={tx('k25')}
                 rows={2}
               />
             </div>
@@ -577,10 +577,10 @@ export default function CompanyTimeTrackingSection({
               disabled={!canStart}
               onClick={() => startMutation.mutate()}
             >
-              {startMutation.isPending ? tr('Avvio...', 'Starting...') : tr('Clock-in', 'Clock-in')}
+              {startMutation.isPending ? tx('k26') : tx('k27')}
             </Button>
             <Button variant="outline" disabled={!canStop} onClick={() => stopMutation.mutate()}>
-              {stopMutation.isPending ? tr('Chiusura...', 'Stopping...') : tr('Clock-out', 'Clock-out')}
+              {stopMutation.isPending ? tx('k28') : tx('k29')}
             </Button>
 
             {isAdmin && (
@@ -588,22 +588,22 @@ export default function CompanyTimeTrackingSection({
                 <DialogTrigger asChild>
                   <Button variant="outline">
                     <Plus className="h-4 w-4 mr-2" />
-                    {tr('Inserimento manuale (admin)', 'Manual entry (admin)')}
+                    {tx('k30')}
                   </Button>
                 </DialogTrigger>
                 <DialogContent>
                   <DialogHeader>
-                    <DialogTitle>{tr('Nuova timbratura manuale', 'New manual work session')}</DialogTitle>
+                    <DialogTitle>{tx('k31')}</DialogTitle>
                     <DialogDescription>
-                      {tr('Usa questa funzione per registrare ore manualmente per un membro della società.', 'Use this action to insert a manual session for a company member.')}
+                      {tx('k32')}
                     </DialogDescription>
                   </DialogHeader>
 
                   <div className="space-y-3">
                     <div className="space-y-2">
-                      <Label>{tr('Membro', 'Member')}</Label>
+                      <Label>{tx('k33')}</Label>
                       <Select value={manualMemberEmail} onValueChange={setManualMemberEmail}>
-                        <SelectTrigger><SelectValue placeholder={tr('Seleziona membro', 'Select member')} /></SelectTrigger>
+                        <SelectTrigger><SelectValue placeholder={tx('k34')} /></SelectTrigger>
                         <SelectContent>
                           {companyMembers.map((member) => (
                             <SelectItem key={member.id} value={member.user_email}>
@@ -615,11 +615,11 @@ export default function CompanyTimeTrackingSection({
                     </div>
 
                     <div className="space-y-2">
-                      <Label>{tr('Cantiere (opzionale)', 'Worksite (optional)')}</Label>
+                      <Label>{tx('k35')}</Label>
                       <Select value={manualProjectId} onValueChange={setManualProjectId}>
                         <SelectTrigger><SelectValue /></SelectTrigger>
                         <SelectContent>
-                          <SelectItem value="__none__">{tr('Nessun cantiere / esterno EdilSync', 'No worksite / external to EdilSync')}</SelectItem>
+                          <SelectItem value="__none__">{tx('k36')}</SelectItem>
                           {projectOptions.map((project) => (
                             <SelectItem key={project.id} value={project.id}>{project.name}</SelectItem>
                           ))}
@@ -629,33 +629,33 @@ export default function CompanyTimeTrackingSection({
 
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                       <div className="space-y-2">
-                        <Label>{tr('Inizio', 'Start')}</Label>
+                        <Label>{tx('k37')}</Label>
                         <Input type="datetime-local" value={manualStartAt} onChange={(event) => setManualStartAt(event.target.value)} />
                       </div>
                       <div className="space-y-2">
-                        <Label>{tr('Fine (opzionale)', 'End (optional)')}</Label>
+                        <Label>{tx('k38')}</Label>
                         <Input type="datetime-local" value={manualEndAt} onChange={(event) => setManualEndAt(event.target.value)} />
                       </div>
                     </div>
 
                     <div className="space-y-2">
-                      <Label>{tr('Motivazione modifica', 'Reason')}</Label>
-                      <Input value={manualReason} onChange={(event) => setManualReason(event.target.value)} placeholder={tr('Es. recupero timbratura dimenticata', 'e.g. missed clock-in correction')} />
+                      <Label>{tx('k39')}</Label>
+                      <Input value={manualReason} onChange={(event) => setManualReason(event.target.value)} placeholder={tx('k40')} />
                     </div>
 
                     <div className="space-y-2">
-                      <Label>{tr('Note', 'Notes')}</Label>
+                      <Label>{tx('k41')}</Label>
                       <Textarea value={manualNote} onChange={(event) => setManualNote(event.target.value)} rows={2} />
                     </div>
 
                     <div className="flex gap-2 justify-end">
-                      <Button variant="outline" onClick={() => setManualOpen(false)}>{tr('Annulla', 'Cancel')}</Button>
+                      <Button variant="outline" onClick={() => setManualOpen(false)}>{tx('k42')}</Button>
                       <Button
                         className="bg-[#ef6144] hover:bg-[#d9553a]"
                         disabled={!manualMemberEmail || !manualStartAt || manualCreateMutation.isPending}
                         onClick={() => manualCreateMutation.mutate()}
                       >
-                        {manualCreateMutation.isPending ? tr('Salvataggio...', 'Saving...') : tr('Salva', 'Save')}
+                        {manualCreateMutation.isPending ? tx('k43') : tx('k44')}
                       </Button>
                     </div>
                   </div>
@@ -668,20 +668,20 @@ export default function CompanyTimeTrackingSection({
 
       <Card>
         <CardHeader>
-          <CardTitle className="text-base">{tr('Le tue ultime timbrature', 'Your recent sessions')}</CardTitle>
+          <CardTitle className="text-base">{tx('k45')}</CardTitle>
         </CardHeader>
         <CardContent className="space-y-2">
           {myRecentSessions.length === 0 ? (
-            <p className="text-sm text-gray-600">{tr('Nessuna timbratura registrata.', 'No sessions yet.')}</p>
+            <p className="text-sm text-gray-600">{tx('k46')}</p>
           ) : (
             myRecentSessions.map((session) => (
               <div key={session.id} className="p-3 rounded-lg border">
                 <div className="flex flex-wrap items-center gap-2">
                   <Badge variant={session.ended_at ? 'outline' : 'secondary'}>
-                    {session.ended_at ? tr('Completata', 'Completed') : tr('Aperta', 'Open')}
+                    {session.ended_at ? tx('k47') : tx('k48')}
                   </Badge>
                   {session.entry_type === 'manual_admin' && (
-                    <Badge className="bg-yellow-100 text-yellow-700">{tr('Inserimento admin', 'Admin entry')}</Badge>
+                    <Badge className="bg-yellow-100 text-yellow-700">{tx('k49')}</Badge>
                   )}
                 </div>
                 <p className="text-sm mt-2">
@@ -689,7 +689,7 @@ export default function CompanyTimeTrackingSection({
                   {session.ended_at ? ` → ${format(new Date(session.ended_at), 'dd MMM yyyy HH:mm', { locale: dateLocale })}` : ''}
                 </p>
                 <p className="text-xs text-gray-500 mt-1">
-                  {session.project_id ? (projectById.get(session.project_id)?.name || tr('Cantiere', 'Worksite')) : tr('Nessun cantiere associato', 'No linked worksite')}
+                  {session.project_id ? (projectById.get(session.project_id)?.name || tx('k50')) : tx('k51')}
                 </p>
                 {session.note && <p className="text-xs text-gray-600 mt-1">{session.note}</p>}
               </div>
@@ -700,14 +700,14 @@ export default function CompanyTimeTrackingSection({
 
       {isAdmin && (
         <div className="pt-1">
-          <p className="text-sm font-semibold text-gray-700">{tr('Controllo amministratore', 'Administrator controls')}</p>
+          <p className="text-sm font-semibold text-gray-700">{tx('k52')}</p>
         </div>
       )}
 
       {isAdmin && openSessions.length > 0 && (
         <Card>
           <CardHeader>
-            <CardTitle className="text-base">{tr('Sessioni aperte (società)', 'Open sessions (company)')}</CardTitle>
+            <CardTitle className="text-base">{tx('k53')}</CardTitle>
           </CardHeader>
           <CardContent className="space-y-2">
             {openSessions.map((session) => (
@@ -715,12 +715,12 @@ export default function CompanyTimeTrackingSection({
                 <div>
                   <p className="font-medium text-sm">{session.user_email}</p>
                   <p className="text-xs text-gray-500">
-                    {tr('Aperta alle', 'Started at')} {format(new Date(session.started_at), 'dd MMM yyyy HH:mm', { locale: dateLocale })}
-                    {session.project_id ? ` · ${projectById.get(session.project_id)?.name || tr('Cantiere', 'Worksite')}` : ''}
+                    {tx('k54')} {format(new Date(session.started_at), 'dd MMM yyyy HH:mm', { locale: dateLocale })}
+                    {session.project_id ? ` · ${projectById.get(session.project_id)?.name || tx('k55')}` : ''}
                   </p>
                   <div className="mt-1 space-y-1">
                     {renderGpsInfo(
-                      tr('Posizione clock-in', 'Clock-in location'),
+                      tx('k56'),
                       session.clock_in_latitude,
                       session.clock_in_longitude,
                       session.clock_in_accuracy_m,
@@ -736,7 +736,7 @@ export default function CompanyTimeTrackingSection({
                     setCloseDialogNote('');
                   }}
                 >
-                  {tr('Chiudi manualmente', 'Close manually')}
+                  {tx('k57')}
                 </Button>
               </div>
             ))}
@@ -747,26 +747,26 @@ export default function CompanyTimeTrackingSection({
       {isAdmin && (
         <Card>
           <CardHeader>
-            <CardTitle className="text-base">{tr('Timbrature società', 'Company sessions')}</CardTitle>
+            <CardTitle className="text-base">{tx('k58')}</CardTitle>
           </CardHeader>
           <CardContent className="space-y-3">
             <div className="grid grid-cols-1 md:grid-cols-4 gap-3">
               <div className="space-y-2">
-                <Label>{tr('Da', 'From')}</Label>
+                <Label>{tx('k59')}</Label>
                 <Input type="date" value={adminFilterFromDate} onChange={(event) => setAdminFilterFromDate(event.target.value)} />
               </div>
               <div className="space-y-2">
-                <Label>{tr('A', 'To')}</Label>
+                <Label>{tx('k60')}</Label>
                 <Input type="date" value={adminFilterToDate} onChange={(event) => setAdminFilterToDate(event.target.value)} />
               </div>
               <div className="space-y-2">
-                <Label>{tr('Membro', 'Member')}</Label>
+                <Label>{tx('k61')}</Label>
                 <Select value={adminFilterMember} onValueChange={setAdminFilterMember}>
                   <SelectTrigger>
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="__all__">{tr('Tutti i membri', 'All members')}</SelectItem>
+                    <SelectItem value="__all__">{tx('k62')}</SelectItem>
                     {companyMembers.map((member) => (
                       <SelectItem key={member.id} value={member.user_email}>
                         {getUserDisplayNameByEmail(member.user_email, allUsers)}
@@ -776,14 +776,14 @@ export default function CompanyTimeTrackingSection({
                 </Select>
               </div>
               <div className="space-y-2">
-                <Label>{tr('Cantiere', 'Worksite')}</Label>
+                <Label>{tx('k63')}</Label>
                 <Select value={adminFilterProject} onValueChange={setAdminFilterProject}>
                   <SelectTrigger>
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="__all__">{tr('Tutti i cantieri', 'All worksites')}</SelectItem>
-                    <SelectItem value="__none__">{tr('Senza cantiere', 'No worksite')}</SelectItem>
+                    <SelectItem value="__all__">{tx('k64')}</SelectItem>
+                    <SelectItem value="__none__">{tx('k65')}</SelectItem>
                     {projectOptions.map((project) => (
                       <SelectItem key={project.id} value={project.id}>{project.name}</SelectItem>
                     ))}
@@ -803,7 +803,7 @@ export default function CompanyTimeTrackingSection({
                     setAdminFilterToDate(today);
                   }}
                 >
-                  {tr('Oggi', 'Today')}
+                  {tx('k66')}
                 </Button>
                 <Button
                   variant="outline"
@@ -815,7 +815,7 @@ export default function CompanyTimeTrackingSection({
                     setAdminFilterProject('__all__');
                   }}
                 >
-                  {tr('Reset filtri', 'Reset filters')}
+                  {tx('k67')}
                 </Button>
                 <Badge variant="outline">{filteredAdminSessions.length}</Badge>
               </div>
@@ -841,7 +841,7 @@ export default function CompanyTimeTrackingSection({
             </div>
 
             {filteredAdminSessions.length === 0 ? (
-              <p className="text-sm text-gray-600">{tr('Nessuna timbratura registrata.', 'No sessions yet.')}</p>
+              <p className="text-sm text-gray-600">{tx('k68')}</p>
             ) : (
               filteredAdminSessions.map((session) => (
                 <div key={`admin-${session.id}`} className="p-3 rounded-lg border">
@@ -851,17 +851,17 @@ export default function CompanyTimeTrackingSection({
                     {session.ended_at ? ` → ${format(new Date(session.ended_at), 'dd MMM yyyy HH:mm', { locale: dateLocale })}` : ''}
                   </p>
                   <p className="text-xs text-gray-500 mt-1">
-                    {session.project_id ? (projectById.get(session.project_id)?.name || tr('Cantiere', 'Worksite')) : tr('Nessun cantiere associato', 'No linked worksite')}
+                    {session.project_id ? (projectById.get(session.project_id)?.name || tx('k69')) : tx('k70')}
                   </p>
                   <div className="mt-1 space-y-1">
                     {renderGpsInfo(
-                      tr('Posizione clock-in', 'Clock-in location'),
+                      tx('k71'),
                       session.clock_in_latitude,
                       session.clock_in_longitude,
                       session.clock_in_accuracy_m,
                     )}
                     {session.ended_at && renderGpsInfo(
-                      tr('Posizione clock-out', 'Clock-out location'),
+                      tx('k72'),
                       session.clock_out_latitude,
                       session.clock_out_longitude,
                       session.clock_out_accuracy_m,
@@ -873,7 +873,7 @@ export default function CompanyTimeTrackingSection({
 
             {companyRecentSessions.length > 0 && (
               <p className="text-xs text-gray-500">
-                {tr('Storico recente totale', 'Recent total history')}: {companyRecentSessions.length}
+                {tx('k73')}: {companyRecentSessions.length}
               </p>
             )}
           </CardContent>
@@ -883,34 +883,34 @@ export default function CompanyTimeTrackingSection({
       <Dialog open={!!closeDialogTarget} onOpenChange={(open) => !open && setCloseDialogTarget(null)}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>{tr('Chiusura manuale sessione', 'Manual session close')}</DialogTitle>
+            <DialogTitle>{tx('k74')}</DialogTitle>
             <DialogDescription>
-              {tr('Inserisci fine timbratura e motivazione per chiudere la sessione aperta.', 'Set end time and reason to close this open session.')}
+              {tx('k75')}
             </DialogDescription>
           </DialogHeader>
 
           <div className="space-y-3">
             <div className="space-y-2">
-              <Label>{tr('Fine', 'End')}</Label>
+              <Label>{tx('k76')}</Label>
               <Input type="datetime-local" value={closeDialogEndedAt} onChange={(event) => setCloseDialogEndedAt(event.target.value)} />
             </div>
             <div className="space-y-2">
-              <Label>{tr('Motivazione modifica', 'Reason')}</Label>
+              <Label>{tx('k77')}</Label>
               <Input value={closeDialogReason} onChange={(event) => setCloseDialogReason(event.target.value)} />
             </div>
             <div className="space-y-2">
-              <Label>{tr('Note', 'Notes')}</Label>
+              <Label>{tx('k78')}</Label>
               <Textarea value={closeDialogNote} onChange={(event) => setCloseDialogNote(event.target.value)} rows={2} />
             </div>
 
             <div className="flex gap-2 justify-end">
-              <Button variant="outline" onClick={() => setCloseDialogTarget(null)}>{tr('Annulla', 'Cancel')}</Button>
+              <Button variant="outline" onClick={() => setCloseDialogTarget(null)}>{tx('k79')}</Button>
               <Button
                 className="bg-[#ef6144] hover:bg-[#d9553a]"
                 disabled={!closeDialogEndedAt || manualCloseMutation.isPending}
                 onClick={() => manualCloseMutation.mutate()}
               >
-                {manualCloseMutation.isPending ? tr('Salvataggio...', 'Saving...') : tr('Conferma', 'Confirm')}
+                {manualCloseMutation.isPending ? tx('k80') : tx('k81')}
               </Button>
             </div>
           </div>
