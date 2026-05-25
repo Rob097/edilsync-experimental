@@ -29,9 +29,9 @@ import {
   Wallet,
   Zap,
 } from 'lucide-react';
-import publicIt from '@i18n/public/it.json';
-import publicEn from '@i18n/public/en.json';
-import publicDe from '@i18n/public/de.json';
+import publicIt from '../../../i18n/public/it.json';
+import publicEn from '../../../i18n/public/en.json';
+import publicDe from '../../../i18n/public/de.json';
 import { DEFAULT_LOCALE, getFallbackLocales, normalizeLocale } from '@/components/i18n/localeConfig';
 import { localizePublicPath } from '@/public/lib/localePath';
 
