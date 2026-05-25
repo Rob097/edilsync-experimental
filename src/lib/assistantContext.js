@@ -1,6 +1,6 @@
-import completeEn from '@i18n/complete/en.json';
-import completeDe from '@i18n/complete/de.json';
-import completeIt from '@i18n/complete/it.json';
+import completeEn from '../../i18n/complete/en.json';
+import completeDe from '../../i18n/complete/de.json';
+import completeIt from '../../i18n/complete/it.json';
 import { normalizeLocale } from '@/components/i18n/localeConfig';
 import { UI_MODES, isOperationalPath } from './ui-mode';
 

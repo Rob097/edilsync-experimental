@@ -1,15 +1,15 @@
 import i18next from 'i18next';
 import { initReactI18next } from 'react-i18next';
 import LanguageDetector from 'i18next-browser-languagedetector';
-import completeIt from '@i18n/complete/it.json';
-import completeEn from '@i18n/complete/en.json';
-import completeDe from '@i18n/complete/de.json';
-import operationalIt from '@i18n/operational/it.json';
-import operationalEn from '@i18n/operational/en.json';
-import operationalDe from '@i18n/operational/de.json';
-import publicIt from '@i18n/public/it.json';
-import publicEn from '@i18n/public/en.json';
-import publicDe from '@i18n/public/de.json';
+import completeIt from '../../../i18n/complete/it.json';
+import completeEn from '../../../i18n/complete/en.json';
+import completeDe from '../../../i18n/complete/de.json';
+import operationalIt from '../../../i18n/operational/it.json';
+import operationalEn from '../../../i18n/operational/en.json';
+import operationalDe from '../../../i18n/operational/de.json';
+import publicIt from '../../../i18n/public/it.json';
+import publicEn from '../../../i18n/public/en.json';
+import publicDe from '../../../i18n/public/de.json';
 import { getFallbackLocales, SUPPORTED_LOCALE_CODES } from '@/components/i18n/localeConfig';
 
 const mergeTranslationResources = (...parts) => Object.assign({}, ...parts);
