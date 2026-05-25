@@ -19,6 +19,10 @@ import ContactPage from '@/public/pages/ContactPage';
 import PrivacyPolicy from '@/pages/PrivacyPolicy';
 import TermsOfService from '@/pages/TermsOfService';
 import CookiePolicy from '@/pages/CookiePolicy';
+import { DEFAULT_LOCALE, getAllLocaleConfigs } from '@/components/i18n/localeConfig';
+import { getPublicBasePath } from '@/public/lib/localePath';
+
+const NON_DEFAULT_PUBLIC_LOCALES = getAllLocaleConfigs().filter(({ isDefaultPublicLocale }) => !isDefaultPublicLocale);
 
 function PublicLocaleRoutes({ locale, basePath, prerenderData }) {
   return (
@@ -51,8 +55,14 @@ function PublicLocaleRoutes({ locale, basePath, prerenderData }) {
 export default function PublicPrerenderRouter({ prerenderData = null }) {
   return (
     <Routes>
-      <Route path="/en/*" element={<PublicLocaleRoutes locale="en" basePath="/en" prerenderData={prerenderData} />} />
-      <Route path="/*" element={<PublicLocaleRoutes locale="it" basePath="" prerenderData={prerenderData} />} />
+      {NON_DEFAULT_PUBLIC_LOCALES.map(({ code }) => (
+        <Route
+          key={code}
+          path={`${getPublicBasePath(code)}/*`}
+          element={<PublicLocaleRoutes locale={code} basePath={getPublicBasePath(code)} prerenderData={prerenderData} />}
+        />
+      ))}
+      <Route path="/*" element={<PublicLocaleRoutes locale={DEFAULT_LOCALE} basePath={getPublicBasePath(DEFAULT_LOCALE)} prerenderData={prerenderData} />} />
     </Routes>
   );
 }

@@ -2,6 +2,7 @@ import React from 'react';
 import { Card, CardContent } from "@/components/ui/card";
 import { useLanguage } from '@/components/i18n/useLanguage';
 import usePublicSeo from '@/public/hooks/usePublicSeo';
+import { getPublicPageSeoData } from '@/public/lib/localePath';
 import { getPublicCopy } from '@/public/lib/publicTranslations';
 
 export default function TermsOfService() {
@@ -9,14 +10,14 @@ export default function TermsOfService() {
   const copy = getPublicCopy(currentLanguage, 'termsOfServicePage');
   const title = copy.title;
   const description = copy.seoDescription;
+  const { canonicalPath, alternatePathsByLocale } = getPublicPageSeoData(currentLanguage, '/termini');
 
   usePublicSeo({
     title,
     description,
-    canonicalPath: currentLanguage === 'en' ? '/en/termini' : '/termini',
+    canonicalPath,
     locale: currentLanguage,
-    alternateItPath: '/termini',
-    alternateEnPath: '/en/termini',
+    alternatePathsByLocale,
   });
 
   return (

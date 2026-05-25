@@ -1,11 +1,11 @@
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { localizePublicPath } from '@/public/lib/localePath';
+import { detectPublicLocale, localizePublicPath } from '@/public/lib/localePath';
 import { getPublicCopy } from '@/public/lib/publicTranslations';
 
 export default function PublicFooter() {
   const location = useLocation();
-  const locale = location.pathname.startsWith('/en') ? 'en' : 'it';
+  const locale = detectPublicLocale(location.pathname);
   const copy = getPublicCopy(locale, 'footer');
   const currentYear = new Date().getFullYear();
   const privacyPath = localizePublicPath('/privacy', location.pathname);

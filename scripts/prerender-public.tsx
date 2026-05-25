@@ -8,18 +8,18 @@ import { StaticRouter } from 'react-router-dom/server';
 import TurndownService from 'turndown';
 import { loadEnv } from 'vite';
 import i18next, { initializeI18n } from '../src/components/i18n/i18nConfig.jsx';
+import { getAllLocaleConfigs } from '../src/components/i18n/localeConfig.js';
 import { contentClient } from '../src/public/api/contentClient.js';
 import { getMarkdownAssetPath } from '../src/public/lib/agentDiscovery.js';
+import { localizePublicPath } from '../src/public/lib/localePath.js';
+import { pickLocalizedField } from '../src/public/lib/pickLocalizedField.js';
+import { getPublicCopy } from '../src/public/lib/publicTranslations.js';
 import PublicPrerenderRouter from '../src/public/PublicPrerenderRouter.jsx';
 import { PUBLIC_PRERENDER_DATA_KEY } from '../src/public/prerenderData.js';
 
 const distDir = path.resolve(process.cwd(), 'dist');
 const templatePath = path.join(distDir, 'index.html');
-
-const defaultDescriptionByLocale = {
-  it: 'EdilSync aiuta impresa, committente, subappaltatori e tecnici a coordinare il cantiere in modo chiaro e tracciabile.',
-  en: 'EdilSync helps contractors, clients, subcontractors, and professionals coordinate the worksite with clear traceability.',
-};
+const PUBLIC_LOCALES = getAllLocaleConfigs().map(({ code }) => code);
 
 const turndownService = new TurndownService({
   bulletListMarker: '-',
@@ -40,61 +40,61 @@ turndownService.remove([
   'svg',
 ]);
 
-const staticRoutes = [
-  { path: '/', locale: 'it', title: 'EdilSync', description: defaultDescriptionByLocale.it },
-  { path: '/en', locale: 'en', title: 'EdilSync', description: defaultDescriptionByLocale.en },
-  { path: '/funzionalita', locale: 'it', title: 'Funzionalita | EdilSync', description: defaultDescriptionByLocale.it },
-  { path: '/en/funzionalita', locale: 'en', title: 'Features | EdilSync', description: defaultDescriptionByLocale.en },
-  { path: '/come-funziona', locale: 'it', title: 'Come Funziona | EdilSync', description: defaultDescriptionByLocale.it },
-  { path: '/en/come-funziona', locale: 'en', title: 'How It Works | EdilSync', description: defaultDescriptionByLocale.en },
-  { path: '/contractors', locale: 'it', title: 'Per i Contractor | EdilSync', description: defaultDescriptionByLocale.it },
-  { path: '/en/contractors', locale: 'en', title: 'For Contractors | EdilSync', description: defaultDescriptionByLocale.en },
-  { path: '/per-committenti', locale: 'it', title: 'Per i Committenti | EdilSync', description: defaultDescriptionByLocale.it },
-  { path: '/en/per-committenti', locale: 'en', title: 'For Homeowners | EdilSync', description: defaultDescriptionByLocale.en },
-  { path: '/per-subappaltatori', locale: 'it', title: 'Per i Subappaltatori | EdilSync', description: defaultDescriptionByLocale.it },
-  { path: '/en/per-subappaltatori', locale: 'en', title: 'For Subcontractors | EdilSync', description: defaultDescriptionByLocale.en },
-  { path: '/per-tecnici', locale: 'it', title: 'Per i Tecnici | EdilSync', description: defaultDescriptionByLocale.it },
-  { path: '/en/per-tecnici', locale: 'en', title: 'For Professionals | EdilSync', description: defaultDescriptionByLocale.en },
-  { path: '/dispute-protection', locale: 'it', title: 'Protezione Dispute | EdilSync', description: defaultDescriptionByLocale.it },
-  { path: '/en/dispute-protection', locale: 'en', title: 'Dispute Protection | EdilSync', description: defaultDescriptionByLocale.en },
-  { path: '/transparency', locale: 'it', title: 'Trasparenza Committente | EdilSync', description: defaultDescriptionByLocale.it },
-  { path: '/en/transparency', locale: 'en', title: 'Client Transparency | EdilSync', description: defaultDescriptionByLocale.en },
-  { path: '/team-coordination', locale: 'it', title: 'Coordinamento Squadra | EdilSync', description: defaultDescriptionByLocale.it },
-  { path: '/en/team-coordination', locale: 'en', title: 'Team Coordination | EdilSync', description: defaultDescriptionByLocale.en },
-  { path: '/prezzi', locale: 'it', title: 'Prezzi | EdilSync', description: defaultDescriptionByLocale.it },
-  { path: '/en/prezzi', locale: 'en', title: 'Pricing | EdilSync', description: defaultDescriptionByLocale.en },
-  { path: '/faq', locale: 'it', title: 'FAQ | EdilSync', description: 'Domande frequenti su EdilSync: piattaforma, prezzi, funzionalita, permessi, sicurezza e supporto.' },
-  { path: '/en/faq', locale: 'en', title: 'FAQ | EdilSync', description: 'Frequently asked questions about EdilSync: platform, pricing, capabilities, permissions, security, and support.' },
+const getDefaultDescription = (locale) => {
+  const copy = getPublicCopy(locale, 'home');
+  return copy?.seo?.description || 'EdilSync';
+};
+
+const getCopyMeta = (locale, group, selectors = {}) => {
+  const copy = getPublicCopy(locale, group);
+  const rawTitle = selectors.title?.(copy) ?? copy?.seoTitle ?? copy?.title ?? '';
+  const rawDescription = selectors.description?.(copy) ?? copy?.seoDescription ?? copy?.subtitle ?? getDefaultDescription(locale);
+
+  return {
+    title: formatTitle(rawTitle),
+    description: rawDescription,
+  };
+};
+
+const STATIC_ROUTE_DEFINITIONS = [
+  {
+    path: '/',
+    getMeta: (locale) => getCopyMeta(locale, 'home', {
+      title: (copy) => copy?.seo?.title,
+      description: (copy) => copy?.seo?.description,
+    }),
+  },
+  { path: '/funzionalita', getMeta: (locale) => getCopyMeta(locale, 'featuresPage') },
+  { path: '/come-funziona', getMeta: (locale) => getCopyMeta(locale, 'howItWorksPage') },
+  { path: '/contractors', getMeta: (locale) => getCopyMeta(locale, 'contractorsPage') },
+  { path: '/per-committenti', getMeta: (locale) => getCopyMeta(locale, 'homeownersPage') },
+  { path: '/per-subappaltatori', getMeta: (locale) => getCopyMeta(locale, 'subcontractorsPage') },
+  { path: '/per-tecnici', getMeta: (locale) => getCopyMeta(locale, 'professionalsPage') },
+  { path: '/dispute-protection', getMeta: (locale) => getCopyMeta(locale, 'disputeProtectionPage') },
+  { path: '/transparency', getMeta: (locale) => getCopyMeta(locale, 'transparencyPage') },
+  { path: '/team-coordination', getMeta: (locale) => getCopyMeta(locale, 'teamCoordinationPage') },
+  { path: '/prezzi', getMeta: (locale) => getCopyMeta(locale, 'pricingPage') },
+  { path: '/faq', getMeta: (locale) => getCopyMeta(locale, 'faqPage') },
   {
     path: '/contatti',
-    locale: 'it',
-    title: 'Contatti | EdilSync',
-    description: 'Raccontaci il tuo cantiere e ti mostriamo come coordinare persone, tempi, documenti e varianti con EdilSync.',
+    getMeta: (locale) => getCopyMeta(locale, 'contact', {
+      description: (copy) => copy?.subtitle,
+    }),
   },
-  {
-    path: '/en/contatti',
-    locale: 'en',
-    title: 'Contact | EdilSync',
-    description: 'Tell us about your worksite and we will show you how EdilSync can coordinate people, timelines, documents, and change requests.',
-  },
-  { path: '/privacy', locale: 'it', title: 'Privacy Policy | EdilSync', description: defaultDescriptionByLocale.it },
-  { path: '/en/privacy', locale: 'en', title: 'Privacy Policy | EdilSync', description: defaultDescriptionByLocale.en },
-  { path: '/termini', locale: 'it', title: 'Termini di Servizio | EdilSync', description: defaultDescriptionByLocale.it },
-  { path: '/en/termini', locale: 'en', title: 'Terms of Service | EdilSync', description: defaultDescriptionByLocale.en },
-  { path: '/cookie', locale: 'it', title: 'Cookie Policy | EdilSync', description: defaultDescriptionByLocale.it },
-  { path: '/en/cookie', locale: 'en', title: 'Cookie Policy | EdilSync', description: defaultDescriptionByLocale.en },
+  { path: '/privacy', getMeta: (locale) => getCopyMeta(locale, 'privacyPolicyPage') },
+  { path: '/termini', getMeta: (locale) => getCopyMeta(locale, 'termsOfServicePage') },
+  { path: '/cookie', getMeta: (locale) => getCopyMeta(locale, 'cookiePolicyPage') },
 ];
 
+const buildStaticRoutes = () => STATIC_ROUTE_DEFINITIONS.flatMap(({ path: routePath, getMeta }) => (
+  PUBLIC_LOCALES.map((locale) => ({
+    path: localizePublicPath(routePath, locale),
+    locale,
+    ...getMeta(locale),
+  }))
+));
+
 const getSiteOrigin = () => process.env.PUBLIC_SITE_ORIGIN || 'https://edilsync.rdlabs.digital';
-
-const pickLocalized = (post, locale, field) => {
-  const preferred = post?.[`${field}_${locale}`];
-  if (preferred && preferred.trim()) {
-    return preferred;
-  }
-
-  return post?.[`${field}_it`] || post?.[`${field}_en`] || '';
-};
 
 const formatTitle = (value) => {
   if (!value) {
@@ -113,40 +113,28 @@ const serializeForScript = (value) => JSON.stringify(value)
 
 const buildBlogRoutes = async () => {
   const posts = await contentClient.listPublishedPosts();
-  const routes = [
-    {
-      path: '/blog',
-      locale: 'it',
-      title: 'Blog | EdilSync',
-      description: 'Approfondimenti EdilSync su coordinamento di cantiere, varianti, documentazione e lavoro condiviso.',
+  const routes = PUBLIC_LOCALES.map((locale) => {
+    const copy = getPublicCopy(locale, 'blogIndex');
+
+    return {
+      path: localizePublicPath('/blog', locale),
+      locale,
+      title: formatTitle(copy?.seoTitle),
+      description: copy?.seoDescription || copy?.subtitle || getDefaultDescription(locale),
       data: { blogPosts: posts },
-    },
-    {
-      path: '/en/blog',
-      locale: 'en',
-      title: 'Blog | EdilSync',
-      description: 'EdilSync insights on worksite coordination, change requests, documentation, and shared execution.',
-      data: { blogPosts: posts },
-    },
-  ];
+    };
+  });
 
   posts.forEach((post) => {
-    routes.push(
-      {
-        path: `/blog/${post.slug}`,
-        locale: 'it',
-        title: formatTitle(pickLocalized(post, 'it', 'seo_title') || pickLocalized(post, 'it', 'title')),
-        description: pickLocalized(post, 'it', 'seo_description') || pickLocalized(post, 'it', 'excerpt') || defaultDescriptionByLocale.it,
+    PUBLIC_LOCALES.forEach((locale) => {
+      routes.push({
+        path: localizePublicPath(`/blog/${post.slug}`, locale),
+        locale,
+        title: formatTitle(pickLocalizedField(post, locale, 'seo_title') || pickLocalizedField(post, locale, 'title')),
+        description: pickLocalizedField(post, locale, 'seo_description') || pickLocalizedField(post, locale, 'excerpt') || getDefaultDescription(locale),
         data: { blogPost: post },
-      },
-      {
-        path: `/en/blog/${post.slug}`,
-        locale: 'en',
-        title: formatTitle(pickLocalized(post, 'en', 'seo_title') || pickLocalized(post, 'en', 'title')),
-        description: pickLocalized(post, 'en', 'seo_description') || pickLocalized(post, 'en', 'excerpt') || defaultDescriptionByLocale.en,
-        data: { blogPost: post },
-      },
-    );
+      });
+    });
   });
 
   return routes;
@@ -194,7 +182,7 @@ const upsertHeadTag = (html, marker, tag) => {
 };
 
 const injectHeadPreloads = (html, route) => {
-  if (route.path !== '/' && route.path !== '/en') {
+  if (route.path !== localizePublicPath('/', route.locale)) {
     return html;
   }
 
@@ -319,7 +307,7 @@ async function main() {
   loadRuntimeEnv();
 
   const template = await fs.readFile(templatePath, 'utf8');
-  const publicRoutes = [...staticRoutes, ...(await buildBlogRoutes())];
+  const publicRoutes = [...buildStaticRoutes(), ...(await buildBlogRoutes())];
 
   for (const route of publicRoutes) {
     const html = await renderRoute(route, template);

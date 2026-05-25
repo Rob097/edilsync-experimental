@@ -13,14 +13,16 @@ import { PUBLIC_CLASSES } from '@/public/designSystem';
 import PublicPrimaryCta from '@/public/components/marketing/PublicPrimaryCta';
 import MarketingFinalCtaSection from '@/public/components/marketing/MarketingFinalCtaSection';
 import EntitlementHint from '@/public/components/marketing/EntitlementHint';
+import { getPublicLocaleVariant, getPublicPageSeoData } from '@/public/lib/localePath';
 import { getPublicCopy } from '@/public/lib/publicTranslations';
 
 
 export default function ProfessionalsPage({ locale = 'it' }) {
   const rootRef = useRef(null);
   const copy = useMemo(() => getPublicCopy(locale, 'professionalsPage'), [locale]);
-  const basePath = locale === 'en' ? '/en' : '';
-  const canonicalPath = locale === 'en' ? '/en/per-tecnici' : '/per-tecnici';
+  const { canonicalPath, alternatePathsByLocale } = getPublicPageSeoData(locale, '/per-tecnici');
+  const professionalContextsLabel = getPublicLocaleVariant(locale, { it: 'Contesti professionali', en: 'Professional contexts' });
+  const technicalWorkflowLabel = getPublicLocaleVariant(locale, { it: 'Flusso tecnico', en: 'Technical workflow' });
 
   usePublicGsap(rootRef);
 
@@ -29,8 +31,7 @@ export default function ProfessionalsPage({ locale = 'it' }) {
     description: copy.seoDescription,
     canonicalPath,
     locale,
-    alternateItPath: '/per-tecnici',
-    alternateEnPath: '/en/per-tecnici',
+    alternatePathsByLocale,
   });
 
   return (
@@ -56,7 +57,7 @@ export default function ProfessionalsPage({ locale = 'it' }) {
       <section className="public-section-shell py-[4.5rem] md:py-20">
         <div className="mx-auto max-w-6xl px-4 sm:px-6">
           <div className="max-w-2xl" data-reveal>
-            <span className="public-eyebrow">{locale === 'en' ? 'Professional contexts' : 'Contesti professionali'}</span>
+            <span className="public-eyebrow">{professionalContextsLabel}</span>
             <h2 className={`mt-5 ${PUBLIC_CLASSES.sectionH2}`}>{copy.rolesTitle}</h2>
           </div>
           <div className="mt-8 grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-12">
@@ -77,7 +78,7 @@ export default function ProfessionalsPage({ locale = 'it' }) {
       <section className="public-section-shell py-[4.5rem] md:py-[5.5rem]">
         <div className="mx-auto max-w-7xl px-4 sm:px-6">
           <div className="max-w-2xl" data-reveal>
-            <span className="public-eyebrow">{locale === 'en' ? 'Technical workflow' : 'Flusso tecnico'}</span>
+            <span className="public-eyebrow">{technicalWorkflowLabel}</span>
             <h2 className={`mt-5 ${PUBLIC_CLASSES.sectionH2}`}>{copy.featuresTitle}</h2>
           </div>
           <div className="mt-8 grid grid-cols-1 gap-5 md:grid-cols-2 xl:grid-cols-12">

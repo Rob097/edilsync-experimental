@@ -6,14 +6,15 @@ import { PUBLIC_SIGNUP_PATH } from '@/lib/authRouting';
 import usePublicSeo from '@/public/hooks/usePublicSeo';
 import usePublicGsap from '@/public/hooks/usePublicGsap';
 import { PUBLIC_CLASSES } from '@/public/designSystem';
+import { getPublicLocaleVariant, getPublicPageSeoData } from '@/public/lib/localePath';
 import { getPublicCopy } from '@/public/lib/publicTranslations';
 
 
 export default function DisputeProtectionPage({ locale = 'it' }) {
   const rootRef = useRef(null);
   const copy = useMemo(() => getPublicCopy(locale, 'disputeProtectionPage'), [locale]);
-  const basePath = locale === 'en' ? '/en' : '';
-  const canonicalPath = locale === 'en' ? '/en/dispute-protection' : '/dispute-protection';
+  const { canonicalPath, alternatePathsByLocale } = getPublicPageSeoData(locale, '/dispute-protection');
+  const protectionFlowLabel = getPublicLocaleVariant(locale, { it: 'Flusso di tutela', en: 'Protection flow' });
 
   usePublicGsap(rootRef);
 
@@ -22,8 +23,7 @@ export default function DisputeProtectionPage({ locale = 'it' }) {
     description: copy.seoDescription,
     canonicalPath,
     locale,
-    alternateItPath: '/dispute-protection',
-    alternateEnPath: '/en/dispute-protection',
+    alternatePathsByLocale,
   });
 
   return (
@@ -94,7 +94,7 @@ export default function DisputeProtectionPage({ locale = 'it' }) {
       <section className="public-section-shell py-[4.5rem] md:py-[5.5rem]">
         <div className="mx-auto max-w-5xl px-4 sm:px-6">
           <div className="mb-12 text-center" data-reveal>
-            <span className="public-eyebrow">{locale === 'en' ? 'Protection flow' : 'Flusso di tutela'}</span>
+            <span className="public-eyebrow">{protectionFlowLabel}</span>
             <h2 className={`mt-5 ${PUBLIC_CLASSES.sectionH2}`}>{copy.flowTitle}</h2>
             <p className={`mx-auto mt-4 max-w-2xl ${PUBLIC_CLASSES.bodyBase}`}>{copy.flowSubtitle}</p>
           </div>

@@ -8,12 +8,14 @@ import usePublicSeo from '@/public/hooks/usePublicSeo';
 import usePublicGsap from '@/public/hooks/usePublicGsap';
 import StructuredData from '@/public/seo/StructuredData';
 import { PUBLIC_CLASSES } from '@/public/designSystem';
+import { getPublicPageSeoData, localizePublicPath } from '@/public/lib/localePath';
 
 export default function HomePage({ locale = 'it' }) {
   const rootRef = useRef(null);
   const { t } = useTranslation();
-  const canonicalPath = locale === 'en' ? '/en' : '/';
-  const basePrefix = locale === 'en' ? '/en' : '';
+  const { canonicalPath, alternatePathsByLocale } = getPublicPageSeoData(locale, '/');
+  const featuresPath = localizePublicPath('/funzionalita', locale);
+  const pricingPath = localizePublicPath('/prezzi', locale);
   const heroImageFallback = '/images/hero-image.png';
   const heroImageSrcSet = '/images/optimized/hero-image-672.webp 672w, /images/optimized/hero-image-1120.webp 1120w';
 
@@ -114,8 +116,7 @@ export default function HomePage({ locale = 'it' }) {
     description: t('publicHome.seo.description'),
     canonicalPath,
     locale,
-    alternateItPath: '/',
-    alternateEnPath: '/en',
+    alternatePathsByLocale,
   });
 
   const structuredData = {
@@ -346,7 +347,7 @@ export default function HomePage({ locale = 'it' }) {
             </div>
             <div data-reveal className="mt-8 flex justify-start">
               <Button asChild variant="outline" className="public-outline-button rounded-full px-6">
-                <Link to={`${basePrefix}/funzionalita`}>
+                <Link to={featuresPath}>
                   {t('publicHome.features.seeAll')}
                   <ChevronRight className="h-4 w-4" />
                 </Link>
@@ -477,7 +478,7 @@ export default function HomePage({ locale = 'it' }) {
                     ))}
                   </ul>
                   <div className="mt-5 flex flex-wrap gap-2">
-                    <Link to={`${basePrefix}/prezzi`} className="public-anchor-link text-sm font-semibold">
+                    <Link to={pricingPath} className="public-anchor-link text-sm font-semibold">
                       {t('publicHome.pricing.seeFull')}
                     </Link>
                   </div>

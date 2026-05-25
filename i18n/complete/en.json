@@ -102,8 +102,11 @@
   "companies": {
     "title": "Companies",
     "kicker": "Company network",
+    "description": "Invite a company or a professional to participate in the worksite.",
     "members": "Members",
     "admin": "Administrator",
+    "projectRole": "Worksite role",
+    "compatibilityError": "Selected worksite role is not compatible with the selected company type.",
     "member": "Member",
     "noCompanies": "No companies available",
     "manageCompanies": "Manage the companies you are part of"
@@ -240,6 +243,7 @@
       "openedEmailSubject": "New dispute in worksite",
       "openedEmailBody": "A new dispute has been opened: {{title}}.",
       "statusChangedTitle": "Dispute status updated",
+      "projectContext": "Worksite: {{project}}",
       "statusChangedMessage": "Dispute \"{{title}}\" is now: {{status}}",
       "statusChangedEmailSubject": "Dispute status update",
       "statusChangedEmailBody": "Dispute \"{{title}}\" has been updated to status: {{status}}.",

@@ -19,8 +19,17 @@ const ContactRoute = lazy(() => import('@/public/routes/ContactRoute'));
 const PrivacyPolicy = lazy(() => import('@/pages/PrivacyPolicy'));
 const TermsOfService = lazy(() => import('@/pages/TermsOfService'));
 const CookiePolicy = lazy(() => import('@/pages/CookiePolicy'));
+import { DEFAULT_LOCALE, getAllLocaleConfigs } from '@/components/i18n/localeConfig';
+import { getPublicBasePath, localizePublicPath } from '@/public/lib/localePath';
 
 const RouteFallback = () => null;
+const PUBLIC_LOCALE_CONFIGS = getAllLocaleConfigs();
+const NON_DEFAULT_PUBLIC_LOCALES = PUBLIC_LOCALE_CONFIGS.filter(({ isDefaultPublicLocale }) => !isDefaultPublicLocale);
+const LEGACY_PUBLIC_REDIRECTS = [
+  ['/PrivacyPolicy', '/privacy'],
+  ['/TermsOfService', '/termini'],
+  ['/CookiePolicy', '/cookie'],
+];
 
 function PublicLocaleRoutes({ locale, basePath }) {
   return (
@@ -33,7 +42,7 @@ function PublicLocaleRoutes({ locale, basePath }) {
           <Route path="transparency" element={<TransparencyPage locale={locale} />} />
           <Route path="team-coordination" element={<TeamCoordinationPage locale={locale} />} />
           <Route path="contractors" element={<ContractorsPage locale={locale} />} />
-          <Route path="per-imprese" element={<Navigate to={locale === 'en' ? '/en/contractors' : '/contractors'} replace />} />
+          <Route path="per-imprese" element={<Navigate to={localizePublicPath('/contractors', locale)} replace />} />
           <Route path="per-committenti" element={<HomeownersPage locale={locale} />} />
           <Route path="per-subappaltatori" element={<SubcontractorsPage locale={locale} />} />
           <Route path="per-tecnici" element={<ProfessionalsPage locale={locale} />} />
@@ -56,14 +65,21 @@ function PublicLocaleRoutes({ locale, basePath }) {
 export default function PublicSiteRouter() {
   return (
     <Routes>
-      <Route path="/PrivacyPolicy" element={<Navigate to="/privacy" replace />} />
-      <Route path="/TermsOfService" element={<Navigate to="/termini" replace />} />
-      <Route path="/CookiePolicy" element={<Navigate to="/cookie" replace />} />
-      <Route path="/en/PrivacyPolicy" element={<Navigate to="/en/privacy" replace />} />
-      <Route path="/en/TermsOfService" element={<Navigate to="/en/termini" replace />} />
-      <Route path="/en/CookiePolicy" element={<Navigate to="/en/cookie" replace />} />
-      <Route path="/en/*" element={<PublicLocaleRoutes locale="en" basePath="/en" />} />
-      <Route path="/*" element={<PublicLocaleRoutes locale="it" basePath="" />} />
+      {PUBLIC_LOCALE_CONFIGS.flatMap(({ code }) => LEGACY_PUBLIC_REDIRECTS.map(([legacyPath, canonicalPath]) => (
+        <Route
+          key={`${code}:${legacyPath}`}
+          path={localizePublicPath(legacyPath, code)}
+          element={<Navigate to={localizePublicPath(canonicalPath, code)} replace />}
+        />
+      )))}
+      {NON_DEFAULT_PUBLIC_LOCALES.map(({ code }) => (
+        <Route
+          key={code}
+          path={`${getPublicBasePath(code)}/*`}
+          element={<PublicLocaleRoutes locale={code} basePath={getPublicBasePath(code)} />}
+        />
+      ))}
+      <Route path="/*" element={<PublicLocaleRoutes locale={DEFAULT_LOCALE} basePath={getPublicBasePath(DEFAULT_LOCALE)} />} />
     </Routes>
   );
 }

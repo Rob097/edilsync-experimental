@@ -1,7 +1,8 @@
 import { getPublicCopy } from '@/public/lib/publicTranslations';
+import { getLocaleConfig, normalizeLocale } from '@/components/i18n/localeConfig';
 
 function getLocaleTag(locale = 'it') {
-  return locale === 'en' ? 'en-GB' : 'it-IT';
+  return getLocaleConfig(locale).readingTimeLocale;
 }
 
 export function formatBlogDate(value, locale = 'it') {
@@ -22,7 +23,7 @@ export function formatReadingTime(minutes, locale = 'it') {
 
   const roundedMinutes = Math.max(1, Math.round(Number(minutes)));
   const copy = getPublicCopy(locale, 'blogMeta');
-  return `${roundedMinutes} ${copy?.minReadLabel || (locale === 'en' ? 'min read' : 'min di lettura')}`;
+  return `${roundedMinutes} ${copy?.minReadLabel || (normalizeLocale(locale) === 'it' ? 'min di lettura' : 'min read')}`;
 }
 
 export function getBlogMetaItems(post, locale = 'it') {

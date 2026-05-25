@@ -2,14 +2,14 @@ import React, { useEffect, useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { Cookie } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { localizePublicPath } from '@/public/lib/localePath';
+import { detectPublicLocale, localizePublicPath } from '@/public/lib/localePath';
 import { getPublicCopy } from '@/public/lib/publicTranslations';
 
 const COOKIE_CONSENT_KEY = 'edilsync_cookie_consent';
 
 export default function PublicCookieBanner() {
   const location = useLocation();
-  const locale = location.pathname.startsWith('/en') ? 'en' : 'it';
+  const locale = detectPublicLocale(location.pathname);
   const copy = getPublicCopy(locale, 'cookieBanner');
   const [visible, setVisible] = useState(false);
   const cookiePolicyPath = localizePublicPath('/cookie', location.pathname);

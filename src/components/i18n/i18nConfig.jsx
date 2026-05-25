@@ -3,27 +3,34 @@ import { initReactI18next } from 'react-i18next';
 import LanguageDetector from 'i18next-browser-languagedetector';
 import completeIt from '@i18n/complete/it.json';
 import completeEn from '@i18n/complete/en.json';
+import completeDe from '@i18n/complete/de.json';
 import operationalIt from '@i18n/operational/it.json';
 import operationalEn from '@i18n/operational/en.json';
+import operationalDe from '@i18n/operational/de.json';
 import publicIt from '@i18n/public/it.json';
 import publicEn from '@i18n/public/en.json';
+import publicDe from '@i18n/public/de.json';
+import { getFallbackLocales, SUPPORTED_LOCALE_CODES } from '@/components/i18n/localeConfig';
 
 const mergeTranslationResources = (...parts) => Object.assign({}, ...parts);
 
+const composeLocaleResources = (completeTranslations, operationalTranslations, publicTranslations = {}) => (
+  mergeTranslationResources(
+    completeTranslations,
+    operationalTranslations,
+    { publicHome: publicTranslations.home || {} },
+  )
+);
+
 const resources = {
   it: {
-    translation: mergeTranslationResources(
-      completeIt,
-      operationalIt,
-      { publicHome: publicIt.home },
-    ),
+    translation: composeLocaleResources(completeIt, operationalIt, publicIt),
   },
   en: {
-    translation: mergeTranslationResources(
-      completeEn,
-      operationalEn,
-      { publicHome: publicEn.home },
-    ),
+    translation: composeLocaleResources(completeEn, operationalEn, publicEn),
+  },
+  de: {
+    translation: composeLocaleResources(completeDe, operationalDe, publicDe),
   },
 };
 
@@ -38,10 +45,10 @@ export const initializeI18n = ({ lng = 'it', useDetector = typeof window !== 'un
     .use(initReactI18next)
     .init({
       resources,
-      supportedLngs: ['it', 'en'],
+      supportedLngs: SUPPORTED_LOCALE_CODES,
       nonExplicitSupportedLngs: true,
       load: 'languageOnly',
-      fallbackLng: 'it',
+      fallbackLng: getFallbackLocales,
       lng: useDetector ? undefined : lng,
       ns: ['translation'],
       defaultNS: 'translation',

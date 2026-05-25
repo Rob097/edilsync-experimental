@@ -6,14 +6,16 @@ import { PUBLIC_SIGNUP_PATH } from '@/lib/authRouting';
 import usePublicSeo from '@/public/hooks/usePublicSeo';
 import usePublicGsap from '@/public/hooks/usePublicGsap';
 import { PUBLIC_CLASSES } from '@/public/designSystem';
+import { getPublicLocaleVariant, getPublicPageSeoData } from '@/public/lib/localePath';
 import { getPublicCopy } from '@/public/lib/publicTranslations';
 
 
 export default function TeamCoordinationPage({ locale = 'it' }) {
   const rootRef = useRef(null);
   const copy = useMemo(() => getPublicCopy(locale, 'teamCoordinationPage'), [locale]);
-  const basePath = locale === 'en' ? '/en' : '';
-  const canonicalPath = locale === 'en' ? '/en/team-coordination' : '/team-coordination';
+  const { canonicalPath, alternatePathsByLocale } = getPublicPageSeoData(locale, '/team-coordination');
+  const failurePointsLabel = getPublicLocaleVariant(locale, { it: 'Punti di rottura', en: 'Common failure points' });
+  const alignmentEngineLabel = getPublicLocaleVariant(locale, { it: 'Motore di allineamento', en: 'Alignment engine' });
 
   usePublicGsap(rootRef);
 
@@ -22,8 +24,7 @@ export default function TeamCoordinationPage({ locale = 'it' }) {
     description: copy.seoDescription,
     canonicalPath,
     locale,
-    alternateItPath: '/team-coordination',
-    alternateEnPath: '/en/team-coordination',
+    alternatePathsByLocale,
   });
 
   return (
@@ -69,7 +70,7 @@ export default function TeamCoordinationPage({ locale = 'it' }) {
       <section className="public-section-shell py-[4.5rem] md:py-[5.5rem]">
         <div className="mx-auto max-w-6xl px-4 sm:px-6">
           <div className="mb-12 text-center" data-reveal>
-            <span className="public-eyebrow">{locale === 'en' ? 'Common failure points' : 'Punti di rottura'}</span>
+            <span className="public-eyebrow">{failurePointsLabel}</span>
             <h2 className={`mt-5 ${PUBLIC_CLASSES.sectionH2}`}>{copy.problemsTitle}</h2>
           </div>
           <div className="grid grid-cols-1 gap-5 md:grid-cols-2">
@@ -86,7 +87,7 @@ export default function TeamCoordinationPage({ locale = 'it' }) {
       <section className="public-section-shell py-[4.5rem] md:py-[5.5rem]">
         <div className="mx-auto max-w-7xl px-4 sm:px-6">
           <div className="mb-12 text-center" data-reveal>
-            <span className="public-eyebrow">{locale === 'en' ? 'Alignment engine' : 'Motore di allineamento'}</span>
+            <span className="public-eyebrow">{alignmentEngineLabel}</span>
             <h2 className={`mt-5 ${PUBLIC_CLASSES.sectionH2}`}>{copy.alignmentTitle}</h2>
           </div>
           <div className="grid grid-cols-1 gap-5 md:grid-cols-2 xl:grid-cols-12">

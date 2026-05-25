@@ -20,10 +20,13 @@ const defaultForm = {
   status: 'draft',
   title_it: '',
   title_en: '',
+  title_de: '',
   excerpt_it: '',
   excerpt_en: '',
+  excerpt_de: '',
   content_markdown_it: '',
   content_markdown_en: '',
+  content_markdown_de: '',
   category_id: '',
   author_id: '',
 };
@@ -46,7 +49,7 @@ export default function WebAdminPosts() {
     queryFn: async () => {
       const { data, error } = await supabase
         .from('blog_posts')
-        .select('id,slug,status,title_it,title_en,published_at,category:blog_categories(name_it),author:blog_authors(full_name)')
+        .select('id,slug,status,title_it,title_en,title_de,published_at,category:blog_categories(name_it,name_en,name_de),author:blog_authors(full_name)')
         .order('updated_date', { ascending: false });
       if (error) throw error;
       return data || [];
@@ -56,7 +59,7 @@ export default function WebAdminPosts() {
   const { data: categories = [] } = useQuery({
     queryKey: ['web-admin-categories'],
     queryFn: async () => {
-      const { data, error } = await supabase.from('blog_categories').select('id,name_it').order('name_it');
+      const { data, error } = await supabase.from('blog_categories').select('id,name_it,name_en,name_de').order('name_it');
       if (error) throw error;
       return data || [];
     },
@@ -96,7 +99,7 @@ export default function WebAdminPosts() {
     mutationFn: async () => {
       const payload = {
         ...form,
-        slug: form.slug || slugify(form.title_it || form.title_en),
+        slug: form.slug || slugify(form.title_it || form.title_en || form.title_de),
         published_at: form.status === 'published' ? (form.published_at || new Date().toISOString()) : null,
       };
 
@@ -148,6 +151,10 @@ export default function WebAdminPosts() {
             <Input id="title_en" value={form.title_en || ''} onChange={(e) => setForm((p) => ({ ...p, title_en: e.target.value }))} />
           </div>
           <div className="space-y-2">
+            <Label htmlFor="title_de">Title DE</Label>
+            <Input id="title_de" value={form.title_de || ''} onChange={(e) => setForm((p) => ({ ...p, title_de: e.target.value }))} />
+          </div>
+          <div className="space-y-2">
             <Label htmlFor="slug">Slug</Label>
             <Input id="slug" value={form.slug || ''} onChange={(e) => setForm((p) => ({ ...p, slug: slugify(e.target.value) }))} />
           </div>
@@ -175,7 +182,7 @@ export default function WebAdminPosts() {
                 <SelectContent>
                   {categories.map((category) => (
                     <SelectItem key={category.id} value={category.id}>
-                      {category.name_it}
+                      {category.name_it || category.name_en || category.name_de}
                     </SelectItem>
                   ))}
                 </SelectContent>
@@ -206,12 +213,20 @@ export default function WebAdminPosts() {
             <Textarea id="excerpt_en" value={form.excerpt_en || ''} onChange={(e) => setForm((p) => ({ ...p, excerpt_en: e.target.value }))} />
           </div>
           <div className="space-y-2">
+            <Label htmlFor="excerpt_de">Excerpt DE</Label>
+            <Textarea id="excerpt_de" value={form.excerpt_de || ''} onChange={(e) => setForm((p) => ({ ...p, excerpt_de: e.target.value }))} />
+          </div>
+          <div className="space-y-2">
             <Label htmlFor="content_markdown_it">Content IT (Markdown)</Label>
             <Textarea id="content_markdown_it" className="min-h-40" value={form.content_markdown_it || ''} onChange={(e) => setForm((p) => ({ ...p, content_markdown_it: e.target.value }))} />
           </div>
           <div className="space-y-2">
             <Label htmlFor="content_markdown_en">Content EN (Markdown)</Label>
             <Textarea id="content_markdown_en" className="min-h-40" value={form.content_markdown_en || ''} onChange={(e) => setForm((p) => ({ ...p, content_markdown_en: e.target.value }))} />
+          </div>
+          <div className="space-y-2">
+            <Label htmlFor="content_markdown_de">Content DE (Markdown)</Label>
+            <Textarea id="content_markdown_de" className="min-h-40" value={form.content_markdown_de || ''} onChange={(e) => setForm((p) => ({ ...p, content_markdown_de: e.target.value }))} />
           </div>
           <div className="flex flex-wrap gap-2">
             <Button disabled={isSaving} onClick={() => saveMutation.mutate()}>
@@ -241,9 +256,9 @@ export default function WebAdminPosts() {
               onClick={() => setForm((prev) => ({ ...prev, id: post.id }))}
               className="w-full text-left rounded-lg border border-stone-200 px-3 py-3 hover:border-[#ef6144]/60 transition-colors"
             >
-              <p className="font-medium text-slate-900 truncate">{post.title_it || post.title_en || post.slug}</p>
+              <p className="font-medium text-slate-900 truncate">{post.title_it || post.title_en || post.title_de || post.slug}</p>
               <p className="text-xs text-slate-500 mt-1">
-                {post.status} | {post.category?.name_it || 'No category'} | {post.author?.full_name || 'No author'}
+                {post.status} | {post.category?.name_it || post.category?.name_en || post.category?.name_de || 'No category'} | {post.author?.full_name || 'No author'}
               </p>
             </button>
           ))}

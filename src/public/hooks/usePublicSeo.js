@@ -1,4 +1,5 @@
 import { useEffect } from 'react';
+import { DEFAULT_LOCALE, getLocaleConfig, normalizeLocale } from '@/components/i18n/localeConfig';
 
 const DEFAULT_TITLE = 'EdilSync';
 const DEFAULT_DESCRIPTION =
@@ -32,16 +33,51 @@ function ensureLink(rel, href, extras = {}) {
   node.setAttribute('href', href);
 }
 
+function ensureManagedAlternateLink(href, hreflang) {
+  let node = document.head.querySelector(`link[rel="alternate"][hreflang="${hreflang}"][data-public-seo="true"]`);
+
+  if (!node) {
+    node = document.createElement('link');
+    node.setAttribute('rel', 'alternate');
+    node.setAttribute('hreflang', hreflang);
+    node.setAttribute('data-public-seo', 'true');
+    document.head.appendChild(node);
+  }
+
+  node.setAttribute('href', href);
+}
+
+function clearManagedAlternateLinks() {
+  document.head
+    .querySelectorAll('link[rel="alternate"][data-public-seo="true"]')
+    .forEach((node) => node.remove());
+}
+
+function getResolvedAlternatePaths(alternatePathsByLocale, alternateItPath, alternateEnPath) {
+  if (alternatePathsByLocale && typeof alternatePathsByLocale === 'object') {
+    return alternatePathsByLocale;
+  }
+
+  return {
+    it: alternateItPath,
+    en: alternateEnPath,
+  };
+}
+
 export default function usePublicSeo({
   title,
   description,
   canonicalPath,
   locale = 'it',
+  alternatePathsByLocale,
   alternateItPath,
   alternateEnPath,
   robots = 'index,follow',
 }) {
   useEffect(() => {
+    const normalizedLocale = normalizeLocale(locale);
+    const localeConfig = getLocaleConfig(normalizedLocale);
+    const resolvedAlternatePaths = getResolvedAlternatePaths(alternatePathsByLocale, alternateItPath, alternateEnPath);
     const finalTitle = title ? `${title} | ${DEFAULT_TITLE}` : DEFAULT_TITLE;
     const finalDescription = description || DEFAULT_DESCRIPTION;
     const origin = window.location.origin;
@@ -52,21 +88,25 @@ export default function usePublicSeo({
     ensureMeta('og:title', finalTitle, true);
     ensureMeta('og:description', finalDescription, true);
     ensureMeta('og:type', 'website', true);
-    ensureMeta('og:locale', locale === 'en' ? 'en_US' : 'it_IT', true);
+    ensureMeta('og:locale', localeConfig.ogLocale, true);
 
     const canonicalHref = canonicalPath ? `${origin}${canonicalPath}` : window.location.href;
     ensureLink('canonical', canonicalHref);
 
-    if (alternateItPath) {
-      ensureLink('alternate', `${origin}${alternateItPath}`, { hreflang: 'it' });
-    }
+    clearManagedAlternateLinks();
 
-    if (alternateEnPath) {
-      ensureLink('alternate', `${origin}${alternateEnPath}`, { hreflang: 'en' });
-    }
+    Object.entries(resolvedAlternatePaths || {}).forEach(([localeCode, path]) => {
+      if (!path) {
+        return;
+      }
 
-    if (alternateItPath || alternateEnPath) {
-      ensureLink('alternate', canonicalHref, { hreflang: 'x-default' });
+      const alternateLocaleConfig = getLocaleConfig(localeCode);
+      ensureManagedAlternateLink(`${origin}${path}`, alternateLocaleConfig.hreflang);
+    });
+
+    const defaultAlternatePath = resolvedAlternatePaths?.[DEFAULT_LOCALE] || canonicalPath;
+    if (defaultAlternatePath) {
+      ensureManagedAlternateLink(`${origin}${defaultAlternatePath}`, 'x-default');
     }
-  }, [title, description, canonicalPath, locale, alternateItPath, alternateEnPath, robots]);
+  }, [title, description, canonicalPath, locale, alternatePathsByLocale, alternateItPath, alternateEnPath, robots]);
 }

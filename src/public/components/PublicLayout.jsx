@@ -15,6 +15,7 @@ import {
 import PublicCookieBanner from '@/public/components/PublicCookieBanner';
 import PublicFooter from '@/public/components/PublicFooter';
 import PublicLanguageSelector from '@/public/components/PublicLanguageSelector';
+import { detectPublicLocale, localizePublicPath } from '@/public/lib/localePath';
 import { getPublicCopy } from '@/public/lib/publicTranslations';
 
 if (!i18next.isInitialized) {
@@ -32,11 +33,12 @@ export default function PublicLayout({ locale = 'it', children }) {
   const location = useLocation();
   const [mobileOpen, setMobileOpen] = useState(false);
 
-  const isEnglishPath = location.pathname.startsWith('/en');
-  const effectiveLocale = isEnglishPath ? 'en' : locale;
+  const effectiveLocale = detectPublicLocale(location.pathname) || locale;
   const localized = getPublicCopy(effectiveLocale, 'layout');
   const copy = localized.cta;
   const aria = localized.aria;
+  const homePath = localizePublicPath('/', effectiveLocale);
+  const contactPath = localizePublicPath('/contatti', effectiveLocale);
 
   const menu = useMemo(() => {
     const rawMenu = localized.menu;
@@ -85,7 +87,7 @@ export default function PublicLayout({ locale = 'it', children }) {
       <div className="public-site min-h-screen flex flex-col">
         <header className="sticky top-0 z-40 border-b border-[rgba(84,63,54,0.12)] bg-[rgba(247,241,235,0.84)] backdrop-blur-2xl supports-[backdrop-filter]:bg-[rgba(247,241,235,0.74)]">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 py-3.5 flex items-center justify-between gap-4">
-            <Link to={effectiveLocale === 'en' ? '/en' : '/'} className="public-anchor-link flex items-center gap-3">
+            <Link to={homePath} className="public-anchor-link flex items-center gap-3">
               <div className="w-10 h-10 rounded-2xl bg-[linear-gradient(135deg,#ef6144,#d9553a)] flex items-center justify-center shadow-[0_14px_28px_rgba(239,97,68,0.25)]">
                 <HardHat className="h-5 w-5 text-white" />
               </div>
@@ -141,7 +143,7 @@ export default function PublicLayout({ locale = 'it', children }) {
                               <p className="mt-2.5 text-[17px] leading-tight font-semibold">{entry.featured.title}</p>
                               <p className="mt-1.5 text-[12px] leading-[1.6] text-[#5e4d47]">{entry.featured.text}</p>
                               <Link
-                                to={effectiveLocale === 'en' ? '/en/contatti' : '/contatti'}
+                                to={contactPath}
                                 className="inline-flex items-center gap-1 font-semibold text-[#c55039] mt-4 text-[12px]"
                               >
                                 {copy.demo}
@@ -180,7 +182,7 @@ export default function PublicLayout({ locale = 'it', children }) {
                 <Link to="/app">{copy.login}</Link>
               </Button>
               <Button asChild className="public-primary-button hidden lg:inline-flex rounded-full px-5">
-                <Link to={effectiveLocale === 'en' ? '/en/contatti' : '/contatti'}>{copy.demo}</Link>
+                <Link to={contactPath}>{copy.demo}</Link>
               </Button>
             </div>
           </div>
@@ -233,7 +235,7 @@ export default function PublicLayout({ locale = 'it', children }) {
                     <Link to="/app">{copy.login}</Link>
                   </Button>
                   <Button asChild className="public-primary-button w-full rounded-full">
-                    <Link to={effectiveLocale === 'en' ? '/en/contatti' : '/contatti'}>{copy.demo}</Link>
+                    <Link to={contactPath}>{copy.demo}</Link>
                   </Button>
                 </div>
               </div>

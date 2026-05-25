@@ -10,11 +10,15 @@ import { Textarea } from '@/components/ui/textarea';
 import { getPublicSupabaseClient } from '@/public/api/publicSupabaseClient';
 import usePublicSeo from '@/public/hooks/usePublicSeo';
 import { PUBLIC_CLASSES } from '@/public/designSystem';
+import { getPublicPageSeoData, localizePublicPath } from '@/public/lib/localePath';
 import { getPublicCopy } from '@/public/lib/publicTranslations';
 
 export default function ContactPage({ locale = 'it' }) {
   const t = getPublicCopy(locale, 'contact');
   const roleOptions = t.roles;
+  const { canonicalPath, alternatePathsByLocale } = getPublicPageSeoData(locale, '/contatti');
+  const blogPath = localizePublicPath('/blog', locale);
+  const faqPath = localizePublicPath('/faq', locale);
 
   const [form, setForm] = useState({
     full_name: '',
@@ -30,10 +34,9 @@ export default function ContactPage({ locale = 'it' }) {
   usePublicSeo({
     title: t.seoTitle,
     description: t.subtitle,
-    canonicalPath: locale === 'en' ? '/en/contatti' : '/contatti',
+    canonicalPath,
     locale,
-    alternateItPath: '/contatti',
-    alternateEnPath: '/en/contatti',
+    alternatePathsByLocale,
   });
 
   const isValid = useMemo(
@@ -49,9 +52,7 @@ export default function ContactPage({ locale = 'it' }) {
         locale,
         source_path: typeof window !== 'undefined'
           ? window.location.pathname
-          : locale === 'en'
-            ? '/en/contatti'
-            : '/contatti',
+          : canonicalPath,
       };
 
       const { error } = await supabase.functions.invoke('submitDemoRequest', {
@@ -100,10 +101,10 @@ export default function ContactPage({ locale = 'it' }) {
             <p className="text-[11px] uppercase tracking-[0.14em] text-[var(--public-accent-dark)] font-extrabold">{t.resourcesTitle}</p>
             <div className="mt-4 flex flex-wrap gap-2">
               <Button asChild variant="ghost" className="public-outline-button rounded-full h-10 px-4 text-[13px] text-[var(--public-ink)]">
-                <Link to={locale === 'en' ? '/en/blog' : '/blog'}>{t.readBlog}</Link>
+                <Link to={blogPath}>{t.readBlog}</Link>
               </Button>
               <Button asChild variant="ghost" className="public-outline-button rounded-full h-10 px-4 text-[13px] text-[var(--public-ink)]">
-                <Link to={locale === 'en' ? '/en/faq' : '/faq'}>{t.faq}</Link>
+                <Link to={faqPath}>{t.faq}</Link>
               </Button>
             </div>
           </div>
@@ -199,7 +200,7 @@ export default function ContactPage({ locale = 'it' }) {
           <p className={`mt-6 ${PUBLIC_CLASSES.darkBodyLead}`}>{t.finalText}</p>
           <div className="mt-10 flex justify-center">
             <Button asChild className={PUBLIC_CLASSES.darkPrimaryCta}>
-              <Link to={locale === 'en' ? '/en/blog' : '/blog'}>
+              <Link to={blogPath}>
                 {t.finalCta}
                 <ArrowRight className="h-4 w-4" />
               </Link>

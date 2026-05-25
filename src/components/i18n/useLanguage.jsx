@@ -1,23 +1,19 @@
 import { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
-
-const normalizeLanguage = (lng) => {
-  if (!lng || typeof lng !== 'string') return 'it';
-  const base = lng.toLowerCase().split('-')[0];
-  return base === 'en' ? 'en' : 'it';
-};
+import { getLocaleConfig, normalizeLocale } from '@/components/i18n/localeConfig';
 
 export const useLanguage = () => {
   const { i18n, t } = useTranslation();
 
   const changeLanguage = (lng) => {
-    const normalized = normalizeLanguage(lng);
+    const normalized = normalizeLocale(lng);
     i18n.changeLanguage(normalized);
     localStorage.setItem('language', normalized);
     localStorage.setItem('i18nextLng', normalized);
   };
 
-  const currentLanguage = normalizeLanguage(i18n.resolvedLanguage || i18n.language);
+  const currentLanguage = normalizeLocale(i18n.resolvedLanguage || i18n.language);
+  const localeConfig = getLocaleConfig(currentLanguage);
 
   useEffect(() => {
     const detected = localStorage.getItem('i18nextLng');
@@ -30,7 +26,7 @@ export const useLanguage = () => {
     if (!date) return '';
 
     const d = new Date(date);
-    const locale = currentLanguage === 'it' ? 'it-IT' : 'en-US';
+    const locale = localeConfig.appLocale;
 
     if (format === 'short') {
       return d.toLocaleDateString(locale);

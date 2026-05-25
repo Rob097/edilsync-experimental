@@ -139,7 +139,6 @@ export default function ProjectMessaging({
     participants,
     companyName,
     t,
-    tr,
   ]);
 
   const accessibleChannels = channels.filter((channel) => {

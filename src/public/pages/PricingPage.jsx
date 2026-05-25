@@ -7,14 +7,29 @@ import usePublicSeo from '@/public/hooks/usePublicSeo';
 import usePublicGsap from '@/public/hooks/usePublicGsap';
 import { PUBLIC_CLASSES } from '@/public/designSystem';
 import MarketingFinalCtaSection from '@/public/components/marketing/MarketingFinalCtaSection';
+import { getPublicLocaleVariant, getPublicPageSeoData, localizePublicPath } from '@/public/lib/localePath';
 import { getPublicCopy } from '@/public/lib/publicTranslations';
 
 
 export default function PricingPage({ locale = 'it' }) {
   const rootRef = useRef(null);
   const copy = useMemo(() => getPublicCopy(locale, 'pricingPage'), [locale]);
-  const basePath = locale === 'en' ? '/en' : '';
-  const canonicalPath = locale === 'en' ? '/en/prezzi' : '/prezzi';
+  const { canonicalPath, alternatePathsByLocale } = getPublicPageSeoData(locale, '/prezzi');
+  const faqPath = localizePublicPath('/faq', locale);
+  const contactPath = localizePublicPath('/contatti', locale);
+  const pricingStructureLabel = getPublicLocaleVariant(locale, { it: 'Struttura del prezzo', en: 'Pricing structure' });
+  const pricingStructureTitle = getPublicLocaleVariant(locale, { it: 'Semplice da spiegare gia dal primo giorno.', en: 'Simple to explain on day one.' });
+  const pricingStructureText = getPublicLocaleVariant(locale, {
+    it: 'EdilSync non fa pagare ogni persona del cantiere. La società passa a Pro quando le servono strumenti avanzati per l’impresa e la sponsorship del cantiere.',
+    en: 'EdilSync does not charge every person on the worksite. The company upgrades when it needs premium company tools and worksite sponsorship.',
+  });
+  const companyPlanLabel = getPublicLocaleVariant(locale, { it: 'Piano società', en: 'Company plan' });
+  const advancedAreasText = getPublicLocaleVariant(locale, {
+    it: 'Le altre aree avanzate di cantiere si attivano non appena una società Pro sponsorizza il cantiere.',
+    en: 'The rest of the advanced worksite capabilities unlock as soon as a Pro company sponsors the worksite.',
+  });
+  const upgradeLogicLabel = getPublicLocaleVariant(locale, { it: 'Quando passare a Pro', en: 'Upgrade logic' });
+  const pricingFaqLabel = getPublicLocaleVariant(locale, { it: 'Domande sui prezzi', en: 'Pricing FAQ' });
 
   usePublicGsap(rootRef);
 
@@ -23,8 +38,7 @@ export default function PricingPage({ locale = 'it' }) {
     description: copy.seoDescription,
     canonicalPath,
     locale,
-    alternateItPath: '/prezzi',
-    alternateEnPath: '/en/prezzi',
+    alternatePathsByLocale,
   });
 
   return (
@@ -50,15 +64,13 @@ export default function PricingPage({ locale = 'it' }) {
               <div className="grid gap-5 md:grid-cols-[0.9fr_1.1fr] md:items-start">
                 <div>
                   <p className="text-[11px] font-bold uppercase tracking-[0.14em] text-[var(--public-accent-dark)]">
-                    {locale === 'en' ? 'Pricing structure' : 'Struttura del prezzo'}
+                    {pricingStructureLabel}
                   </p>
                   <h2 className="mt-4 text-[clamp(1.55rem,2.4vw,2.3rem)] font-bold leading-[1.02] tracking-[-0.045em] text-[var(--public-ink)]">
-                    {locale === 'en' ? 'Simple to explain on day one.' : 'Semplice da spiegare gia dal primo giorno.'}
+                    {pricingStructureTitle}
                   </h2>
                   <p className="mt-4 text-sm leading-relaxed text-[var(--public-muted)]">
-                    {locale === 'en'
-                      ? 'EdilSync does not charge every person on the worksite. The company upgrades when it needs premium company tools and worksite sponsorship.'
-                      : 'EdilSync non fa pagare ogni persona del cantiere. La società passa a Pro quando le servono strumenti avanzati per l’impresa e la sponsorship del cantiere.'}
+                    {pricingStructureText}
                   </p>
                 </div>
                 <div className="space-y-3">
@@ -79,7 +91,7 @@ export default function PricingPage({ locale = 'it' }) {
             <div className="p-8 md:p-10">
               <div className="flex items-start justify-between gap-3">
                 <div>
-                  <p className="text-[11px] font-bold uppercase tracking-[0.14em] text-[var(--public-accent-dark)]">{locale === 'en' ? 'Company plan' : 'Piano società'}</p>
+                  <p className="text-[11px] font-bold uppercase tracking-[0.14em] text-[var(--public-accent-dark)]">{companyPlanLabel}</p>
                   <h2 className="mt-3 text-3xl font-bold tracking-[-0.05em] text-[var(--public-ink)]">{copy.planName}</h2>
                   <p className="mt-2 text-sm text-[var(--public-muted)]">{copy.planDesc}</p>
                 </div>
@@ -113,11 +125,7 @@ export default function PricingPage({ locale = 'it' }) {
                     </div>
                   ))}
                 </div>
-                <p className="mt-4 text-xs leading-relaxed text-[var(--public-muted)]">
-                  {locale === 'en'
-                    ? 'The rest of the advanced worksite capabilities unlock as soon as a Pro company sponsors the worksite.'
-                    : 'Le altre aree avanzate di cantiere si attivano non appena una società Pro sponsorizza il cantiere.'}
-                </p>
+                <p className="mt-4 text-xs leading-relaxed text-[var(--public-muted)]">{advancedAreasText}</p>
               </div>
             </div>
           </div>
@@ -149,7 +157,7 @@ export default function PricingPage({ locale = 'it' }) {
       <section className="public-section-shell py-[4.5rem] md:py-20">
         <div className="mx-auto max-w-6xl px-4 sm:px-6" data-reveal>
           <div className="max-w-2xl">
-            <span className="public-eyebrow">{locale === 'en' ? 'Upgrade logic' : 'Quando passare a Pro'}</span>
+            <span className="public-eyebrow">{upgradeLogicLabel}</span>
             <h2 className={`mt-5 ${PUBLIC_CLASSES.sectionH2}`}>{copy.worthTitle}</h2>
           </div>
           <div className="mt-8 grid gap-4 md:grid-cols-2 xl:grid-cols-12">
@@ -168,7 +176,7 @@ export default function PricingPage({ locale = 'it' }) {
       <section className="public-section-shell py-[4.5rem] md:py-20">
         <div className="mx-auto max-w-3xl px-4 sm:px-6">
           <div className="mb-10 text-center" data-reveal>
-            <span className="public-eyebrow">{locale === 'en' ? 'Pricing FAQ' : 'Domande sui prezzi'}</span>
+            <span className="public-eyebrow">{pricingFaqLabel}</span>
             <h2 className={`mt-5 ${PUBLIC_CLASSES.sectionH2}`}>{copy.faqTitle}</h2>
           </div>
 
@@ -188,11 +196,11 @@ export default function PricingPage({ locale = 'it' }) {
 
           <p className="mt-6 text-center text-sm text-[var(--public-muted)]" data-reveal>
             {copy.faqFooterStart}{' '}
-            <Link className="text-[var(--public-accent)] hover:underline" to={`${basePath}/faq`}>
+            <Link className="text-[var(--public-accent)] hover:underline" to={faqPath}>
               {copy.faqFooterFaq}
             </Link>{' '}
             {copy.faqFooterAnd}{' '}
-            <Link className="text-[var(--public-accent)] hover:underline" to={`${basePath}/contatti`}>
+            <Link className="text-[var(--public-accent)] hover:underline" to={contactPath}>
               {copy.faqFooterContact}
             </Link>
             .
@@ -204,7 +212,7 @@ export default function PricingPage({ locale = 'it' }) {
         title={copy.finalTitle}
         text={copy.finalText}
         ctaLabel={copy.finalCta}
-        ctaHref={`${basePath}/contatti`}
+        ctaHref={contactPath}
         note={copy.finalNote}
       />
     </div>

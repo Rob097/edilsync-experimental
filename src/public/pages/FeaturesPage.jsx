@@ -22,13 +22,14 @@ import usePublicGsap from '@/public/hooks/usePublicGsap';
 import { PUBLIC_CLASSES } from '@/public/designSystem';
 import MarketingCenteredHero from '@/public/components/marketing/MarketingCenteredHero';
 import EntitlementHint from '@/public/components/marketing/EntitlementHint';
+import { getPublicPageSeoData } from '@/public/lib/localePath';
 import { getPublicCopy } from '@/public/lib/publicTranslations';
 
 
 export default function FeaturesPage({ locale = 'it' }) {
   const rootRef = useRef(null);
   const copy = useMemo(() => getPublicCopy(locale, 'featuresPage'), [locale]);
-  const canonicalPath = locale === 'en' ? '/en/funzionalita' : '/funzionalita';
+  const { canonicalPath, alternatePathsByLocale } = getPublicPageSeoData(locale, '/funzionalita');
 
   usePublicGsap(rootRef);
 
@@ -37,8 +38,7 @@ export default function FeaturesPage({ locale = 'it' }) {
     description: copy.seoDescription,
     canonicalPath,
     locale,
-    alternateItPath: '/funzionalita',
-    alternateEnPath: '/en/funzionalita',
+    alternatePathsByLocale,
   });
 
   return (

@@ -7,14 +7,10 @@ import { getBlogMetaItems } from '@/public/blogMeta';
 import { PUBLIC_CLASSES } from '@/public/designSystem';
 import usePublicSeo from '@/public/hooks/usePublicSeo';
 import usePublicGsap from '@/public/hooks/usePublicGsap';
+import { getPublicPageSeoData, localizePublicPath } from '@/public/lib/localePath';
+import { pickLocalizedField } from '@/public/lib/pickLocalizedField';
 import { readPublicPrerenderData } from '@/public/prerenderData';
 import { getPublicCopy } from '@/public/lib/publicTranslations';
-
-function pickLocalized(post, locale, field) {
-  const preferred = post?.[`${field}_${locale}`];
-  if (preferred && preferred.trim()) return preferred;
-  return post?.[`${field}_it`] || post?.[`${field}_en`] || '';
-}
 
 export default function BlogIndexPage({ locale = 'it', basePath = '', initialPosts }) {
   const rootRef = useRef(null);
@@ -32,14 +28,15 @@ export default function BlogIndexPage({ locale = 'it', basePath = '', initialPos
   const copy = getPublicCopy(locale, 'blogIndex');
   const title = copy.seoTitle;
   const subtitle = copy.subtitle;
+  const { canonicalPath, alternatePathsByLocale } = getPublicPageSeoData(locale, '/blog');
+  const contactPath = localizePublicPath('/contatti', locale);
 
   usePublicSeo({
     title,
     description: subtitle,
-    canonicalPath: `${basePath}/blog` || '/blog',
+    canonicalPath,
     locale,
-    alternateItPath: '/blog',
-    alternateEnPath: '/en/blog',
+    alternatePathsByLocale,
   });
 
   usePublicGsap(rootRef);
@@ -71,11 +68,11 @@ export default function BlogIndexPage({ locale = 'it', basePath = '', initialPos
           {posts.map((post) => (
             <article key={post.id} data-reveal className="public-grid-card flex min-h-[250px] flex-col p-6">
               <p className="text-[11px] uppercase tracking-[0.12em] text-[#ef6144] font-semibold">
-                {post.category?.[`name_${locale}`] || post.category?.name_it || post.category?.name_en || 'Blog'}
+                {pickLocalizedField(post.category, locale, 'name') || 'Blog'}
               </p>
               <h2 className="mt-3 text-[22px] font-[700] leading-[1.28] text-[var(--public-ink)]">
-                <Link to={`${basePath}/blog/${post.slug}`} className="hover:text-[#ef6144] transition-colors">
-                  {pickLocalized(post, locale, 'title')}
+                <Link to={localizePublicPath(`/blog/${post.slug}`, locale)} className="hover:text-[#ef6144] transition-colors">
+                  {pickLocalizedField(post, locale, 'title')}
                 </Link>
               </h2>
               {getBlogMetaItems(post, locale).length > 0 ? (
@@ -87,8 +84,8 @@ export default function BlogIndexPage({ locale = 'it', basePath = '', initialPos
                   ))}
                 </div>
               ) : null}
-              <p className="mt-3 flex-1 text-[14px] leading-[1.72] text-[var(--public-muted)]">{pickLocalized(post, locale, 'excerpt')}</p>
-              <Link to={`${basePath}/blog/${post.slug}`} className="mt-4 text-[13px] font-semibold text-[#ef6144] hover:text-[#d9553a]">
+              <p className="mt-3 flex-1 text-[14px] leading-[1.72] text-[var(--public-muted)]">{pickLocalizedField(post, locale, 'excerpt')}</p>
+              <Link to={localizePublicPath(`/blog/${post.slug}`, locale)} className="mt-4 text-[13px] font-semibold text-[#ef6144] hover:text-[#d9553a]">
                 {copy.readArticle}
               </Link>
             </article>
@@ -107,7 +104,7 @@ export default function BlogIndexPage({ locale = 'it', basePath = '', initialPos
           </p>
           <div data-reveal className="mt-8 flex justify-center">
             <Button asChild className="bg-[#ef6144] hover:bg-[#d9553a] text-white rounded-full h-10 px-6 text-[13px] font-semibold shadow-[0_10px_28px_rgba(239,97,68,0.28)]">
-              <Link to={`${basePath}/contatti`}>{copy.ctaButton}</Link>
+              <Link to={contactPath}>{copy.ctaButton}</Link>
             </Button>
           </div>
         </div>

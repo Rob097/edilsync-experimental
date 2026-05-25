@@ -59,6 +59,14 @@ describe('PublicSiteRouter', () => {
     });
   });
 
+  it('resolves german localized pages under /de', () => {
+    renderRouter('/de/prezzi');
+
+    return screen.findByText('pricing:de').then((element) => {
+      expect(element).toBeTruthy();
+    });
+  });
+
   it('redirects legacy legal paths to the localized public legal pages', async () => {
     renderRouter('/PrivacyPolicy');
 
@@ -80,6 +88,14 @@ describe('PublicSiteRouter', () => {
 
     await waitFor(() => {
       expect(screen.getByText('home:en')).toBeTruthy();
+    });
+  });
+
+  it('falls back to the german locale home page for unknown german routes', async () => {
+    renderRouter('/de/unknown-path');
+
+    await waitFor(() => {
+      expect(screen.getByText('home:de')).toBeTruthy();
     });
   });
 });

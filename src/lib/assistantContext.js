@@ -1,15 +1,19 @@
 import completeEn from '@i18n/complete/en.json';
+import completeDe from '@i18n/complete/de.json';
 import completeIt from '@i18n/complete/it.json';
+import { normalizeLocale } from '@/components/i18n/localeConfig';
 import { UI_MODES, isOperationalPath } from './ui-mode';
 
 const assistantContextCopyByLanguage = {
   it: completeIt.completeScoped.lib_assistantContext,
   en: completeEn.completeScoped.lib_assistantContext,
+  de: completeDe.completeScoped?.lib_assistantContext || completeEn.completeScoped.lib_assistantContext,
 };
 
-const getAssistantContextCopy = (currentLanguage = 'it') => (
-  currentLanguage === 'en' ? assistantContextCopyByLanguage.en : assistantContextCopyByLanguage.it
-);
+const getAssistantContextCopy = (currentLanguage = 'it') => {
+  const normalizedLanguage = normalizeLocale(currentLanguage);
+  return assistantContextCopyByLanguage[normalizedLanguage] || assistantContextCopyByLanguage.en || assistantContextCopyByLanguage.it;
+};
 
 const getOperationalProjectId = (pathname = '') => {
   const match = pathname.match(/^\/(?:app\/)?operativa\/progetto\/([^/?#]+)/);

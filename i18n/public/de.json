@@ -1,0 +1,1434 @@
+{
+	"home": {
+		"seo": {
+			"title": "Plattform fuer Baustellenkoordination",
+			"description": "EdilSync buendelt Kommunikation und Planung fuer Bauunternehmen, Bauherren und Nachunternehmer.",
+			"softwareDescription": "Bausoftware, die Kommunikation, Planung und nachvollziehbare Ausfuehrung an einem Ort buendelt."
+		},
+		"hero": {
+			"badge": "Die Plattform fuer Baustellenkoordination",
+			"titleA": "Schluss mit dem Chaos auf der Baustelle.",
+			"titleHighlight": "Alles koordinieren",
+			"titleB": "an einem Ort.",
+			"subtitle": "EdilSync bringt Bauherren, Bauunternehmen, Nachunternehmer und Fachleute auf eine gemeinsame Plattform. Weniger Anrufe, weniger Missverstaendnisse, mehr Kontrolle.",
+			"ctaPrimary": "Kostenloses Konto anlegen",
+			"ctaSecondary": "Mehr erfahren",
+			"note": "Privates oder Firmenkonto · Keine Karte zum Start noetig · Upgrade bei Bedarf",
+			"highlights": {
+				"alignmentLabel": "Abstimmung",
+				"alignmentText": "Ein Ort fuer Aufgaben, Fotos, Nachtraege und Baustellengespraeche.",
+				"traceabilityLabel": "Nachvollziehbarkeit",
+				"traceabilityText": "Jede Aktion wird zu belastbarer Dokumentation fuer Entscheidungen, Baufortschritt und Streitfaelle.",
+				"controlLabel": "Kontrolle",
+				"controlText": "Weniger Rueckfragen, weniger Leerfahrten, weniger Graubereiche."
+			},
+			"preview": {
+				"alt": "EdilSync-Oberflaeche fuer die Koordination der Baustelle",
+				"feedLabel": "Baustellen-Feed",
+				"feedTitle": "Status, Verantwortlichkeiten und Freigaben im selben Ablauf.",
+				"feedText": "Der Bauherr sieht Fortschritt und Entscheidungen. Das Unternehmen behaelt den Zusammenhang, ohne Chats und Anhaengen hinterherzulaufen.",
+				"fieldReadyLabel": "Fuer die Baustelle",
+				"fieldReadyValue": "3 Taps",
+				"fieldReadyText": "Um den Status zu aktualisieren, ein Foto anzuhaengen oder auf einen Nachtrag zu reagieren."
+			}
+		},
+		"stats": {
+			"aValue": "$31B",
+			"aLabel": "Gehen jedes Jahr durch schlechte Kommunikation verloren",
+			"bValue": "98%",
+			"bLabel": "Der Baustellen verfehlen die erwarteten Qualitaetsstandards",
+			"cValue": "14h",
+			"cLabel": "Gehen pro Woche fuer Konflikte und Nacharbeit verloren",
+			"dValue": "48%",
+			"dLabel": "Der Nacharbeit haengt mit unzureichender Kommunikation zusammen"
+		},
+		"problem": {
+			"chip": "Das Problem",
+			"title": "Die Kommunikation auf der Baustelle ist chaotisch",
+			"subtitle": "Jeden Tag werden verschiedene Werkzeuge genutzt, um Baustellen zu steuern, aber das Ergebnis sind fehlende Abstimmung und Kommunikation ausserhalb des richtigen Kontexts.",
+			"issueLabel": "Problem {{number}}",
+			"c1t": "WhatsApp, SMS, E-Mail ... ueberall",
+			"c1d": "Informationen gehen in privaten Chats, Gruppen und endlosen Threads verloren. Das wichtige Gespraech von vor 3 Wochen wiederzufinden, wird fast unmoeglich.",
+			"c2t": "Staendige Anrufe stoppen die Ausfuehrung",
+			"c2d": "Der Bauherr ruft wegen Updates an. Nachunternehmer rufen zur Abstimmung an. Jede Unterbrechung kostet rund 15 Minuten Produktivitaet.",
+			"c3t": "\"Ich dachte, das waere enthalten\"",
+			"c3d": "Undokumentierte Aenderungen werden zu Streitfaellen. Bei Margen von 3-5% kann ein einziges Missverstaendnis den Gewinn der ganzen Baustelle aufzehren.",
+			"c4t": "Verzoegerungen ohne klare Verantwortung",
+			"c4d": "Wer hat die Verzoegerung verursacht? Der Lieferant? Der Kunde, der die Materialien nicht ausgewaehlt hat? Ohne Dokumentation faellt die Schuld immer auf das Bauunternehmen.",
+			"c5t": "Leerfahrten und unmoegliche Abstimmung",
+			"c5d": "Der Elektriker kommt an, aber die Vorarbeiten sind nicht fertig. Jede Leerfahrt kostet $100-200, und das dutzendfach pro Jahr.",
+			"c6t": "Keine Sicht fuer den Bauherrn",
+			"c6d": "Der Bauherr weiss nicht, was passiert, wird unruhig und ruft staendig an. Nicht aus Misstrauen, sondern weil kein Werkzeug echte Transparenz schafft."
+		},
+		"solution": {
+			"chip": "Die Loesung",
+			"title": "Ein gemeinsamer Ort fuer alle Beteiligten",
+			"subtitle": "Eine kontextbezogene Plattform, bei der sich Rollen, Rechte und Verantwortlichkeiten an Baustelle und Ablauf anpassen.",
+			"s1t": "Baustelle anlegen",
+			"s1d": "Das Unternehmen legt die Baustelle an und laedt Bauherren, Nachunternehmer und Fachleute mit einem Klick ein.",
+			"s2t": "Arbeiten und dokumentieren",
+			"s2d": "Jede Aktion - Fotos, Aufgaben, Aenderungen, Nachrichten - wird automatisch zu nachvollziehbarer Dokumentation.",
+			"s3t": "Abgestimmt bleiben",
+			"s3d": "Alle sehen denselben Stand der Baustelle. Keine Mehrdeutigkeit.",
+			"result": {
+				"label": "Operatives Ergebnis",
+				"title": "Alle sehen dieselbe Baustelle, ohne Updates hinterherzulaufen.",
+				"b1": "Der Bauherr verfolgt Fortschritt und Entscheidungen ohne staendige Anrufe.",
+				"b2": "Das Bauunternehmen koordiniert Aufgaben, Fotobelege und Nachtraege im selben Ablauf.",
+				"b3": "Der Nachunternehmer sieht nur das, was er braucht, wenn er es braucht."
+			}
+		},
+		"features": {
+			"chip": "Funktionen",
+			"title": "Alles, was Ihre Baustelle braucht",
+			"subtitle": "Aufgaben, Fotos, Aenderungen, Chat und Kostenkontrolle in einem integrierten Ablauf.",
+			"moduleLabel": "Modul",
+			"seeAll": "Alle Funktionen ansehen",
+			"f1t": "Aufgaben und Meilensteine",
+			"f1d": "Organisieren Sie die Arbeit nach Raeumen, Phasen und Meilensteinen. Blockiert-Status mit zugeordneter Verantwortung, um Verzoegerungen sauber zu dokumentieren.",
+			"f2t": "Fotodokumentation",
+			"f2d": "Aufgenommene Fotos werden automatisch Teil der Baustelle. Zeitstempel, Organisation nach Aufgabe und integrierte rechtliche Absicherung.",
+			"f3t": "Nachtraege",
+			"f3d": "Jede Aenderung wird mit Kosten- und Termineffekt erfasst. Der Bauherr genehmigt oder lehnt ab. Keine Streitfaelle mehr wie 'Ich dachte, das waere enthalten'.",
+			"f4t": "Kontextbezogener Chat",
+			"f4d": "Baustellennachrichten mit Verweisen auf Aufgaben, Meilensteine und Dokumente. Ersetzt WhatsApp und haelt alles im richtigen Zusammenhang.",
+			"f5t": "Gemeinsamer Kalender",
+			"f5d": "Koordinieren Sie Termine, Teams und Fristen mit Konflikterkennung.",
+			"f6t": "Streitfall-Management",
+			"f6d": "Streitfaelle mit Zeitachse, Belegen, Kommentaren und Status sauber abbilden.",
+			"f7t": "Kostenkontrolle",
+			"f7d": "Budget, Kosten, Stundensaetze und Leistungsstaende. Der Bauherr sieht den Fortschritt, waehrend das Unternehmen die wirtschaftliche Kontrolle behaelt.",
+			"f8t": "Anwesenheit und Zeiterfassung",
+			"f8d": "Optionale GPS-Zeiterfassung beim Ein- und Ausstempeln, direkt mit Baustellenkosten verknuepft."
+		},
+		"why": {
+			"chip": "Warum EdilSync",
+			"title": "Kein weiteres generisches Verwaltungstool",
+			"w1t": "Absicherung schafft Vertrauen",
+			"w1d": "Das einzige Werkzeug, das um den Schutz des Bauunternehmens herum gebaut wurde. Automatische Dokumentation schuetzt beide Seiten ohne Mehrarbeit.",
+			"w2t": "Wirklich mobile-first",
+			"w2d": "Fuer die Baustelle entwickelt, nicht fuer den Schreibtisch. Fotos in 3 Taps hochladen, Status in 3 Taps aktualisieren. Wenn mobil Reibung entsteht, scheitert es.",
+			"w3t": "Keine Schulung noetig",
+			"w3d": "Wenn man laenger als 5 Minuten braucht, um es zu verstehen, haben wir es falsch gemacht. Klare Oberflaechen, keine versteckten Funktionen, dasselbe Modell fuer jede Rolle.",
+			"w4t": "Automatische Dokumentation",
+			"w4d": "Sie muessen keine 'Updates schreiben'. Ihre Aktionen - Fotos, Aufgaben-Updates, Freigaben - werden automatisch zum Baustellen-Feed."
+		},
+		"audience": {
+			"chip": "Fuer wen",
+			"title": "Fuer jede Rolle auf der Baustelle gemacht",
+			"subtitle": "Dasselbe Werkzeug, eine an die Rolle angepasste Oberflaeche. Niemand muss bei null anfangen.",
+			"micheleRole": "Bauunternehmer",
+			"micheleQuote": "\"Ich bin nicht im Verzug - ich warte seit drei Wochen darauf, dass der Kunde die Fliesen auswaehlt.\"",
+			"matteoRole": "Bauherr",
+			"matteoQuote": "\"Ich gebe €40.000 fuer meine Kueche aus und habe keine Ahnung, was gerade passiert.\"",
+			"marcoRole": "Nachunternehmer",
+			"marcoQuote": "\"Ich komme auf die Baustelle und die Vorarbeiten sind nicht fertig. Schon wieder eine Leerfahrt.\"",
+			"helpLabel": "SO HILFT EDILSYNC",
+			"m1": "Alles automatisch dokumentieren, ohne Mehrarbeit",
+			"m2": "Marge mit nachvollziehbaren Nachtraegen schuetzen",
+			"m3": "Nachunternehmer von einer Plattform aus koordinieren",
+			"m4": "Ihren Kunden Professionalitaet zeigen",
+			"t1": "Echtzeit-Sicht ohne staendige Anrufe",
+			"t2": "Sie wissen genau, wann Fortschritt zu erwarten ist",
+			"t3": "Keine Ueberraschungen bei nicht freigegebenen Zusatzkosten",
+			"t4": "Kostenloser Zugang zur Baustelle, zu der Sie eingeladen sind",
+			"r1": "Sie sehen nur Aufgaben und Fristen, die Sie betreffen",
+			"r2": "Leerfahrten mit dem gemeinsamen Kalender vermeiden",
+			"r3": "Baustellenchat ohne persoenliche Nummer",
+			"r4": "Dokumente und Fotos immer verfuegbar"
+		},
+		"pricing": {
+			"chip": "Preise",
+			"title": "Einfache Preise. Keine Ueberraschungen.",
+			"subtitle": "Private Bauherren bleiben kostenlos. Unternehmen koennen kostenlos oder Pro sein. Erweiterte Baustellenfunktionen werden durch Freischaltung aktiviert.",
+			"badge": "Unternehmen + Freischaltung",
+			"trial": "€19/Monat oder €190/Jahr",
+			"plan": "EIN TARIF",
+			"price": "€19/Monat",
+			"priceNote": "EdilSync Pro fuer Unternehmen mit Baustellen-Freischaltung. Keine Karte zum Start noetig.",
+			"cta": "Firmenkonto anlegen",
+			"noCard": "Keine Karte zum Start noetig",
+			"included": "EdilSync Pro schaltet fuer das Unternehmen und freigeschaltete Baustellen frei:",
+			"p1": "Zeiterfassung fuers Unternehmen",
+			"p2": "Baustellen freischalten und damit die Premium-Funktionen auf diesen Baustellen aktivieren",
+			"p3": "Auf freigeschalteten Baustellen: Aufgaben, Meilensteine und Nachtraege",
+			"p4": "Firmenchat und auf freigeschalteten Baustellen kontextbezogener Baustellenchat",
+			"p5": "Gemeinsamer Kalender mit Konflikterkennung",
+			"p6": "Auf freigeschalteten Baustellen: Dokumentenmanagement mit Versionen",
+			"p7": "Auf freigeschalteten Baustellen: Streitfall-Modul und Dokumentenschutz",
+			"p8": "Auf freigeschalteten Baustellen: Baustellen-Kostenkontrolle",
+			"p9": "Auf freigeschalteten Baustellen: Anwesenheit und Baustellen-Zeiterfassung",
+			"p10": "Erweiterter Operativbereich fuers Unternehmen",
+			"p11": "Abrechnung und Verwaltung des Abos",
+			"p12": "Benachrichtigungen in der App und per E-Mail",
+			"explainer": {
+				"freeBadge": "Immer kostenlos",
+				"freeTitle": "Wer nichts zahlt",
+				"freeText": "Bauherren, Nachunternehmer und eingeladene Fachleute koennen kostenlos an der Baustelle teilnehmen. Auch ein Unternehmen kann kostenlos bleiben, bis es erweiterte Funktionen braucht.",
+				"companyBadge": "Pro-Unternehmen",
+				"companyTitle": "Wer zahlt",
+				"companyText": "Nur das Unternehmen, das den Pro-Tarif moechte, zahlt: Es schaltet Premium-Funktionen fuers Unternehmen, den erweiterten operativen Bereich und die Moeglichkeit frei, Baustellen freizuschalten.",
+				"projectBadge": "Freigeschaltete Baustelle",
+				"projectTitle": "Was auf der Baustelle freigeschaltet wird",
+				"projectText": "Meilensteine, Kostenkontrolle, erweiterte Dokumente, Streitfaelle und der volle Baustellenchat werden aktiv, wenn ein Pro-Unternehmen genau diese Baustelle freischaltet."
+			},
+			"access": {
+				"label": "Abrechnungslogik",
+				"title": "Ein Firmentarif. Kostenloser Zugang fuer alle anderen.",
+				"i1": "Bauherren und eingeladene Beteiligte bleiben kostenlos",
+				"i2": "Nur das Unternehmen zahlt, wenn es Premium-Werkzeuge fuers Unternehmen braucht",
+				"i3": "Freigeschaltete Baustellen oeffnen erweiterte gemeinsame Baustellenbereiche"
+			},
+			"teamsNeedLabel": "Was Teams meistens zuerst brauchen",
+			"seeFull": "Alle Preisdetails ansehen",
+			"hint": " pro Jahr koennen das ganze Abo bezahlen.",
+			"hintStrong": "Ein vermiedener Streitfall",
+			"hintSub": "Rund $230/Jahr: die Kosten einer einzigen Leerfahrt."
+		},
+		"final": {
+			"title": "Bereit, Ordnung auf Ihre Baustelle zu bringen?",
+			"text": "Hoeren Sie auf, Zeit in Chats, E-Mails und Anrufen zu verlieren. Starten Sie heute mit EdilSync und spueren Sie den Unterschied vom ersten Tag an.",
+			"ctaPrimary": "EdilSync oeffnen",
+			"ctaSecondary": "Kontakt aufnehmen"
+		}
+	},
+	"layout": {
+		"brandTagline": "Echte Koordination",
+		"menu": {
+			"solutions": {
+				"label": "Loesung",
+				"sections": [
+					{
+						"title": "Produktueberblick",
+						"links": [
+							{
+								"label": "Kompletter Funktionsumfang",
+								"href": "/en/funzionalita",
+								"desc": "Aufgaben, Dokumente, Streitfaelle, Kosten und Chat in einem Ablauf."
+							},
+							{
+								"label": "So funktioniert es",
+								"href": "/en/come-funziona",
+								"desc": "Vom Baustellenstart bis zum Abschluss mit nachvollziehbaren Belegen."
+							},
+							{
+								"label": "Preise",
+								"href": "/en/prezzi",
+								"desc": "Gefuehrter Einstieg passend zu Team und Baustellenvolumen."
+							}
+						]
+					},
+					{
+						"title": "Zentrale Probleme, die geloest werden",
+						"links": [
+							{
+								"label": "Schutz bei Streitfaellen",
+								"href": "/en/dispute-protection",
+								"desc": "Schuetzen Sie Ihre Marge vor nicht erfassten Leistungsaenderungen."
+							},
+							{
+								"label": "Transparenz fuer den Bauherrn",
+								"href": "/en/transparency",
+								"desc": "Weniger Unsicherheit und weniger Nachfragen ueber verschiedene Kanaele."
+							},
+							{
+								"label": "Teamkoordination",
+								"href": "/en/team-coordination",
+								"desc": "Weniger Leerfahrten durch klarere Verantwortlichkeiten."
+							}
+						]
+					}
+				],
+				"featured": {
+					"title": "Warum EdilSync",
+					"text": "Entwickelt, um Marge und Ruf des Bauunternehmens mit einer belastbaren, baustellenbezogenen Zeitachse zu schuetzen, wenn es zu Streitfaellen kommt."
+				}
+			},
+			"audiences": {
+				"label": "Fuer wen",
+				"sections": [
+					{
+						"title": "",
+						"links": [
+							{
+								"label": "Bauunternehmen",
+								"href": "/en/contractors",
+								"desc": "Allgemeine und spezialisierte Bauunternehmen",
+								"icon": "hammer"
+							},
+							{
+								"label": "Bauherren",
+								"href": "/en/per-committenti",
+								"desc": "Private Bauherren und Auftraggeber",
+								"icon": "house"
+							}
+						]
+					},
+					{
+						"title": "",
+						"links": [
+							{
+								"label": "Technische Fachleute",
+								"href": "/en/per-tecnici",
+								"desc": "Architekten, Ingenieure, Vermesser, Designer",
+								"icon": "ruler"
+							},
+							{
+								"label": "Nachunternehmer",
+								"href": "/en/per-subappaltatori",
+								"desc": "Fachgewerke und externe Teams",
+								"icon": "wrench"
+							}
+						]
+					}
+				],
+				"featured": {
+					"title": "Kontextbezogene Rechte",
+					"text": "Eine Person kann im Lauf der Zeit als Bauherr, Bauunternehmen oder in einer technischen Rolle arbeiten, ohne Konten aufzuteilen oder die Datenkontinuitaet zu verlieren."
+				}
+			},
+			"resources": {
+				"label": "Ressourcen",
+				"sections": [
+					{
+						"title": "Lernen und bewerten",
+						"links": [
+							{
+								"label": "EdilSync-Blog",
+								"href": "/en/blog",
+								"desc": "Praxisnahe Inhalte zu Streitfaellen, Ablaeufen und Abstimmung auf der Baustelle."
+							},
+							{
+								"label": "FAQ",
+								"href": "/en/faq",
+								"desc": "Antworten zu Einfuehrung, Onboarding und taeglicher Umsetzung."
+							},
+							{
+								"label": "Kontakt",
+								"href": "/en/contatti",
+								"desc": "Buchen Sie eine Demo, die auf Ihr tatsaechliches Arbeitsmodell zugeschnitten ist."
+							}
+						]
+					}
+				],
+				"featured": {
+					"title": "Praxisnah",
+					"text": "Die Inhalte orientieren sich an echten Baustellenbedingungen, nicht an allgemeiner Management-Theorie."
+				}
+			},
+			"quickLinks": [
+				{
+					"label": "Blog",
+					"href": "/en/blog"
+				},
+				{
+					"label": "Kontakt",
+					"href": "/en/contatti"
+				}
+			]
+		},
+		"cta": {
+			"demo": "Demo anfragen",
+			"login": "Anmelden"
+		},
+		"aria": {
+			"openMenu": "Menue oeffnen",
+			"closeMenu": "Menue schliessen"
+		}
+	},
+	"blogIndex": {
+		"seoTitle": "Ressourcen fuer die Bauwirtschaft",
+		"subtitle": "Praxisnahe Inhalte zu Streitfall-Praevention, Baustellenkoordination und operativer Klarheit im Bau.",
+		"chip": "Ressourcen",
+		"loading": "Laedt ...",
+		"loadError": "Blogbeitraege konnten nicht geladen werden.",
+		"empty": "Noch keine veroeffentlichten Artikel. Die Inhalte erscheinen bald hier.",
+		"readArticle": "Artikel lesen",
+		"ctaTitle": "Wollen Sie Inhalte, die genau zu Ihrem Baustellenmodell passen?",
+		"ctaText": "Buchen Sie eine fokussierte Demo und sehen Sie, wie EdilSync bewaehrte Vorgehensweisen in operative Routinen uebersetzt.",
+		"ctaButton": "Demo anfragen"
+	},
+	"blogPost": {
+		"loading": "Laedt ...",
+		"notFound": "Artikel nicht gefunden",
+		"backToBlog": "Zurueck zum Blog",
+		"ctaTitle": "Brauchen Sie das im Alltag und nicht nur in Artikeln?",
+		"ctaText": "Buchen Sie eine gefuehrte Demo und legen Sie EdilSync auf Ihren realen Baustellenablauf um.",
+		"ctaButton": "Demo anfragen"
+	},
+	"contact": {
+		"seoTitle": "Kontakt und Demo-Anfrage",
+		"chip": "Kontakt",
+		"title": "EdilSync-Demo anfragen",
+		"subtitle": "Beschreiben Sie uns Ihren Baustellenkontext. Wir melden uns mit einer Demo, die auf Streitfall-Praevention, Koordination und operative Kontrolle ausgerichtet ist.",
+		"fields": {
+			"fullName": "Vollstaendiger Name",
+			"email": "E-Mail",
+			"company": "Unternehmen (optional)",
+			"role": "Rolle",
+			"message": "Nachricht"
+		},
+		"roles": [
+			"Bauunternehmen",
+			"Bauherr",
+			"Nachunternehmer",
+			"Technische Fachkraft",
+			"Sonstiges"
+		],
+		"messagePlaceholder": "Beschreiben Sie Ihren aktuellen Ablauf und die groessten Schwierigkeiten ...",
+		"submit": "Anfrage senden",
+		"sending": "Wird gesendet ...",
+		"success": "Anfrage gesendet. Wir melden uns in Kuerze.",
+		"error": "Die Anfrage kann gerade nicht gesendet werden. Bitte versuchen Sie es in Kuerze erneut.",
+		"nextTitle": "So geht es weiter",
+		"nextSteps": [
+			"1. Wir pruefen Ihre Anfrage und den Kontext.",
+			"2. Wir vereinbaren ein gezieltes Abstimmungsgespraech.",
+			"3. Wir zeigen eine Live-Demo nach Rollen."
+		],
+		"resourcesTitle": "Erst einmal Unterlagen anschauen?",
+		"readBlog": "Blog lesen",
+		"faq": "FAQ",
+		"detailsTitle": "Details zur Demo",
+		"finalTitle": "Brauchen Sie vor der Demo sofort Unterstuetzung?",
+		"finalText": "Schreiben Sie uns, und wir zeigen Ihnen den besten Einstieg fuer Ihren Baustellenkontext.",
+		"finalCta": "Ressourcen oeffnen",
+		"finalNote": "Praxisleitfaeden, echte Ablaeufe und erprobte Updates"
+	},
+	"pricingPage": {
+		"seoTitle": "Preise",
+		"seoDescription": "Klare Preise fuer Unternehmen und Baustellen: kostenloser oder kostenpflichtiger Firmentarif, Baustellen-Freischaltung und kostenloser Zugang fuer Bauherren und eingeladene Beteiligte.",
+		"badge": "Preise",
+		"title": "Klare Preise fuer Unternehmen und Baustellen.",
+		"subtitle": "Die Premium-Funktionen fuers Unternehmen gehoeren zum Unternehmen. Premium-Funktionen auf der Baustelle werden durch aktive Freischaltung aktiviert.",
+		"planName": "EdilSync Pro fuer Unternehmen",
+		"planDesc": "Premium-Funktionen fuers Unternehmen und Baustellen-Freischaltung",
+		"trialBadge": "Jahrestarif fuer €190",
+		"price": "€19",
+		"priceSuffix": "/Monat",
+		"priceNote": "Oder €190/Jahr - zzgl. MwSt. - Jederzeit kuendbar",
+		"legendTitle": "So funktioniert die Abrechnung wirklich",
+		"legendItems": [
+			{
+				"badge": "Immer kostenlos",
+				"title": "Bauherren und Eingeladene",
+				"text": "Private Bauherren bleiben kostenlos. Nachunternehmer und Fachleute koennen eingeladenen Baustellen ebenfalls kostenlos beitreten."
+			},
+			{
+				"badge": "Pro-Unternehmen",
+				"title": "Wer zahlt",
+				"text": "Nur das Unternehmen, das den Pro-Tarif moechte, zahlt: Es schaltet Premium-Funktionen fuers Unternehmen, den erweiterten operativen Bereich und die Moeglichkeit frei, Baustellen freizuschalten."
+			},
+			{
+				"badge": "Freigeschaltete Baustelle",
+				"title": "Was freigeschaltet wird",
+				"text": "Meilensteine, Finanzen, Streitfaelle, erweiterte Dokumente und der volle Baustellenchat werden auf jeder freigeschalteten Baustelle aktiviert."
+			}
+		],
+		"cta": "Firmenkonto anlegen",
+		"noCard": "Keine Karte zum Start noetig",
+		"includedLabel": "EdilSync Pro schaltet frei",
+		"includedItems": [
+			"Zeiterfassung fuers Unternehmen",
+			"Mehrkanal-Chat fuers Unternehmen",
+			"Vollstaendige Firmendokumente",
+			"Baustellen-Freischaltung",
+			"Meilensteine auf freigeschalteten Baustellen",
+			"Baustellen-Finanzen auf freigeschalteten Baustellen",
+			"Erweiterter Baustellenchat auf freigeschalteten Baustellen",
+			"Erweiterte Baustellendokumente auf freigeschalteten Baustellen",
+			"Premium-Operativbereich fuers Unternehmen",
+			"Abrechnung und Verwaltung des Abos"
+		],
+		"freeAccessTitle": "Wer kostenlos bleibt und was kostenlos bleibt",
+		"freeAccessText": "Private Bauherren bleiben kostenlos. Unternehmen koennen kostenlos bleiben oder auf Pro wechseln. Bauherren, Nachunternehmer und Fachleute koennen eingeladenen Baustellen kostenlos beitreten; Premium-Funktionen auf der Baustelle haengen von einer aktiven Freischaltung ab.",
+		"roles": [
+			{
+				"label": "Privater Bauherr / Eigentuemer",
+				"value": "Kostenlos",
+				"note": "Kann jeweils 1 nicht freigeschaltete Baustelle haben"
+			},
+			{
+				"label": "Kostenloses Unternehmen",
+				"value": "Kostenlos",
+				"note": "Kann Baustellen beitreten und jeweils 1 nicht freigeschaltete eigene Baustelle haben"
+			},
+			{
+				"label": "Bezahltes Unternehmen",
+				"value": "€19/Monat oder €190/Jahr",
+				"note": "Kann Baustellen freischalten und Premium-Funktionen fuers Unternehmen aktivieren"
+			}
+		],
+		"worthTitle": "Wann Pro Sinn macht",
+		"worthItems": [
+			"Sie wollen eine Baustelle freischalten und Meilensteine, Finanzen, Premium-Chat und Premium-Dokumente fuer alle Baustellenbeteiligten aktivieren",
+			"Sie brauchen Zeiterfassung fuer das Unternehmen und weitere Premium-Funktionen",
+			"Sie verwalten mehr als ein minimales kostenloses Setup und wollen nicht, dass die Koordination an den Grenzen des Free-Tarifs haengen bleibt",
+			"Ein vermiedener Streitfall oder eine vermiedene Leerfahrt kann die Kosten des Tarifs bereits rechtfertigen"
+		],
+		"faqTitle": "Fragen zu den Preisen",
+		"faqs": [
+			{
+				"q": "Muss der Bauherr zahlen?",
+				"a": "Nein. Bauherren bleiben kostenlos. Nachunternehmer und Fachleute koennen eingeladenen Baustellen ebenfalls kostenlos beitreten."
+			},
+			{
+				"q": "Kann ich jederzeit kuendigen?",
+				"a": "Ja, ohne Strafgebuehren und ohne versteckte Kosten. Sie koennen jederzeit in den Einstellungen kuendigen."
+			},
+			{
+				"q": "Was passiert mit den Daten, wenn ich kuendige?",
+				"a": "Die Daten bleiben im System, aber die Premium-Bereiche fuers Unternehmen und fuer die Baustelle sind erst wieder zugreifbar, wenn ein Pro-Tarif oder eine gueltige Freischaltung aktiv ist."
+			},
+			{
+				"q": "Gibt es einen langfristigen Vertrag?",
+				"a": "Nein. EdilSync laeuft monatlich und Sie koennen jederzeit kuendigen."
+			},
+			{
+				"q": "Bieten Sie einen Enterprise-Tarif an?",
+				"a": "Wir bereiten einen Enterprise-Tarif vor. Schreiben Sie an info@rdlabs.digital, um Ihren Bedarf zu besprechen."
+			}
+		],
+		"faqFooterStart": "Brauchen Sie mehr Details?",
+		"faqFooterFaq": "Zur vollstaendigen FAQ-Seite",
+		"faqFooterAnd": "oder",
+		"faqFooterContact": "kontaktieren Sie uns",
+		"finalTitle": "Sie moechten sehen, ob Pro zu Ihrem Unternehmen passt?",
+		"finalText": "Starten Sie kostenlos, pruefen Sie den Ablauf mit Ihrem Team und wechseln Sie erst dann auf Pro, wenn Sie Freischaltungen, Premium-Werkzeuge und engere Kontrolle brauchen.",
+		"finalCta": "Sprechen Sie mit uns",
+		"finalNote": "Einfacher Tarif · Kein schweres Setup · Upgrade bei Bedarf"
+	},
+	"featuresPage": {
+		"seoTitle": "EdilSync-Funktionen",
+		"seoDescription": "Alle EdilSync-Funktionen fuer Baustellenkoordination, Kommunikation, Dokumentation, Einsatz vor Ort und Schutz bei Streitfaellen, mit klarer Trennung zwischen Unternehmens-Premium und Premium auf freigeschalteten Baustellen.",
+		"badge": "Funktionen",
+		"title": "Alles auf einer Plattform",
+		"subtitle": "Keine getrennten Module, sondern ein zusammenhaengendes System, das jede Ebene der Baustellenkoordination abdeckt - vom ersten Foto bis zum letzten Leistungsnachweis.",
+		"note": "Private Bauherren und eingeladene Beteiligte bleiben kostenlos. Unternehmens-Premium gehoert zum Pro-Unternehmen; Meilensteine, Kostenkontrolle, erweiterte Dokumente und der volle Baustellenchat werden auf freigeschalteten Baustellen aktiviert.",
+		"sections": [
+			{
+				"title": "Baustellenmanagement",
+				"icon": "Layers",
+				"colorClass": "bg-blue-500/10 text-blue-600",
+				"note": "Die hier beschriebenen Premium-Baustellenbereiche werden auf freigeschalteten Baustellen aktiviert.",
+				"cards": [
+					{
+						"title": "Aufgaben und Meilensteine",
+						"icon": "ListChecks",
+						"badge": "Freigeschaltete Baustelle",
+						"description": "Organisieren Sie die Ausfuehrung nach Phasen, Raeumen und Meilensteinen. Jede Aufgabe hat Status, Faelligkeit, Verantwortlichen und optional blockierende Verantwortlichkeit. Board- und Listenansicht inklusive."
+					},
+					{
+						"title": "Nachtraege / Aenderungen",
+						"icon": "FileText",
+						"description": "Jede angeforderte Aenderung wird mit Kosten- und Termineffekt erfasst. Bauherren koennen genehmigen, ablehnen oder Rueckfragen stellen. Vollstaendig mit Zeitstempel."
+					},
+					{
+						"title": "Gemeinsamer Kalender",
+						"icon": "CalendarDays",
+						"description": "Gemeinsamer Kalender fuer Ereignisse, Baustellentermine und faellige Aufgaben. Erkennt Konflikte automatisch und benachrichtigt alle Beteiligten."
+					}
+				]
+			},
+			{
+				"title": "Kommunikation",
+				"icon": "MessageCircle",
+				"colorClass": "bg-purple-500/10 text-purple-600",
+				"note": "Chat und Benachrichtigungen bleiben kontextbezogen; erweiterte Baustellenverweise werden auf freigeschalteten Baustellen ausgebaut.",
+				"cards": [
+					{
+						"title": "Kontextbezogener Chat",
+						"icon": "MessageCircle",
+						"badge": "Freigeschaltete Baustelle",
+						"description": "Baustellen- und Firmennachrichten, verknuepft mit Aufgaben, Meilensteinen, Dokumenten und Nachtraegen ueber strukturierte klickbare Verweise."
+					},
+					{
+						"title": "Intelligente Benachrichtigungen",
+						"icon": "Bell",
+						"description": "Benachrichtigungen in der App und per E-Mail fuer wichtige Ereignisse: Einladungen, Zuweisungen, Status-Updates und Erwaehnungen. Nach Typ und Kanal konfigurierbar."
+					},
+					{
+						"title": "Einladungen und Beteiligung",
+						"icon": "Users",
+						"description": "Bauherren, Nachunternehmer und Fachleute per E-Mail einladen. Einladungsstatus verfolgen und kontextbezogene Rechte automatisch anwenden."
+					}
+				]
+			},
+			{
+				"title": "Dokumentation",
+				"icon": "Camera",
+				"colorClass": "bg-amber-500/10 text-amber-600",
+				"note": "Erweiterte Dokumentenablaeufe und vollstaendige technische Zusammenarbeit sind auf freigeschalteten Baustellen am staerksten.",
+				"cards": [
+					{
+						"title": "Fotodokumentation",
+						"icon": "Camera",
+						"description": "Fotos werden automatisch mit der Baustelle verknuepft, mit Zeitstempel versehen und nach Aufgabe und Bereich organisiert - mit integrierter rechtlicher Absicherung."
+					},
+					{
+						"title": "Erweitertes Dokumentenmanagement",
+						"icon": "FileText",
+						"badge": "Freigeschaltete Baustelle",
+						"description": "Hochladen, Vorschau, Download, Kommentare, Versionen und Kategorisierung mit erweiterten Metadaten fuer Gewerk, Phase und Status."
+					},
+					{
+						"title": "BIM- und 3D-Viewer",
+						"icon": "Globe",
+						"badge": "Freigeschaltete Baustelle",
+						"description": "Auf freigeschalteten Baustellen native Unterstuetzung fuer IFC, GLB und GLTF mit In-App-Orbit-Steuerung, IFC-Verarbeitung und automatischem Fallback auf einen externen Viewer, wenn noetig."
+					}
+				]
+			},
+			{
+				"title": "Finanzen und Betrieb",
+				"icon": "Wallet",
+				"colorClass": "bg-emerald-500/10 text-emerald-600",
+				"note": "Anwesenheit fuers Unternehmen gehoert zum Pro-Unternehmen; Kostenkontrolle und Baustellenbetrieb haengen von einer aktiven Freischaltung ab.",
+				"cards": [
+					{
+						"title": "Kostenkontrolle",
+						"icon": "Wallet",
+						"badge": "Freigeschaltete Baustelle",
+						"description": "Budgets, Kosten, Stundensaetze und Leistungsstaende mit rollenbasierter Sicht auf Prognosen, freigegebene Extras und strittige Positionen."
+					},
+					{
+						"title": "Anwesenheit und Zeiterfassung",
+						"icon": "Clock3",
+						"description": "Ein- und Ausstempeln mit optionalem GPS, Ein- und Austrittsnotizen, Baustellenbezug, Datenexport und Integration in die Kostenkontrolle."
+					},
+					{
+						"title": "Dashboards und Analysen",
+						"icon": "ChartNoAxesColumn",
+						"description": "Rollenbezogene Dashboards mit Fortschrittsindikatoren, erledigten Aufgaben, aktiven Baustellen und Teamanwesenheit ueber alle Kontexte hinweg."
+					}
+				]
+			},
+			{
+				"title": "Sicherheit und Absicherung",
+				"icon": "ShieldCheck",
+				"colorClass": "bg-red-500/10 text-red-600",
+				"cards": [
+					{
+						"title": "Streitfall-Management",
+						"icon": "ShieldCheck",
+						"description": "Konflikte zu Leistung, Kosten, Verzoegerungen, Qualitaet und Zahlungen mit Ereignis-Zeitachsen, Belegen und Loesungsnotizen formalisieren."
+					},
+					{
+						"title": "Kontextbezogene Rechte",
+						"icon": "LockKeyhole",
+						"description": "Rechteebenen ueber App-Bereich, aktiven Kontext, Unternehmensrolle und Baustellenrolle. Vollstaendig relational und nachvollziehbar."
+					},
+					{
+						"title": "Automatische Dokumentation",
+						"icon": "Zap",
+						"description": "Taegliche Aktionen werden automatisch dokumentiert: Statusaenderungen, Uploads, Freigaben und Nachrichten landen im Baustellen-Feed."
+					}
+				]
+			},
+			{
+				"title": "Nutzungsmodi",
+				"icon": "Smartphone",
+				"colorClass": "bg-indigo-500/10 text-indigo-600",
+				"note": "Der operative Modus folgt derselben Rechte- und Freischaltungslogik wie der vollstaendige Bereich.",
+				"cards": [
+					{
+						"title": "Vollstaendiger Arbeitsbereich",
+						"icon": "Layers",
+						"description": "Vollstaendiger Bereich mit Dashboards, Baustellen, Kalender, Unternehmen, Benachrichtigungen und Einstellungen fuer die erweiterte Steuerung."
+					},
+					{
+						"title": "Operativer Modus",
+						"icon": "Smartphone",
+						"description": "Mobile-first-Oberflaeche fuer Teams auf der Baustelle mit schnellem Ein-/Ausstempeln, Tagesaufgaben, Foto-Uploads und kompaktem Chat."
+					},
+					{
+						"title": "Kontextbezogener Rollenzugang",
+						"icon": "Zap",
+						"description": "Dieselbe Plattform passt Sichtbarkeit und Aktionen anhand des aktiven Kontexts, der Unternehmensrolle und der Baustellenrolle an, ohne Bereiche zu duplizieren."
+					}
+				]
+			}
+		]
+	},
+	"faqPage": {
+		"seoTitle": "FAQ",
+		"seoDescription": "Haeufige Fragen zu EdilSync: Plattform, Preise, Funktionen, Rechte, Sicherheit und Support.",
+		"badge": "FAQ",
+		"title": "Haeufig gestellte Fragen",
+		"subtitle": "Antworten auf die haeufigsten Fragen zu EdilSync.",
+		"groups": [
+			{
+				"title": "Allgemein",
+				"items": [
+					{
+						"q": "Was ist EdilSync?",
+						"a": "EdilSync ist eine Plattform fuer die Koordination von Baustellen und Sanierungen. Sie bringt Bauherren, Bauunternehmen, Nachunternehmer und Fachleute in einem gemeinsamen Bereich zusammen, mit kontextbezogenen Rollen und Rechten fuer jede Baustelle."
+					},
+					{
+						"q": "Ist EdilSync fuer kleine Unternehmen geeignet?",
+						"a": "Auf jeden Fall. EdilSync ist speziell fuer Bauunternehmen mit weniger als €1 Mio. Jahresumsatz konzipiert, die 8-12 Wohnraumsanierungen betreuen. Die Oberflaeche ist einfach, mobile-first und erfordert keine Schulung."
+					},
+					{
+						"q": "Welche Sprachen werden unterstuetzt?",
+						"a": "EdilSync ist auf Italienisch und Englisch verfuegbar. Die Sprache kann jederzeit im Benutzermenue gewechselt werden."
+					}
+				]
+			},
+			{
+				"title": "Preise und Abo",
+				"items": [
+					{
+						"q": "Wie viel kostet EdilSync?",
+						"a": "EdilSync Pro fuer Unternehmen kostet €19/Monat oder €190/Jahr. Private Bauherren bleiben kostenlos. Unternehmen koennen kostenlos bleiben oder auf Pro wechseln, um die Freischaltung von Baustellen und Premium-Funktionen fuers Unternehmen zu aktivieren."
+					},
+					{
+						"q": "Kann ich ohne Karte starten?",
+						"a": "Es gibt keine separate Teststufe. Sie koennen ohne Karte mit einem privaten Konto oder einem kostenlosen Unternehmen starten und auf Pro wechseln, wenn Sie Freischaltungen oder Premium-Funktionen fuers Unternehmen brauchen."
+					},
+					{
+						"q": "Kann ich jederzeit kuendigen?",
+						"a": "Ja, Sie koennen Ihr Abo jederzeit direkt in den Einstellungen kuendigen. Es gibt keine Strafgebuehren und keine versteckten Kosten."
+					},
+					{
+						"q": "Muessen meine Bauherren zahlen?",
+						"a": "Nein. Der Bauherr bleibt kostenlos. Nachunternehmer und Fachleute koennen eingeladenen Baustellen ebenfalls kostenlos beitreten. Premium-Funktionen auf der Baustelle haengen von einer aktiven Freischaltung durch ein zahlendes Unternehmen ab."
+					}
+				]
+			},
+			{
+				"title": "Funktionen",
+				"items": [
+					{
+						"q": "Kann ich EdilSync auf der Baustelle mit dem Handy nutzen?",
+						"a": "Ja, EdilSync ist mobile-first. Es gibt einen eigenen operativen Modus fuer den Einsatz vor Ort, gedacht fuer Arbeiter, Bauleiter und alle, die auf der Baustelle arbeiten. Foto-Uploads, Ein-/Ausstempeln und Aufgaben-Updates funktionieren mit wenigen Taps."
+					},
+					{
+						"q": "Wie funktionieren die Rechte? Kann jeder alles sehen?",
+						"a": "Nein. EdilSync verwendet ein kontextbezogenes Rechtemodell mit 4 Ebenen: App-Rolle, aktiver Kontext (privat oder Unternehmen), Unternehmensrolle und Baustellenrolle. Jede Person sieht nur das, was fuer ihre Rolle auf dieser konkreten Baustelle relevant ist."
+					},
+					{
+						"q": "Kann ich mehrstufige Nachunternehmer-Strukturen verwalten?",
+						"a": "Ja. EdilSync unterstuetzt mehrstufige Nachunternehmer-Strukturen nativ. Ein Bauunternehmen kann Nachunternehmer einladen, die wiederum ihre eigenen Teams einbinden koennen. Rechte und Zugriff werden auf jeder Ebene gesteuert."
+					},
+					{
+						"q": "Kann ich BIM-Dateien oder 3D-Modelle ansehen?",
+						"a": "Ja, aber als Premium-Funktion auf der Baustelle. Auf freigeschalteten Baustellen unterstuetzt EdilSync IFC, GLB und GLTF mit einem In-App-IFC-Viewer und einem 3D-Viewer fuer GLB/GLTF. Auf nicht freigeschalteten Baustellen koennen diese Dateien nicht hochgeladen werden, und vorhandene Dateien bleiben ohne Vorschau archiviert."
+					},
+					{
+						"q": "Wie funktioniert das Streitfall-Management?",
+						"a": "Das Streitfall-Modul ermoeglicht es, Konflikte zu Leistung, Kosten, Verzoegerungen, Qualitaet oder Zahlungen zu formalisieren. Jeder Streitfall hat eine Ereignis-Zeitachse und kann Belege, Kommentare, Loesungsnotizen und Benachrichtigungen an Beteiligte enthalten. Alles ist dokumentiert und unveraenderbar."
+					}
+				]
+			},
+			{
+				"title": "Datenschutz und Sicherheit",
+				"items": [
+					{
+						"q": "Sind meine Daten sicher?",
+						"a": "Ja. EdilSync laeuft auf Cloud-Infrastruktur mit Row Level Security (RLS) bei jeder Datenoperation. Der Datenzugriff basiert auf synchronisierten Nutzergruppen, die automatisch aus Mitgliedschaften und Baustellenbeteiligung abgeleitet werden."
+					},
+					{
+						"q": "Wer kann meine Baustellen sehen?",
+						"a": "Nur Personen, die Sie als Beteiligte auf der Baustelle eingeladen haben. Jeder Nutzer sieht nur Baustellen, an denen er aktiv beteiligt ist, und nur die Bereiche, die zu seiner Rolle auf dieser Baustelle passen."
+					}
+				]
+			}
+		],
+		"finalTitle": "Bereit, Ordnung auf Ihre Baustelle zu bringen?",
+		"finalText": "Hoeren Sie auf, Zeit in Chats, E-Mails und Anrufen zu verlieren. Starten Sie heute mit EdilSync und spueren Sie den Unterschied vom ersten Tag an.",
+		"finalCta": "EdilSync oeffnen",
+		"finalNote": "Privates oder Firmenkonto - Keine Karte zum Start noetig - Upgrade bei Bedarf"
+	},
+	"howItWorksPage": {
+		"seoTitle": "So funktioniert EdilSync",
+		"seoDescription": "Von null zur koordinierten Baustelle in wenigen Minuten: Onboarding, Baustellenanlage, Einladungen, taegliche Ausfuehrung und Abschlusskontrolle.",
+		"badge": "So funktioniert es",
+		"title": "Von null zur koordinierten Baustelle in wenigen Minuten",
+		"subtitle": "EdilSync ist dafuer gemacht, vom ersten Tag an zu funktionieren - ohne aufwendige Schulung und ohne kompliziertes Setup.",
+		"ctaTop": "Kostenloses Konto anlegen",
+		"steps": [
+			{
+				"number": "01",
+				"title": "Konto anlegen",
+				"text": "Registrieren Sie sich in 2 Minuten. Keine Karte zum Start noetig. Entscheiden Sie, ob Sie als Person oder als Unternehmen arbeiten.",
+				"note": "Jede Person hat ein Konto und kann in mehreren Kontexten arbeiten - als Bauherr, Firmenmitglied oder Fachkraft. Ein Login fuer alles.",
+				"icon": "UserPlus"
+			},
+			{
+				"number": "02",
+				"title": "Unternehmen anlegen",
+				"text": "Registrieren Sie Ihr Bauunternehmen in EdilSync. Fuegen Sie Mitarbeiter hinzu, weisen Sie operative Rollen zu und aktivieren Sie Ihren internen Kommunikationskanal.",
+				"note": "Das Unternehmen ist die operative Einheit der Baustelle. Sie koennen Bauleiter, Poliere, Arbeiter und Backoffice mit kontextbezogenen Rechten anlegen.",
+				"icon": "Building2"
+			},
+			{
+				"number": "03",
+				"title": "Baustelle anlegen",
+				"text": "Eroeffnen Sie eine neue Baustelle in EdilSync. Fuegen Sie Adresse, Termine, Beschreibung und die erste Fotodokumentation hinzu.",
+				"note": "Die Baustelle ist der Rahmen fuer alle Beziehungen: Bauherr, Bauunternehmen, Nachunternehmer, Fachleute, Dokumente, Aufgaben, Chat und Finanzen.",
+				"icon": "FolderOpen"
+			},
+			{
+				"number": "04",
+				"title": "Beteiligte einladen",
+				"text": "Laden Sie Bauherren, Nachunternehmer und Fachleute per E-Mail ein. Jeder Beteiligte sieht nur den relevanten Bereich mit rollenbasierten Rechten.",
+				"note": "Der Bauherr nimmt kostenlos teil. Nachunternehmer und Fachleute koennen eingeladenen Baustellen kostenlos beitreten. Erweiterte Baustellenfunktionen werden freigeschaltet, wenn ein zahlendes Unternehmen die Baustelle freischaltet.",
+				"icon": "Users"
+			},
+			{
+				"number": "05",
+				"title": "Arbeiten und dokumentieren",
+				"text": "Aufgaben, Fotos, Nachrichten, Aenderungen, Fristen - jede Aktion wird automatisch zu nachvollziehbarer Baustellendokumentation.",
+				"note": "Sie muessen keine manuellen Updates schreiben. Taegliche Aktionen werden zum Bautagebuch, das in Echtzeit sichtbar ist.",
+				"icon": "CircleCheck"
+			},
+			{
+				"number": "06",
+				"title": "Steuern und abschliessen",
+				"text": "Ueberwachen Sie Fortschritt, Kosten und Meilensteine. Verwalten Sie freigegebene Aenderungen und dokumentierte Streitfaelle. Schliessen Sie mit einer vollstaendigen Baustellenhistorie ab.",
+				"note": "Von der Anwesenheit vor Ort bis zur Kostenkontrolle bleibt alles verbunden. Der abschliessende Leistungsnachweis buendelt alle Belege an einem Ort.",
+				"icon": "TrendingUp"
+			}
+		],
+		"finalTitle": "Bereit, Ordnung auf Ihre Baustelle zu bringen?",
+		"finalText": "Hoeren Sie auf, Zeit in Chats, E-Mails und Anrufen zu verlieren. Starten Sie heute mit EdilSync und spueren Sie den Unterschied vom ersten Tag an.",
+		"finalCta": "Kostenloses Konto anlegen",
+		"finalNote": "Privates oder Firmenkonto · Setup in 2 Minuten · Upgrade bei Bedarf"
+	},
+	"contractorsPage": {
+		"seoTitle": "Fuer Bauunternehmen",
+		"seoDescription": "Seite fuer Bauunternehmen: kostenloser oder Pro-Firmentarif, Margenschutz, automatische Dokumentation, Koordination von Nachunternehmern und Premium-Baustellenfunktionen ueber Freischaltung.",
+		"badge": "Fuer Bauunternehmen",
+		"titleA": "Schuetzen Sie Ihre Marge.",
+		"titleB": "Jeden Tag.",
+		"subtitle": "Bei Margen von 3-5% kann ein einziger undokumentierter Streitfall den Gewinn einer ganzen Baustelle ausloeschen. Ihr Unternehmen kann kostenlos starten und auf Pro wechseln, wenn Sie Premium-Funktionen fuers Unternehmen und die Freischaltung von Baustellen brauchen.",
+		"note": "Kostenloses oder Pro-Unternehmen. Premium-Funktionen auf der Baustelle werden auf freigeschalteten Baustellen aktiviert.",
+		"ctaTop": "Firmenkonto anlegen",
+		"quote": "Ich bin nicht im Verzug - ich warte seit drei Wochen darauf, dass der Kunde die Fliesen auswaehlt. Aber wenn er eine schlechte Bewertung schreibt, rate mal, wer die Schuld bekommt?",
+		"quoteAuthor": "Michele",
+		"quoteRole": "Bauunternehmer, 18 Jahre Erfahrung",
+		"advantagesTitle": "Konkrete Vorteile fuer Ihr Unternehmen",
+		"advantages": [
+			{
+				"title": "Schutz bei Streitfaellen",
+				"text": "Jede Aenderung wird mit einem unterzeichneten Nachtragsablauf dokumentiert. Keine margenfressenden Diskussionen mehr ueber unklare Leistungen.",
+				"icon": "Shield"
+			},
+			{
+				"title": "Automatische Dokumentation",
+				"text": "Fotos von der Baustelle werden automatisch Teil der Baustellenakte. Mit Zeitstempel, geordnet und jederzeit auffindbar.",
+				"icon": "Camera"
+			},
+			{
+				"title": "Koordination der Nachunternehmer",
+				"text": "Laden Sie Fachgewerke ein. Jeder sieht seine zugewiesenen Aufgaben und den gemeinsamen Kalender. Weniger Leerfahrten.",
+				"icon": "Users"
+			},
+			{
+				"title": "Vollstaendige Nachvollziehbarkeit",
+				"text": "Wer hat was wann und auf welcher Baustelle gesagt. Jede Aktion wird fuer rechtliche und operative Klarheit protokolliert.",
+				"icon": "FileText"
+			},
+			{
+				"title": "Kostenkontrolle",
+				"text": "Budget, Kosten, Saetze und Leistungsstaende an einem Ort. Von der Anwesenheit bis zum Schlussstand bleibt alles verknuepft.",
+				"icon": "Wallet"
+			},
+			{
+				"title": "Wirklich mobile-first",
+				"text": "Der operative Modus ist fuer Teams auf der Baustelle gemacht. Schneller Foto-Upload, schnelles Ein-/Ausstempeln und die Tagesaufgaben immer sichtbar.",
+				"icon": "Smartphone"
+			}
+		],
+		"valueTitle": "Welchen Wert hat EdilSync fuer Sie?",
+		"valueItems": [
+			"Ein vermiedener Streitfall (~€300 im Schnitt) = 15 Monate Abo",
+			"Eine vermiedene Leerfahrt pro Monat = Abo bezahlt",
+			"2 Stunden pro Monat weniger fuer Statusanrufe = Abo bezahlt",
+			"Eine vermiedene schlechte Bewertung = unbezahlbarer Wert"
+		],
+		"valueCostLabel": "Kosten:",
+		"valueCost": "€19/Monat fuer ein Pro-Unternehmen",
+		"finalTitle": "Bereit, Ordnung auf Ihre Baustelle zu bringen?",
+		"finalText": "Hoeren Sie auf, Zeit in Chats, E-Mails und Anrufen zu verlieren. Starten Sie heute mit EdilSync und spueren Sie den Unterschied vom ersten Tag an.",
+		"finalCta": "Firmenkonto anlegen",
+		"finalNote": "Kostenloses oder Pro-Unternehmen · Keine Karte zum Start noetig · Upgrade bei Bedarf"
+	},
+	"homeownersPage": {
+		"seoTitle": "Fuer Bauherren",
+		"seoDescription": "Seite fuer Bauherren: kostenloser Zugang zur Baustelle, nachvollziehbare Freigaben und auf freigeschalteten Baustellen mehr Kontrolle ueber Kosten, Zeitplan und Koordination.",
+		"badge": "Fuer Bauherren",
+		"titleA": "Behalten Sie Ihre Baustelle im Blick",
+		"titleB": "mit Klarheit.",
+		"subtitle": "Keine Updates mehr ueber Chats und Anrufe zusammensuchen. EdilSync gibt Ihnen Fortschritt, Entscheidungen und Leistungsaenderungen in einer strukturierten Zeitachse; freigeschaltete Baustellen oeffnen zusaetzlich erweiterte Bereiche fuer Transparenz und Koordination.",
+		"note": "Der Zugang fuer den Bauherrn ist in der Baustelle enthalten. Erweiterte Bereiche werden aktiviert, wenn ein Pro-Unternehmen die Baustelle freischaltet.",
+		"ctaTop": "Demo anfragen",
+		"quote": "Frueher habe ich jede Woche nach Updates gefragt. Jetzt oeffne ich die Baustelle und sehe sofort, was erledigt ist, was noch offen ist und was von mir entschieden werden muss.",
+		"quoteAuthor": "Laura",
+		"quoteRole": "Privater Bauherr",
+		"advantagesTitle": "Was Sie in der Praxis bekommen",
+		"advantages": [
+			{
+				"title": "Klare Sicht auf den Fortschritt",
+				"text": "Klare Zeitachse mit erledigten, laufenden und blockierten Taetigkeiten. Sie verstehen jederzeit den Stand der Baustelle.",
+				"icon": "Clock3"
+			},
+			{
+				"title": "Nachvollziehbare Freigaben und Entscheidungen",
+				"text": "Auf freigeschalteten Baustellen wird jede Leistungsaenderung mit Zeit- und Kosteneffekt formalisiert. Keine Unklarheiten am Ende der Baustelle.",
+				"icon": "CheckCheck",
+				"badge": "Freigeschaltete Baustelle"
+			},
+			{
+				"title": "Geordnete Kommunikation",
+				"text": "Auf freigeschalteten Baustellen ersetzt kontextbezogene Kommunikation verstreute persoenliche Chats, Anrufe und lose Anhaenge.",
+				"icon": "MessagesSquare",
+				"badge": "Freigeschaltete Baustelle"
+			},
+			{
+				"title": "Immer zugaengliche Dokumentation",
+				"text": "Auf freigeschalteten Baustellen bleiben Fotos, Dateien und Entscheidungen mit den richtigen Vorgaengen verknuepft, damit Sie alles schnell finden.",
+				"icon": "FileText",
+				"badge": "Freigeschaltete Baustelle"
+			},
+			{
+				"title": "Nuetzliche Hinweise statt Laerm",
+				"text": "Sie werden nur informiert, wenn Ihre Rueckmeldung gebraucht wird: Freigaben, Blocker und wichtige Entscheidungen.",
+				"icon": "BellRing"
+			},
+			{
+				"title": "Mehr Schutz, weniger Stress",
+				"text": "Eine belastbare Zeitachse senkt das Konfliktrisiko und haelt Bauherr, Bauunternehmen und Fachleute auf einer Linie.",
+				"icon": "ShieldCheck"
+			}
+		],
+		"valueTitle": "Wie viel Nutzen kann EdilSync fuer Sie schaffen?",
+		"valueItems": [
+			"Eine vor der Ausfuehrung geklaerte Leistungsaenderung kann teure Streitfaelle am Ende verhindern",
+			"Weniger Zeit fuer Statusnachfragen bedeutet mehr Sicherheit waehrend der ganzen Baustelle",
+			"Nachvollziehbare Entscheidungen reduzieren Missverstaendnisse und Nacharbeit",
+			"Geordnete Dokumentation schuetzt die Zusammenarbeit zwischen Bauherr, Bauunternehmen und Fachleuten"
+		],
+		"valueCostLabel": "Zugang fuer Bauherren:",
+		"valueCost": "kostenlos in der Baustelle",
+		"finalTitle": "Wuenschen Sie sich eine transparentere, weniger stressige Baustelle?",
+		"finalText": "Fragen Sie eine Demo an und sehen Sie, wie Sie Ausfuehrung, Freigaben und Aenderungen verfolgen, ohne die Kontrolle zu verlieren.",
+		"finalCta": "Demo buchen",
+		"finalNote": "Keine technische Einrichtungslast · Gefuehrter Zugang · Schnelle Zusammenarbeit"
+	},
+	"subcontractorsPage": {
+		"seoTitle": "Fuer Nachunternehmer",
+		"seoDescription": "Seite fuer Nachunternehmer: weniger Leerfahrten, kontextbezogene Aufgaben, nachvollziehbarer Chat und kostenloser Zugang auf EdilSync-Baustellen.",
+		"badge": "Fuer Nachunternehmer",
+		"titleA": "Wissen Sie genau",
+		"titleB": "wo und wann",
+		"titleC": "Sie auf der Baustelle sein muessen.",
+		"subtitle": "3-5 aktive Baustellen gleichzeitig zu steuern ist eine Abstimmungsfrage. EdilSync gibt Ihnen den richtigen Kontext fuer jede Baustelle ohne Durcheinander.",
+		"note": "Kostenloser Zugang auf Baustellen, zu denen Sie eingeladen sind",
+		"ctaTop": "Kostenloses Konto oeffnen",
+		"quote": "Ich komme auf die Baustelle und die Vorarbeiten sind nicht fertig. Schon wieder eine Leerfahrt. €150 Kosten, null Umsatz. Und niemand hat mich informiert.",
+		"quoteAuthor": "Marco",
+		"quoteRole": "Elektriker, 5 aktive Baustellen",
+		"benefitsTitle": "Vorteile fuer Nachunternehmer",
+		"benefits": [
+			{
+				"title": "Keine Leerfahrten",
+				"text": "Der gemeinsame Kalender zeigt Ihnen, wann Sie auf der Baustelle erwartet werden. Wenn sich etwas aendert, werden Sie sofort benachrichtigt.",
+				"icon": "CalendarDays"
+			},
+			{
+				"title": "Nur Ihre Aufgaben",
+				"text": "Sie sehen nur die Aufgaben und Taetigkeiten, die fuer Ihren Bereich relevant sind. Kein Laerm, nur das, was Sie zur Ausfuehrung brauchen.",
+				"icon": "ListChecks"
+			},
+			{
+				"title": "Chat ohne persoenliche Nummer",
+				"text": "Kommunizieren Sie mit Bauunternehmen und Baustellenteam im EdilSync-Chat. Sie muessen Ihre persoenliche Telefonnummer nicht weitergeben.",
+				"icon": "MessageCircle"
+			},
+			{
+				"title": "Dokumentieren Sie Ihre Arbeit",
+				"text": "Fotos und Dokumente zu Ihren Aufgaben. Eingebaute Absicherung fuer erbrachte Leistungen, verfuegbar wenn sie gebraucht wird.",
+				"icon": "Camera"
+			},
+			{
+				"title": "Kontextbezogener Zugang",
+				"text": "Sie betreten Baustellen nur auf Einladung, mit Sicht nur auf das, was fuer Ihr Leistungspaket relevant ist.",
+				"icon": "Navigation"
+			},
+			{
+				"title": "Kostenloser Zugang auf Einladung",
+				"text": "Als Nachunternehmer treten Sie eingeladenen Baustellen kostenlos bei. Wenn die Baustelle freigeschaltet ist, erhalten Sie auch die dort verfuegbaren Premium-Funktionen.",
+				"icon": "ArrowRight"
+			}
+		],
+		"finalTitle": "Bereit, Ordnung auf Ihre Baustelle zu bringen?",
+		"finalText": "Hoeren Sie auf, Zeit in Chats, E-Mails und Anrufen zu verlieren. Starten Sie heute mit EdilSync und spueren Sie den Unterschied vom ersten Tag an.",
+		"finalCta": "Kostenloses Konto oeffnen",
+		"finalNote": "Nur Zugang zu eingeladenen Baustellen · Keine Karte zum Start noetig · Schnelle Zusammenarbeit"
+	},
+	"professionalsPage": {
+		"seoTitle": "Fuer technische Fachleute",
+		"seoDescription": "Seite fuer technische Fachleute: kostenloser Zugang auf eingeladenen Baustellen, mit erweitertem Dokumentenmanagement und strukturierter Koordination auf freigeschalteten Baustellen.",
+		"badge": "Fuer technische Fachleute",
+		"title": "Ihr gemeinsamer Arbeitsbereich mit Unternehmen und Bauherr",
+		"subtitle": "Architekten, Ingenieure, Vermesser und Designer. Sie treten eingeladenen Baustellen kostenlos bei und arbeiten auf freigeschalteten Baustellen mit erweiterten Dokumenten, Meilensteinen und vollstaendig kontextbezogenem Chat.",
+		"note": "Kostenloser Zugang auf eingeladenen Baustellen. Premium-Baustellenbereiche werden auf freigeschalteten Baustellen aktiviert.",
+		"ctaTop": "Kostenloses Konto oeffnen",
+		"rolesTitle": "Fuer jedes fachliche Profil",
+		"roles": [
+			{
+				"title": "Architekten",
+				"text": "Koordinieren Sie Ausfuehrungsplanung, Aenderungen und Freigaben mit Bauherr und Unternehmen in einem gemeinsamen Bereich. Ihre technischen Unterlagen bleiben zugaenglich und abgestimmt."
+			},
+			{
+				"title": "Tragwerksplaner",
+				"text": "Dokumentieren Sie Berechnungen, Berichte und statische Pruefungen. Verfolgen Sie jede konstruktive Aenderung und ihre Freigabe ueber die Zeit."
+			},
+			{
+				"title": "Vermesser",
+				"text": "Verwalten Sie Genehmigungen, Katasterunterlagen und Baustellenueberwachung. Koordinieren Sie sich mit Bauherr und Unternehmen ohne zerfaserte E-Mails."
+			},
+			{
+				"title": "Interior Designer",
+				"text": "Teilen Sie Tafeln, Materialien und Versionen. Nachtraege dokumentieren jede abgestimmte Gestaltungsvariante mit dem Kunden."
+			},
+			{
+				"title": "Technische Berater",
+				"text": "Greifen Sie in Ihrem Rollen-Kontext auf die Baustelle zu, sehen Sie relevante Dokumente und kommunizieren Sie mit allen Beteiligten ohne Mehrfachkonten."
+			}
+		],
+		"featuresTitle": "Funktionen fuer technische Fachleute",
+		"features": [
+			{
+				"title": "Integrierter BIM-Viewer",
+				"text": "Auf freigeschalteten Baustellen laden Sie IFC, GLB und GLTF hoch und pruefen 3D-Modelle direkt in der Plattform, waehrend Sie den Kontext mit Bauherren und Unternehmen teilen.",
+				"icon": "Globe",
+				"badge": "Freigeschaltete Baustelle"
+			},
+			{
+				"title": "Erweitertes Dokumentenmanagement",
+				"text": "Auf freigeschalteten Baustellen halten Gewerk, Phase, Status, Versionen und Tags jedes Dokument auffindbar, pruefbar und sauber organisiert.",
+				"icon": "FileText",
+				"badge": "Freigeschaltete Baustelle"
+			},
+			{
+				"title": "Gemeinsamer Kalender",
+				"text": "Baustellentermine, Besprechungen und Fristen - vollstaendig koordiniert zwischen allen Beteiligten in einem gemeinsamen Kalender.",
+				"icon": "CalendarDays"
+			},
+			{
+				"title": "Strukturierter Baustellenchat",
+				"text": "Auf freigeschalteten Baustellen koennen Nachrichten auf Dokumente, Aufgaben und Meilensteine verweisen. Keine endlosen E-Mail-Ketten mehr fuer jedes Update.",
+				"icon": "MessageCircle",
+				"badge": "Freigeschaltete Baustelle"
+			},
+			{
+				"title": "Kontextbezogener Zugang",
+				"text": "Ihr fachliches Profil kann ueber mehrere Baustellen hinweg in unterschiedlichen Rollen arbeiten. Ein Konto fuer alles.",
+				"icon": "Layers"
+			},
+			{
+				"title": "Koordination zwischen mehreren Akteuren",
+				"text": "Sie sind oft das Bindeglied zwischen Bauherr und Unternehmen. EdilSync macht diese Abstimmung strukturiert und nachvollziehbar.",
+				"icon": "Users"
+			}
+		],
+		"finalTitle": "Bereit, Ordnung auf Ihre Baustelle zu bringen?",
+		"finalText": "Hoeren Sie auf, Zeit in Chats, E-Mails und Anrufen zu verlieren. Starten Sie heute mit EdilSync und spueren Sie den Unterschied vom ersten Tag an.",
+		"finalCta": "Kostenloses Konto oeffnen",
+		"finalNote": "Ein Konto · Kostenloser Zugang auf eingeladenen Baustellen · Premium auf freigeschalteten Baustellen"
+	},
+	"disputeProtectionPage": {
+		"seoTitle": "Schutz bei Streitfaellen",
+		"seoDescription": "Reduzieren Sie Streitfaelle auf der Baustelle mit kontextbezogenen Belegen, nachvollziehbaren Nachtraegen und strukturierter Kommunikation in einem gemeinsamen Bereich.",
+		"badge": "Schutz bei Streitfaellen",
+		"title": "Jedes Wort steht fest.",
+		"titleHighlight": "Jede Vereinbarung ist belegbar.",
+		"subtitle": "Im Bau liegen die Margen oft bei 3-5%. Ein einziger undokumentierter Streitfall kann den Gewinn einer ganzen Baustelle ausloeschen. EdilSync schuetzt Sie automatisch, ohne zusaetzlichen Verwaltungsaufwand.",
+		"cta": "Firmenkonto anlegen",
+		"note": "Fuer Bauunternehmen, Bauherren, Nachunternehmer und technische Fachleute gemacht.",
+		"scenarioLabel": "Typisches Szenario",
+		"scenarioQuote": "\"Ich habe auf einer Baustelle ueber €28.000 wegen eines Streits um zwei Raeume €4.200 verloren, weil der Kunde meinte, das sei schon enthalten. Ich hatte nichts dokumentiert. Nur mein Wort.\"",
+		"scenarioAuthor": "Giuseppe",
+		"scenarioRole": "Bauunternehmer, Turin - vor EdilSync",
+		"issuesTitle": "Die haeufigsten Streitfaelle - und wie Sie sie vermeiden",
+		"issuesSubtitle": "Zu jedem schmerzhaften Szenario gibt es eine klare dokumentarische Antwort.",
+		"issues": [
+			{
+				"title": "\"Ich dachte, das waere im Angebot enthalten\"",
+				"text": "Nachtraege dokumentieren jede Aenderung mit Kosten- und Termineffekt. Der Bauherr genehmigt oder lehnt ab. Alles ist mit Zeitstempel versehen und unveraenderbar.",
+				"icon": "FileText"
+			},
+			{
+				"title": "\"Ich wusste nicht, dass die Verzoegerung auf mich zurueckgeht\"",
+				"text": "Blockierte Aufgaben erfassen Verantwortlichen, Datum und Grund. Wenn die Verzoegerung von einer Entscheidung des Bauherrn abhaengt, wird das klar festgehalten.",
+				"icon": "Clock3"
+			},
+			{
+				"title": "\"Dieses Foto beweist nichts\"",
+				"text": "Fotos werden mit Zeitstempel versehen und mit der konkreten Aufgabe verknuepft. Ausgangs- und Endzustand jedes Bereichs werden automatisch dokumentiert.",
+				"icon": "Camera"
+			},
+			{
+				"title": "\"Aber ich habe es Ihnen am Telefon gesagt\"",
+				"text": "Alle wichtigen Abstimmungen bleiben in der App mit strukturierten Verweisen. Kritische Entscheidungen verschwinden nicht in privaten Chats oder E-Mails.",
+				"icon": "Scale"
+			}
+		],
+		"flowTitle": "So funktioniert der Schutz",
+		"flowSubtitle": "Das ist kein zusaetzliches Formular. Es entsteht aus Ihrer taeglichen Arbeit.",
+		"flowSteps": [
+			{
+				"title": "Ihre Aktionen werden zu Belegen",
+				"text": "Jedes Foto, jedes Aufgaben-Update und jede Freigabe wird automatisch mit Zeitstempel im Baustellen-Feed erfasst. Kein zusaetzlicher Aufwand noetig."
+			},
+			{
+				"title": "Aenderungen werden formalisiert",
+				"text": "Wenn sich der Leistungsumfang aendert, erfasst ein Nachtrag Beschreibung, Zeitwirkung und Kostenwirkung. Die Freigabe ist digital und unveraenderbar."
+			},
+			{
+				"title": "Verzoegerungen haben einen klaren Verantwortlichen",
+				"text": "Aufgaben koennen mit Ursache und verantwortlicher Partei als blockiert markiert werden. Wenn Sie auf eine Entscheidung des Bauherrn warten, wird das mit Datum und Uhrzeit dokumentiert."
+			},
+			{
+				"title": "Streitfaelle werden formal behandelt",
+				"text": "Wenn ein Konflikt beginnt, eroefnen Sie einen formalen Streitfall mit Ereignis-Zeitachse, angehaengten Belegen und Kommentaren. Alles an einem Ort, vollstaendig nachvollziehbar."
+			}
+		],
+		"roiTitle": "Ein vermiedener Streitfall ist Monate an Abo wert",
+		"roiText": "Ein durchschnittlicher Baustellenstreit kann zwischen €200 und €2.000 an Zeit, Nacharbeit und verlorener Marge kosten. EdilSync kostet €19 pro Monat. Der ROI ist eindeutig.",
+		"roiCards": [
+			{
+				"value": "€300",
+				"label": "Durchschnittliche Kosten eines kleinen Streitfalls"
+			},
+			{
+				"value": "€19/month",
+				"label": "Kosten von EdilSync"
+			},
+			{
+				"value": "15x",
+				"label": "ROI mit einem vermiedenen Streitfall pro Jahr"
+			}
+		],
+		"finalTitle": "Bereit, Ordnung auf Ihre Baustelle zu bringen?",
+		"finalText": "Hoeren Sie auf, Zeit zwischen Chats, E-Mails und Anrufen zu verlieren. Starten Sie heute mit EdilSync und spueren Sie den Unterschied vom ersten Tag an.",
+		"finalCta": "Firmenkonto anlegen",
+		"finalNote": "Kostenloses oder Pro-Unternehmen - Keine Karte zum Start noetig - Upgrade bei Bedarf"
+	},
+	"transparencyPage": {
+		"seoTitle": "Transparenz fuer Bauherren",
+		"seoDescription": "Verfolgen Sie Ihre Baustelle in Echtzeit ohne staendige Anrufe: Live-Feed, sinnvolle Hinweise und auf freigeschalteten Baustellen klare Meilensteine sowie Sicht auf Kosten und Aenderungen.",
+		"badge": "Baustellentransparenz",
+		"title": "Sie wissen immer, was passiert.",
+		"titleHighlight": "Ohne anzurufen.",
+		"subtitle": "Sie investieren viel Geld in Ihr Zuhause oder Ihre Immobilie. Sie erhalten Echtzeit-Sicht auf die Baustelle und auf freigeschalteten Baustellen zusaetzlich Zugang zu erweiterten Bereichen fuer Koordination und Kostentransparenz.",
+		"note": "Bauherren bleiben immer kostenlos. Meilensteine, freigegebene Kosten und strukturierter Chat werden auf freigeschalteten Baustellen aktiviert.",
+		"cta": "Kostenloses Konto oeffnen",
+		"quote": "\"Ich habe €65.000 fuer die Renovierung meiner Wohnung ausgegeben. Drei Monate lang habe ich das Bauunternehmen alle zwei Tage angerufen, nur um den Fortschritt zu verstehen. Ich kam mir laestig vor, hatte aber keine Alternative.\"",
+		"quoteAuthor": "Simona",
+		"quoteRole": "Bauherr, Mailand - vor EdilSync",
+		"compareTitle": "Vor und nach EdilSync",
+		"compareRows": [
+			[
+				"Sie rufen das Bauunternehmen an, um nach dem Stand zu fragen",
+				"Sie oeffnen die App und sehen den aktuellen Feed"
+			],
+			[
+				"Sie wissen nicht, ob eine Aenderung die Endkosten erhoeht",
+				"Jede Aenderung enthaelt Kosten- und Termineffekt"
+			],
+			[
+				"Die Verzoegerung wird Ihnen angelastet, obwohl Material gefehlt hat",
+				"Die Ursache der Verzoegerung wird immer dokumentiert"
+			],
+			[
+				"Sie verstehen den Fortschrittsbericht nicht, den Sie bekommen haben",
+				"Der Fortschritt ist in Echtzeit sichtbar"
+			],
+			[
+				"Sie machen unangekuendigte Baustellenbesuche, weil Sie den Updates nicht vertrauen",
+				"Sie haben volle Sicht, ohne jemanden zu stoeren"
+			]
+		],
+		"featuresTitle": "Alles, was Sie als Bauherr sehen",
+		"featuresSubtitle": "Sofortige Sicht auf die Baustelle, mit erweiterten Bereichen, sobald ein Pro-Unternehmen die Baustelle freischaltet.",
+		"features": [
+			{
+				"title": "Baustellen-Feed in Echtzeit",
+				"text": "Jede Aktion - Foto hochgeladen, Aufgabe erledigt, Aenderung freigegeben - erscheint im Feed. Sie sehen dieselbe Baustellenrealitaet wie das Unternehmen.",
+				"icon": "Eye"
+			},
+			{
+				"title": "Aktive Hinweise",
+				"text": "Wenn etwas Relevantes passiert, werden Sie benachrichtigt. Keine Unsicherheit mehr darueber, was auf der Baustelle passiert.",
+				"icon": "Bell"
+			},
+			{
+				"title": "Fotodokumentation",
+				"text": "Baustellenfotos werden automatisch in der Baustelle sichtbar. Verfolgen Sie jeden Bereich Tag fuer Tag ohne spontane Kontrollen.",
+				"icon": "Camera"
+			},
+			{
+				"title": "Klare Meilensteine und Fristen",
+				"text": "Auf freigeschalteten Baustellen umfasst die gemeinsame Zeitachse klare Meilensteine und Fristen. Sie wissen, was Sie erwarten koennen, und erhalten Hinweise, wenn etwas mit dokumentierter Ursache ins Rutschen geraet.",
+				"icon": "CalendarDays",
+				"badge": "Freigeschaltete Baustelle"
+			},
+			{
+				"title": "Kostentransparenz",
+				"text": "Auf freigeschalteten Baustellen sehen Sie Budget, freigegebene Kosten und den Fortschritt. Leistungsaenderungen kommen als formale Nachtraege mit klarer Wirkung.",
+				"icon": "Wallet",
+				"badge": "Freigeschaltete Baustelle"
+			},
+			{
+				"title": "Direkter Baustellenkanal",
+				"text": "Auf freigeschalteten Baustellen haelt der Baustellenchat die Kommunikation im richtigen Zusammenhang und verknuepft sie mit Aufgaben und Dokumenten. Keine verlorenen E-Mails oder verstreuten Nachrichten mehr.",
+				"icon": "MessageCircle",
+				"badge": "Freigeschaltete Baustelle"
+			}
+		],
+		"finalTitle": "Bereit, Ordnung auf Ihre Baustelle zu bringen?",
+		"finalText": "Hoeren Sie auf, Zeit in Chats, E-Mails und Anrufen zu verlieren. Starten Sie heute mit EdilSync und sehen Sie den Unterschied vom ersten Tag an.",
+		"finalCta": "Kostenloses Konto oeffnen",
+		"finalNote": "Gefuehrter Zugang · Keine Karte zum Start noetig · Schnelle Zusammenarbeit"
+	},
+	"teamCoordinationPage": {
+		"seoTitle": "Teamkoordination",
+		"seoDescription": "Bringen Sie Bauunternehmen, Bauherren, Nachunternehmer und technische Fachleute in einem Ablauf mit gemeinsamen Aufgaben, Kalender und kontextbezogener Kommunikation zusammen.",
+		"badge": "Teamkoordination",
+		"title": "Auf einer Baustelle arbeiten 4-8 Beteiligte.",
+		"titleHighlight": "Alle muessen abgestimmt bleiben.",
+		"subtitle": "Bauunternehmen, Bauherr, Nachunternehmer, Architekten. Jeder hat andere Prioritaeten, Termine und Werkzeuge. EdilSync bringt alle in einem gemeinsamen Arbeitsbereich zusammen.",
+		"cta": "EdilSync oeffnen",
+		"stakeholdersTitle": "Wen Sie mit EdilSync koordinieren",
+		"stakeholders": [
+			{
+				"role": "Bauunternehmen",
+				"roleClass": "bg-blue-500/10 text-blue-600",
+				"text": "Steuert die Baustelle, weist Aufgaben zu, genehmigt Aenderungen und ueberwacht Kosten."
+			},
+			{
+				"role": "Bauherr",
+				"roleClass": "bg-amber-500/10 text-amber-600",
+				"text": "Hat Echtzeit-Sicht, genehmigt Nachtraege und kommuniziert mit dem Bauunternehmen."
+			},
+			{
+				"role": "Nachunternehmer",
+				"roleClass": "bg-emerald-500/10 text-emerald-600",
+				"text": "Sieht eigene Aufgaben, den gemeinsamen Kalender und Updates des Bauunternehmens."
+			},
+			{
+				"role": "Fachkraft",
+				"roleClass": "bg-purple-500/10 text-purple-600",
+				"text": "Bearbeitet technische Dokumente und koordiniert mit Bauunternehmen und Bauherrn."
+			}
+		],
+		"problemsTitle": "Woechentliche Probleme durch fehlende Abstimmung",
+		"problems": [
+			{
+				"title": "Doppelt belegte Arbeitsbereiche",
+				"text": "Elektriker und Fliesenleger sind am selben Tag fuer dasselbe Bad eingeplant. Niemand wusste es."
+			},
+			{
+				"title": "Nachunternehmer kommt ohne fertige Vorbereitung an",
+				"text": "Vorarbeiten sind nicht abgeschlossen. Der Installateur ist 60 km umsonst gefahren. Niemand hat ihn informiert."
+			},
+			{
+				"title": "Blockierende Entscheidung wird nicht hochgezogen",
+				"text": "Der Kunde muss Fliesen auswaehlen. Die Arbeit steht still. Das Bauunternehmen weiss nicht, dass es nachfassen muss."
+			},
+			{
+				"title": "Aufgabe an die falsche Person vergeben",
+				"text": "Die Abdichtung der Terrasse landet beim falschen Gewerk. Das Problem wird erst sichtbar, wenn die Arbeit schon laeuft."
+			}
+		],
+		"alignmentTitle": "So haelt EdilSync alle abgestimmt",
+		"alignment": [
+			{
+				"title": "Zugewiesene Aufgaben mit klarer Verantwortung",
+				"text": "Jede Aufgabe hat Verantwortlichen, Frist und Status. Zustaendigkeiten sind eindeutig.",
+				"icon": "ListChecks"
+			},
+			{
+				"title": "Gemeinsamer Kalender mit Konflikterkennung",
+				"text": "Alle Besuche, Einsatzfenster und Fristen in einem gemeinsamen Plan mit automatischer Konfliktpruefung.",
+				"icon": "CalendarDays"
+			},
+			{
+				"title": "Kontextbezogene Kommunikation",
+				"text": "Nachrichten sind mit Aufgaben und Dokumenten verknuepft, damit wichtige Informationen nie verloren gehen.",
+				"icon": "MessageCircle"
+			},
+			{
+				"title": "Aktive Benachrichtigungen fuer jede Rolle",
+				"text": "Jede Rolle erhaelt nur relevante Updates. Niemand kann behaupten, er habe nichts gewusst.",
+				"icon": "Bell"
+			},
+			{
+				"title": "Rollenbasierte Sicht",
+				"text": "Jeder sieht nur das, was fuer seine Rolle in diesem Baustellenkontext relevant ist.",
+				"icon": "Navigation"
+			},
+			{
+				"title": "Gemeinsamer Baustellen-Feed",
+				"text": "Ein chronologischer Feed fuer alles, was auf der Baustelle passiert. Fotos, Updates, Freigaben: standardmaessig abgestimmt.",
+				"icon": "Zap"
+			}
+		],
+		"citation": "Fragmentierte Kommunikation kostet die Bauindustrie jedes Jahr $31B. Nicht, weil Menschen nicht kommunizieren wollen, sondern weil ihnen die richtigen Werkzeuge fehlen.",
+		"citationSource": "FMI Corporation, Construction Industry Report",
+		"finalTitle": "Bereit, Ordnung auf Ihre Baustelle zu bringen?",
+		"finalText": "Hoeren Sie auf, Zeit in Chats, E-Mails und Anrufen zu verlieren. Starten Sie heute mit EdilSync und spueren Sie den Unterschied vom ersten Tag an.",
+		"finalCta": "EdilSync oeffnen",
+		"finalNote": "Privates oder Firmenkonto - Keine Karte zum Start noetig - Upgrade bei Bedarf"
+	},
+	"blogMeta": {
+		"minReadLabel": ""
+	},
+	"footer": {
+		"copyright": "© {{year}} EdilSync. Alle Rechte vorbehalten.",
+		"privacyLabel": "Datenschutz",
+		"termsLabel": "Bedingungen",
+		"cookiesLabel": "Cookies"
+	},
+	"cookieBanner": {
+		"text": "Wir verwenden technische Cookies, die fuer den Dienst notwendig sind, sowie Analyse-Cookies, um Ihr Erlebnis zu verbessern. Weitere Informationen finden Sie in unserer",
+		"linkLabel": "Cookie-Richtlinie",
+		"rejectAction": "Nur notwendige",
+		"acceptAction": "Alle akzeptieren"
+	},
+	"privacyPolicyPage": {
+		"chipLabel": "Rechtliches",
+		"title": "Datenschutzerklaerung",
+		"seoDescription": "Datenschutzerklaerung zur Verarbeitung personenbezogener Daten bei EdilSync.",
+		"updatedAt": "Zuletzt aktualisiert: 17. Februar 2026",
+		"intro": "Diese Richtlinie erklaert, wie personenbezogene Daten bei EdilSync verarbeitet werden.",
+		"k1": "1. Verantwortlicher",
+		"k2": "Verantwortlicher fuer die Verarbeitung personenbezogener Daten ist EdilSync, erreichbar unter:",
+		"k3": "2. Erhobene Daten",
+		"k4": "Wir erheben folgende Kategorien personenbezogener Daten:",
+		"k5": "Identifikationsdaten:",
+		"k6": "Vorname, Nachname, E-Mail-Adresse",
+		"k7": "Unternehmensdaten:",
+		"k8": "Firmenname, USt-IdNr., Geschaeftsanschrift, Telefon",
+		"k9": "Nutzungsdaten:",
+		"k10": "Zugriffsprotokolle, Interaktionen mit der Anwendung",
+		"k11": "Baustellendaten:",
+		"k12": "Dokumente, Fotos und Nachrichten, die vom Nutzer hochgeladen werden",
+		"k13": "3. Zwecke und Rechtsgrundlagen",
+		"k14": "Die Daten werden zu folgenden Zwecken verarbeitet:",
+		"k15": "Vertragserfuellung",
+		"k16": "Registrierung, Kontoverwaltung, Bereitstellung des Dienstes",
+		"k17": "Berechtigtes Interesse",
+		"k18": "Sicherheit, Betrugspraevention, Verbesserung des Dienstes",
+		"k19": "Einwilligung",
+		"k20": "Versand von Werbemitteilungen (sofern aktiviert)",
+		"k21": "Gesetzliche Verpflichtung",
+		"k22": "steuerliche und buchhalterische Pflichten",
+		"k23": "4. Speicherdauer",
+		"k24": "Personenbezogene Daten werden fuer die Dauer des Vertragsverhaeltnisses und fuer die folgenden 10 Jahre zur Erfuellung steuerlicher und rechtlicher Pflichten gespeichert. Nutzungsdaten werden 24 Monate gespeichert.",
+		"k25": "5. Datenweitergabe",
+		"k26": "Daten koennen weitergegeben werden an:",
+		"k27": "Andere Baustellenbeteiligte (Name, E-Mail, Rolle) — erforderlich fuer den Betrieb des Dienstes",
+		"k28": "Technische Dienstleister (Hosting, E-Mail) — als Auftragsverarbeiter",
+		"k29": "Daten werden nicht an Dritte verkauft.",
+		"k30": "6. Rechte der betroffenen Person",
+		"k31": "Nach den Artikeln 15-22 DSGVO haben Nutzer das Recht:",
+		"k32": "auf Auskunft ueber personenbezogene Daten",
+		"k33": "auf Berichtigung unrichtiger Daten",
+		"k34": "auf Loeschung personenbezogener Daten (\"Recht auf Vergessenwerden\")",
+		"k35": "auf Einschraenkung der Verarbeitung",
+		"k36": "auf Datenuebertragbarkeit",
+		"k37": "auf Widerspruch gegen die Verarbeitung",
+		"k38": "eine Einwilligung jederzeit zu widerrufen",
+		"k39": "eine Beschwerde bei der Datenschutzbehoerde einzureichen",
+		"k40": "Zur Ausuebung Ihrer Rechte schreiben Sie an:",
+		"k41": "7. Cookies",
+		"k42": "Informationen zur Verwendung von Cookies finden Sie in unserer",
+		"cookiePolicyLinkLabel": "Cookie-Richtlinie",
+		"k43": "8. Aenderungen",
+		"k44": "Wir behalten uns das Recht vor, diese Richtlinie zu aktualisieren. Aenderungen werden ueber die Anwendung mitgeteilt."
+	},
+	"termsOfServicePage": {
+		"chipLabel": "Rechtliches",
+		"title": "Nutzungsbedingungen",
+		"heroTitle": "Allgemeine Geschaefts- und Nutzungsbedingungen",
+		"seoDescription": "Bedingungen, die die Nutzung der EdilSync-Plattform regeln.",
+		"updatedAt": "Zuletzt aktualisiert: 17. Februar 2026",
+		"intro": "Diese Bedingungen regeln die Nutzung der EdilSync-Plattform.",
+		"k1": "1. Beschreibung des Dienstes",
+		"k2": "EdilSync ist eine digitale Plattform zur Verwaltung von Baustellen und ermoeglicht die Zusammenarbeit zwischen Bauherren, Unternehmen, Fachleuten und Beratern. Der Dienst umfasst die Verwaltung von Baustellen, Aufgaben, Dokumenten, Nachrichten und Kalendern.",
+		"k3": "2. Annahme der Bedingungen",
+		"k4": "Der Zugriff auf und die Nutzung von EdilSync setzt die vollstaendige Annahme dieser Nutzungsbedingungen voraus. Wenn Sie diese Bedingungen nicht akzeptieren, duerfen Sie den Dienst nicht nutzen.",
+		"k5": "3. Registrierung und Konto",
+		"k6": "Nutzer muessen wahrheitsgemaesse und aktuelle Informationen bereitstellen",
+		"k7": "Nutzer sind fuer die Vertraulichkeit ihrer Zugangsdaten verantwortlich",
+		"k8": "Jedes Konto ist persoenlich und nicht uebertragbar",
+		"k9": "Nutzer sind fuer alle Aktivitaeten verantwortlich, die ueber ihr Konto ausgefuehrt werden",
+		"k10": "4. Pflichten der Nutzer",
+		"k11": "Nutzer verpflichten sich:",
+		"k12": "den Dienst im Einklang mit italienischem und EU-Recht zu nutzen",
+		"k13": "keine rechtswidrigen, verleumderischen oder Rechte verletzenden Inhalte hochzuladen",
+		"k14": "keinen unbefugten Zugriff auf Daten oder Funktionen zu versuchen",
+		"k15": "den Dienst nicht fuer andere Zwecke als die Verwaltung von Baustellen zu nutzen",
+		"k16": "5. Geistiges Eigentum",
+		"k17": "Die Software, das Design, die Logos und saemtliche Inhalte von EdilSync sind urheberrechtlich geschuetzt und bleiben ausschliessliches Eigentum des Rechteinhabers. Nutzer behalten das Eigentum an den auf die Plattform hochgeladenen Inhalten.",
+		"k18": "6. Inhalte der Nutzer",
+		"k19": "Nutzer gewaehrten EdilSync eine beschraenkte, nicht ausschliessliche Lizenz, hochgeladene Inhalte ausschliesslich zur Erbringung des Dienstes zu hosten, anzuzeigen und zu uebertragen. Inhalte, die innerhalb einer Baustelle geteilt werden, sind fuer andere Baustellenbeteiligte sichtbar.",
+		"k20": "7. Haftungsbeschraenkung",
+		"k21": "EdilSync wird \"wie besehen\" bereitgestellt. Der Rechteinhaber garantiert nicht, dass der Dienst fehlerfrei oder unterbrechungsfrei ist. In keinem Fall haftet der Rechteinhaber fuer mittelbare, zufaellige oder Folgeschaeden, die aus der Nutzung des Dienstes entstehen.",
+		"k22": "8. Sperrung und Beendigung",
+		"k23": "Der Rechteinhaber behaelt sich das Recht vor, den Zugang zum Dienst bei Verstoessen gegen diese Bedingungen ohne Vorankuendigung auszusetzen oder zu beenden. Nutzer koennen ihr Konto jederzeit in den Einstellungen loeschen.",
+		"k24": "9. Anwendbares Recht und Gerichtsstand",
+		"k25": "Diese Bedingungen unterliegen italienischem Recht. Fuer Streitigkeiten ist das Gericht am Sitz [registered office] zustaendig, sofern zwingende Verbraucherschutzvorschriften nichts anderes vorsehen.",
+		"k26": "10. Aenderungen",
+		"k27": "Wir behalten uns das Recht vor, diese Bedingungen zu aendern. Aenderungen werden mit angemessener Frist ueber die Anwendung mitgeteilt. Die weitere Nutzung nach einer Aenderung gilt als Annahme der aktualisierten Bedingungen.",
+		"k28": "11. Kontakte",
+		"k29": "Bei Fragen zu diesen Bedingungen schreiben Sie an:"
+	},
+	"cookiePolicyPage": {
+		"chipLabel": "Rechtliches",
+		"title": "Cookie-Richtlinie",
+		"seoDescription": "Cookie-Richtlinie fuer den Betrieb und die Verbesserung des Dienstes bei EdilSync.",
+		"updatedAt": "Zuletzt aktualisiert: 17. Februar 2026",
+		"intro": "Diese Richtlinie erklaert, wie Cookies fuer den Betrieb und die Verbesserung des Dienstes verwendet werden.",
+		"k1": "1. Was Cookies sind",
+		"k2": "Cookies sind kleine Textdateien, die waehrend der Nutzung auf dem Geraet des Nutzers gespeichert werden. Sie werden verwendet, um das Nutzungserlebnis zu verbessern und den Betrieb des Dienstes zu ermoeglichen.",
+		"k3": "2. Verwendete Arten von Cookies",
+		"k4": "Technische Cookies (notwendig)",
+		"k5": "Diese Cookies sind fuer die Funktion der Anwendung unerlaesslich und koennen nicht deaktiviert werden. Dazu gehoeren:",
+		"k6": "Session-Cookies:",
+		"k7": "halten die Nutzeranmeldung aufrecht",
+		"k8": "Praeferenz-Cookies:",
+		"k9": "speichern Nutzereinstellungen (z. B. aktiver Kontext)",
+		"k10": "Rechtsgrundlage:",
+		"k11": "berechtigtes Interesse (Art. 6.1.f DSGVO) — erforderlich fuer die Bereitstellung des Dienstes.",
+		"k12": "Analyse-Cookies",
+		"k13": "Wir verwenden Analyse-Cookies, um zu verstehen, wie Nutzer mit der Anwendung interagieren, und um den Dienst zu verbessern. Diese Cookies erfassen aggregierte und anonyme Informationen.",
+		"k14": "Rechtsgrundlage:",
+		"k15": "Einwilligung des Nutzers (Art. 6.1.a DSGVO).",
+		"k16": "3. Cookies von Drittanbietern",
+		"k17": "Die Anwendung kann Dienste von Drittanbietern enthalten, die eigene Cookies setzen. EdilSync hat keine Kontrolle ueber diese Cookies. Bitte lesen Sie die jeweiligen Richtlinien.",
+		"k18": "4. Cookie-Verwaltung",
+		"k19": "Nutzer koennen Cookie-Praeferenzen verwalten ueber:",
+		"k20": "das Cookie-Banner beim ersten Aufruf",
+		"k21": "die Einstellungen des Browsers",
+		"k22": "Das Deaktivieren technischer Cookies kann die Funktion der Anwendung beeintraechtigen.",
+		"k23": "5. Cookie-Dauer",
+		"k24": "Typ",
+		"k25": "Dauer",
+		"k26": "Session-Cookies",
+		"k27": "Bis der Browser geschlossen wird",
+		"k28": "Praeferenz-Cookies",
+		"k29": "12 Monate",
+		"k30": "Analyse-Cookies",
+		"k31": "24 Monate",
+		"k32": "6. Rechte der Nutzer",
+		"k33": "Weitere Informationen zu Rechten bei der Datenverarbeitung finden Sie in unserer",
+		"privacyPolicyLinkLabel": "Datenschutzerklaerung",
+		"k34": "7. Kontakte",
+		"k35": "Bei Fragen zu Cookies schreiben Sie an:"
+	}
+}

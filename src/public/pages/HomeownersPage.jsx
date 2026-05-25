@@ -7,14 +7,21 @@ import MarketingSplitHero from '@/public/components/marketing/MarketingSplitHero
 import MarketingBenefitsGrid from '@/public/components/marketing/MarketingBenefitsGrid';
 import MarketingValueListSection from '@/public/components/marketing/MarketingValueListSection';
 import MarketingFinalCtaSection from '@/public/components/marketing/MarketingFinalCtaSection';
+import { getPublicLocaleVariant, getPublicPageSeoData, localizePublicPath } from '@/public/lib/localePath';
 import { getPublicCopy } from '@/public/lib/publicTranslations';
 
 
 export default function HomeownersPage({ locale = 'it' }) {
   const rootRef = useRef(null);
   const copy = useMemo(() => getPublicCopy(locale, 'homeownersPage'), [locale]);
-  const basePath = locale === 'en' ? '/en' : '';
-  const canonicalPath = locale === 'en' ? '/en/per-committenti' : '/per-committenti';
+  const { canonicalPath, alternatePathsByLocale } = getPublicPageSeoData(locale, '/per-committenti');
+  const contactPath = localizePublicPath('/contatti', locale);
+  const fieldNoteLabel = getPublicLocaleVariant(locale, { it: 'Nota dal campo', en: 'Field note' });
+  const operationalValueLabel = getPublicLocaleVariant(locale, { it: 'Valore operativo', en: 'Operational value' });
+  const operationalValueText = getPublicLocaleVariant(locale, {
+    it: 'Questi punti mostrano cosa cambia davvero per il committente: meno zone d’ombra, meno incomprensioni e più serenità lungo tutto il cantiere.',
+    en: 'These points show what EdilSync changes in practice for homeowners: fewer blind spots, fewer misunderstandings, and more confidence through the full worksite.',
+  });
 
   usePublicGsap(rootRef);
 
@@ -23,8 +30,7 @@ export default function HomeownersPage({ locale = 'it' }) {
     description: copy.seoDescription,
     canonicalPath,
     locale,
-    alternateItPath: '/per-committenti',
-    alternateEnPath: '/en/per-committenti',
+    alternatePathsByLocale,
   });
 
   return (
@@ -36,12 +42,12 @@ export default function HomeownersPage({ locale = 'it' }) {
         subtitle={copy.subtitle}
         note={copy.note}
         ctaLabel={copy.ctaTop}
-        ctaHref={`${basePath}/contatti`}
+        ctaHref={contactPath}
         quote={copy.quote}
         quoteAuthor={copy.quoteAuthor}
         quoteRole={copy.quoteRole}
         quoteInitial="L"
-        noteLabel={locale === 'en' ? 'Field note' : 'Nota dal campo'}
+        noteLabel={fieldNoteLabel}
       />
 
       <MarketingBenefitsGrid title={copy.advantagesTitle} items={copy.advantages} />
@@ -51,15 +57,15 @@ export default function HomeownersPage({ locale = 'it' }) {
         items={copy.valueItems}
         costLabel={copy.valueCostLabel}
         costValue={copy.valueCost}
-        eyebrowLabel={locale === 'en' ? 'Operational value' : 'Valore operativo'}
-        introText={locale === 'en' ? 'These points show what EdilSync changes in practice for homeowners: fewer blind spots, fewer misunderstandings, and more confidence through the full worksite.' : 'Questi punti mostrano cosa cambia davvero per il committente: meno zone d’ombra, meno incomprensioni e più serenità lungo tutto il cantiere.'}
+        eyebrowLabel={operationalValueLabel}
+        introText={operationalValueText}
       />
 
       <MarketingFinalCtaSection
         title={copy.finalTitle}
         text={copy.finalText}
         ctaLabel={copy.finalCta}
-        ctaHref={`${basePath}/contatti`}
+        ctaHref={contactPath}
         note={copy.finalNote}
       />
     </div>

@@ -3,7 +3,7 @@ import { Link, useLocation } from 'react-router-dom';
 import { Card, CardContent } from "@/components/ui/card";
 import { useLanguage } from '@/components/i18n/useLanguage';
 import usePublicSeo from '@/public/hooks/usePublicSeo';
-import { localizePublicPath } from '@/public/lib/localePath';
+import { getPublicPageSeoData, localizePublicPath } from '@/public/lib/localePath';
 import { getPublicCopy } from '@/public/lib/publicTranslations';
 
 export default function PrivacyPolicy() {
@@ -12,15 +12,15 @@ export default function PrivacyPolicy() {
   const copy = getPublicCopy(currentLanguage, 'privacyPolicyPage');
   const title = copy.title;
   const description = copy.seoDescription;
+  const { canonicalPath, alternatePathsByLocale } = getPublicPageSeoData(currentLanguage, '/privacy');
   const cookiePolicyPath = localizePublicPath('/cookie', location.pathname);
 
   usePublicSeo({
     title,
     description,
-    canonicalPath: currentLanguage === 'en' ? '/en/privacy' : '/privacy',
+    canonicalPath,
     locale: currentLanguage,
-    alternateItPath: '/privacy',
-    alternateEnPath: '/en/privacy',
+    alternatePathsByLocale,
   });
 
   return (

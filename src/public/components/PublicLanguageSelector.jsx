@@ -2,28 +2,19 @@ import React from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { Globe } from 'lucide-react';
 import { useLanguage } from '@/components/i18n/useLanguage';
-
-function toEnglishPath(pathname) {
-  if (pathname.startsWith('/en')) return pathname;
-  if (pathname === '/') return '/en';
-  return `/en${pathname}`;
-}
-
-function toItalianPath(pathname) {
-  if (!pathname.startsWith('/en')) return pathname;
-  const stripped = pathname.replace(/^\/en/, '');
-  return stripped || '/';
-}
+import { getAllLocaleConfigs } from '@/components/i18n/localeConfig';
+import { detectPublicLocale, localizePublicPath } from '@/public/lib/localePath';
 
 export default function PublicLanguageSelector() {
   const location = useLocation();
   const navigate = useNavigate();
   const { t } = useLanguage();
-  const selectedLanguage = location.pathname.startsWith('/en') ? 'en' : 'it';
+  const localeOptions = getAllLocaleConfigs();
+  const selectedLanguage = detectPublicLocale(location.pathname);
 
   const onValueChange = (value) => {
     if (value === selectedLanguage) return;
-    const nextPath = value === 'en' ? toEnglishPath(location.pathname) : toItalianPath(location.pathname);
+    const nextPath = localizePublicPath(location.pathname, value);
     navigate(nextPath + location.search + location.hash);
   };
 
@@ -39,8 +30,9 @@ export default function PublicLanguageSelector() {
         value={selectedLanguage}
         onChange={(event) => onValueChange(event.target.value)}
       >
-        <option value="it">{t('languageSelector.italian')}</option>
-        <option value="en">{t('languageSelector.english')}</option>
+        {localeOptions.map((locale) => (
+          <option key={locale.code} value={locale.code}>{locale.nativeLabel}</option>
+        ))}
       </select>
     </div>
   );

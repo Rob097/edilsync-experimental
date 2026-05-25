@@ -10,16 +10,12 @@ import { getBlogMetaItems } from '@/public/blogMeta';
 import { contentClient } from '@/public/api/contentClient';
 import { PUBLIC_CLASSES } from '@/public/designSystem';
 import usePublicSeo from '@/public/hooks/usePublicSeo';
+import { getPublicPageSeoData, localizePublicPath } from '@/public/lib/localePath';
+import { pickLocalizedField } from '@/public/lib/pickLocalizedField';
 import { readPublicPrerenderData } from '@/public/prerenderData';
 import StructuredData from '@/public/seo/StructuredData';
 import usePublicGsap from '@/public/hooks/usePublicGsap';
 import { getPublicCopy } from '@/public/lib/publicTranslations';
-
-function pickLocalized(post, locale, field) {
-  const preferred = post?.[`${field}_${locale}`];
-  if (preferred && preferred.trim()) return preferred;
-  return post?.[`${field}_it`] || post?.[`${field}_en`] || '';
-}
 
 export default function BlogPostPage({ locale = 'it', basePath = '', initialPost }) {
   const rootRef = useRef(null);
@@ -39,18 +35,20 @@ export default function BlogPostPage({ locale = 'it', basePath = '', initialPost
     initialData: seededPost,
   });
 
-  const title = pickLocalized(post, locale, 'title');
-  const excerpt = pickLocalized(post, locale, 'excerpt');
-  const content = pickLocalized(post, locale, 'content_markdown');
-  const canonicalPath = slug ? `${basePath}/blog/${slug}` : `${basePath}/blog`;
+  const title = pickLocalizedField(post, locale, 'title');
+  const excerpt = pickLocalizedField(post, locale, 'excerpt');
+  const content = pickLocalizedField(post, locale, 'content_markdown');
+  const seoPath = slug ? `/blog/${slug}` : '/blog';
+  const { canonicalPath, alternatePathsByLocale } = getPublicPageSeoData(locale, seoPath);
+  const blogIndexPath = localizePublicPath('/blog', locale);
+  const contactPath = localizePublicPath('/contatti', locale);
 
   usePublicSeo({
     title,
     description: excerpt,
     canonicalPath,
     locale,
-    alternateItPath: slug ? `/blog/${slug}` : '/blog',
-    alternateEnPath: slug ? `/en/blog/${slug}` : '/en/blog',
+    alternatePathsByLocale,
     robots: !post && (error || !isLoading) ? 'noindex,nofollow' : 'index,follow',
   });
 
@@ -64,7 +62,7 @@ export default function BlogPostPage({ locale = 'it', basePath = '', initialPost
     return (
       <section className="max-w-4xl mx-auto px-4 sm:px-6 py-16">
         <h1 className="text-3xl font-semibold text-[#141821]">{copy.notFound}</h1>
-        <Link className="text-[#ef6144] hover:underline mt-4 inline-block" to={`${basePath}/blog`}>
+        <Link className="text-[#ef6144] hover:underline mt-4 inline-block" to={blogIndexPath}>
           {copy.backToBlog}
         </Link>
       </section>
@@ -94,7 +92,7 @@ export default function BlogPostPage({ locale = 'it', basePath = '', initialPost
       <section className="relative overflow-hidden border-b border-[var(--public-line)] bg-[linear-gradient(180deg,rgba(255,250,246,0.96),rgba(247,241,235,0.82))]">
         <div className="absolute top-8 left-6 h-[52px] w-[52px] rounded-full bg-[#ef6144]/10 blur-[16px]" aria-hidden />
         <div className="max-w-4xl mx-auto px-4 sm:px-6 pt-16 sm:pt-20 pb-12 sm:pb-14">
-          <Link data-reveal className="text-[13px] font-semibold text-[#ef6144] hover:text-[#d9553a]" to={`${basePath}/blog`}>
+          <Link data-reveal className="text-[13px] font-semibold text-[#ef6144] hover:text-[#d9553a]" to={blogIndexPath}>
             {copy.backToBlog}
           </Link>
           <h1 data-reveal className={`mt-5 ${PUBLIC_CLASSES.displayH1}`}>{title}</h1>
@@ -130,7 +128,7 @@ export default function BlogPostPage({ locale = 'it', basePath = '', initialPost
           </p>
           <div data-reveal className="mt-8 flex justify-center">
             <Button asChild className="bg-[#ef6144] hover:bg-[#d9553a] text-white rounded-full h-10 px-6 text-[13px] font-semibold shadow-[0_10px_28px_rgba(239,97,68,0.28)]">
-              <Link to={`${basePath}/contatti`}>{copy.ctaButton}</Link>
+              <Link to={contactPath}>{copy.ctaButton}</Link>
             </Button>
           </div>
         </div>

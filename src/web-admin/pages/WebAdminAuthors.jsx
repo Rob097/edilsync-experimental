@@ -14,8 +14,10 @@ const initialForm = {
   full_name: '',
   role_title_it: '',
   role_title_en: '',
+  role_title_de: '',
   bio_it: '',
   bio_en: '',
+  bio_de: '',
   avatar_url: '',
   linkedin_url: '',
   is_active: true,
@@ -100,6 +102,10 @@ export default function WebAdminAuthors() {
               <Label>Role title EN</Label>
               <Input value={form.role_title_en || ''} onChange={(e) => setForm((p) => ({ ...p, role_title_en: e.target.value }))} />
             </div>
+            <div className="space-y-2 sm:col-span-2">
+              <Label>Role title DE</Label>
+              <Input value={form.role_title_de || ''} onChange={(e) => setForm((p) => ({ ...p, role_title_de: e.target.value }))} />
+            </div>
           </div>
           <div className="space-y-2">
             <Label>Bio IT</Label>
@@ -108,6 +114,10 @@ export default function WebAdminAuthors() {
           <div className="space-y-2">
             <Label>Bio EN</Label>
             <Textarea value={form.bio_en || ''} onChange={(e) => setForm((p) => ({ ...p, bio_en: e.target.value }))} />
+          </div>
+          <div className="space-y-2">
+            <Label>Bio DE</Label>
+            <Textarea value={form.bio_de || ''} onChange={(e) => setForm((p) => ({ ...p, bio_de: e.target.value }))} />
           </div>
           <div className="grid sm:grid-cols-2 gap-4">
             <div className="space-y-2">

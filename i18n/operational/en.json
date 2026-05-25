@@ -13,6 +13,7 @@
   "operational": {
     "selectCompany": "Which company are you working for today?",
     "chooseStart": "How do you want to start?",
+    "project": "Worksite",
     "daySummary": "Day summary",
     "selectProject": "Select worksite",
     "noProjects": "No worksites available for this company.",
@@ -244,6 +245,7 @@
       "openedEmailSubject": "New dispute in worksite",
       "openedEmailBody": "A new dispute has been opened: {{title}}.",
       "statusChangedTitle": "Dispute status updated",
+      "projectContext": "Worksite: {{project}}",
       "statusChangedMessage": "Dispute \"{{title}}\" is now: {{status}}",
       "statusChangedEmailSubject": "Dispute status update",
       "statusChangedEmailBody": "Dispute \"{{title}}\" has been updated to status: {{status}}.",

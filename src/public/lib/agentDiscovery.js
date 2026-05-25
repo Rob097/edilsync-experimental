@@ -1,3 +1,5 @@
+import { detectPublicLocale, localizePublicPath } from '@/public/lib/localePath';
+
 export const INTERNAL_MARKDOWN_PREFIX = '/__agent_markdown';
 
 const PROTECTED_PREFIXES = ['/app', '/web-admin', '/operativa', '/api'];
@@ -42,7 +44,7 @@ const STATIC_ASSET_EXTENSIONS = [
 
 const matchesPrefix = (pathname, prefix) => pathname === prefix || pathname.startsWith(`${prefix}/`);
 
-const localePath = (locale, pathname) => (locale === 'en' ? `/en${pathname}` : pathname);
+const localePath = (locale, pathname) => localizePublicPath(pathname, locale);
 
 export function normalizePathname(pathname) {
   if (!pathname) {
@@ -58,7 +60,7 @@ export function normalizePathname(pathname) {
 }
 
 export function getLocaleFromPath(pathname) {
-  return normalizePathname(pathname).startsWith('/en') ? 'en' : 'it';
+  return detectPublicLocale(normalizePathname(pathname));
 }
 
 export function hasStaticAssetExtension(pathname) {

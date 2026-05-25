@@ -6,25 +6,31 @@ const postSelect = `
   status,
   title_it,
   title_en,
+  title_de,
   excerpt_it,
   excerpt_en,
+  excerpt_de,
   content_markdown_it,
   content_markdown_en,
+  content_markdown_de,
   cover_image_url,
   cover_alt_it,
   cover_alt_en,
+  cover_alt_de,
   seo_title_it,
   seo_title_en,
+  seo_title_de,
   seo_description_it,
   seo_description_en,
+  seo_description_de,
   featured,
   published_at,
   reading_time_minutes,
   tags,
   created_date,
   updated_date,
-  category:blog_categories(id,slug,name_it,name_en),
-  author:blog_authors(id,slug,full_name,role_title_it,role_title_en)
+  category:blog_categories(id,slug,name_it,name_en,name_de),
+  author:blog_authors(id,slug,full_name,role_title_it,role_title_en,role_title_de)
 `;
 
 export const contentClient = {

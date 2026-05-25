@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "vite",
     "qa": "vite --mode qa --host 127.0.0.1 --port 4173",
-    "build": "vite build",
+    "build": "npm run i18n:check && vite build",
     "optimize:public-images": "node scripts/optimize-public-images.mjs",
     "postbuild": "tsx --tsconfig jsconfig.json scripts/prerender-public.tsx",
     "check:secrets": "bash ./scripts/check-secrets.sh",
@@ -27,6 +27,7 @@
     "test:e2e:regression": "bash ./tests/scripts/run-e2e-regression.sh",
     "test:e2e:smoke": "bash ./tests/scripts/run-e2e-smoke.sh",
     "test:all": "bash ./tests/scripts/run-all-tests.sh",
+    "i18n:check": "node scripts/check-i18n-parity.mjs",
     "playwright:install": "playwright install --with-deps chromium",
     "supabase:login": "supabase login",
     "supabase:link:prod": "supabase link --project-ref eeautkvckrbuorngkvyi",

@@ -6,14 +6,14 @@ import { PUBLIC_SIGNUP_PATH } from '@/lib/authRouting';
 import usePublicSeo from '@/public/hooks/usePublicSeo';
 import usePublicGsap from '@/public/hooks/usePublicGsap';
 import { PUBLIC_CLASSES } from '@/public/designSystem';
+import { getPublicPageSeoData } from '@/public/lib/localePath';
 import { getPublicCopy } from '@/public/lib/publicTranslations';
 
 
 export default function FaqPage({ locale = 'it' }) {
   const rootRef = useRef(null);
   const copy = useMemo(() => getPublicCopy(locale, 'faqPage'), [locale]);
-  const basePath = locale === 'en' ? '/en' : '';
-  const canonicalPath = locale === 'en' ? '/en/faq' : '/faq';
+  const { canonicalPath, alternatePathsByLocale } = getPublicPageSeoData(locale, '/faq');
   const [openItem, setOpenItem] = useState('0-0');
 
   usePublicGsap(rootRef);
@@ -23,8 +23,7 @@ export default function FaqPage({ locale = 'it' }) {
     description: copy.seoDescription,
     canonicalPath,
     locale,
-    alternateItPath: '/faq',
-    alternateEnPath: '/en/faq',
+    alternatePathsByLocale,
   });
 
   return (

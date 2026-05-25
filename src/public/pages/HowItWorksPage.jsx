@@ -13,14 +13,14 @@ import { PUBLIC_CLASSES } from '@/public/designSystem';
 import MarketingCenteredHero from '@/public/components/marketing/MarketingCenteredHero';
 import MarketingFinalCtaSection from '@/public/components/marketing/MarketingFinalCtaSection';
 import MarketingStepTimeline from '@/public/components/marketing/MarketingStepTimeline';
+import { getPublicPageSeoData } from '@/public/lib/localePath';
 import { getPublicCopy } from '@/public/lib/publicTranslations';
 
 
 export default function HowItWorksPage({ locale = 'it' }) {
   const rootRef = useRef(null);
   const copy = useMemo(() => getPublicCopy(locale, 'howItWorksPage'), [locale]);
-  const basePath = locale === 'en' ? '/en' : '';
-  const canonicalPath = locale === 'en' ? '/en/come-funziona' : '/come-funziona';
+  const { canonicalPath, alternatePathsByLocale } = getPublicPageSeoData(locale, '/come-funziona');
 
   usePublicGsap(rootRef);
 
@@ -29,8 +29,7 @@ export default function HowItWorksPage({ locale = 'it' }) {
     description: copy.seoDescription,
     canonicalPath,
     locale,
-    alternateItPath: '/come-funziona',
-    alternateEnPath: '/en/come-funziona',
+    alternatePathsByLocale,
   });
 
   return (

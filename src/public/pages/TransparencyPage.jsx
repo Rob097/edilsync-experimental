@@ -7,14 +7,15 @@ import usePublicSeo from '@/public/hooks/usePublicSeo';
 import usePublicGsap from '@/public/hooks/usePublicGsap';
 import { PUBLIC_CLASSES } from '@/public/designSystem';
 import EntitlementHint from '@/public/components/marketing/EntitlementHint';
+import { getPublicLocaleVariant, getPublicPageSeoData } from '@/public/lib/localePath';
 import { getPublicCopy } from '@/public/lib/publicTranslations';
 
 
 export default function TransparencyPage({ locale = 'it' }) {
   const rootRef = useRef(null);
   const copy = useMemo(() => getPublicCopy(locale, 'transparencyPage'), [locale]);
-  const basePath = locale === 'en' ? '/en' : '';
-  const canonicalPath = locale === 'en' ? '/en/transparency' : '/transparency';
+  const { canonicalPath, alternatePathsByLocale } = getPublicPageSeoData(locale, '/transparency');
+  const beforeAfterLabel = getPublicLocaleVariant(locale, { it: 'Prima / dopo', en: 'Before / after' });
 
   usePublicGsap(rootRef);
 
@@ -23,8 +24,7 @@ export default function TransparencyPage({ locale = 'it' }) {
     description: copy.seoDescription,
     canonicalPath,
     locale,
-    alternateItPath: '/transparency',
-    alternateEnPath: '/en/transparency',
+    alternatePathsByLocale,
   });
 
   return (
@@ -70,7 +70,7 @@ export default function TransparencyPage({ locale = 'it' }) {
       <section className="public-section-shell py-[4.5rem] md:py-20">
         <div className="mx-auto max-w-5xl px-4 sm:px-6">
           <div className="mb-12 text-center" data-reveal>
-            <span className="public-eyebrow">{locale === 'en' ? 'Before / after' : 'Prima / dopo'}</span>
+            <span className="public-eyebrow">{beforeAfterLabel}</span>
             <h2 className={`mt-5 ${PUBLIC_CLASSES.sectionH2}`}>{copy.compareTitle}</h2>
           </div>
           <div className="space-y-3">

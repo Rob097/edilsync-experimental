@@ -13,14 +13,16 @@ import usePublicGsap from '@/public/hooks/usePublicGsap';
 import { PUBLIC_CLASSES } from '@/public/designSystem';
 import PublicPrimaryCta from '@/public/components/marketing/PublicPrimaryCta';
 import MarketingFinalCtaSection from '@/public/components/marketing/MarketingFinalCtaSection';
+import { getPublicLocaleVariant, getPublicPageSeoData } from '@/public/lib/localePath';
 import { getPublicCopy } from '@/public/lib/publicTranslations';
 
 
 export default function SubcontractorsPage({ locale = 'it' }) {
   const rootRef = useRef(null);
   const copy = useMemo(() => getPublicCopy(locale, 'subcontractorsPage'), [locale]);
-  const basePath = locale === 'en' ? '/en' : '';
-  const canonicalPath = locale === 'en' ? '/en/per-subappaltatori' : '/per-subappaltatori';
+  const { canonicalPath, alternatePathsByLocale } = getPublicPageSeoData(locale, '/per-subappaltatori');
+  const fieldStoryLabel = getPublicLocaleVariant(locale, { it: 'Storia dal campo', en: 'Field story' });
+  const subcontractorFlowLabel = getPublicLocaleVariant(locale, { it: 'Flusso subappalto', en: 'Subcontractor flow' });
 
   usePublicGsap(rootRef);
 
@@ -29,8 +31,7 @@ export default function SubcontractorsPage({ locale = 'it' }) {
     description: copy.seoDescription,
     canonicalPath,
     locale,
-    alternateItPath: '/per-subappaltatori',
-    alternateEnPath: '/en/per-subappaltatori',
+    alternatePathsByLocale,
   });
 
   return (
@@ -59,7 +60,7 @@ export default function SubcontractorsPage({ locale = 'it' }) {
           <div className="public-device-frame self-start p-5 md:p-6" data-reveal>
             <div className="rounded-[28px] border border-white/60 bg-[linear-gradient(180deg,rgba(255,255,255,0.96),rgba(255,247,242,0.92))] p-7 shadow-[0_18px_50px_rgba(52,35,29,0.1)]">
               <div className="flex items-center justify-between text-[11px] font-bold uppercase tracking-[0.14em] text-[var(--public-accent-dark)]">
-                <span>{locale === 'en' ? 'Field story' : 'Storia dal campo'}</span>
+                <span>{fieldStoryLabel}</span>
                 <span>EdilSync</span>
               </div>
               <Quote className="mt-8 h-8 w-8 text-[var(--public-accent)]/30" />
@@ -79,7 +80,7 @@ export default function SubcontractorsPage({ locale = 'it' }) {
       <section className="public-section-shell py-[4.5rem] md:py-[5.5rem]">
         <div className="mx-auto max-w-7xl px-4 sm:px-6">
           <div className="max-w-2xl" data-reveal>
-            <span className="public-eyebrow">{locale === 'en' ? 'Subcontractor flow' : 'Flusso subappalto'}</span>
+            <span className="public-eyebrow">{subcontractorFlowLabel}</span>
             <h2 className={`mt-5 ${PUBLIC_CLASSES.sectionH2}`}>{copy.benefitsTitle}</h2>
           </div>
           <div className="mt-8 grid grid-cols-1 gap-5 md:grid-cols-2 xl:grid-cols-12">

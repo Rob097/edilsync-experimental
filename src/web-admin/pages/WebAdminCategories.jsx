@@ -13,8 +13,10 @@ const initialForm = {
   slug: '',
   name_it: '',
   name_en: '',
+  name_de: '',
   description_it: '',
   description_en: '',
+  description_de: '',
   sort_order: 100,
   is_visible: true,
 };
@@ -43,7 +45,7 @@ export default function WebAdminCategories() {
 
   const saveMutation = useMutation({
     mutationFn: async () => {
-      const payload = { ...form, slug: form.slug || slugify(form.name_it || form.name_en) };
+      const payload = { ...form, slug: form.slug || slugify(form.name_it || form.name_en || form.name_de) };
 
       if (payload.id) {
         const { id, ...updatePayload } = payload;
@@ -90,6 +92,10 @@ export default function WebAdminCategories() {
             <Input value={form.name_en || ''} onChange={(e) => setForm((p) => ({ ...p, name_en: e.target.value }))} />
           </div>
           <div className="space-y-2">
+            <Label>Name DE</Label>
+            <Input value={form.name_de || ''} onChange={(e) => setForm((p) => ({ ...p, name_de: e.target.value }))} />
+          </div>
+          <div className="space-y-2">
             <Label>Slug</Label>
             <Input value={form.slug || ''} onChange={(e) => setForm((p) => ({ ...p, slug: slugify(e.target.value) }))} />
           </div>
@@ -100,6 +106,10 @@ export default function WebAdminCategories() {
           <div className="space-y-2">
             <Label>Description EN</Label>
             <Textarea value={form.description_en || ''} onChange={(e) => setForm((p) => ({ ...p, description_en: e.target.value }))} />
+          </div>
+          <div className="space-y-2">
+            <Label>Description DE</Label>
+            <Textarea value={form.description_de || ''} onChange={(e) => setForm((p) => ({ ...p, description_de: e.target.value }))} />
           </div>
           <div className="grid sm:grid-cols-2 gap-4 items-center">
             <div className="space-y-2">
@@ -144,7 +154,7 @@ export default function WebAdminCategories() {
               onClick={() => setForm(category)}
               className="w-full text-left rounded-lg border border-stone-200 px-3 py-3 hover:border-[#ef6144]/60 transition-colors"
             >
-              <p className="font-medium text-slate-900 truncate">{category.name_it}</p>
+              <p className="font-medium text-slate-900 truncate">{category.name_it || category.name_en || category.name_de}</p>
               <p className="text-xs text-slate-500 mt-1">
                 {category.slug} | order {category.sort_order} | {category.is_visible ? 'visible' : 'hidden'}
               </p>
